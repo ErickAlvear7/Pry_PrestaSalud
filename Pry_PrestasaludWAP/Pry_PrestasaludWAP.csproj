@@ -1153,6 +1153,13 @@
     <Compile Include="Reportes\FrmRepExpertOdontoV1.aspx.designer.cs">
       <DependentUpon>FrmRepExpertOdontoV1.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\Frm_RepExpertDoctorNova.aspx.cs">
+      <DependentUpon>Frm_RepExpertDoctorNova.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepExpertDoctorNova.aspx.designer.cs">
+      <DependentUpon>Frm_RepExpertDoctorNova.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\Frm_RepExpertDoctorV1.aspx.cs">
       <DependentUpon>Frm_RepExpertDoctorV1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1636,6 +1643,7 @@
     </Content>
     <Content Include="Pruebas\WFrm_Pruebas.aspx" />
     <Content Include="Pruebas\WFrm_PruebaTokenHumana.aspx" />
+    <Content Include="Reportes\Frm_RepExpertDoctorNova.aspx" />
     <Content Include="Reportes\Frm_RepGerencialV2.aspx" />
     <Content Include="Reportes\WFrm_RepGerencialV3.aspx" />
     <Content Include="Reportes\WFrm_RepGerencialV4.aspx" />
