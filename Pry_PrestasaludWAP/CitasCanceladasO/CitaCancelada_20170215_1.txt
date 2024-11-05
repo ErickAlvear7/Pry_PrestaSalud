@@ -1,0 +1,11 @@
+Código_Cita    :  1
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  2017-02-15
+Hora_Cita      :  17:30 - 18:00
+Prestadora     :  PRESTADORPRUEBA
+Medico         :  VINICIO ROLDAN
+Especialidad   :  ODONTOLOGIA
+Tipo           :  TITULAR
+Paciente       :  LEVER VIDAL ALVAREZ ZABALA
+Motivo         :  PERSONAL
+Observación    :  CITA CANCELADA

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DtsFacOdonAdmin" targetNamespace="http://tempuri.org/DtsFacOdonAdmin.xsd" xmlns:mstns="http://tempuri.org/DtsFacOdonAdmin.xsd" xmlns="http://tempuri.org/DtsFacOdonAdmin.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DtsFacOdonAdmin" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DtsFacOdonAdmin" msprop:Generator_UserDSName="DtsFacOdonAdmin">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DtbFactOdonAdmin" msprop:Generator_TableClassName="DtbFactOdonAdminDataTable" msprop:Generator_TableVarName="tableDtbFactOdonAdmin" msprop:Generator_RowChangedName="DtbFactOdonAdminRowChanged" msprop:Generator_TablePropName="DtbFactOdonAdmin" msprop:Generator_RowDeletingName="DtbFactOdonAdminRowDeleting" msprop:Generator_RowChangingName="DtbFactOdonAdminRowChanging" msprop:Generator_RowEvHandlerName="DtbFactOdonAdminRowChangeEventHandler" msprop:Generator_RowDeletedName="DtbFactOdonAdminRowDeleted" msprop:Generator_RowClassName="DtbFactOdonAdminRow" msprop:Generator_UserTableName="DtbFactOdonAdmin" msprop:Generator_RowEvArgName="DtbFactOdonAdminRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CodigoCita" msprop:Generator_ColumnVarNameInTable="columnCodigoCita" msprop:Generator_ColumnPropNameInRow="CodigoCita" msprop:Generator_ColumnPropNameInTable="CodigoCitaColumn" msprop:Generator_UserColumnName="CodigoCita" type="xs:int" minOccurs="0" />
+              <xs:element name="Producto" msprop:Generator_ColumnVarNameInTable="columnProducto" msprop:Generator_ColumnPropNameInRow="Producto" msprop:Generator_ColumnPropNameInTable="ProductoColumn" msprop:Generator_UserColumnName="Producto" type="xs:string" minOccurs="0" />
+              <xs:element name="Tipo" msprop:Generator_ColumnVarNameInTable="columnTipo" msprop:Generator_ColumnPropNameInRow="Tipo" msprop:Generator_ColumnPropNameInTable="TipoColumn" msprop:Generator_UserColumnName="Tipo" type="xs:string" minOccurs="0" />
+              <xs:element name="Paciente" msprop:Generator_ColumnVarNameInTable="columnPaciente" msprop:Generator_ColumnPropNameInRow="Paciente" msprop:Generator_ColumnPropNameInTable="PacienteColumn" msprop:Generator_UserColumnName="Paciente" type="xs:string" minOccurs="0" />
+              <xs:element name="Identificacion" msprop:Generator_ColumnVarNameInTable="columnIdentificacion" msprop:Generator_ColumnPropNameInRow="Identificacion" msprop:Generator_ColumnPropNameInTable="IdentificacionColumn" msprop:Generator_UserColumnName="Identificacion" type="xs:string" minOccurs="0" />
+              <xs:element name="Procedimiento" msprop:Generator_ColumnVarNameInTable="columnProcedimiento" msprop:Generator_ColumnPropNameInRow="Procedimiento" msprop:Generator_ColumnPropNameInTable="ProcedimientoColumn" msprop:Generator_UserColumnName="Procedimiento" type="xs:string" minOccurs="0" />
+              <xs:element name="Pieza" msprop:Generator_ColumnVarNameInTable="columnPieza" msprop:Generator_ColumnPropNameInRow="Pieza" msprop:Generator_ColumnPropNameInTable="PiezaColumn" msprop:Generator_UserColumnName="Pieza" type="xs:int" minOccurs="0" />
+              <xs:element name="Pvp" msprop:Generator_ColumnVarNameInTable="columnPvp" msprop:Generator_ColumnPropNameInRow="Pvp" msprop:Generator_ColumnPropNameInTable="PvpColumn" msprop:Generator_UserColumnName="Pvp" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Costo" msprop:Generator_ColumnVarNameInTable="columnCosto" msprop:Generator_ColumnPropNameInRow="Costo" msprop:Generator_ColumnPropNameInTable="CostoColumn" msprop:Generator_UserColumnName="Costo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Cobertura" msprop:Generator_ColumnVarNameInTable="columnCobertura" msprop:Generator_ColumnPropNameInRow="Cobertura" msprop:Generator_ColumnPropNameInTable="CoberturaColumn" msprop:Generator_UserColumnName="Cobertura" type="xs:int" minOccurs="0" />
+              <xs:element name="Total" msprop:Generator_ColumnVarNameInTable="columnTotal" msprop:Generator_ColumnPropNameInRow="Total" msprop:Generator_ColumnPropNameInTable="TotalColumn" msprop:Generator_UserColumnName="Total" type="xs:decimal" minOccurs="0" />
+              <xs:element name="FechaCita" msprop:Generator_ColumnVarNameInTable="columnFechaCita" msprop:Generator_ColumnPropNameInRow="FechaCita" msprop:Generator_ColumnPropNameInTable="FechaCitaColumn" msprop:Generator_UserColumnName="FechaCita" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaRegistro" msprop:Generator_ColumnVarNameInTable="columnFechaRegistro" msprop:Generator_ColumnPropNameInRow="FechaRegistro" msprop:Generator_ColumnPropNameInTable="FechaRegistroColumn" msprop:Generator_UserColumnName="FechaRegistro" type="xs:string" minOccurs="0" />
+              <xs:element name="Prestadora" msprop:Generator_ColumnVarNameInTable="columnPrestadora" msprop:Generator_ColumnPropNameInRow="Prestadora" msprop:Generator_ColumnPropNameInTable="PrestadoraColumn" msprop:Generator_UserColumnName="Prestadora" type="xs:string" minOccurs="0" />
+              <xs:element name="Medico" msprop:Generator_ColumnVarNameInTable="columnMedico" msprop:Generator_ColumnPropNameInRow="Medico" msprop:Generator_ColumnPropNameInTable="MedicoColumn" msprop:Generator_UserColumnName="Medico" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

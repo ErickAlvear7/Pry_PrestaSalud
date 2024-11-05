@@ -1,0 +1,16 @@
+Cliente        :  SEGUROS PICHINCHA
+Producto       :  PREVISION MAXIMA PLUS G5 PROPIEDAD
+Código_Cita    :  2
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  02/21/2017
+Hora_Cita      :  15:00
+Prestadora     :  ASISTANET NORTE
+Medico         :  DR. LENIN ANDRES GONZALEZ ORTEGA
+Especialidad   :  ODONTOLOGIA
+Observacion    :  PRESUPUESTO
+Cedula_Titu    :  0104700992
+Tipo           :  TITULAR
+Paciente       :  JUAN DIEGO PEÑAFIEL CHACON
+Fecha_Naci     :  02/22/2016
+Dirección      :  SAN JUAN PAMBA DE NULTI
+Teléfonos      :  012490065/

@@ -1,0 +1,16 @@
+Cliente        :  SEGUROS PICHINCHA
+Producto       :  TRANQUILIDAD VITAL BGR 35.000 - PLAN 3
+Código_Cita    :  115
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  03/02/2017
+Hora_Cita      :  07:15
+Prestadora     :  PRESTADORPRUEBA
+Medico         :  VINICIO ROLDAN
+Especialidad   :  ODONTOLOGIA
+Observacion    :  PRESUPUESTO
+Cedula_Titu    :  1714675855
+Tipo           :  TITULAR
+Paciente       :  HUGO  ROLDAN 
+Fecha_Naci     :  10/29/1976
+Dirección      :  
+Teléfonos      :  /

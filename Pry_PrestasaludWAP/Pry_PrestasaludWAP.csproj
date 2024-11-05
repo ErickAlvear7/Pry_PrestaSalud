@@ -1,0 +1,2171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{46D4FC40-2BF1-4777-B862-E8F96C46F74B}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pry_PrestasaludWAP</RootNamespace>
+    <AssemblyName>Pry_PrestasaludWAP</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=3.5.50401.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.bootstrap, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\AspNet.ScriptManager.bootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.jQuery, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\AspNet.ScriptManager.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.FriendlyUrls, Version=1.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.AspNet.FriendlyUrls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>ddl\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.MSAjax, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.ScriptManager.MSAjax.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.WebForms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.ScriptManager.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.5.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="net.Mensaje.Web.PopupWin, Version=1.2.306.19259, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\net.Mensaje.Web.PopupWin.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="SIFunBasicas, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\SIFunBasicas.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.5.0.0\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ddl\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Administrador\FrmAtencionAdminMed.aspx.cs">
+      <DependentUpon>FrmAtencionAdminMed.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmAtencionAdminMed.aspx.designer.cs">
+      <DependentUpon>FrmAtencionAdminMed.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmAtencionOdontoAdministrador.aspx.cs">
+      <DependentUpon>FrmAtencionOdontoAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmAtencionOdontoAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmAtencionOdontoAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmCitaAdministrador.aspx.cs">
+      <DependentUpon>FrmCitaAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmCitaAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmCitaAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmCitaOdontoAdministrador.aspx.cs">
+      <DependentUpon>FrmCitaOdontoAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmCitaOdontoAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmCitaOdontoAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmDetalleAdministrador.aspx.cs">
+      <DependentUpon>FrmDetalleAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmDetalleAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmDetalleAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmGesReaMedAdmin.aspx.cs">
+      <DependentUpon>FrmGesReaMedAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmGesReaMedAdmin.aspx.designer.cs">
+      <DependentUpon>FrmGesReaMedAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmMenuAdministrador.aspx.cs">
+      <DependentUpon>FrmMenuAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmMenuAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmMenuAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmPresuRealizadoAdministrador.aspx.cs">
+      <DependentUpon>FrmPresuRealizadoAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmPresuRealizadoAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmPresuRealizadoAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmPrincipalAdministrador.aspx.cs">
+      <DependentUpon>FrmPrincipalAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmPrincipalAdministrador.aspx.designer.cs">
+      <DependentUpon>FrmPrincipalAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmRepFactMedAdmin.aspx.cs">
+      <DependentUpon>FrmRepFactMedAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmRepFactMedAdmin.aspx.designer.cs">
+      <DependentUpon>FrmRepFactMedAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administrador\FrmRepFactOdonAdmin.aspx.cs">
+      <DependentUpon>FrmRepFactOdonAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administrador\FrmRepFactOdonAdmin.aspx.designer.cs">
+      <DependentUpon>FrmRepFactOdonAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmActualizarDatos.aspx.cs">
+      <DependentUpon>FrmActualizarDatos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmActualizarDatos.aspx.designer.cs">
+      <DependentUpon>FrmActualizarDatos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmAgendarCitaMedica.aspx.cs">
+      <DependentUpon>FrmAgendarCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmAgendarCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmAgendarCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmCitaMedicaAdmin.aspx.cs">
+      <DependentUpon>FrmCitaMedicaAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmCitaMedicaAdmin.aspx.designer.cs">
+      <DependentUpon>FrmCitaMedicaAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosCitaMedica.aspx.cs">
+      <DependentUpon>FrmDatosCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmDatosCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosMedicoHorarios.aspx.cs">
+      <DependentUpon>FrmDatosMedicoHorarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosMedicoHorarios.aspx.designer.cs">
+      <DependentUpon>FrmDatosMedicoHorarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosPrestadora.aspx.cs">
+      <DependentUpon>FrmDatosPrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDatosPrestadora.aspx.designer.cs">
+      <DependentUpon>FrmDatosPrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDetalleCitaMedica.aspx.cs">
+      <DependentUpon>FrmDetalleCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmDetalleCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmDetalleCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmMenuCitaMedica.aspx.cs">
+      <DependentUpon>FrmMenuCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmMenuCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmMenuCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmNuevaCitaMedica.aspx.cs">
+      <DependentUpon>FrmNuevaCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmNuevaCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmNuevaCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaMedica\FrmPrincipalCitaMedica.aspx.cs">
+      <DependentUpon>FrmPrincipalCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmPrincipalCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmPrincipalCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmActualizarDatosO.aspx.cs">
+      <DependentUpon>FrmActualizarDatosO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmActualizarDatosO.aspx.designer.cs">
+      <DependentUpon>FrmActualizarDatosO.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmAgendarCitaOdonto.aspx.cs">
+      <DependentUpon>FrmAgendarCitaOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmAgendarCitaOdonto.aspx.designer.cs">
+      <DependentUpon>FrmAgendarCitaOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmCitaOdontoAdmin.aspx.cs">
+      <DependentUpon>FrmCitaOdontoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmCitaOdontoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmCitaOdontoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmDatosOdontoHorarios.aspx.cs">
+      <DependentUpon>FrmDatosOdontoHorarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmDatosOdontoHorarios.aspx.designer.cs">
+      <DependentUpon>FrmDatosOdontoHorarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmDatosPrestaOdonto.aspx.cs">
+      <DependentUpon>FrmDatosPrestaOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaOdontologica\FrmDatosPrestaOdonto.aspx.designer.cs">
+      <DependentUpon>FrmDatosPrestaOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Clientes\FrmCampaignAdmin.aspx.cs">
+      <DependentUpon>FrmCampaignAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Clientes\FrmCampaignAdmin.aspx.designer.cs">
+      <DependentUpon>FrmCampaignAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Clientes\FrmNuevaCampaign.aspx.cs">
+      <DependentUpon>FrmNuevaCampaign.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Clientes\FrmNuevaCampaign.aspx.designer.cs">
+      <DependentUpon>FrmNuevaCampaign.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmConfigInfAdicional.aspx.cs">
+      <DependentUpon>FrmConfigInfAdicional.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmConfigInfAdicional.aspx.designer.cs">
+      <DependentUpon>FrmConfigInfAdicional.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmConfigurarFTP.aspx.cs">
+      <DependentUpon>FrmConfigurarFTP.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmConfigurarFTP.aspx.designer.cs">
+      <DependentUpon>FrmConfigurarFTP.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmCrearUserAdmin.aspx.cs">
+      <DependentUpon>FrmCrearUserAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmCrearUserAdmin.aspx.designer.cs">
+      <DependentUpon>FrmCrearUserAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoAprobarSMS.aspx.cs">
+      <DependentUpon>FrmNuevoAprobarSMS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoAprobarSMS.aspx.designer.cs">
+      <DependentUpon>FrmNuevoAprobarSMS.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoSecuencialxD.aspx.cs">
+      <DependentUpon>FrmNuevoSecuencialxD.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoSecuencialxD.aspx.designer.cs">
+      <DependentUpon>FrmNuevoSecuencialxD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoSecuencialxO.aspx.cs">
+      <DependentUpon>FrmNuevoSecuencialxO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoSecuencialxO.aspx.designer.cs">
+      <DependentUpon>FrmNuevoSecuencialxO.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoUserAdmin.aspx.cs">
+      <DependentUpon>FrmNuevoUserAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmNuevoUserAdmin.aspx.designer.cs">
+      <DependentUpon>FrmNuevoUserAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmProgramarFTPAdmin.aspx.cs">
+      <DependentUpon>FrmProgramarFTPAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmProgramarFTPAdmin.aspx.designer.cs">
+      <DependentUpon>FrmProgramarFTPAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmSecuencialxDAdmin.aspx.cs">
+      <DependentUpon>FrmSecuencialxDAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmSecuencialxDAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSecuencialxDAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmSecuencialxOAdmin.aspx.cs">
+      <DependentUpon>FrmSecuencialxOAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmSecuencialxOAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSecuencialxOAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuracion\FrmSMSAdmin.aspx.cs">
+      <DependentUpon>FrmSMSAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuracion\FrmSMSAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSMSAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controles\BuscarGrilla.ascx.cs">
+      <DependentUpon>BuscarGrilla.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controles\BuscarGrilla.ascx.designer.cs">
+      <DependentUpon>BuscarGrilla.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Departamento\FrmDepartamentoAdmin.aspx.cs">
+      <DependentUpon>FrmDepartamentoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Departamento\FrmDepartamentoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmDepartamentoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Departamento\FrmNuevoDepartamento.aspx.cs">
+      <DependentUpon>FrmNuevoDepartamento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Departamento\FrmNuevoDepartamento.aspx.designer.cs">
+      <DependentUpon>FrmNuevoDepartamento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Especialidad\FrmEspecialidadAdmin.aspx.cs">
+      <DependentUpon>FrmEspecialidadAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Especialidad\FrmEspecialidadAdmin.aspx.designer.cs">
+      <DependentUpon>FrmEspecialidadAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Especialidad\FrmNuevaEspecialidad.aspx.cs">
+      <DependentUpon>FrmNuevaEspecialidad.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Especialidad\FrmNuevaEspecialidad.aspx.designer.cs">
+      <DependentUpon>FrmNuevaEspecialidad.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmAgregarExamenPrestadora.aspx.cs">
+      <DependentUpon>FrmAgregarExamenPrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmAgregarExamenPrestadora.aspx.designer.cs">
+      <DependentUpon>FrmAgregarExamenPrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmAtencionExamen.aspx.cs">
+      <DependentUpon>FrmAtencionExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmAtencionExamen.aspx.designer.cs">
+      <DependentUpon>FrmAtencionExamen.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmAuditarExamen.aspx.cs">
+      <DependentUpon>FrmAuditarExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmAuditarExamen.aspx.designer.cs">
+      <DependentUpon>FrmAuditarExamen.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmAuditarExamenAdmin.aspx.cs">
+      <DependentUpon>FrmAuditarExamenAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmAuditarExamenAdmin.aspx.designer.cs">
+      <DependentUpon>FrmAuditarExamenAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmClienteExamenAdmin.aspx.cs">
+      <DependentUpon>FrmClienteExamenAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmClienteExamenAdmin.aspx.designer.cs">
+      <DependentUpon>FrmClienteExamenAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmCorregirExamen.aspx.cs">
+      <DependentUpon>FrmCorregirExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmCorregirExamen.aspx.designer.cs">
+      <DependentUpon>FrmCorregirExamen.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenNegadoAdmin.aspx.cs">
+      <DependentUpon>FrmExamenNegadoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenNegadoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmExamenNegadoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenRealizadoAdmin.aspx.cs">
+      <DependentUpon>FrmExamenRealizadoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenRealizadoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmExamenRealizadoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenSegurosAdmin.aspx.cs">
+      <DependentUpon>FrmExamenSegurosAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmExamenSegurosAdmin.aspx.designer.cs">
+      <DependentUpon>FrmExamenSegurosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmNuevoExamenAdmin.aspx.cs">
+      <DependentUpon>FrmNuevoExamenAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmNuevoExamenAdmin.aspx.designer.cs">
+      <DependentUpon>FrmNuevoExamenAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmNuevoExamenCliente.aspx.cs">
+      <DependentUpon>FrmNuevoExamenCliente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmNuevoExamenCliente.aspx.designer.cs">
+      <DependentUpon>FrmNuevoExamenCliente.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmPrestadoraExamenAdmin.aspx.cs">
+      <DependentUpon>FrmPrestadoraExamenAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmPrestadoraExamenAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPrestadoraExamenAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmRevisionExamen.aspx.cs">
+      <DependentUpon>FrmRevisionExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmRevisionExamen.aspx.designer.cs">
+      <DependentUpon>FrmRevisionExamen.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudExamen.aspx.cs">
+      <DependentUpon>FrmSolicitudExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudExamen.aspx.designer.cs">
+      <DependentUpon>FrmSolicitudExamen.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudExamenAdmin.aspx.cs">
+      <DependentUpon>FrmSolicitudExamenAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudExamenAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSolicitudExamenAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudOperadorAdmin.aspx.cs">
+      <DependentUpon>FrmSolicitudOperadorAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmSolicitudOperadorAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSolicitudOperadorAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Expert_WebDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Expert_WebDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="FrmPaginaEnConstruccion.aspx.cs">
+      <DependentUpon>FrmPaginaEnConstruccion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FrmPaginaEnConstruccion.aspx.designer.cs">
+      <DependentUpon>FrmPaginaEnConstruccion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Login.aspx.cs">
+      <DependentUpon>Frm_Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Frm_Login.aspx.designer.cs">
+      <DependentUpon>Frm_Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Horarios\FrmHorarioAdmin.aspx.cs">
+      <DependentUpon>FrmHorarioAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Horarios\FrmHorarioAdmin.aspx.designer.cs">
+      <DependentUpon>FrmHorarioAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Horarios\FrmNuevoHorario.aspx.cs">
+      <DependentUpon>FrmNuevoHorario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Horarios\FrmNuevoHorario.aspx.designer.cs">
+      <DependentUpon>FrmNuevoHorario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Horarios\FrmNuevoTurno.aspx.cs">
+      <DependentUpon>FrmNuevoTurno.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Horarios\FrmNuevoTurno.aspx.designer.cs">
+      <DependentUpon>FrmNuevoTurno.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Horarios\FrmTurnoAdmin.aspx.cs">
+      <DependentUpon>FrmTurnoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Horarios\FrmTurnoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmTurnoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mantenedor\FrmDetalle.aspx.cs">
+      <DependentUpon>FrmDetalle.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mantenedor\FrmDetalle.aspx.designer.cs">
+      <DependentUpon>FrmDetalle.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mantenedor\FrmMenu.aspx.cs">
+      <DependentUpon>FrmMenu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mantenedor\FrmMenu.aspx.designer.cs">
+      <DependentUpon>FrmMenu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mantenedor\FrmPrincipal.aspx.cs">
+      <DependentUpon>FrmPrincipal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mantenedor\FrmPrincipal.aspx.designer.cs">
+      <DependentUpon>FrmPrincipal.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmAtencionCitaOdonto.aspx.cs">
+      <DependentUpon>FrmAtencionCitaOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmAtencionCitaOdonto.aspx.designer.cs">
+      <DependentUpon>FrmAtencionCitaOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmDetalleCitaOdonto.aspx.cs">
+      <DependentUpon>FrmDetalleCitaOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmDetalleCitaOdonto.aspx.designer.cs">
+      <DependentUpon>FrmDetalleCitaOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmDetalleOdonto.aspx.cs">
+      <DependentUpon>FrmDetalleOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmDetalleOdonto.aspx.designer.cs">
+      <DependentUpon>FrmDetalleOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmMedicoOdonAdmin.aspx.cs">
+      <DependentUpon>FrmMedicoOdonAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmMedicoOdonAdmin.aspx.designer.cs">
+      <DependentUpon>FrmMedicoOdonAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmMenuOdonto.aspx.cs">
+      <DependentUpon>FrmMenuOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmMenuOdonto.aspx.designer.cs">
+      <DependentUpon>FrmMenuOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoMedicoOdon.aspx.cs">
+      <DependentUpon>FrmNuevoMedicoOdon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoMedicoOdon.aspx.designer.cs">
+      <DependentUpon>FrmNuevoMedicoOdon.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoTurnoOdon.aspx.cs">
+      <DependentUpon>FrmNuevoTurnoOdon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoTurnoOdon.aspx.designer.cs">
+      <DependentUpon>FrmNuevoTurnoOdon.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoUsuarioOdonto.aspx.cs">
+      <DependentUpon>FrmNuevoUsuarioOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmNuevoUsuarioOdonto.aspx.designer.cs">
+      <DependentUpon>FrmNuevoUsuarioOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmOdontoCitasAdmin.aspx.cs">
+      <DependentUpon>FrmOdontoCitasAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmOdontoCitasAdmin.aspx.designer.cs">
+      <DependentUpon>FrmOdontoCitasAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmOdontoUsuarioAdmin.aspx.cs">
+      <DependentUpon>FrmOdontoUsuarioAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmOdontoUsuarioAdmin.aspx.designer.cs">
+      <DependentUpon>FrmOdontoUsuarioAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPrespuestoRealizadoAdmin.aspx.cs">
+      <DependentUpon>FrmPrespuestoRealizadoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPrespuestoRealizadoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPrespuestoRealizadoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPresupuestosRegistrados.aspx.cs">
+      <DependentUpon>FrmPresupuestosRegistrados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPresupuestosRegistrados.aspx.designer.cs">
+      <DependentUpon>FrmPresupuestosRegistrados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPrincipalOdonto.aspx.cs">
+      <DependentUpon>FrmPrincipalOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmPrincipalOdonto.aspx.designer.cs">
+      <DependentUpon>FrmPrincipalOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmProductoProcedimientos.aspx.cs">
+      <DependentUpon>FrmProductoProcedimientos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\FrmProductoProcedimientos.aspx.designer.cs">
+      <DependentUpon>FrmProductoProcedimientos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\RptPresupuestoRegistrado.aspx.cs">
+      <DependentUpon>RptPresupuestoRegistrado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\RptPresupuestoRegistrado.aspx.designer.cs">
+      <DependentUpon>RptPresupuestoRegistrado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MedicoOdonto\RptReporteFacturacion.aspx.cs">
+      <DependentUpon>RptReporteFacturacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MedicoOdonto\RptReporteFacturacion.aspx.designer.cs">
+      <DependentUpon>RptReporteFacturacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmAtencionCitaMedica.aspx.cs">
+      <DependentUpon>FrmAtencionCitaMedica.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmAtencionCitaMedica.aspx.designer.cs">
+      <DependentUpon>FrmAtencionCitaMedica.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmDetalleGestionesRealizadas.aspx.cs">
+      <DependentUpon>FrmDetalleGestionesRealizadas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmDetalleGestionesRealizadas.aspx.designer.cs">
+      <DependentUpon>FrmDetalleGestionesRealizadas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmDetalleObservaGestiones.aspx.cs">
+      <DependentUpon>FrmDetalleObservaGestiones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmDetalleObservaGestiones.aspx.designer.cs">
+      <DependentUpon>FrmDetalleObservaGestiones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmGestionesRealizadasAdmin.aspx.cs">
+      <DependentUpon>FrmGestionesRealizadasAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmGestionesRealizadasAdmin.aspx.designer.cs">
+      <DependentUpon>FrmGestionesRealizadasAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoAdmin.aspx.cs">
+      <DependentUpon>FrmMedicoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmMedicoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoCitasAdmin.aspx.cs">
+      <DependentUpon>FrmMedicoCitasAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoCitasAdmin.aspx.designer.cs">
+      <DependentUpon>FrmMedicoCitasAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoUsuarioAdmin.aspx.cs">
+      <DependentUpon>FrmMedicoUsuarioAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmMedicoUsuarioAdmin.aspx.designer.cs">
+      <DependentUpon>FrmMedicoUsuarioAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoMedico.aspx.cs">
+      <DependentUpon>FrmNuevoMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoMedico.aspx.designer.cs">
+      <DependentUpon>FrmNuevoMedico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoTurnoMedico.aspx.cs">
+      <DependentUpon>FrmNuevoTurnoMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoTurnoMedico.aspx.designer.cs">
+      <DependentUpon>FrmNuevoTurnoMedico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoUsuarioMedico.aspx.cs">
+      <DependentUpon>FrmNuevoUsuarioMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmNuevoUsuarioMedico.aspx.designer.cs">
+      <DependentUpon>FrmNuevoUsuarioMedico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\FrmVademecumAdmin.aspx.cs">
+      <DependentUpon>FrmVademecumAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\FrmVademecumAdmin.aspx.designer.cs">
+      <DependentUpon>FrmVademecumAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\RptRegistroAgendas.aspx.cs">
+      <DependentUpon>RptRegistroAgendas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\RptRegistroAgendas.aspx.designer.cs">
+      <DependentUpon>RptRegistroAgendas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\RptReporteFacturacion.aspx.cs">
+      <DependentUpon>RptReporteFacturacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\RptReporteFacturacion.aspx.designer.cs">
+      <DependentUpon>RptReporteFacturacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmEditarMenu.aspx.cs">
+      <DependentUpon>FrmEditarMenu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmEditarMenu.aspx.designer.cs">
+      <DependentUpon>FrmEditarMenu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmMenuAdmin.aspx.cs">
+      <DependentUpon>FrmMenuAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmMenuAdmin.aspx.designer.cs">
+      <DependentUpon>FrmMenuAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmNuevoMenu.aspx.cs">
+      <DependentUpon>FrmNuevoMenu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmNuevoMenu.aspx.designer.cs">
+      <DependentUpon>FrmNuevoMenu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Old_App_Code\BundleConfig.cs" />
+    <Compile Include="Old_App_Code\Conexion.cs" />
+    <Compile Include="Old_App_Code\DatosJson.cs" />
+    <Compile Include="Old_App_Code\Datos_Humana.cs" />
+    <Compile Include="Old_App_Code\Funciones.cs" />
+    <Compile Include="Old_App_Code\IdentityModels.cs" />
+    <Compile Include="Old_App_Code\ListaPrestadorasDTO.cs" />
+    <Compile Include="Old_App_Code\RouteConfig.cs" />
+    <Compile Include="Old_App_Code\SegPrincipal.cs" />
+    <Compile Include="Old_App_Code\Startup.Auth.cs" />
+    <Compile Include="Old_App_Code\Startup.cs" />
+    <Compile Include="Parametros\FrmNuevoParametro.aspx.cs">
+      <DependentUpon>FrmNuevoParametro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Parametros\FrmNuevoParametro.aspx.designer.cs">
+      <DependentUpon>FrmNuevoParametro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Parametros\FrmParametrosAdmin.aspx.cs">
+      <DependentUpon>FrmParametrosAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Parametros\FrmParametrosAdmin.aspx.designer.cs">
+      <DependentUpon>FrmParametrosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil\FrmEditarPerfil.aspx.cs">
+      <DependentUpon>FrmEditarPerfil.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Perfil\FrmEditarPerfil.aspx.designer.cs">
+      <DependentUpon>FrmEditarPerfil.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil\FrmNuevoPerfil.aspx.cs">
+      <DependentUpon>FrmNuevoPerfil.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Perfil\FrmNuevoPerfil.aspx.designer.cs">
+      <DependentUpon>FrmNuevoPerfil.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil\FrmPerfilAdmin.aspx.cs">
+      <DependentUpon>FrmPerfilAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Perfil\FrmPerfilAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPerfilAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PrestadoraOdonto\FrmNuevaPrestadoraOdon.aspx.cs">
+      <DependentUpon>FrmNuevaPrestadoraOdon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PrestadoraOdonto\FrmNuevaPrestadoraOdon.aspx.designer.cs">
+      <DependentUpon>FrmNuevaPrestadoraOdon.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PrestadoraOdonto\FrmPrestadoraOdonAdmin.aspx.cs">
+      <DependentUpon>FrmPrestadoraOdonAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PrestadoraOdonto\FrmPrestadoraOdonAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPrestadoraOdonAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmAsignarEspePrestadora.aspx.cs">
+      <DependentUpon>FrmAsignarEspePrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmAsignarEspePrestadora.aspx.designer.cs">
+      <DependentUpon>FrmAsignarEspePrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmDetallePrestaEspe.aspx.cs">
+      <DependentUpon>FrmDetallePrestaEspe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmDetallePrestaEspe.aspx.designer.cs">
+      <DependentUpon>FrmDetallePrestaEspe.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmMenuPrestaEspe.aspx.cs">
+      <DependentUpon>FrmMenuPrestaEspe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmMenuPrestaEspe.aspx.designer.cs">
+      <DependentUpon>FrmMenuPrestaEspe.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmNuevaPrestadora.aspx.cs">
+      <DependentUpon>FrmNuevaPrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmNuevaPrestadora.aspx.designer.cs">
+      <DependentUpon>FrmNuevaPrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmNuevaPrestaEspe.aspx.cs">
+      <DependentUpon>FrmNuevaPrestaEspe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmNuevaPrestaEspe.aspx.designer.cs">
+      <DependentUpon>FrmNuevaPrestaEspe.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrestadoraAdmin.aspx.cs">
+      <DependentUpon>FrmPrestadoraAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrestadoraAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPrestadoraAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrestaEspeAdmin.aspx.cs">
+      <DependentUpon>FrmPrestaEspeAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrestaEspeAdmin.aspx.designer.cs">
+      <DependentUpon>FrmPrestaEspeAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrincipalPrestaEspe.aspx.cs">
+      <DependentUpon>FrmPrincipalPrestaEspe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Prestadora\FrmPrincipalPrestaEspe.aspx.designer.cs">
+      <DependentUpon>FrmPrincipalPrestaEspe.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Procedimientos\FrmAsignarProcedimiento.aspx.cs">
+      <DependentUpon>FrmAsignarProcedimiento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Procedimientos\FrmAsignarProcedimiento.aspx.designer.cs">
+      <DependentUpon>FrmAsignarProcedimiento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Procedimientos\FrmAsignarProceProducto.aspx.cs">
+      <DependentUpon>FrmAsignarProceProducto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Procedimientos\FrmAsignarProceProducto.aspx.designer.cs">
+      <DependentUpon>FrmAsignarProceProducto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Procedimientos\FrmNuevoProcedimiento.aspx.cs">
+      <DependentUpon>FrmNuevoProcedimiento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Procedimientos\FrmNuevoProcedimiento.aspx.designer.cs">
+      <DependentUpon>FrmNuevoProcedimiento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Procedimientos\FrmProcedimientosAdmin.aspx.cs">
+      <DependentUpon>FrmProcedimientosAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Procedimientos\FrmProcedimientosAdmin.aspx.designer.cs">
+      <DependentUpon>FrmProcedimientosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Pruebas\WFrm_Pruebas.aspx.cs">
+      <DependentUpon>WFrm_Pruebas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pruebas\WFrm_Pruebas.aspx.designer.cs">
+      <DependentUpon>WFrm_Pruebas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pruebas\WFrm_PruebaTokenHumana.aspx.cs">
+      <DependentUpon>WFrm_PruebaTokenHumana.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pruebas\WFrm_PruebaTokenHumana.aspx.designer.cs">
+      <DependentUpon>WFrm_PruebaTokenHumana.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Regiones\FrmCiudadAdmin.aspx.cs">
+      <DependentUpon>FrmCiudadAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Regiones\FrmCiudadAdmin.aspx.designer.cs">
+      <DependentUpon>FrmCiudadAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Regiones\FrmNuevaCiudad.aspx.cs">
+      <DependentUpon>FrmNuevaCiudad.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Regiones\FrmNuevaCiudad.aspx.designer.cs">
+      <DependentUpon>FrmNuevaCiudad.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Regiones\FrmNuevaProvincia.aspx.cs">
+      <DependentUpon>FrmNuevaProvincia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Regiones\FrmNuevaProvincia.aspx.designer.cs">
+      <DependentUpon>FrmNuevaProvincia.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Regiones\FrmProvinciaAdmin.aspx.cs">
+      <DependentUpon>FrmProvinciaAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Regiones\FrmProvinciaAdmin.aspx.designer.cs">
+      <DependentUpon>FrmProvinciaAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\FrmRepExpertDoctorBI.aspx.cs">
+      <DependentUpon>FrmRepExpertDoctorBI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\FrmRepExpertDoctorBI.aspx.designer.cs">
+      <DependentUpon>FrmRepExpertDoctorBI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\FrmRepExpertOdontoV1.aspx.cs">
+      <DependentUpon>FrmRepExpertOdontoV1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\FrmRepExpertOdontoV1.aspx.designer.cs">
+      <DependentUpon>FrmRepExpertOdontoV1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepExpertDoctorV1.aspx.cs">
+      <DependentUpon>Frm_RepExpertDoctorV1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepExpertDoctorV1.aspx.designer.cs">
+      <DependentUpon>Frm_RepExpertDoctorV1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepGerencialV1.aspx.cs">
+      <DependentUpon>Frm_RepGerencialV1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepGerencialV1.aspx.designer.cs">
+      <DependentUpon>Frm_RepGerencialV1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepGerencialV2.aspx.cs">
+      <DependentUpon>Frm_RepGerencialV2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\Frm_RepGerencialV2.aspx.designer.cs">
+      <DependentUpon>Frm_RepGerencialV2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\WFrm_RepGerencialV3.aspx.cs">
+      <DependentUpon>WFrm_RepGerencialV3.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\WFrm_RepGerencialV3.aspx.designer.cs">
+      <DependentUpon>WFrm_RepGerencialV3.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\WFrm_RepGerencialV4.aspx.cs">
+      <DependentUpon>WFrm_RepGerencialV4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\WFrm_RepGerencialV4.aspx.designer.cs">
+      <DependentUpon>WFrm_RepGerencialV4.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes_BI\FrmReportBICargaFTP.aspx.cs">
+      <DependentUpon>FrmReportBICargaFTP.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes_BI\FrmReportBICargaFTP.aspx.designer.cs">
+      <DependentUpon>FrmReportBICargaFTP.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes_BI\FrmReportesExpert.aspx.cs">
+      <DependentUpon>FrmReportesExpert.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes_BI\FrmReportesExpert.aspx.designer.cs">
+      <DependentUpon>FrmReportesExpert.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsCitasAgendadas.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsCitasAgendadas.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\DtsDoctorGerencial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DtsDoctorGerencial.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\DtsFacMedAdmin.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DtsFacMedAdmin.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\DtsFacOdonAdmin.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DtsFacOdonAdmin.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsFacturaMedico.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsFacturaMedico.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsFacturaOdonto.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsFacturaOdonto.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsGerencialCiudadDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsGerencialCiudadDetail.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsGerencialDoctor.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsGerencialDoctor.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsGerencialDoctorDetail.cs">
+      <DependentUpon>dtsGerencialDoctorDetail.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsGerencialDoctorDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsGerencialDoctorDetail.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\dtsPresupuestos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsPresupuestos.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Site.master.cs">
+      <DependentUpon>Site.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.master.designer.cs">
+      <DependentUpon>Site.master</DependentUpon>
+    </Compile>
+    <Compile Include="Site.Mobile.master.cs">
+      <DependentUpon>Site.Mobile.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Mobile.master.designer.cs">
+      <DependentUpon>Site.Mobile.master</DependentUpon>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperOdonto.aspx.cs">
+      <DependentUpon>FrmSuperOdonto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperOdonto.aspx.designer.cs">
+      <DependentUpon>FrmSuperOdonto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperOdontoAdmin.aspx.cs">
+      <DependentUpon>FrmSuperOdontoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperOdontoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSuperOdontoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperPresupuestoAdmin.aspx.cs">
+      <DependentUpon>FrmSuperPresupuestoAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupervisionOdonto\FrmSuperPresupuestoAdmin.aspx.designer.cs">
+      <DependentUpon>FrmSuperPresupuestoAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tarea\FrmNuevaTarea.aspx.cs">
+      <DependentUpon>FrmNuevaTarea.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tarea\FrmNuevaTarea.aspx.designer.cs">
+      <DependentUpon>FrmNuevaTarea.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tarea\FrmTareaAdmin.aspx.cs">
+      <DependentUpon>FrmTareaAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tarea\FrmTareaAdmin.aspx.designer.cs">
+      <DependentUpon>FrmTareaAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmActivarTitular.aspx.cs">
+      <DependentUpon>FrmActivarTitular.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmActivarTitular.aspx.designer.cs">
+      <DependentUpon>FrmActivarTitular.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmDetallePrestadora.aspx.cs">
+      <DependentUpon>FrmDetallePrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmDetallePrestadora.aspx.designer.cs">
+      <DependentUpon>FrmDetallePrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmMenuPrestadora.aspx.cs">
+      <DependentUpon>FrmMenuPrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmMenuPrestadora.aspx.designer.cs">
+      <DependentUpon>FrmMenuPrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmNuevoTitular.aspx.cs">
+      <DependentUpon>FrmNuevoTitular.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmNuevoTitular.aspx.designer.cs">
+      <DependentUpon>FrmNuevoTitular.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmPrincipalPrestadora.aspx.cs">
+      <DependentUpon>FrmPrincipalPrestadora.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmPrincipalPrestadora.aspx.designer.cs">
+      <DependentUpon>FrmPrincipalPrestadora.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\FrmTitularAdmin.aspx.cs">
+      <DependentUpon>FrmTitularAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\FrmTitularAdmin.aspx.designer.cs">
+      <DependentUpon>FrmTitularAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Titulares\Frm_TitularAdminSet.aspx.cs">
+      <DependentUpon>Frm_TitularAdminSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Titulares\Frm_TitularAdminSet.aspx.designer.cs">
+      <DependentUpon>Frm_TitularAdminSet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios\FrmChangePassword.aspx.cs">
+      <DependentUpon>FrmChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Usuarios\FrmChangePassword.aspx.designer.cs">
+      <DependentUpon>FrmChangePassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios\FrmNuevoUsuario.aspx.cs">
+      <DependentUpon>FrmNuevoUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Usuarios\FrmNuevoUsuario.aspx.designer.cs">
+      <DependentUpon>FrmNuevoUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios\FrmUsuarioAdmin.aspx.cs">
+      <DependentUpon>FrmUsuarioAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Usuarios\FrmUsuarioAdmin.aspx.designer.cs">
+      <DependentUpon>FrmUsuarioAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewSwitcher.ascx.cs">
+      <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewSwitcher.ascx.designer.cs">
+      <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\WReferenceSMS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="WFrm_Login.aspx.cs">
+      <DependentUpon>WFrm_Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WFrm_Login.aspx.designer.cs">
+      <DependentUpon>WFrm_Login.aspx</DependentUpon>
+    </Compile>
+    <Content Include="Administrador\FrmAtencionAdminMed.aspx" />
+    <Content Include="Administrador\FrmAtencionOdontoAdministrador.aspx" />
+    <Content Include="Administrador\FrmCitaAdministrador.aspx" />
+    <Content Include="Administrador\FrmCitaOdontoAdministrador.aspx" />
+    <Content Include="Administrador\FrmDetalleAdministrador.aspx" />
+    <Content Include="Administrador\FrmGesReaMedAdmin.aspx" />
+    <Content Include="Administrador\FrmMenuAdministrador.aspx" />
+    <Content Include="Administrador\FrmPresuRealizadoAdministrador.aspx" />
+    <Content Include="Administrador\FrmPrincipalAdministrador.aspx" />
+    <Content Include="Administrador\FrmRepFactMedAdmin.aspx" />
+    <Content Include="Administrador\FrmRepFactOdonAdmin.aspx" />
+    <Content Include="Bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Bootstrap\css\bootstrap.css" />
+    <Content Include="Bootstrap\css\bootstrap.min.css" />
+    <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Bootstrap\js\bootstrap.js" />
+    <Content Include="Bootstrap\js\bootstrap.min.js" />
+    <Content Include="Bootstrap\js\npm.js" />
+    <Content Include="Botones\activada_down.png" />
+    <Content Include="Botones\activada_up.png" />
+    <Content Include="Botones\agendarmail.png" />
+    <Content Include="Botones\agregar.jpg" />
+    <Content Include="Botones\agregar_usuario.jpg" />
+    <Content Include="Botones\atencionmedica.png" />
+    <Content Include="Botones\atencionmedicaoff.png" />
+    <Content Include="Botones\ausente.png" />
+    <Content Include="Botones\btnauditarexamen.png" />
+    <Content Include="Botones\btnInciarsesion.png" />
+    <Content Include="Botones\btnpasaruno.jpg" />
+    <Content Include="Botones\btnquitar.jpg" />
+    <Content Include="Botones\btnquitaruno.png" />
+    <Content Include="Botones\btnrealizarexamen.png" />
+    <Content Include="Botones\btnrevisardatos.png" />
+    <Content Include="Botones\btntodos.jpg" />
+    <Content Include="Botones\Buscar.png" />
+    <Content Include="Botones\buscaroff.png" />
+    <Content Include="Botones\busqueda.png" />
+    <Content Include="Botones\cancelar.jpg" />
+    <Content Include="Botones\casa.png" />
+    <Content Include="Botones\citamedica.png" />
+    <Content Include="Botones\citamedicadesac.png" />
+    <Content Include="Botones\con_usuario.jpg" />
+    <Content Include="Botones\desactivada_down.png" />
+    <Content Include="Botones\desactivada_up.png" />
+    <Content Include="Botones\downloadcolor.png" />
+    <Content Include="Botones\downloadgris.png" />
+    <Content Include="Botones\eliminar.png" />
+    <Content Include="Botones\eliminaroff.jpg" />
+    <Content Include="Botones\emailcancel.png" />
+    <Content Include="Botones\gafas.png" />
+    <Content Include="Botones\imprimir.jpg" />
+    <Content Include="Botones\mailagenda.png" />
+    <Content Include="Botones\medico.png" />
+    <Content Include="Botones\modificar.png" />
+    <Content Include="Botones\mueladisable.png" />
+    <Content Include="Botones\muelaenable.png" />
+    <Content Include="Botones\notepadcolor.png" />
+    <Content Include="Botones\notepadgray.png" />
+    <Content Include="Botones\ocultarFrame.png" />
+    <Content Include="Botones\procesar.jpg" />
+    <Content Include="Botones\procesar.png" />
+    <Content Include="Botones\procesofinalizado.jpg" />
+    <Content Include="Botones\productos.png" />
+    <Content Include="Botones\quitar_usuario.jpg" />
+    <Content Include="Botones\relojoff.png" />
+    <Content Include="Botones\relojon.png" />
+    <Content Include="Botones\resetpassword.png" />
+    <Content Include="Botones\selecc.png" />
+    <Content Include="Botones\seleccgris.png" />
+    <Content Include="Botones\seleccionar.png" />
+    <Content Include="Botones\semaforoRojo.png" />
+    <Content Include="Botones\semaforoVerde.png" />
+    <Content Include="Botones\sin_usuario.png" />
+    <Content Include="Botones\variablescolor.png" />
+    <Content Include="Botones\variablesgris.png" />
+    <Content Include="CitaMedica\FrmActualizarDatos.aspx" />
+    <Content Include="CitaMedica\FrmAgendarCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmCitaMedicaAdmin.aspx" />
+    <Content Include="CitaMedica\FrmDatosCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmDatosMedicoHorarios.aspx" />
+    <Content Include="CitaMedica\FrmDatosPrestadora.aspx" />
+    <Content Include="CitaMedica\FrmDetalleCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmMenuCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmNuevaCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmPrincipalCitaMedica.aspx" />
+    <Content Include="CitaOdontologica\FrmActualizarDatosO.aspx" />
+    <Content Include="CitaOdontologica\FrmAgendarCitaOdonto.aspx" />
+    <Content Include="CitaOdontologica\FrmCitaOdontoAdmin.aspx" />
+    <Content Include="CitaOdontologica\FrmDatosOdontoHorarios.aspx" />
+    <Content Include="CitaOdontologica\FrmDatosPrestaOdonto.aspx" />
+    <Content Include="Clientes\FrmCampaignAdmin.aspx" />
+    <Content Include="Clientes\FrmNuevaCampaign.aspx" />
+    <Content Include="Configuracion\FrmConfigInfAdicional.aspx" />
+    <Content Include="Configuracion\FrmConfigurarFTP.aspx" />
+    <Content Include="Configuracion\FrmCrearUserAdmin.aspx" />
+    <Content Include="Configuracion\FrmNuevoAprobarSMS.aspx" />
+    <Content Include="Configuracion\FrmNuevoSecuencialxD.aspx" />
+    <Content Include="Configuracion\FrmNuevoSecuencialxO.aspx" />
+    <Content Include="Configuracion\FrmNuevoUserAdmin.aspx" />
+    <Content Include="Configuracion\FrmProgramarFTPAdmin.aspx" />
+    <Content Include="Configuracion\FrmSecuencialxDAdmin.aspx" />
+    <Content Include="Configuracion\FrmSecuencialxOAdmin.aspx" />
+    <Content Include="Configuracion\FrmSMSAdmin.aspx" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Controles\BuscarGrilla.ascx" />
+    <Content Include="css\chosen.css" />
+    <Content Include="css\DatePicker\jquery-ui.css" />
+    <Content Include="css\Estilos.css" />
+    <Content Include="css\Images\fondoLogueo.jpg" />
+    <Content Include="css\Images\FondoWebPrestaSaludGrande.png" />
+    <Content Include="css\Images\FondoWebPrestaSaludGrande1.png" />
+    <Content Include="css\Images\jquery-te.png" />
+    <Content Include="css\Images\LoginGeneral.png" />
+    <Content Include="css\img\background.gif" />
+    <Content Include="css\img\fondo.jpg" />
+    <Content Include="css\img\fondo1.jpg" />
+    <Content Include="css\img\fondo2.jpg" />
+    <Content Include="css\jquery-te-1.4.0.css" />
+    <Content Include="css\jquery.ui.accordion.css" />
+    <Content Include="css\Login.css" />
+    <Content Include="css\Logueo.css" />
+    <Content Include="ddl\AjaxControlToolkit.dll" />
+    <Content Include="ddl\Antlr3.Runtime.dll" />
+    <Content Include="ddl\AspNet.ScriptManager.bootstrap.dll" />
+    <Content Include="ddl\AspNet.ScriptManager.jQuery.dll" />
+    <Content Include="ddl\EntityFramework.dll" />
+    <Content Include="ddl\EntityFramework.SqlServer.dll" />
+    <Content Include="ddl\Microsoft.AspNet.FriendlyUrls.dll" />
+    <Content Include="ddl\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="ddl\Microsoft.AspNet.Identity.Owin.dll" />
+    <Content Include="ddl\Microsoft.AspNet.Web.Optimization.WebForms.dll" />
+    <Content Include="ddl\Microsoft.Owin.dll" />
+    <Content Include="ddl\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.Cookies.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.Facebook.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.Google.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.MicrosoftAccount.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.OAuth.dll" />
+    <Content Include="ddl\Microsoft.Owin.Security.Twitter.dll" />
+    <Content Include="ddl\Microsoft.ScriptManager.MSAjax.dll" />
+    <Content Include="ddl\Microsoft.ScriptManager.WebForms.dll" />
+    <Content Include="ddl\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="ddl\MySql.Data.dll" />
+    <Content Include="ddl\net.Mensaje.Web.PopupWin.dll" />
+    <Content Include="ddl\Newtonsoft.Json.dll" />
+    <Content Include="ddl\Owin.dll" />
+    <Content Include="ddl\SIFunBasicas.dll" />
+    <Content Include="ddl\System.Web.Optimization.dll" />
+    <Content Include="ddl\System.Web.Providers.dll" />
+    <Content Include="ddl\WebGrease.dll" />
+    <Content Include="Examenes\FrmAgregarExamenPrestadora.aspx" />
+    <Content Include="Examenes\FrmAtencionExamen.aspx" />
+    <Content Include="Examenes\FrmAuditarExamen.aspx" />
+    <Content Include="Examenes\FrmAuditarExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmClienteExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmCorregirExamen.aspx" />
+    <Content Include="Examenes\FrmExamenNegadoAdmin.aspx" />
+    <Content Include="Examenes\FrmExamenRealizadoAdmin.aspx" />
+    <Content Include="Examenes\FrmExamenSegurosAdmin.aspx" />
+    <Content Include="Examenes\FrmNuevoExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmNuevoExamenCliente.aspx" />
+    <Content Include="Examenes\FrmPrestadoraExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmRevisionExamen.aspx" />
+    <Content Include="Examenes\FrmSolicitudExamen.aspx" />
+    <Content Include="Examenes\FrmSolicitudExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmSolicitudOperadorAdmin.aspx" />
+    <Content Include="FrmPaginaEnConstruccion.aspx" />
+    <Content Include="Frm_Login.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\13_odontograma.png" />
+    <Content Include="css\Images\FondoWebPresta.png" />
+    <Content Include="Images\load.gif" />
+    <Content Include="Images\Login.png" />
+    <Content Include="Images\LogoGeneral.png" />
+    <Content Include="Images\LogoGeneral1.png" />
+    <Content Include="Images\LogoInicial.png" />
+    <Content Include="Images\LogoPrestasalud.png" />
+    <Content Include="Images\OdontoGrama.jpg" />
+    <Content Include="Images\Odontograma_Pediatrico.png" />
+    <Content Include="Images\Odonto_Adultos.jpg" />
+    <Content Include="Images\Odonto_Pediatrico.jpg" />
+    <Content Include="Images\Vademecum.png" />
+    <Content Include="MedicoOdonto\FrmAtencionCitaOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmDetalleCitaOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmDetalleOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmMedicoOdonAdmin.aspx" />
+    <Content Include="MedicoOdonto\FrmMenuOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmNuevoMedicoOdon.aspx" />
+    <Content Include="MedicoOdonto\FrmNuevoTurnoOdon.aspx" />
+    <Content Include="MedicoOdonto\FrmNuevoUsuarioOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmOdontoCitasAdmin.aspx" />
+    <Content Include="MedicoOdonto\FrmOdontoUsuarioAdmin.aspx" />
+    <Content Include="MedicoOdonto\FrmPrespuestoRealizadoAdmin.aspx" />
+    <Content Include="MedicoOdonto\FrmPresupuestosRegistrados.aspx" />
+    <Content Include="MedicoOdonto\FrmPrincipalOdonto.aspx" />
+    <Content Include="MedicoOdonto\FrmProductoProcedimientos.aspx" />
+    <Content Include="MedicoOdonto\RptPresupuestoRegistrado.aspx" />
+    <Content Include="MedicoOdonto\RptReporteFacturacion.aspx" />
+    <Content Include="Medicos\FrmAtencionCitaMedica.aspx" />
+    <Content Include="Medicos\FrmDetalleGestionesRealizadas.aspx" />
+    <Content Include="Medicos\FrmDetalleObservaGestiones.aspx" />
+    <Content Include="Medicos\FrmGestionesRealizadasAdmin.aspx" />
+    <Content Include="Medicos\FrmMedicoCitasAdmin.aspx" />
+    <Content Include="Medicos\FrmMedicoUsuarioAdmin.aspx" />
+    <Content Include="Medicos\FrmNuevoUsuarioMedico.aspx" />
+    <Content Include="Medicos\FrmVademecumAdmin.aspx" />
+    <Content Include="Medicos\RptRegistroAgendas.aspx" />
+    <Content Include="Medicos\RptReporteFacturacion.aspx" />
+    <Content Include="Menu\FrmNuevoMenu.aspx" />
+    <Content Include="packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll" />
+    <Content Include="packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.pdb" />
+    <Content Include="packages\AspNet.ScriptManager.bootstrap.3.0.0\lib\net40\AspNet.ScriptManager.bootstrap.dll" />
+    <Content Include="packages\AspNet.ScriptManager.bootstrap.3.0.0\lib\net45\AspNet.ScriptManager.bootstrap.dll" />
+    <Content Include="packages\AspNet.ScriptManager.jQuery.1.10.2\lib\net40\AspNet.ScriptManager.jQuery.dll" />
+    <Content Include="packages\AspNet.ScriptManager.jQuery.1.10.2\lib\net45\AspNet.ScriptManager.jQuery.dll" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Content\bootstrap-theme.css" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Content\bootstrap-theme.min.css" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Content\bootstrap.css" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Content\bootstrap.min.css" />
+    <Content Include="packages\bootstrap.3.0.0\Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Scripts\bootstrap.js" />
+    <Content Include="packages\bootstrap.3.0.0\Content\Scripts\bootstrap.min.js" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.xml" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net40\EntityFramework.xml" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.xml" />
+    <Content Include="packages\EntityFramework.6.1.1\lib\net45\EntityFramework.xml" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\about_EntityFramework.help.txt" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\EntityFramework.PowerShell.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\EntityFramework.PowerShell.Utility.dll" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\migrate.exe" />
+    <Content Include="Expert_WebDataSet.xsc">
+      <DependentUpon>Expert_WebDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Pruebas\WFrm_Pruebas.aspx" />
+    <Content Include="Pruebas\WFrm_PruebaTokenHumana.aspx" />
+    <Content Include="Reportes\Frm_RepGerencialV2.aspx" />
+    <Content Include="Reportes\WFrm_RepGerencialV3.aspx" />
+    <Content Include="Reportes\WFrm_RepGerencialV4.aspx" />
+    <Content Include="Scripts\chosen.jquery.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Titulares\Frm_TitularAdminSet.aspx" />
+    <Content Include="Usuarios\FrmChangePassword.aspx" />
+    <Content Include="WFrm_Login.aspx" />
+    <None Include="Expert_WebDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Expert_WebDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Expert_WebDataSet.xss">
+      <DependentUpon>Expert_WebDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="packages\jQuery.1.10.2\Content\Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="packages\jQuery.1.10.2\Content\Scripts\jquery-1.10.2.js" />
+    <Content Include="packages\jQuery.1.10.2\Content\Scripts\jquery-1.10.2.min.js" />
+    <None Include="packages\jQuery.1.10.2\Tools\jquery-1.10.2.intellisense.js" />
+    <Content Include="packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net40\Microsoft.AspNet.FriendlyUrls.dll" />
+    <Content Include="packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net40\Microsoft.AspNet.FriendlyUrls.xml" />
+    <Content Include="packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.dll" />
+    <Content Include="packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.xml" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.xml" />
+    <Content Include="packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll" />
+    <Content Include="packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.xml" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.xml" />
+    <Content Include="packages\Microsoft.AspNet.Providers.Core.2.0.0\lib\net40\System.Web.Providers.dll" />
+    <Content Include="packages\Microsoft.AspNet.Providers.Core.2.0.0\lib\net40\System.Web.Providers.xml" />
+    <Content Include="packages\Microsoft.AspNet.Providers.Core.2.0.0\ReadMe.txt" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\content\Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\lib\net45\Microsoft.ScriptManager.MSAjax.dll" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\DetailsView.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\Focus.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\GridView.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\Menu.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\MenuStandards.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\SmartNav.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\TreeView.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\WebForms.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\WebParts.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\content\Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\lib\net45\Microsoft.ScriptManager.WebForms.dll" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\system.web.optimization.xml" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll" />
+    <Content Include="packages\Microsoft.Owin.2.1.0\lib\net40\Microsoft.Owin.dll" />
+    <Content Include="packages\Microsoft.Owin.2.1.0\lib\net40\Microsoft.Owin.XML" />
+    <Content Include="packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll" />
+    <Content Include="packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.XML" />
+    <Content Include="packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net40\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net40\Microsoft.Owin.Host.SystemWeb.xml" />
+    <Content Include="packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.xml" />
+    <Content Include="packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.XML" />
+    <Content Include="packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.xml" />
+    <Content Include="packages\Microsoft.Owin.Security.Facebook.2.1.0\lib\net45\Microsoft.Owin.Security.Facebook.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.Facebook.2.1.0\lib\net45\Microsoft.Owin.Security.Facebook.XML" />
+    <Content Include="packages\Microsoft.Owin.Security.Google.2.1.0\lib\net45\Microsoft.Owin.Security.Google.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.Google.2.1.0\lib\net45\Microsoft.Owin.Security.Google.XML" />
+    <Content Include="packages\Microsoft.Owin.Security.MicrosoftAccount.2.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.MicrosoftAccount.2.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.XML" />
+    <Content Include="packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.XML" />
+    <Content Include="packages\Microsoft.Owin.Security.Twitter.2.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll" />
+    <Content Include="packages\Microsoft.Owin.Security.Twitter.2.1.0\lib\net45\Microsoft.Owin.Security.Twitter.XML" />
+    <Content Include="packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="packages\Modernizr.2.6.2\Content\Scripts\modernizr-2.6.2.js" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net20\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net20\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net35\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net35\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\netcore45\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\netcore45\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\portable-net40+sl4+wp7+win8\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\portable-net40+sl4+wp7+win8\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.xml" />
+    <Content Include="packages\Owin.1.0\lib\net40\Owin.dll" />
+    <Content Include="packages\Respond.1.2.0\content\Scripts\respond.js" />
+    <Content Include="packages\Respond.1.2.0\content\Scripts\respond.min.js" />
+    <Content Include="packages\WebGrease.1.5.2\lib\WebGrease.dll" />
+    <Content Include="packages\WebGrease.1.5.2\tools\WG.exe" />
+    <Content Include="Parametros\FrmNuevoParametro.aspx" />
+    <Content Include="Parametros\FrmParametrosAdmin.aspx" />
+    <Content Include="Perfil\FrmEditarPerfil.aspx" />
+    <Content Include="Perfil\FrmNuevoPerfil.aspx" />
+    <Content Include="Perfil\FrmPerfilAdmin.aspx" />
+    <Content Include="PrestadoraOdonto\FrmNuevaPrestadoraOdon.aspx" />
+    <Content Include="PrestadoraOdonto\FrmPrestadoraOdonAdmin.aspx" />
+    <Content Include="Prestadora\FrmAsignarEspePrestadora.aspx" />
+    <Content Include="Prestadora\FrmDetallePrestaEspe.aspx" />
+    <Content Include="Prestadora\FrmMenuPrestaEspe.aspx" />
+    <Content Include="Prestadora\FrmNuevaPrestadora.aspx" />
+    <Content Include="Prestadora\FrmNuevaPrestaEspe.aspx" />
+    <Content Include="Prestadora\FrmPrestadoraAdmin.aspx" />
+    <Content Include="Prestadora\FrmPrestaEspeAdmin.aspx" />
+    <Content Include="Prestadora\FrmPrincipalPrestaEspe.aspx" />
+    <Content Include="Procedimientos\FrmAsignarProcedimiento.aspx" />
+    <Content Include="Procedimientos\FrmAsignarProceProducto.aspx" />
+    <Content Include="Procedimientos\FrmNuevoProcedimiento.aspx" />
+    <Content Include="Procedimientos\FrmProcedimientosAdmin.aspx" />
+    <Content Include="Regiones\FrmCiudadAdmin.aspx" />
+    <Content Include="Regiones\FrmNuevaCiudad.aspx" />
+    <Content Include="Regiones\FrmNuevaProvincia.aspx" />
+    <Content Include="Regiones\FrmProvinciaAdmin.aspx" />
+    <Content Include="Reload.html" />
+    <Content Include="Reportes\FrmRepExpertDoctorBI.aspx" />
+    <Content Include="Reportes\FrmRepExpertOdontoV1.aspx" />
+    <Content Include="Reportes\Frm_RepExpertDoctorV1.aspx" />
+    <Content Include="Reportes\Frm_RepGerencialV1.aspx" />
+    <Content Include="Reportes_BI\FrmReportBICargaFTP.aspx" />
+    <Content Include="Reportes_BI\FrmReportesExpert.aspx" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\external\jquery\jquery.js" />
+    <None Include="Properties\PublishProfiles\PRESTASALUD_PRODUCCION.pubxml" />
+    <None Include="Properties\PublishProfiles\PRY_GSBPO_TEST.pubxml" />
+    <Content Include="Reports\dtsPresupuestos.xsc">
+      <DependentUpon>dtsPresupuestos.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\dtsFacturaOdonto.xsc">
+      <DependentUpon>dtsFacturaOdonto.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsCitasAgendadas.xsc">
+      <DependentUpon>dtsCitasAgendadas.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsCitasAgendadas.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsCitasAgendadas.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsCitasAgendadas.xss">
+      <DependentUpon>dtsCitasAgendadas.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\dtsFacturaMedico.xsc">
+      <DependentUpon>dtsFacturaMedico.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\DtsDoctorGerencial.xsc">
+      <DependentUpon>DtsDoctorGerencial.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DtsDoctorGerencial.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DtsDoctorGerencial.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DtsDoctorGerencial.xss">
+      <DependentUpon>DtsDoctorGerencial.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\DtsFacMedAdmin.xsc">
+      <DependentUpon>DtsFacMedAdmin.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DtsFacMedAdmin.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DtsFacMedAdmin.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DtsFacMedAdmin.xss">
+      <DependentUpon>DtsFacMedAdmin.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\DtsFacOdonAdmin.xsc">
+      <DependentUpon>DtsFacOdonAdmin.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DtsFacOdonAdmin.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DtsFacOdonAdmin.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DtsFacOdonAdmin.xss">
+      <DependentUpon>DtsFacOdonAdmin.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsFacturaMedico.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsFacturaMedico.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsFacturaMedico.xss">
+      <DependentUpon>dtsFacturaMedico.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsFacturaOdonto.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsFacturaOdonto.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsFacturaOdonto.xss">
+      <DependentUpon>dtsFacturaOdonto.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\dtsGerencialDoctor.xsc">
+      <DependentUpon>dtsGerencialDoctor.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\dtsGerencialCiudadDetail.xsc">
+      <DependentUpon>dtsGerencialCiudadDetail.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsGerencialCiudadDetail.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsGerencialCiudadDetail.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsGerencialCiudadDetail.xss">
+      <DependentUpon>dtsGerencialCiudadDetail.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsGerencialDoctor.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsGerencialDoctor.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsGerencialDoctor.xss">
+      <DependentUpon>dtsGerencialDoctor.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\dtsGerencialDoctorDetail.xsc">
+      <DependentUpon>dtsGerencialDoctorDetail.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsGerencialDoctorDetail.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsGerencialDoctorDetail.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsGerencialDoctorDetail.xss">
+      <DependentUpon>dtsGerencialDoctorDetail.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\dtsPresupuestos.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsPresupuestos.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\dtsPresupuestos.xss">
+      <DependentUpon>dtsPresupuestos.xsd</DependentUpon>
+    </Content>
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\MarqSn.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Tables\dataTable.bootstrap.min.js" />
+    <Content Include="Scripts\Tables\DataTables.js" />
+    <Content Include="Scripts\Tables\jquery.DataTable.min.css" />
+    <Content Include="Scripts\WebForms\DetailsView.js" />
+    <Content Include="Scripts\WebForms\Focus.js" />
+    <Content Include="Scripts\WebForms\GridView.js" />
+    <Content Include="Scripts\WebForms\Menu.js" />
+    <Content Include="Scripts\WebForms\MenuStandards.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
+    <Content Include="Scripts\WebForms\SmartNav.js" />
+    <Content Include="Scripts\WebForms\TreeView.js" />
+    <Content Include="Scripts\WebForms\WebForms.js" />
+    <Content Include="Scripts\WebForms\WebParts.js" />
+    <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <None Include="Scripts\_references.js" />
+    <Content Include="SupervisionOdonto\FrmSuperOdonto.aspx" />
+    <Content Include="SupervisionOdonto\FrmSuperOdontoAdmin.aspx" />
+    <Content Include="SupervisionOdonto\FrmSuperPresupuestoAdmin.aspx" />
+    <Content Include="Tarea\FrmNuevaTarea.aspx" />
+    <Content Include="Tarea\FrmTareaAdmin.aspx" />
+    <Content Include="Template\HtmlTemplate.html" />
+    <Content Include="Template\HtmlTemplateC.html" />
+    <Content Include="Titulares\FrmActivarTitular.aspx" />
+    <Content Include="Titulares\FrmDetallePrestadora.aspx" />
+    <Content Include="Titulares\FrmMenuPrestadora.aspx" />
+    <Content Include="Titulares\FrmNuevoTitular.aspx" />
+    <Content Include="Titulares\FrmPrincipalPrestadora.aspx" />
+    <Content Include="Titulares\FrmTitularAdmin.aspx" />
+    <Content Include="Usuarios\FrmNuevoUsuario.aspx" />
+    <Content Include="Usuarios\FrmUsuarioAdmin.aspx" />
+    <Content Include="ViewSwitcher.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Departamento\FrmDepartamentoAdmin.aspx" />
+    <Content Include="Departamento\FrmNuevoDepartamento.aspx" />
+    <Content Include="Especialidad\FrmEspecialidadAdmin.aspx" />
+    <Content Include="Especialidad\FrmNuevaEspecialidad.aspx" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Horarios\FrmHorarioAdmin.aspx" />
+    <Content Include="Horarios\FrmNuevoHorario.aspx" />
+    <Content Include="Horarios\FrmNuevoTurno.aspx" />
+    <Content Include="Horarios\FrmTurnoAdmin.aspx" />
+    <Content Include="Images\csv.jpg" />
+    <Content Include="Images\excel.jpg" />
+    <Content Include="Images\excel.png" />
+    <Content Include="Images\exportar.png" />
+    <Content Include="Images\loadingbar.gif" />
+    <Content Include="Images\Logo.jpg" />
+    <Content Include="Images\pagina_construccion.jpg" />
+    <Content Include="JS\DatePicker\jquery-1.9.1.js" />
+    <Content Include="JS\DatePicker\jquery-ui.js" />
+    <Content Include="JS\jquery-1.10.2.min.js" />
+    <Content Include="JS\jquery-te-1.4.0.min.js" />
+    <Content Include="Mantenedor\FrmDetalle.aspx" />
+    <Content Include="Mantenedor\FrmMenu.aspx" />
+    <Content Include="Mantenedor\FrmPrincipal.aspx" />
+    <Content Include="Medicos\FrmMedicoAdmin.aspx" />
+    <Content Include="Medicos\FrmNuevoMedico.aspx" />
+    <Content Include="Medicos\FrmNuevoTurnoMedico.aspx" />
+    <Content Include="Menu\FrmEditarMenu.aspx" />
+    <Content Include="Menu\FrmMenuAdmin.aspx" />
+    <Content Include="Old_App_Code\ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ddl\AspNet.ScriptManager.bootstrap.dll.refresh" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\PublishProfiles\perfil_prestaSalud.pubxml" />
+    <Content Include="Bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Bootstrap\css\bootstrap.css.map" />
+    <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Bundle.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="packages.config" />
+    <Content Include="packages\Antlr.3.4.1.9004\Antlr.3.4.1.9004.nupkg" />
+    <Content Include="packages\AspNet.ScriptManager.bootstrap.3.0.0\AspNet.ScriptManager.bootstrap.3.0.0.nupkg" />
+    <Content Include="packages\AspNet.ScriptManager.jQuery.1.10.2\AspNet.ScriptManager.jQuery.1.10.2.nupkg" />
+    <Content Include="packages\bootstrap.3.0.0\bootstrap.3.0.0.nupkg" />
+    <Content Include="packages\bootstrap.3.0.0\Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages\bootstrap.3.0.0\Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="packages\bootstrap.3.0.0\Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="packages\EntityFramework.6.1.1\content\App.config.transform" />
+    <Content Include="packages\EntityFramework.6.1.1\content\Web.config.transform" />
+    <Content Include="packages\EntityFramework.6.1.1\EntityFramework.6.1.1.nupkg" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\EntityFramework.psd1" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\EntityFramework.psm1" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\init.ps1" />
+    <Content Include="packages\EntityFramework.6.1.1\tools\install.ps1" />
+    <Content Include="packages\jQuery.1.10.2\Content\Scripts\jquery-1.10.2.min.map" />
+    <Content Include="packages\jQuery.1.10.2\jQuery.1.10.2.nupkg" />
+    <Content Include="packages\jQuery.1.10.2\Tools\common.ps1" />
+    <Content Include="packages\jQuery.1.10.2\Tools\install.ps1" />
+    <Content Include="packages\jQuery.1.10.2\Tools\uninstall.ps1" />
+    <Content Include="packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\Microsoft.AspNet.FriendlyUrls.Core.1.0.2.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Core.2.1.0\Microsoft.AspNet.Identity.Core.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\Microsoft.AspNet.Identity.EntityFramework.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Identity.Owin.2.1.0\Microsoft.AspNet.Identity.Owin.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Providers.Core.2.0.0\Microsoft.AspNet.Providers.Core.2.0.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.ScriptManager.WebForms.5.0.0\Microsoft.AspNet.ScriptManager.WebForms.5.0.0.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.1.1.3\Microsoft.AspNet.Web.Optimization.1.1.3.nupkg" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\content\web.config.transform" />
+    <Content Include="packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3.nupkg" />
+    <Content Include="packages\Microsoft.Owin.2.1.0\Microsoft.Owin.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Host.SystemWeb.2.1.0\Microsoft.Owin.Host.SystemWeb.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.2.1.0\Microsoft.Owin.Security.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.Cookies.2.1.0\Microsoft.Owin.Security.Cookies.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.Facebook.2.1.0\Microsoft.Owin.Security.Facebook.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.Google.2.1.0\Microsoft.Owin.Security.Google.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.MicrosoftAccount.2.1.0\Microsoft.Owin.Security.MicrosoftAccount.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.OAuth.2.1.0\Microsoft.Owin.Security.OAuth.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Owin.Security.Twitter.2.1.0\Microsoft.Owin.Security.Twitter.2.1.0.nupkg" />
+    <Content Include="packages\Microsoft.Web.Infrastructure.1.0.0.0\Microsoft.Web.Infrastructure.1.0.0.0.nupkg" />
+    <Content Include="packages\Modernizr.2.6.2\Modernizr.2.6.2.nupkg" />
+    <Content Include="packages\Modernizr.2.6.2\Tools\common.ps1" />
+    <Content Include="packages\Modernizr.2.6.2\Tools\install.ps1" />
+    <Content Include="packages\Modernizr.2.6.2\Tools\uninstall.ps1" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\Newtonsoft.Json.6.0.3.nupkg" />
+    <Content Include="packages\Newtonsoft.Json.6.0.3\tools\install.ps1" />
+    <Content Include="packages\Owin.1.0\Owin.1.0.nupkg" />
+    <Content Include="packages\Respond.1.2.0\Respond.1.2.0.nupkg" />
+    <Content Include="packages\WebGrease.1.5.2\tools\install.ps1" />
+    <Content Include="packages\WebGrease.1.5.2\tools\uninstall.ps1" />
+    <Content Include="packages\WebGrease.1.5.2\WebGrease.1.5.2.nupkg" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Site.master" />
+    <Content Include="Site.Mobile.master" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Web References\WReferenceSMS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Web References\WReferenceSMS\RespuestaMPlus.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </Content>
+    <None Include="Web References\WReferenceSMS\WSMPLUSMT.wsdl" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CitasAgendadasO\" />
+    <Folder Include="CitasAgendadas\" />
+    <Folder Include="CitasCanceladasO\" />
+    <Folder Include="CitasCanceladas\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptPresupuestoRegistrado.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptFacturaPrestaOdonto.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://186.3.87.9/WSMPLUSMT/WSMPLUSMT.php%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\WReferenceSMS\</RelPath>
+      <UpdateFromURL>http://186.3.87.9/WSMPLUSMT/WSMPLUSMT.php%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pry_PrestasaludWAP_WReferenceSMS_WSMPLUS</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialDoctor.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorMes.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialDoctorDetalle.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialDoctorCiudad.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptCiudadDetail.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorHoras.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorPrestadora.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorEspecialidad.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorGenero.rdlc" />
+    <Content Include="Reports\RptGerencialDoctorProducto.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptAgendasMedicas.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptFacturaPrestaMedico.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoCiudad.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoHoras.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoPrestadora.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoEspecialidad.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoGenero.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\RptGerencialOdontoProducto.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\RptFactMedAdmin.rdlc" />
+    <EmbeddedResource Include="Reports\RptFacturaPrestaMedicoNew.rdlc" />
+    <EmbeddedResource Include="Reports\RptFactOdonAdmin.rdlc" />
+    <EmbeddedResource Include="Reports\RptFacturaPrestaOdontoNew.rdlc" />
+    <EmbeddedResource Include="Reports\RtpGerenOdonto.rdlc" />
+    <EmbeddedResource Include="Reports\RtpGerenDoctor.rdlc" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>11038</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:11038/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

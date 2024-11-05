@@ -1,0 +1,20 @@
+﻿body 
+{
+	background-image: url(img/fondo2.jpg);
+	background-repeat: no-repeat;
+	
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+		
+	text-align:center;
+	margin:0 auto;
+
+	padding: 0;
+	text-align: center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.7em;
+	color: #B3C1FF;
+	font-size: 12px;
+}
+

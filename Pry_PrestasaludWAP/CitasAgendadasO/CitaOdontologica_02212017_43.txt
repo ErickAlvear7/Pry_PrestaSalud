@@ -1,0 +1,16 @@
+Cliente        :  SEGUROS PICHINCHA
+Producto       :  PREVISION MAXIMA PLUS G5 PROPIEDAD
+Código_Cita    :  43
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  02/21/2017
+Hora_Cita      :  16:00
+Prestadora     :  ASISTANET NORTE
+Medico         :  DR. FABIAN ALEXANDER  GORDON SANTORUM
+Especialidad   :  ODONTOLOGIA
+Observacion    :  PRESUPUESTO
+Cedula_Titu    :  0105636088
+Tipo           :  TITULAR
+Paciente       :  LEVER VIDAL ALVAREZ ZABALA
+Fecha_Naci     :  06/07/2016
+Dirección      :  CARLOS CRESPI
+Teléfonos      :  072340449/

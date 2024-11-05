@@ -1,0 +1,16 @@
+Cliente        :  SEGUROS PICHINCHA
+Producto       :  SIEMPRE SALUDABLE PLAN A ALT-10.000 G5
+Código_Cita    :  3
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  03/16/2017
+Hora_Cita      :  08:00
+Prestadora     :  PRESTADORPRUEBA
+Medico         :  VINICIO ROLDAN
+Especialidad   :  ODONTOLOGIA
+Observacion    :  PROCEDIMIENTO
+Cedula_Titu    :  1103792030
+Tipo           :  BENEFICIARIO
+Paciente       :  BELTRAN ALVAREZ CLAUDIA JOHANNA
+Fecha_Naci     :  01/01/2017
+Dirección      :  DOLORES CACUANGO
+Teléfonos      :  0991727477

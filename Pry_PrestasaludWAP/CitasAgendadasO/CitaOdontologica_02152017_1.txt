@@ -1,0 +1,16 @@
+Cliente        :  SEGUROS PICHINCHA
+Producto       :  PREVISION MAXIMA PLUS G5 PROPIEDAD
+Código_Cita    :  1
+Ciudad_Cita    :  QUITO
+Fecha_Cita     :  02/15/2017
+Hora_Cita      :  18:00
+Prestadora     :  PRESTADORPRUEBA
+Medico         :  VINICIO ROLDAN
+Especialidad   :  ODONTOLOGIA
+Observacion    :  PRESUPUESTO
+Cedula_Titu    :  0105636088
+Tipo           :  TITULAR
+Paciente       :  LEVER VIDAL ALVAREZ ZABALA
+Fecha_Naci     :  06/07/2016
+Dirección      :  CARLOS CRESPI
+Teléfonos      :  

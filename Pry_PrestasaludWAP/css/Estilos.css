@@ -1,0 +1,73 @@
+﻿.Label {
+    font-style: normal;
+    font-size: 14px;
+}
+
+.RequireValidator {
+    color: red;
+    font-size: 14px;
+}
+
+.upperCase {
+    text-transform: uppercase;
+    margin-right: 0px;
+}
+
+.alinearDerecha {
+    text-align: right;
+}
+
+.lowCase {
+    text-transform: lowercase;
+    margin-right: 0px;
+}
+
+.GVFixedHeader {
+    font-weight: bold;
+    background-color: #20365F;
+    position: relative;
+    top: expression(this.parentNode.parentNode.parentNode.scrollTop-1);
+}
+
+.button {
+    text-decoration: none;
+    text-align: center;
+    padding: 11px 32px;
+    border: solid 1px #004F72;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    font: 12px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #E5FFFF;
+    background: #5d7b9d;
+    -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+}
+
+    .button:hover {
+        padding: 11px 32px;
+        border: solid 1px #004F72;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
+        font: 14px Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        color: #E5FFFF;
+        background: #5d7b9d;
+        -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+        -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+        box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+
+.FixedHeader {
+    position: absolute;
+    font-weight: bold;
+}
+.divClass
+{   
+    overflow:scroll;
+    width:800px;
+    height:300px;
+}
