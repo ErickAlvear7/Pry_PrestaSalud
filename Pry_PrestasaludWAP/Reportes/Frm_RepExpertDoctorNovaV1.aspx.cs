@@ -103,6 +103,7 @@ namespace Pry_PrestasaludWAP.Reportes
 
 
             Array.Resize(ref objparam, 4);
+            System.Threading.Thread.Sleep(500);
             objparam[0] = 0;
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
