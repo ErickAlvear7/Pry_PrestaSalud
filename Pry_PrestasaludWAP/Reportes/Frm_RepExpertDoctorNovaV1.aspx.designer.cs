@@ -11,17 +11,17 @@ namespace Pry_PrestasaludWAP.Reportes
 {
 
 
-    public partial class Frm_RepExpertDoctorNova
+    public partial class Frm_RepExpertDoctorNovaV1
     {
 
         /// <summary>
-        /// Control form.
+        /// Control form1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
         /// Control lbltitulo.
@@ -33,13 +33,13 @@ namespace Pry_PrestasaludWAP.Reportes
         protected global::System.Web.UI.WebControls.Label lbltitulo;
 
         /// <summary>
-        /// Control ToolkitScriptManager1.
+        /// Control ToolkitScriptManager2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
+        protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager2;
 
         /// <summary>
         /// Control updError.
@@ -78,13 +78,13 @@ namespace Pry_PrestasaludWAP.Reportes
         protected global::System.Web.UI.UpdatePanel updCabecera;
 
         /// <summary>
-        /// Control ddlCliente.
+        /// Control ddlClienteNova.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCliente;
+        protected global::System.Web.UI.WebControls.DropDownList ddlClienteNova;
 
         /// <summary>
         /// Control txtFechaInicio.
@@ -103,24 +103,6 @@ namespace Pry_PrestasaludWAP.Reportes
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaFinal;
-
-        /// <summary>
-        /// Control ddlTipoAgenda.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoAgenda;
-
-        /// <summary>
-        /// Control ddlTipoCliente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoCliente;
 
         /// <summary>
         /// Control btnProcesar.

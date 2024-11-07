@@ -438,12 +438,12 @@ public class Funciones
 
     public string funEnviarMail(string mailsTo, string subject, object[] objBody, string emailTemplate,
         string host, int port, bool enableSSl, string usuario, string password, string ePathAttach, string ePathLogo,
-        string eAlterMail, string eDocMail, string eUsuMail)
+        string eAlterMail, string eDocMail, string eUsuMail,string fechaCita)
     {
         string mensaje = "";
         try
         {
-            string body = ReplaceBody(objBody, emailTemplate);
+            string body = ReplaceBody(objBody, emailTemplate,fechaCita);
             mensaje = SendHtmlEmail(mailsTo, subject, body, host, port, enableSSl, usuario, password, ePathAttach, ePathLogo,
                 eAlterMail, eDocMail, eUsuMail);
         }
@@ -454,7 +454,7 @@ public class Funciones
         return mensaje;
     }
 
-    private string ReplaceBody(object[] oBody,string eTemplate)
+    private string ReplaceBody(object[] oBody,string eTemplate, string fechaCita)
     {
         string body = "";
         using (StreamReader reader = new StreamReader(eTemplate))
@@ -467,7 +467,7 @@ public class Funciones
         body = body.Replace("{Medicinas}", oBody[20].ToString());
         body = body.Replace("{CodigoCita}", oBody[2].ToString());
         body = body.Replace("{Ciudad}", oBody[3].ToString());
-        body = body.Replace("{FecCita}", oBody[4].ToString());
+        body = body.Replace("{FecCita}", fechaCita);
         body = body.Replace("{Horacita}", oBody[5].ToString());
         body = body.Replace("{Prestadora}", oBody[6].ToString());
         body = body.Replace("{Medico}", oBody[7].ToString());

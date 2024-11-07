@@ -796,6 +796,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[3] = 0;
                     objparam[4] = dr[5].ToString();
                     ViewState["FechaCita"] = objparam[4].ToString();
+                    DateTime fecha = DateTime.ParseExact(objparam[4].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    string newFecha = fecha.ToString("dd/MM/yyyy");
+                    //string newFecha = DateTime.ParseExact(fecha.ToString("MM/dd/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
+                   
+
                     objparam[5] = dr[6].ToString();
                     objparam[6] = dr[7].ToString();
                     ViewState["HoraCita"] = objparam[6].ToString();
@@ -848,11 +853,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU);
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha);
                     
                 }
 
-                mensaje = "";
+                //mensaje = "";
                 if (mensaje == "")
                 {
                     Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());

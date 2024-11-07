@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_RepExpertDoctorNova.aspx.cs" Inherits="Pry_PrestasaludWAP.Reportes.Frm_RepExpertDoctorNova" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_RepExpertDoctorNovaV1.aspx.cs" Inherits="Pry_PrestasaludWAP.Reportes.Frm_RepExpertDoctorNovaV1" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
@@ -6,16 +6,15 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
     <link href="../css/Estilos.css" rel="stylesheet" />
-    <link href="../Scripts/Tables/jquery.DataTable.min.css" rel="stylesheet" />
     <link href="../Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <script src="../Scripts/external/jquery/jquery.js"></script>
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="../Scripts/Tables/DataTables.js"></script>
     <script src="../Scripts/Tables/dataTable.bootstrap.min.js"></script>
-    <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
+    <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet"/>
     <script type="text/javascript" src="../../JS/DatePicker/jquery-ui.js"></script>
 
     <script type="text/javascript">
@@ -56,7 +55,7 @@
         }
 
     </script>
-    <style type="text/css">
+        <style type="text/css">
         .overlay {
             position: fixed;
             z-index: 98;
@@ -90,13 +89,13 @@
 
 </head>
 <body>
-    <form id="form" runat="server">
+    <form id="form1" runat="server">
         <div class="panel panel-primary">
-            <div class="panel-heading">
+            <div class="panel-heading" id="Aja">
                 <asp:Label ID="lbltitulo" runat="server"></asp:Label>
-                <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-                </asp:ToolkitScriptManager>
             </div>
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server">
+            </asp:ToolkitScriptManager>
             <asp:UpdatePanel ID="updError" runat="server">
                 <ContentTemplate>
                     <div style="background-color: beige; text-align: left; width: 100%; font-size: 25px">
@@ -104,7 +103,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <!--<div class="panel-info">
+            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCabecera">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -114,7 +113,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>-->
+            </div>
             <div class="panel-body">
                 <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
@@ -132,7 +131,7 @@
                                     <h5>Cliente:</h5>
                                 </td>
                                 <td colspan="2">
-                                    <asp:DropDownList ID="ddlCliente" runat="server" CssClass="form-control" Width="100%" TabIndex="1">
+                                    <asp:DropDownList ID="ddlClienteNova" runat="server" CssClass="form-control" Width="100%" TabIndex="1">
                                     </asp:DropDownList>
                                 </td>
                                 <td></td>
@@ -164,14 +163,14 @@
                                 <td></td>
                             </tr>
                         </table>
-                        <!--<table style="width: 100%">
+                        <table style="width: 100%">
                             <tr>
                                 <td style="width: 15%"></td>
                                 <td style="width: 35%"></td>
                                 <td style="width: 15%"></td>
                                 <td style="width: 35%"></td>
                             </tr>
-                            <tr>
+                       <%--     <tr>
                                 <td>
                                     <h5>Tipo Agenda:</h5>
                                 </td>
@@ -190,7 +189,7 @@
                                     </asp:DropDownList>
                                 </td>
                                 <td></td>
-                            </tr>
+                            </tr>--%>
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -198,7 +197,7 @@
                                 <td></td>
                                 <td></td>
                             </tr>
-                        </table>-->
+                        </table>
                         <div class="panel panel-default">
                             <table style="width: 100%">
                                 <tr>
@@ -286,14 +285,14 @@
                                         </asp:BoundField>
                                         <asp:BoundField DataField="UsuarioAgenda" HeaderText="Usuario_Agenda" />
                                         <asp:BoundField DataField="UsuarioCancela" HeaderText="Usuario_Cancela" />
-                                        <%--<asp:BoundField DataField="FechaCancelacion" HeaderText="Fecha_Cancelación" />
+                                       <%-- <asp:BoundField DataField="FechaCancelacion" HeaderText="Fecha_Cancelación" />
                                         <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
                                         <asp:BoundField DataField="Costo" HeaderText="Costo" />
                                         <asp:BoundField DataField="IdBeneficiario" HeaderText="IdBeneficiario" />--%>
                                         <asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
                                             <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                       <%-- <asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
+                                        <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
 
                                     </Columns>
