@@ -12,7 +12,6 @@ namespace Pry_PrestasaludWAP.Reportes
         #region Variables
         Object[] objparam = new Object[1];
         DataSet ds = new DataSet();
-        string sentencia1 = "", sentencia2 = "", motivoAgenda = "";
         #endregion
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -87,18 +86,18 @@ namespace Pry_PrestasaludWAP.Reportes
 
             TimeSpan tiempo = fechaFin.Subtract(fechaInicio);
             int dia = tiempo.Days;
-            if(dia > 31)
+            if(dia > 90)
             {
-                new Funciones().funShowJSMessage("La consulta excede los 30 dias", this);
+                new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
                 return;
             }
 
 
-            if (fechaInicio <= fecha)
-            {
-                new Funciones().funShowJSMessage("Fecha a consultar solo a partir del mes de Octubre", this);
-                return;
-            }
+            //if (fechaInicio <= fecha)
+            //{
+            //    new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
+            //    return;
+            //}
 
 
 
@@ -109,6 +108,8 @@ namespace Pry_PrestasaludWAP.Reportes
             objparam[2] = txtFechaFinal.Text;
             objparam[3] = ddlClienteNova.SelectedValue;
             ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
+
+           
 
             grdvDatos.DataSource = ds;
             grdvDatos.DataBind();
@@ -122,6 +123,8 @@ namespace Pry_PrestasaludWAP.Reportes
             {
                 imgExportar.Visible = false;
                 lblExportar.Visible = false;
+                new Funciones().funShowJSMessage("No existen datos para mostrar", this);
+                return;
             }
 
         }
