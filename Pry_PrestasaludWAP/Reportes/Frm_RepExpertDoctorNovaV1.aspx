@@ -296,7 +296,7 @@
                                         </asp:BoundField>
                                         <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
-
+                                        <asp:BoundField DataField="TipoAgendamiento" HeaderText="Agendamiento" />
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />
                                 </asp:GridView>
