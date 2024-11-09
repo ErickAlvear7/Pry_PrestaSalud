@@ -92,14 +92,11 @@ namespace Pry_PrestasaludWAP.Reportes
                 return;
             }
 
-
             //if (fechaInicio <= fecha)
             //{
             //    new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
             //    return;
             //}
-
-
 
             Array.Resize(ref objparam, 4);
             System.Threading.Thread.Sleep(500);
@@ -107,13 +104,14 @@ namespace Pry_PrestasaludWAP.Reportes
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
             objparam[3] = ddlClienteNova.SelectedValue;
-            ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
+            //ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
+            ds = new Conexion(2, "").FunConsultarSQLNOVA(objparam);
 
-           
-
-            grdvDatos.DataSource = ds;
+            grdvDatos.DataSource = ds.Tables[0];
             grdvDatos.DataBind();
-            ViewState["grdvDatos"] = grdvDatos.DataSource;
+            ViewState["grdvDatos"] = ds.Tables[1];
+            //ViewState["grdvDatos"] = grdvDatos.DataSource;
+            totalreg.InnerHtml = "Total Registro: " + ds.Tables[1].Rows.Count.ToString();
             if (ds.Tables[0].Rows.Count > 0)
             {
                 imgExportar.Visible = true;
@@ -157,7 +155,7 @@ namespace Pry_PrestasaludWAP.Reportes
             {
                 HtmlTextWriter hw = new HtmlTextWriter(sw);
                 grdvDatos.AllowPaging = false;
-                grdvDatos.DataSource = (DataSet)ViewState["grdvDatos"];
+                grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
                 grdvDatos.DataBind();
                 //grdvDatos.HeaderRow.BackColor = Color.White;
                 foreach (GridViewRow row in grdvDatos.Rows)

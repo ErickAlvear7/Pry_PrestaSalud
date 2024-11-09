@@ -96,8 +96,7 @@
             <div class="panel-heading" id="Aja">
                 <asp:Label ID="lbltitulo" runat="server"></asp:Label>
             </div>
-            <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server">
-            </asp:ToolkitScriptManager>
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server"></asp:ToolkitScriptManager>
             <asp:UpdatePanel ID="updError" runat="server">
                 <ContentTemplate>
                     <div style="background-color: beige; text-align: left; width: 100%; font-size: 25px">
@@ -204,11 +203,11 @@
                             <table style="width: 100%">
                                 <tr>
                                     <td style="text-align: right; width: 45%">
-                                        <asp:Button ID="btnProcesar" runat="server" Text="Procesar" Width="120px" CssClass="button" OnClick="btnProcesar_Click" TabIndex="6" />
+                                        <asp:Button ID="btnProcesar" runat="server" Text="Procesar" Width="120px" CssClass="button" OnClick="btnProcesar_Click" TabIndex="4" />
                                     </td>
                                     <td style="width:10%"></td>
                                     <td style="text-align: left; width: 45%">
-                                        <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button" OnClick="btnSalir_Click" TabIndex="7" />
+                                        <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button" OnClick="btnSalir_Click" TabIndex="5" />
                                     </td>
                                 </tr>
                             </table>
@@ -216,8 +215,17 @@
                         <div class="panel panel-default">
                             <table style="width: 100%">
                                 <tr>
+                                    <td>
+                                        <h5 id="totalreg" runat="server" ></h5>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
                                     <td style="text-align: left">
-                                        <asp:ImageButton ID="imgExportar" runat="server" ImageUrl="~/Images/excel.png" Width="40px" Height="30px" Visible="false" OnClick="imgExportar_Click" TabIndex="8" />
+                                        <asp:ImageButton ID="imgExportar" runat="server" ImageUrl="~/Images/excel.png" Width="40px" Height="30px" Visible="false" OnClick="imgExportar_Click" TabIndex="6" />
                                         <asp:Label ID="lblExportar" runat="server" Text="Exportar" Visible="false"></asp:Label>
                                     </td>
                                     <td></td>
@@ -232,7 +240,7 @@
                                 <asp:GridView ID="grdvDatos" runat="server" Width="100%"
                                     AutoGenerateColumns="False"
                                     CssClass="table table-condensed table-bordered table-hover table-responsive"
-                                    ShowHeaderWhenEmpty="True" EmptyDataText="No existen datos para mostrar" AllowPaging="True" PageSize="50" OnPageIndexChanging="grdvDatos_PageIndexChanging" TabIndex="12">
+                                    ShowHeaderWhenEmpty="True" EmptyDataText="No existen datos para mostrar" AllowPaging="True" PageSize="50" OnPageIndexChanging="grdvDatos_PageIndexChanging" TabIndex="7">
                                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                     <Columns>
                                         <asp:BoundField DataField="FechaRegistro" HeaderText="Fecha_Registro" />

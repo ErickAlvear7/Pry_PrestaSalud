@@ -143,8 +143,8 @@ public class Conexion
                 {
                     strSelectCommandText = strSelectCommandText + "," + objparam[i].ToString();
                 }
-            }
-            new SqlDataAdapter(strSelectCommandText, Sqlcn).Fill(dsData);
+            }            
+            new SqlDataAdapter(strSelectCommandText, Sqlcn).Fill(dsData);            
             Sqlcn.Close();
             return dsData;
         }
@@ -184,7 +184,31 @@ public class Conexion
             return ds = null;
         }
     }
-
+    public DataSet FunConsultarSQLNOVA(object[] objparam)
+    {
+        try
+        {
+            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNova"))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = Sqlcn;
+                cmd.CommandTimeout = 120;
+                cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
+                cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
+                cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
+                cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3].ToString());
+                Sqlcn.Open();
+                //cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+        }
+        catch (Exception ex)
+        {
+            return ds = null;
+        }
+    }
     public DataSet FunInsertarTurnos(object[] objparam, DataTable dt)
     {        
         try
