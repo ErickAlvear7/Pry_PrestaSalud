@@ -142,7 +142,7 @@ namespace Pry_PrestasaludWAP.Reportes
             /* Verifies that the control is rendered */
         }
 
-        protected void grdvDatos_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+        protected void grdvDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             grdvDatos.PageIndex = e.NewPageIndex;
             grdvDatos.DataBind();
