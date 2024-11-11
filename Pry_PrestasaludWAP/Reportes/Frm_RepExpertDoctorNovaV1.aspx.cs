@@ -2,6 +2,7 @@
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -13,6 +14,8 @@ namespace Pry_PrestasaludWAP.Reportes
         Object[] objparam = new Object[1];
         DataSet ds = new DataSet();
         #endregion
+
+        #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -40,6 +43,7 @@ namespace Pry_PrestasaludWAP.Reportes
             else grdvDatos.DataSource = ViewState["grdvDatos"];
 
         }
+        #endregion  
 
         #region Procedimientos y Funciones
         private void FunCascadaCombos(int opcion)
@@ -60,6 +64,7 @@ namespace Pry_PrestasaludWAP.Reportes
         }
         #endregion
 
+        #region Botones y Eventos
         protected void btnProcesar_Click(object sender, EventArgs e)
         {
             if (!new Funciones().IsDate(txtFechaInicio.Text))
@@ -99,7 +104,7 @@ namespace Pry_PrestasaludWAP.Reportes
             //}
 
             Array.Resize(ref objparam, 4);
-            System.Threading.Thread.Sleep(500);
+            //System.Threading.Thread.Sleep(500);
             objparam[0] = 0;
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
@@ -107,11 +112,16 @@ namespace Pry_PrestasaludWAP.Reportes
             //ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
             ds = new Conexion(2, "").FunConsultarSQLNOVA(objparam);
 
-            grdvDatos.DataSource = ds.Tables[0];
-            grdvDatos.DataBind();
-            ViewState["grdvDatos"] = ds.Tables[1];
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
+                grdvDatos.DataSource = dtresul;
+                grdvDatos.DataBind();
+            }
+
+            ViewState["grdvDatos"] = ds.Tables[0];
             //ViewState["grdvDatos"] = grdvDatos.DataSource;
-            totalreg.InnerHtml = "Total Registro: " + ds.Tables[1].Rows.Count.ToString();
+            totalreg.InnerHtml = "Total Registro: " + ds.Tables[0].Rows.Count.ToString();
             if (ds.Tables[0].Rows.Count > 0)
             {
                 imgExportar.Visible = true;
@@ -176,4 +186,5 @@ namespace Pry_PrestasaludWAP.Reportes
 
         }
     }
+    #endregion
 }
