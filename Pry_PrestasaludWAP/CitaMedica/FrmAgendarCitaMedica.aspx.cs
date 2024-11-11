@@ -836,8 +836,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
                     objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
                     objcitamedica[14] = dt.Tables[0].Rows[0][2].ToString();
-                    objcitamedica[15] = "";
-                    //objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
+                    //objcitamedica[15] = "";
+                    objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
                     objcitamedica[20] = medicamentos;
                     objcitamedica[21] = Session["usuLogin"].ToString();
                     objcitamedica[22] = dr[20].ToString();
