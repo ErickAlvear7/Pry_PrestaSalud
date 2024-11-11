@@ -1787,6 +1787,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\external\jquery\jquery.js" />
+    <None Include="Properties\PublishProfiles\PrestaSalud.pubxml" />
     <None Include="Properties\PublishProfiles\PRESTASALUD_PRODUCCION.pubxml" />
     <None Include="Properties\PublishProfiles\PRY_GSBPO_TEST.pubxml" />
     <Content Include="Reports\dtsPresupuestos.xsc">
