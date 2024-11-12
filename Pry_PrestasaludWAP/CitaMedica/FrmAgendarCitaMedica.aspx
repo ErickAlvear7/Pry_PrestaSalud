@@ -96,7 +96,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <%--<div class="panel-info">
+            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -106,7 +106,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>--%>
+            </div>
             <asp:UpdatePanel ID="updTimer" runat="server">
                 <ContentTemplate>
                     <asp:Timer ID="tmrdat" runat="server" OnTick="tmrdat_Tick">

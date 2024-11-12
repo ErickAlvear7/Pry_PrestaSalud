@@ -136,8 +136,41 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
-                Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
-                    strCodProducto + "&Regresar=0");
+
+                if(strCodProducto == "225" || strCodProducto == "226" || strCodProducto == "227")
+                {
+                    DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                    TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
+
+                    int _idasx = difFechas.Days;
+
+                    if (_idasx > _dias)
+                    {
+                        Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                            strCodProducto + "&Regresar=0");
+                    }
+                    else
+                    {
+                        int _diffdias = _dias - _idasx;
+
+                        _fechaatual = _fechaatual.AddDays(_diffdias);
+                        string _fecha = DateTime.ParseExact(_fechaatual.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+
+                        string _mensaje = "Usted aun no puede agendar, su fecha fecha de Cobertura inicia el: " + strFechaCobertura;
+                        _mensaje += "  Puede Agendar a partir del :  " + _fecha;
+
+                        new Funciones().funShowJSMessage(_mensaje, this);
+
+                    }
+                }
+                else
+                {
+                    Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                        strCodProducto + "&Regresar=0");
+
+                }
             }
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
