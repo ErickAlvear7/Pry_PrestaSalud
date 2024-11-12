@@ -835,6 +835,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objdatostitu[3] = 0;
                     dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
                     objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
+                    objcitamedica[13].ToString();
+                    DateTime FechaNaci = DateTime.ParseExact(objcitamedica[13].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    string newFechaNaci = FechaNaci.ToString("dd/MM/yyyy");
+
                     objcitamedica[14] = dt.Tables[0].Rows[0][2].ToString();
                     //objcitamedica[15] = "";
                     objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
@@ -853,7 +857,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha);
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
                     
                 }
 

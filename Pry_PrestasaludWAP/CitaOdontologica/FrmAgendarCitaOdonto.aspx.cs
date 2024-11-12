@@ -617,7 +617,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     returnFile = "";
                     msjEmail = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU,"");
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU,"","");
                 }
                 if (msjEmail == "") Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
                 else
