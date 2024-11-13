@@ -25,12 +25,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Response.Redirect("~/Reload.html");
             if (!IsPostBack)
             {
-                txtFechaNacimiento.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                txtFechaNacBen.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                txtFechaNacimiento.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txtFechaNacBen.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
                 txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
-                TxtFechaIniCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                TxtFechaFinCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                TxtFechaIniCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                TxtFechaFinCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");
                 try
                 {
