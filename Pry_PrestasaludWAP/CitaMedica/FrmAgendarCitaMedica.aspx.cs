@@ -283,6 +283,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
+        private void FunContadorCitas()
+        {
+            try
+            {
+                Array.Resize(ref objparam, 173);
+                objparam[0] = int.Parse(Session["CodigoTitular"].ToString());
+                objparam[1] = "";
+                objparam[2] = 32;
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+        
+
+        }
+
         private void FunEliminarReservas()
         {
             try

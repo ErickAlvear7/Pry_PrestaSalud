@@ -200,20 +200,16 @@
                                         <td style="width: 5%"></td>
                                     </tr>
                                      <tr>
-                                         <td></td>
-                                         <td>
-                                             <h5>Medicina General</h5>
-                                             <asp:Label ID="Label1" runat="server"></asp:Label>
-                                         </td>
-                                            
-                                             <h5>Especialidades</h5>
-                                             <asp:Label ID="Label2" runat="server"></asp:Label>
-                                         </td>
-                                          </td>
-                                            
-                                             <h5>Laboratorio</h5>
-                                             <asp:Label ID="Label3" runat="server"></asp:Label>
-                                         </td>
+                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+			                                <Columns>
+				                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL"></asp:BoundField>
+				                                <asp:BoundField DataField="Especialidaes" HeaderText="ESPECIALIDADES" />
+				                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" />
+			                                </Columns>
+			                                <RowStyle Font-Size="X-Small" />
+			                                <HeaderStyle Font-Size="Small" />
+		                                </asp:GridView>
                                      </tr>
                                  </table>
                              </div>
