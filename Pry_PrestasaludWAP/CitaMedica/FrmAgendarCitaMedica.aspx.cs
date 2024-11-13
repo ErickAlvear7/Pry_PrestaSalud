@@ -1760,7 +1760,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         Session["SalirAgenda"] = "SI";
                         ViewState["CodigoCitapop"] = codCita;
 
-                        FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedValue);
+                        FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString());
                     }
                 }
                 else FunShowJSMessage("Seleccione Datos para Agendar la Cita");
