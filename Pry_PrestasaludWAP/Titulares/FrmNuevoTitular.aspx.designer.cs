@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Titulares {
-    
-    
-    public partial class FrmNuevoTitular {
-        
+namespace Pry_PrestasaludWAP.Titulares
+{
+
+
+    public partial class FrmNuevoTitular
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control lbltitulo.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbltitulo;
-        
+
         /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// Control updError.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updError;
-        
+
         /// <summary>
         /// Control lblerror.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblerror;
-        
+
         /// <summary>
         /// Control hidEdad.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hidEdad;
-        
+
         /// <summary>
         /// Control hidEdadB.
         /// </summary>
@@ -74,16 +76,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hidEdadB;
-        
-        /// <summary>
-        /// Control updProgress.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.UpdateProgress updProgress;
-        
+
         /// <summary>
         /// Control updCabecera.
         /// </summary>
@@ -92,7 +85,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updCabecera;
-        
+
         /// <summary>
         /// Control ddlTipoDocumento.
         /// </summary>
@@ -101,7 +94,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoDocumento;
-        
+
         /// <summary>
         /// Control txtNumeroDocumento.
         /// </summary>
@@ -110,7 +103,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroDocumento;
-        
+
         /// <summary>
         /// Control txtNumeroDocumento_FilteredTextBoxExtender.
         /// </summary>
@@ -119,7 +112,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtNumeroDocumento_FilteredTextBoxExtender;
-        
+
         /// <summary>
         /// Control txtPrimerNombre.
         /// </summary>
@@ -128,7 +121,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPrimerNombre;
-        
+
         /// <summary>
         /// Control txtSegundoNombre.
         /// </summary>
@@ -137,7 +130,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSegundoNombre;
-        
+
         /// <summary>
         /// Control txtPrimerApellido.
         /// </summary>
@@ -146,7 +139,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPrimerApellido;
-        
+
         /// <summary>
         /// Control txtSegundoApellido.
         /// </summary>
@@ -155,7 +148,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSegundoApellido;
-        
+
         /// <summary>
         /// Control ddlGenero.
         /// </summary>
@@ -164,7 +157,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGenero;
-        
+
         /// <summary>
         /// Control ddlEstadoCivil.
         /// </summary>
@@ -173,7 +166,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivil;
-        
+
         /// <summary>
         /// Control txtFechaNacimiento.
         /// </summary>
@@ -182,7 +175,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaNacimiento;
-        
+
         /// <summary>
         /// Control txtEdad.
         /// </summary>
@@ -191,7 +184,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEdad;
-        
+
         /// <summary>
         /// Control ddlProvincia.
         /// </summary>
@@ -200,7 +193,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlProvincia;
-        
+
         /// <summary>
         /// Control ddlCiudad.
         /// </summary>
@@ -209,7 +202,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCiudad;
-        
+
         /// <summary>
         /// Control txtDireccion.
         /// </summary>
@@ -218,7 +211,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDireccion;
-        
+
         /// <summary>
         /// Control txtFonoCasa.
         /// </summary>
@@ -227,7 +220,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFonoCasa;
-        
+
         /// <summary>
         /// Control txtFonoCasa_FilteredTextBoxExtender.
         /// </summary>
@@ -236,7 +229,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtFonoCasa_FilteredTextBoxExtender;
-        
+
         /// <summary>
         /// Control txtFonoOficina.
         /// </summary>
@@ -245,7 +238,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFonoOficina;
-        
+
         /// <summary>
         /// Control txtFonoOficina_FilteredTextBoxExtender.
         /// </summary>
@@ -254,7 +247,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtFonoOficina_FilteredTextBoxExtender;
-        
+
         /// <summary>
         /// Control txtCelular.
         /// </summary>
@@ -263,7 +256,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCelular;
-        
+
         /// <summary>
         /// Control txtCelular_FilteredTextBoxExtender.
         /// </summary>
@@ -272,7 +265,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.FilteredTextBoxExtender txtCelular_FilteredTextBoxExtender;
-        
+
         /// <summary>
         /// Control txtEmail.
         /// </summary>
@@ -281,7 +274,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
-        
+
         /// <summary>
         /// Control Label3.
         /// </summary>
@@ -290,7 +283,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Label3;
-        
+
         /// <summary>
         /// Control chkEstado.
         /// </summary>
@@ -299,7 +292,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkEstado;
-        
+
         /// <summary>
         /// Control TxtFechaIniCobertura.
         /// </summary>
@@ -308,7 +301,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtFechaIniCobertura;
-        
+
         /// <summary>
         /// Control TxtFechaFinCobertura.
         /// </summary>
@@ -317,7 +310,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtFechaFinCobertura;
-        
+
         /// <summary>
         /// Control updDetalle.
         /// </summary>
@@ -326,7 +319,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updDetalle;
-        
+
         /// <summary>
         /// Control ddlTipoDocumentoBen.
         /// </summary>
@@ -335,7 +328,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoDocumentoBen;
-        
+
         /// <summary>
         /// Control txtNumeroDocumentoBen.
         /// </summary>
@@ -344,7 +337,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroDocumentoBen;
-        
+
         /// <summary>
         /// Control txtPrimerNombreB.
         /// </summary>
@@ -353,7 +346,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPrimerNombreB;
-        
+
         /// <summary>
         /// Control txtSegundoNombreB.
         /// </summary>
@@ -362,7 +355,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSegundoNombreB;
-        
+
         /// <summary>
         /// Control txtPrimerApellidoB.
         /// </summary>
@@ -371,7 +364,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPrimerApellidoB;
-        
+
         /// <summary>
         /// Control txtSegundoApellidoB.
         /// </summary>
@@ -380,7 +373,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSegundoApellidoB;
-        
+
         /// <summary>
         /// Control ddlGeneroBen.
         /// </summary>
@@ -389,7 +382,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGeneroBen;
-        
+
         /// <summary>
         /// Control ddlEstadoCivilBen.
         /// </summary>
@@ -398,7 +391,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivilBen;
-        
+
         /// <summary>
         /// Control txtFechaNacBen.
         /// </summary>
@@ -407,7 +400,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaNacBen;
-        
+
         /// <summary>
         /// Control txtEdadBen.
         /// </summary>
@@ -416,7 +409,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEdadBen;
-        
+
         /// <summary>
         /// Control ddlProvinciaBen.
         /// </summary>
@@ -425,7 +418,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlProvinciaBen;
-        
+
         /// <summary>
         /// Control ddlCiudadBen.
         /// </summary>
@@ -434,7 +427,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCiudadBen;
-        
+
         /// <summary>
         /// Control txtDireccionBen.
         /// </summary>
@@ -443,7 +436,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDireccionBen;
-        
+
         /// <summary>
         /// Control txtFonoCasaBen.
         /// </summary>
@@ -452,7 +445,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFonoCasaBen;
-        
+
         /// <summary>
         /// Control txtFonoOficBen.
         /// </summary>
@@ -461,7 +454,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFonoOficBen;
-        
+
         /// <summary>
         /// Control txtCelularBen.
         /// </summary>
@@ -470,7 +463,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCelularBen;
-        
+
         /// <summary>
         /// Control txtEmailBen.
         /// </summary>
@@ -479,7 +472,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmailBen;
-        
+
         /// <summary>
         /// Control ddlParentesco.
         /// </summary>
@@ -488,7 +481,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlParentesco;
-        
+
         /// <summary>
         /// Control Label4.
         /// </summary>
@@ -497,7 +490,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Label4;
-        
+
         /// <summary>
         /// Control chkEstadoBen.
         /// </summary>
@@ -506,7 +499,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkEstadoBen;
-        
+
         /// <summary>
         /// Control pnlEspacio.
         /// </summary>
@@ -515,7 +508,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlEspacio;
-        
+
         /// <summary>
         /// Control imgAgregar.
         /// </summary>
@@ -524,7 +517,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgAgregar;
-        
+
         /// <summary>
         /// Control imgModificar.
         /// </summary>
@@ -533,7 +526,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgModificar;
-        
+
         /// <summary>
         /// Control imgCancelar.
         /// </summary>
@@ -542,7 +535,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgCancelar;
-        
+
         /// <summary>
         /// Control pnlBeneficiarios.
         /// </summary>
@@ -551,7 +544,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlBeneficiarios;
-        
+
         /// <summary>
         /// Control grdvDatos.
         /// </summary>
@@ -560,7 +553,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdvDatos;
-        
+
         /// <summary>
         /// Control updOpciones.
         /// </summary>
@@ -569,7 +562,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updOpciones;
-        
+
         /// <summary>
         /// Control btnGrabar.
         /// </summary>
@@ -578,7 +571,7 @@ namespace Pry_PrestasaludWAP.Titulares {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGrabar;
-        
+
         /// <summary>
         /// Control btnSalir.
         /// </summary>

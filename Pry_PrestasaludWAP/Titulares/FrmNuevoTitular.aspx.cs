@@ -724,6 +724,8 @@ namespace Pry_PrestasaludWAP.Titulares
                 objparam[9] = ddlGenero.SelectedValue;
                 objparam[10] = ddlEstadoCivil.SelectedValue;
                 objparam[11] = txtFechaNacimiento.Text;//DateTime.ParseExact(txtFechaNacimiento.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                DateTime FechaNaciTitu = DateTime.ParseExact(objparam[11].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                string NewFechaNaciTitu = FechaNaciTitu.ToString("dd/MM/yyyy");
                 objparam[12] = int.Parse(ddlCiudad.SelectedValue);
                 objparam[13] = txtDireccion.Text.Trim().ToUpper();
                 objparam[14] = txtFonoCasa.Text.Trim();

@@ -217,7 +217,7 @@
                 <asp:Label ID="lbltitulo" runat="server"></asp:Label>
             </div>
             <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
-            <asp:UpdatePanel ID="updError" runat="server">
+           <asp:UpdatePanel ID="updError" runat="server">
                 <ContentTemplate>
                     <div style="background-color: beige; text-align: left; width: 100%; font-size: 25px">
                         <asp:Label ID="lblerror" runat="server" ForeColor="Red"></asp:Label>
@@ -226,7 +226,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <div class="panel-info">
+          <%--  <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updOpciones">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -236,7 +236,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>
+            </div>--%>
             <div class="panel-body">
                 <div id="acordionParametro">
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">DATOS TITULAR</h3>
