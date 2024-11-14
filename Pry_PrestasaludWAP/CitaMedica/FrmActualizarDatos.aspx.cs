@@ -27,8 +27,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 txtFechaNacimiento.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtFechaNacBen.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
-                txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
+                //txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
+                //txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
                 TxtFechaIniCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 TxtFechaFinCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");
@@ -60,6 +60,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     ViewState["CodProducto"] = Request["CodProducto"];
                     ViewState["CodTitular"] = Request["CodTitular"];
+                    ViewState["CodigoPersona"] = 0;
                     ViewState["Regresar"] = Request["Regresar"];
                     funCargarCombos();
                     Array.Resize(ref objparam, 3);
@@ -99,6 +100,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularEdit", objparam);
                 if (dt.Tables[0].Rows.Count > 0)
                 {
+                    ViewState["CodigoPersona"] = dt.Tables[0].Rows[0][21].ToString();
                     ddlTipoDocumento.SelectedValue = dt.Tables[0].Rows[0][18].ToString();
                     if (ddlTipoDocumento.SelectedValue == "C")
                     {
@@ -472,8 +474,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     return;
                 }
             }
-            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (dtmFechaNacimiento > dtmFechaActual)
             {
                 lblerror.Text = "La Fecha de Nacimiento no puede ser mayor a la actual..!";
@@ -494,6 +496,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         maxCodigo = int.Parse(dr[8].ToString());
                     }
                 }
+                else
+                {
+                    maxCodigo = 0;
+                }
 
                 if (lexiste)
                 {
@@ -513,12 +519,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 filagre["Parentesco"] = ddlParentesco.SelectedItem.ToString();
                 filagre["ParentescoCod"] = ddlParentesco.SelectedValue;
                 filagre["Estado"] = chkEstadoBen.Checked ? "Activo" : "Inactivo";
-                filagre["CodigoBen"] = maxCodigo + 1;
+                filagre["CodigoBen"] = 0;
                 filagre["TipoDocumentoBen"] = ddlTipoDocumentoBen.SelectedValue;
                 filagre["NumeroDocumentoBen"] = txtNumeroDocumentoBen.Text;
                 filagre["GeneroBen"] = ddlGeneroBen.SelectedValue;
                 filagre["EstadoCivilBen"] = ddlEstadoCivilBen.SelectedValue;
-                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
                 filagre["ProvinciaBen"] = int.Parse(ddlProvinciaBen.SelectedValue);
                 filagre["CiudadBen"] = int.Parse(ddlCiudadBen.SelectedValue);
                 filagre["DireccionBen"] = txtDireccionBen.Text.ToUpper();
@@ -753,7 +759,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 //System.Threading.Thread.Sleep(300);
                 Array.Resize(ref objparam, 23);
-                objparam[0] = 0;
+                objparam[0] = int.Parse(ViewState["CodigoPersona"].ToString());
                 objparam[1] = int.Parse(ViewState["CodTitular"].ToString());
                 objparam[2] = int.Parse(ViewState["CodProducto"].ToString());
                 objparam[3] = ddlTipoDocumento.SelectedValue;
