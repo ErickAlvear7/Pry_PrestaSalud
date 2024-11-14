@@ -226,7 +226,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-          <%--  <div class="panel-info">
+            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updOpciones">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -236,7 +236,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>--%>
+            </div>
             <div class="panel-body">
                 <div id="acordionParametro">
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">DATOS TITULAR</h3>

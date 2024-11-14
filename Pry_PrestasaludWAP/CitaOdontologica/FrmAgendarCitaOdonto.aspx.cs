@@ -2,13 +2,12 @@
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Web.UI;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Threading;
 
 namespace Pry_PrestasaludWAP.CitaOdontologica
 {
@@ -86,6 +85,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 tbCitaMedica.Columns.Add("Longitud");
                 tbCitaMedica.Columns.Add("Latitud");
                 tbCitaMedica.Columns.Add("Observacion");
+                tbCitaMedica.Columns.Add("FechaCitax");
                 ViewState["tbCitaMedica"] = tbCitaMedica;
 
                 lbltitulo.Text = "Agendar Cita";
@@ -609,8 +609,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
 
                     if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
                     {
-                        thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
-                        thrEnviarSMS.Start();
+                        //thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
+                        //thrEnviarSMS.Start();
                     }
 
                     //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
@@ -1211,6 +1211,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
+                    filagre["FechaCitax"] = CalendarioCita.SelectedDate.ToString("dd/MM/yyyy");
+
                     tblagre.Rows.Add(filagre);
                     ViewState["tbCitaMedica"] = tblagre;
                     grdvResumenCita.DataSource = tblagre;
