@@ -1083,7 +1083,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     fechaSistema = DateTime.ParseExact(fechaActual, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     if (tipofecha == "FC")
                     {
-                        fechaFinCobertura = DateTime.ParseExact(ViewState["FechaFinCobertura"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        fechaFinCobertura = DateTime.ParseExact(ViewState["FechaFinCobertura"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         if (fechaFinCobertura < fechaSistema)
                         {
                             new Funciones().funShowJSMessage("Fecha de Cobertura Finalizada..!", this);
@@ -1295,7 +1295,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 int preecodigo = int.Parse(grdvResumenCita.DataKeys[intIndex].Values["PreeCodigo"].ToString());
                 int medicodigo = int.Parse(grdvResumenCita.DataKeys[intIndex].Values["MediCodigo"].ToString());
                 int especodigo = int.Parse(grdvResumenCita.DataKeys[intIndex].Values["EspeCodigo"].ToString());
-                string fechacita = grdvResumenCita.Rows[intIndex].Cells[6].Text;
+                string fechacita = grdvResumenCita.DataKeys[intIndex].Values["FechaCita"].ToString();
+                //string fechacita = grdvResumenCita.Rows[intIndex].Cells[6].Text;
                 string diacita = DateTime.ParseExact(fechacita, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("dddd");
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 14;

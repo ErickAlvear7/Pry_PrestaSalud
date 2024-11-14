@@ -392,7 +392,7 @@
                                         <tr>
                                             <td></td>
                                             <td colspan="2">
-                                                <asp:GridView ID="grdvResumenCita" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" DataKeyNames="PreeCodigo,MediCodigo,EspeCodigo,HodeCodigo" TabIndex="16">
+                                                <asp:GridView ID="grdvResumenCita" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" DataKeyNames="PreeCodigo,MediCodigo,EspeCodigo,HodeCodigo,FechaCita" TabIndex="16">
                                                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                                     <Columns>
                                                         <asp:BoundField HeaderText="Paciente" DataField="Cliente" />
@@ -405,7 +405,7 @@
                                                         </asp:TemplateField>
                                                         <asp:BoundField HeaderText="Medico" DataField="Medico" />
                                                         <asp:BoundField HeaderText="Especialidad" DataField="Especialidad" />
-                                                        <asp:BoundField HeaderText="Fecha" DataField="FechaCita" />
+                                                        <asp:BoundField HeaderText="Fecha" DataField="FechaCitax" />
                                                         <asp:BoundField HeaderText="Hora" DataField="Hora" />
                                                         <asp:TemplateField HeaderText="Eliminar">
                                                             <ItemTemplate>
