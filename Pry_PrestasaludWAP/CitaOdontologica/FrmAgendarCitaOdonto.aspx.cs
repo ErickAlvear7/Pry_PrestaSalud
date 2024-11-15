@@ -571,6 +571,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objparam[2] = int.Parse(dr[10].ToString());
                     objparam[3] = int.Parse(dr[11].ToString());
                     objparam[4] = dr[5].ToString();
+                    string newFecha = objparam[4].ToString();
                     objparam[5] = dr[6].ToString();
                     objparam[6] = dr[7].ToString();
                     objparam[7] = "";
@@ -600,6 +601,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
                     objcitamedica[14] = dt.Tables[0].Rows[0][2].ToString();
                     objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
+                    string newFechaNaci = objcitamedica[13].ToString();
                     objcitamedica[20] = medicamentos;
                     objcitamedica[21] = Session["usuLogin"].ToString();
                     objcitamedica[22] = dr[20].ToString();
@@ -617,7 +619,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     returnFile = "";
                     msjEmail = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU,"","");
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
                 }
                 if (msjEmail == "") Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
                 else
