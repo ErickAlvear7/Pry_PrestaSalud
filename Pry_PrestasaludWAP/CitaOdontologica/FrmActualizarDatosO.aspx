@@ -74,7 +74,7 @@
                   {
                       //showOn: "both",
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "dd/mm/yy",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -90,7 +90,7 @@
                 $('#txtFechaNacBen').datepicker(
                   {
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "dd/mm/yy",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -104,7 +104,7 @@
                 $('#TxtFechaIniCobertura').datepicker(
                     {
                         inline: true,
-                        dateFormat: "mm/dd/yy",
+                        dateFormat: "dd/mm/yy",
                         monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                         monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                         dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -118,7 +118,7 @@
                 $('#TxtFechaFinCobertura').datepicker(
                     {
                         inline: true,
-                        dateFormat: "mm/dd/yy",
+                        dateFormat: "dd/mm/yy",
                         monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                         monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                         dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -133,7 +133,7 @@
 
         function Calcular_Edad()
         {
-            var today = new Date();
+          <%--  var today = new Date();
             var birthDate = new Date(document.getElementById("<%=txtFechaNacimiento.ClientID%>").value);
             var age = today.getFullYear() - birthDate.getFullYear();
             var m = today.getMonth() - birthDate.getMonth();
@@ -142,11 +142,35 @@
             }
             document.getElementById("<%=hidEdad.ClientID%>").value = "";
             document.getElementById("<%=txtEdad.ClientID%>").value = age;
-            document.getElementById("<%=hidEdad.ClientID%>").value = age;
+            document.getElementById("<%=hidEdad.ClientID%>").value = age;--%>
+
+            var hoy = new Date();
+            //var cumpleanos = new Date(document.getElementById("<%=txtFechaNacimiento.ClientID%>").value);
+            var fecha = document.getElementById("<%=txtFechaNacimiento.ClientID%>").value;
+
+            var dateParts = fecha.split("/");
+
+            var dia = dateParts[0];
+            var mes = dateParts[1];
+            var yea = dateParts[2];
+
+            var today = new Date();
+            var yactual = today.getFullYear();
+
+            if (yactual > today) {
+                alert('Fecha de Nacimiento mayor a la fecha actual');
+                edad < 0;
+                return;
+            }
+            edad = yactual - yea;
+
+            document.getElementById("<%=hidEdad.ClientID%>").value = "";
+            document.getElementById("<%=txtEdad.ClientID%>").value = edad;
+            document.getElementById("<%=hidEdad.ClientID%>").value = edad;
         }
 
         function Calcular_EdadB() {
-            var today = new Date();
+           <%-- var today = new Date();
             var birthDate = new Date(document.getElementById("<%=txtFechaNacBen.ClientID%>").value);
             var age = today.getFullYear() - birthDate.getFullYear();
             var m = today.getMonth() - birthDate.getMonth();
@@ -155,7 +179,29 @@
             }
             document.getElementById("<%=hidEdadB.ClientID%>").value = "";
             document.getElementById("<%=txtEdadBen.ClientID%>").value = age;            
-            document.getElementById("<%=hidEdadB.ClientID%>").value = age;            
+            document.getElementById("<%=hidEdadB.ClientID%>").value = age;--%>
+
+            var fecha = document.getElementById("<%=txtFechaNacBen.ClientID%>").value;
+
+            var dateParts = fecha.split("/");
+
+            var dia = dateParts[0];
+            var mes = dateParts[1];
+            var yea = dateParts[2];
+
+            var today = new Date();
+            var yactual = today.getFullYear();
+
+            if (yactual > today) {
+                alert('Fecha de Nacimiento mayor a la fecha actual');
+                edad < 0;
+                return;
+            }
+            edad = yactual - yea;
+
+            document.getElementById("<%=hidEdadB.ClientID%>").value = "";
+            document.getElementById("<%=txtEdadBen.ClientID%>").value = edad;            
+            document.getElementById("<%=hidEdadB.ClientID%>").value = edad;
         }
 
         function Validar_Cedula() {

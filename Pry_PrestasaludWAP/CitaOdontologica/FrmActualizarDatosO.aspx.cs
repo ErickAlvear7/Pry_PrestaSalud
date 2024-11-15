@@ -24,10 +24,10 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 Response.Redirect("~/Reload.html");
             if (!IsPostBack)
             {
-                txtFechaNacimiento.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                txtFechaNacBen.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                TxtFechaIniCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                TxtFechaFinCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                txtFechaNacimiento.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txtFechaNacBen.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                TxtFechaIniCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                TxtFechaFinCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
                 txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
                 txtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");
@@ -329,7 +329,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 lblerror.Text = "Ingrese al menos primer Apellido del Beneficiario..!";
                 return;
             }
-            if (!fun.IsDate(txtFechaNacBen.Text))
+            if (!fun.IsDateNew(txtFechaNacBen.Text))
             {
                 lblerror.Text = "Fecha de Nacimiento Beneficiario incorrecta..!";
                 return;
@@ -369,8 +369,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     return;
                 }
             }
-            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (dtmFechaNacimiento > dtmFechaActual)
             {
                 lblerror.Text = "La Fecha de Nacimiento no puede ser mayor a la actual..!";
@@ -415,7 +415,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 filagre["NumeroDocumentoBen"] = txtNumeroDocumentoBen.Text;
                 filagre["GeneroBen"] = ddlGeneroBen.SelectedValue;
                 filagre["EstadoCivilBen"] = ddlEstadoCivilBen.SelectedValue;
-                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy");
+                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
                 filagre["ProvinciaBen"] = int.Parse(ddlProvinciaBen.SelectedValue);
                 filagre["CiudadBen"] = int.Parse(ddlCiudadBen.SelectedValue);
                 filagre["DireccionBen"] = txtDireccionBen.Text.ToUpper();
@@ -492,8 +492,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     return;
                 }
             }
-            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (dtmFechaNacimiento > dtmFechaActual)
             {
                 lblerror.Text = "La Fecha de Nacimiento no puede ser mayor a la actual..!";
@@ -539,7 +539,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 filagre["NumeroDocumentoBen"] = txtNumeroDocumentoBen.Text;
                 filagre["GeneroBen"] = ddlGeneroBen.SelectedValue;
                 filagre["EstadoCivilBen"] = ddlEstadoCivilBen.SelectedValue;
-                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy");
+                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
                 filagre["ProvinciaBen"] = int.Parse(ddlProvinciaBen.SelectedValue);
                 filagre["CiudadBen"] = int.Parse(ddlCiudadBen.SelectedValue);
                 filagre["DireccionBen"] = txtDireccionBen.Text.ToUpper();
@@ -594,7 +594,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 ddlGeneroBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["GeneroBen"].ToString();
                 ddlEstadoCivilBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["EstadoCivilBen"].ToString();
                 txtFechaNacBen.Text = grdvDatos.DataKeys[intIndex].Values["FechaNacimientoBen"].ToString();
-                txtEdad.Text = fun.Edad(DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture)).ToString();
+                txtEdad.Text = fun.Edad(DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToString();
                 ddlProvinciaBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["ProvinciaBen"].ToString();
                 funCascadaCombos(2);
                 ddlCiudadBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["CiudadBen"].ToString();
@@ -645,7 +645,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     new Funciones().funShowJSMessage("Ingrese Apellidos del Titular..!", this);
                     return;
                 }
-                if (!new Funciones().IsDate(txtFechaNacimiento.Text))
+                if (!new Funciones().IsDateNew(txtFechaNacimiento.Text))
                 {
                     new Funciones().funShowJSMessage("Fecha de Nacimiento Titular Incorrecta (formato MM-dd-yyyy)..!", this);
                     return;
@@ -686,7 +686,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     }
                 }
 
-                if (fun.Edad(DateTime.ParseExact(string.Format("{0}", txtFechaNacimiento.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture)) < 0)
+                if (fun.Edad(DateTime.ParseExact(string.Format("{0}", txtFechaNacimiento.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture)) < 0)
                 {
                     new Funciones().funShowJSMessage("Verifique la Edad del Titular..!", this);
                     return;
