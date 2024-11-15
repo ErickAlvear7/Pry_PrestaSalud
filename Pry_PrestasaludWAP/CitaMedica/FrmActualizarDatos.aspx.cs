@@ -391,7 +391,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ddlGeneroBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["GeneroBen"].ToString();
                 ddlEstadoCivilBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["EstadoCivilBen"].ToString();
                 txtFechaNacBen.Text = grdvDatos.DataKeys[intIndex].Values["FechaNacimientoBen"].ToString();
-                txtEdad.Text = fun.Edad(DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture)).ToString();
+                txtEdad.Text = fun.Edad(DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToString();
                 ddlProvinciaBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["ProvinciaBen"].ToString();
                 funCascadaCombos(2);
                 ddlCiudadBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["CiudadBen"].ToString();
@@ -405,7 +405,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 chkEstadoBen.Text = grdvDatos.Rows[intIndex].Cells[2].Text;
                 chkEstadoBen.Checked = grdvDatos.Rows[intIndex].Cells[2].Text == "Activo" ? true : false;
                 ViewState["CodigoBeneficiario"] = grdvDatos.DataKeys[intIndex].Values["CodigoBen"].ToString();
-                txtEdadBen.Text = new Funciones().Edad(DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture)).ToString();
+                txtEdadBen.Text = new Funciones().Edad(DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToString();
                 imgModificar.Enabled = true;
                 imgAgregar.Enabled = false;
                 imgCancelar.Enabled = true;
