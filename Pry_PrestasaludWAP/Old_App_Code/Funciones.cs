@@ -464,6 +464,7 @@ public class Funciones
             string body = ReplaceBody(objBody, emailTemplate,fechaCita, fechaNaci);
             mensaje = SendHtmlEmail(mailsTo, subject, body, host, port, enableSSl, usuario, password, ePathAttach, ePathLogo,
                 eAlterMail, eDocMail, eUsuMail);
+            
         }
         catch (Exception ex)
         {
@@ -521,7 +522,7 @@ public class Funciones
         catch (Exception ex)
         {
             mensaje = ex.ToString();
-            funCrearLogAuditoria(1, "Envío Mail", ex.ToString(), 1);
+            funCrearLogAuditoria(1, "Envío Mail -- CANCELAR", ex.ToString(), 1);
         }
         return mensaje;
     }
@@ -625,7 +626,7 @@ public class Funciones
             catch (Exception ex)
             {
                 mensaje = ex.Message;
-                funCrearLogAuditoria(1, "Envío Mail", mensaje, 1);
+                funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
             }
             return mensaje;
         }

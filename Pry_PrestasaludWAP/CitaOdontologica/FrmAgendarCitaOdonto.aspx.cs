@@ -609,11 +609,11 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     nameFile = filePath + "CitaOdontologica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
                     msjEmail = nameFile;
 
-                    if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
+                    /*if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
                     {
-                        //thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
-                        //thrEnviarSMS.Start();
-                    }
+                        thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
+                        thrEnviarSMS.Start();
+                    }*/
 
                     //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
                     returnFile = "";
@@ -621,12 +621,16 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
                         ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
                 }
-                if (msjEmail == "") Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
+
+                if (msjEmail == "")
+                {
+                   Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", false);
+                }
                 else
                 {
                     mensaje = "Errores en el Envío, Revise el LOG de Errores";
                     new Funciones().funCrearLogAuditoria(1, "FrmAgendaCitaOdonto", msjEmail, 1);
-                    Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='" + mensaje + "'", true);
+                    Response.Redirect("FrmCitaOdontoAdmin.aspx?MensajeRetornado='" + mensaje + "'", false);
                 }
 
             }

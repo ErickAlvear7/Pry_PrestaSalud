@@ -176,13 +176,13 @@
                                 switch (Session["Perfil"].ToString())
                                 {
                                     case "SUPERVISOR_ODONTO":
-                                        Response.Redirect("~/MedicoOdonto/FrmPrincipalOdonto.aspx", true);
+                                        Response.Redirect("~/MedicoOdonto/FrmPrincipalOdonto.aspx", false);
                                         break;
                                     case "ADMINISTRADOR PRESTADORA":
-                                        Response.Redirect("~/Administrador/FrmPrincipalAdministrador.aspx", true);
+                                        Response.Redirect("~/Administrador/FrmPrincipalAdministrador.aspx", false);
                                         break;
                                     default:
-                                        Response.Redirect("~/Mantenedor/FrmPrincipal.aspx", true);
+                                        Response.Redirect("~/Mantenedor/FrmPrincipal.aspx", false);
                                         break;
                                 }
                             }
@@ -192,13 +192,13 @@
                             switch (Session["Perfil"].ToString())
                             {
                                 case "SUPERVISOR_ODONTO":
-                                    Response.Redirect("~/MedicoOdonto/FrmPrincipalOdonto.aspx", true);
+                                    Response.Redirect("~/MedicoOdonto/FrmPrincipalOdonto.aspx", false);
                                     break;
                                 case "ADMINISTRADOR PRESTADORA":
-                                    Response.Redirect("~/Administrador/FrmPrincipalAdministrador.aspx", true);
+                                    Response.Redirect("~/Administrador/FrmPrincipalAdministrador.aspx", false);
                                     break;
                                 default:
-                                    Response.Redirect("~/Mantenedor/FrmPrincipal.aspx", true);
+                                    Response.Redirect("~/Mantenedor/FrmPrincipal.aspx", false);
                                     
                                     /*string postbackUrl = "Mantenedor/FrmPrincipal.aspx";
                                     Response.Clear();
@@ -254,7 +254,7 @@
             }
             catch (Exception ex)
             {
-                new Funciones().funCrearLogAuditoria(1, "FrmLogin", ex.ToString(), 1);
+                new Funciones().funCrearLogAuditoria(1, "WFRMLOGIN", ex.ToString(), 1);
                 new Funciones().funShowJSMessage(ex.ToString(), this);
             }
         }
