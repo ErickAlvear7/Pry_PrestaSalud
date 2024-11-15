@@ -571,7 +571,9 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objparam[2] = int.Parse(dr[10].ToString());
                     objparam[3] = int.Parse(dr[11].ToString());
                     objparam[4] = dr[5].ToString();
-                    string newFecha = objparam[4].ToString();
+                    //string newFecha = objparam[4].ToString();
+                    DateTime newFecha = DateTime.ParseExact(objparam[4].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    string newFechaCita = newFecha.ToString("dd/MM/yyyy");
                     objparam[5] = dr[6].ToString();
                     objparam[6] = dr[7].ToString();
                     objparam[7] = "";
@@ -619,7 +621,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     returnFile = "";
                     msjEmail = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFechaCita, newFechaNaci);
                 }
 
                 if (msjEmail == "")
@@ -1363,7 +1365,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 if (tbCitaMedica.Rows.Count > 0)
                 {
                     string[] columnas = new[] { "PreeCodigo", "MediCodigo", "EspeCodigo", "TipoCliente", "TituCodigo", "BeneCodigo", "CodParentesco",
-                "EstatusCita","FechaCita","DiaCita","Hora","HodeCodigo","Detalle","Longitud","Latitud","Observacion"};
+                "EstatusCita","FechaCita","DiaCita","Hora","HodeCodigo","Detalle","Longitud","Latitud","Observacion","FechaCitax"};
                     tbNuevaCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                     tbMailCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                     DataView view = new DataView(tbNuevaCitaMedica);

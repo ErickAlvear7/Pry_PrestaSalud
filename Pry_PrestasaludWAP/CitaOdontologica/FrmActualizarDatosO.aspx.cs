@@ -452,7 +452,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 lblerror.Text = "Ingrese al menos un Apellido del Beneficiario..!";
                 return;
             }
-            if (!fun.IsDate(txtFechaNacBen.Text))
+            if (!fun.IsDateNew(txtFechaNacBen.Text))
             {
                 lblerror.Text = "Fecha de Nacimiento Beneficiario Incorrecta..!";
                 return;
