@@ -25,10 +25,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Response.Redirect("~/Reload.html");
             if (!IsPostBack)
             {
+                txtFechaNacBen.Text = "0";
                 txtFechaNacimiento.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtFechaNacBen.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                //txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
-                //txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
+                txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
+                txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
                 TxtFechaIniCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 TxtFechaFinCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");
@@ -434,7 +435,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = "Ingrese al menos primer Apellido del Beneficiario..!";
                 return;
             }
-            if (!fun.IsDate(txtFechaNacBen.Text))
+            if (!fun.IsDateNew(txtFechaNacBen.Text))
             {
                 lblerror.Text = "Fecha de Nacimiento Beneficiario incorrecta..!";
                 return;
@@ -561,7 +562,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = "Ingrese al menos un Apellido del Beneficiario..!";
                 return;
             }
-            if (!fun.IsDate(txtFechaNacBen.Text))
+            if (!fun.IsDateNew(txtFechaNacBen.Text))
             {
                 lblerror.Text = "Fecha de Nacimiento Beneficiario Incorrecta..!";
                 return;
@@ -884,5 +885,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
         #endregion
+
     }
 }

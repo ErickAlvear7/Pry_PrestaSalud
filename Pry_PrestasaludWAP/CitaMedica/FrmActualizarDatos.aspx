@@ -85,7 +85,7 @@
                       yearRange: "-100:+5"
 
                       
-                  });
+                    });
                 
                 $('#txtFechaNacBen').datepicker(
                   {
@@ -133,29 +133,63 @@
 
         function Calcular_Edad()
         {
+
+            var hoy = new Date();
+            //var cumpleanos = new Date(document.getElementById("<%=txtFechaNacimiento.ClientID%>").value);
+            var fecha = document.getElementById("<%=txtFechaNacimiento.ClientID%>").value;
+
+            var dateParts = fecha.split("/");
+
+            var dia = dateParts[0];
+            var mes = dateParts[1];
+            var yea = dateParts[2];
+
             var today = new Date();
-            var birthDate = new Date(document.getElementById("<%=txtFechaNacimiento.ClientID%>").value);
-            var age = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
+            var yactual = today.getFullYear();
+
+            if (yactual > today) {
+                alert('Fecha de Nacimiento mayor a la fecha actual');
+                edad = 0;
+                return;
             }
+            edad = yactual - yea;
+
             document.getElementById("<%=hidEdad.ClientID%>").value = "";
-            document.getElementById("<%=txtEdad.ClientID%>").value = age;
-            document.getElementById("<%=hidEdad.ClientID%>").value = age;
+            document.getElementById("<%=txtEdad.ClientID%>").value = edad;
+            document.getElementById("<%=hidEdad.ClientID%>").value = edad;
         }
 
         function Calcular_EdadB() {
+
+            //var today = new Date();
+            //var birthDate = new Date(document.getElementById("<%=txtFechaNacBen.ClientID%>").value);
+            //var age = today.getFullYear() - birthDate.getFullYear();
+            //var m = today.getMonth() - birthDate.getMonth();
+            //if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            //    age--;
+            //}
+
+            var fecha = document.getElementById("<%=txtFechaNacBen.ClientID%>").value;
+
+            var dateParts = fecha.split("/");
+
+            var dia = dateParts[0];
+            var mes = dateParts[1];
+            var yea = dateParts[2];
+
             var today = new Date();
-            var birthDate = new Date(document.getElementById("<%=txtFechaNacBen.ClientID%>").value);
-            var age = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
+            var yactual = today.getFullYear();
+
+            if (yactual > today) {
+                alert('Fecha de Nacimiento mayor a la fecha actual');
+                edad = 0;
+                return;
             }
+            edad = yactual - yea;
+
             document.getElementById("<%=hidEdadB.ClientID%>").value = "";
-            document.getElementById("<%=txtEdadBen.ClientID%>").value = age;            
-            document.getElementById("<%=hidEdadB.ClientID%>").value = age;            
+            document.getElementById("<%=txtEdadBen.ClientID%>").value = edad;            
+            document.getElementById("<%=hidEdadB.ClientID%>").value = edad;            
         }
 
         function Validar_Cedula() {
@@ -336,7 +370,7 @@
                                             <h5>Edad:</h5>
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txtEdad" runat="server" CssClass="form-control upperCase" MaxLength="2" Width="100%" ReadOnly="True" TabIndex="10"></asp:TextBox>
+                                            <asp:TextBox ID="txtEdad" runat="server" CssClass="form-control " MaxLength="3" Width="100%" ReadOnly="True" TabIndex="10"></asp:TextBox>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -538,7 +572,7 @@
                                             <h5>Edad:</h5>
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txtEdadBen" runat="server" CssClass="form-control upperCase" MaxLength="2" Width="100%" ReadOnly="True" TabIndex="30"></asp:TextBox>
+                                            <asp:TextBox ID="txtEdadBen" runat="server" CssClass="form-control upperCase" MaxLength="3" Width="100%" ReadOnly="True" TabIndex="30"></asp:TextBox>
                                         </td>
                                         <td></td>
                                     </tr>
