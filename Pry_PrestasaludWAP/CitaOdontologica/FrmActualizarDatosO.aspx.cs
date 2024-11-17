@@ -410,7 +410,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 filagre["Parentesco"] = ddlParentesco.SelectedItem.ToString();
                 filagre["ParentescoCod"] = ddlParentesco.SelectedValue;
                 filagre["Estado"] = chkEstadoBen.Checked ? "Activo" : "Inactivo";
-                filagre["CodigoBen"] = maxCodigo + 1;
+                filagre["CodigoBen"] = 0;
                 filagre["TipoDocumentoBen"] = ddlTipoDocumentoBen.SelectedValue;
                 filagre["NumeroDocumentoBen"] = txtNumeroDocumentoBen.Text;
                 filagre["GeneroBen"] = ddlGeneroBen.SelectedValue;
@@ -608,7 +608,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 chkEstadoBen.Text = grdvDatos.Rows[intIndex].Cells[2].Text;
                 chkEstadoBen.Checked = grdvDatos.Rows[intIndex].Cells[2].Text == "Activo" ? true : false;
                 ViewState["CodigoBeneficiario"] = grdvDatos.DataKeys[intIndex].Values["CodigoBen"].ToString();
-                txtEdadBen.Text = new Funciones().Edad(DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture)).ToString();
+                txtEdadBen.Text = new Funciones().Edad(DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToString();
                 imgModificar.Enabled = true;
                 imgAgregar.Enabled = false;
                 imgCancelar.Enabled = true;
