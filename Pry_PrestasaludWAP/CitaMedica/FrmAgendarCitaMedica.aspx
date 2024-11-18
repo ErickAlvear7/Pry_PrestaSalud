@@ -203,8 +203,9 @@
                                         <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
 			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 			                                <Columns>
+                                                <asp:BoundField DataField="Tipo" HeaderText="TIPO CLIENTE"></asp:BoundField>
 				                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL"></asp:BoundField>
-				                                <asp:BoundField DataField="Especialidaes" HeaderText="ESPECIALIDADES" />
+				                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" />
 				                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" />
 			                                </Columns>
 			                                <RowStyle Font-Size="X-Small" />

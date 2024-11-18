@@ -103,6 +103,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Session["TipoCita"] = "CitaMedica";
                 ViewState["Intervalo"] = 0;
                 Session["codigocita"] = 0;
+                FunContadorCitas();
                 FunCargaMantenimiento();
                 FunHistorialCitas();
                 FunEliminarReservas();
@@ -287,10 +288,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             try
             {
-                Array.Resize(ref objparam, 173);
-                objparam[0] = int.Parse(Session["CodigoTitular"].ToString());
-                objparam[1] = "";
-                objparam[2] = 32;
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 173;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                if (dt != null && dt.Tables[0].Rows.Count > 0)
+                {
+                    grdvContadorCitas.DataSource = dt;
+                    grdvContadorCitas.DataBind();
+                }
 
             }
             catch(Exception ex)
