@@ -473,7 +473,7 @@
                                             <asp:TextBox ID="TxtFechaIniCobertura" runat="server" CssClass="form-control" TabIndex="19" Width="100%"></asp:TextBox>
                                         </td>
                                         <td></td>
-                                        <td><h5>Fin Cobertura:</h5></td>
+                                        <td ><h5 id="lblFinCobertura" runat="server">Fin Cobertura:</h5></td>
                                         <td>
                                             <asp:TextBox ID="TxtFechaFinCobertura" runat="server" CssClass="form-control" TabIndex="20" Width="100%"></asp:TextBox>
                                         </td>

@@ -74,6 +74,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     chkEstado.Visible = true;
                     lbltitulo.Text = "Editar Titular " + dt.Tables[0].Rows[0][0].ToString();
                     funCargaMantenimiento(int.Parse(ViewState["CodTitular"].ToString()));
+
+                    if (Session["Perfil"].ToString() == "NOVA")
+                    {
+                        TxtFechaFinCobertura.Visible = false;
+                        lblFinCobertura.Visible = false;
+                    }
+
                 }
                 catch (Exception ex)
                 {

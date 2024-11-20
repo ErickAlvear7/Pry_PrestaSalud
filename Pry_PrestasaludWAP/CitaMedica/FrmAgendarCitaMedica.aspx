@@ -204,9 +204,9 @@
 			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 			                                <Columns>
                                                 <asp:BoundField DataField="Tipo" HeaderText="TIPO CLIENTE"></asp:BoundField>
-				                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL"></asp:BoundField>
-				                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" />
-				                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" />
+				                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL" HeaderStyle-BackColor="#d2f0eb" />
+				                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" HeaderStyle-BackColor="#e7f0f2" />
+				                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" HeaderStyle-BackColor="#e5eaf6" />
 			                                </Columns>
 			                                <RowStyle Font-Size="X-Small" />
 			                                <HeaderStyle Font-Size="Small" />
