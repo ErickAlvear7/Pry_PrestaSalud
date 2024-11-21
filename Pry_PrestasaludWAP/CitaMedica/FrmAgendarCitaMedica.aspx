@@ -230,10 +230,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h5 class="label label-primary">ALERTA</h5>
+                                    <h5 class="label label-primary" id="idAl" runat="server">ALERTA</h5>
                                 </td>
                                 <td>
-                                    <h3 id="idMg" runat="server" style="background-color:brown"></h3>
+                                    <h5 class="label label-danger" id="idMg" runat="server"></h5>
                                 </td>
                                 <td></td>
                                 <td></td>

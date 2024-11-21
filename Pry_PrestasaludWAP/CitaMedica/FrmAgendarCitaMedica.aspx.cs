@@ -104,7 +104,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["Intervalo"] = 0;
                 Session["codigocita"] = 0;
                 FunContadorCitas();
-                //FunValidarEspe();
+                FunValidarEspe();
                 FunCargaMantenimiento();
                 FunHistorialCitas();
                 FunEliminarReservas();
@@ -310,6 +310,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunValidarEspe()
         {
+            idAl.Visible = false;
             try
             {
                 Array.Resize(ref objparam, 3);
@@ -322,11 +323,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (cmg == 4)
                 {
-                    idMg.InnerText = "YA NO PUEDE AGENDAR";
+                    new Funciones().funShowJSMessage("Exedio el #Citas en Medicina General!!..", this);
+                    idAl.Visible = true;
+                    idMg.InnerText = "Excedio el #Citas en Medicina General!!..";
 
-                    //pnlOpcionesCita.Enabled = false;
-                    //new Funciones
+                    
+
                 }
+
+                ViewState["ContMG"] = cmg;
             }
             catch (Exception ex)
             {
@@ -1235,6 +1240,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(ddlEspecialidad.SelectedValue.ToString() == "341")
+            {
+                if(ViewState["ContMG"].ToString() == "4")
+                {
+                    new Funciones().funShowJSMessage("no permitido", this);
+                    ddlEspecialidad.SelectedIndex = 0;
+                    return;
+                }
+
+            }
             FunCascadaCombos(4);
             FunLimpiarCampos();
         }
