@@ -385,7 +385,7 @@ namespace Pry_PrestasaludWAP.Titulares
                 new Funciones().funShowJSMessage("Ingrese al menos primer Apellido del Beneficiario..!", this);
                 return;
             }
-            if (!fun.IsDate(txtFechaNacBen.Text))
+            if (!fun.IsDateNew(txtFechaNacBen.Text))
             {
                 new Funciones().funShowJSMessage("Fecha de Nacimiento Beneficiario Incorrecta..!", this);
                 return;
@@ -425,8 +425,8 @@ namespace Pry_PrestasaludWAP.Titulares
                     return;
                 }
             }
-            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaNacimiento = DateTime.ParseExact(string.Format("{0}", txtFechaNacBen.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             if (dtmFechaNacimiento > dtmFechaActual)
             {
                 new Funciones().funShowJSMessage("La Fecha de Nacimiento no puede ser mayor a la actual..!", this);
@@ -477,7 +477,7 @@ namespace Pry_PrestasaludWAP.Titulares
                 filagre["NumeroDocumentoBen"] = txtNumeroDocumentoBen.Text;
                 filagre["GeneroBen"] = ddlGeneroBen.SelectedValue;
                 filagre["EstadoCivilBen"] = ddlEstadoCivilBen.SelectedValue;
-                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy");
+                filagre["FechaNacimientoBen"] = DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
                 filagre["ProvinciaBen"] = int.Parse(ddlProvinciaBen.SelectedValue);
                 filagre["CiudadBen"] = int.Parse(ddlCiudadBen.SelectedValue);
                 filagre["DireccionBen"] = txtDireccionBen.Text.ToUpper();
