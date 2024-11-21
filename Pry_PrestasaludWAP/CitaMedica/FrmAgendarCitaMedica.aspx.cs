@@ -104,6 +104,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["Intervalo"] = 0;
                 Session["codigocita"] = 0;
                 FunContadorCitas();
+                FunValidarEspe();
                 FunCargaMantenimiento();
                 FunHistorialCitas();
                 FunEliminarReservas();
@@ -305,6 +306,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
         
+        }
+
+        private void FunValidarEspe()
+        {
+            try
+            {
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0; //Medicina General 
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 174;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                int cmg = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                if (cmg == 4)
+                {
+                    idMg.InnerText = "YA NO PUEDE AGENDAR";
+
+                    //pnlOpcionesCita.Enabled = false;
+                    //new Funciones
+                }
+            }
+            catch (Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs", ex.ToString(), 1);
+            }
 
         }
 
@@ -337,6 +365,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs", ex.ToString(), 1);
             }
         }
 

@@ -214,10 +214,35 @@
                                      </tr>
                                  </table>
                              </div>
-
                          </ContentTemplate>
                      </asp:UpdatePanel>
                 </div>
+            </div>
+            <div class="panel-body">
+                <asp:UpdatePanel ID="panelMensaje" runat="server">
+                    <ContentTemplate>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 10%"></td>
+                                <td style="width: 50%"></td>
+                                <td style="width: 20%"></td>  
+                                <td style="width: 20%"></td>  
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5 class="label label-primary">ALERTA</h5>
+                                </td>
+                                <td>
+                                    <h3 id="idMg" runat="server" style="background-color:brown"></h3>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </table>
+                    </ContentTemplate>
+
+                </asp:UpdatePanel>
             </div>
             <div class="panel-body">
                 <div id="acordionParametro">

@@ -24,10 +24,10 @@ namespace Pry_PrestasaludWAP.Titulares
                 Response.Redirect("~/Reload.html");
             if (!IsPostBack)
             {
-                txtFechaNacimiento.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                txtFechaNacBen.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                TxtFechaIniCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                TxtFechaFinCobertura.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                txtFechaNacimiento.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txtFechaNacBen.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                TxtFechaIniCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                TxtFechaFinCobertura.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
                 txtFechaNacBen.Attributes.Add("onchange", "Calcular_EdadB();");
                 txtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");                
@@ -662,9 +662,9 @@ namespace Pry_PrestasaludWAP.Titulares
                 new Funciones().funShowJSMessage("Ingrese Apellidos del Titular..!", this);
                 return;
             }
-            if (!new Funciones().IsDate(txtFechaNacimiento.Text))
+            if (!new Funciones().IsDateNew(txtFechaNacimiento.Text))
             {
-                new Funciones().funShowJSMessage("Fecha de Nacimiento Titular Incorrecta (formato MM-dd-yyyy)..!", this);
+                new Funciones().funShowJSMessage("Fecha de Nacimiento Titular Incorrecta (formato dd-MM-yyyy)..!", this);
                 return;
             }
             if(!string.IsNullOrEmpty(txtFonoCasa.Text.Trim()))
@@ -703,7 +703,7 @@ namespace Pry_PrestasaludWAP.Titulares
                 }
             }
 
-            if (fun.Edad(DateTime.ParseExact(string.Format("{0}", txtFechaNacimiento.Text), "MM/dd/yyyy", CultureInfo.InvariantCulture)) < 0)
+            if (fun.Edad(DateTime.ParseExact(string.Format("{0}", txtFechaNacimiento.Text), "dd/MM/yyyy", CultureInfo.InvariantCulture)) < 0)
             {
                 new Funciones().funShowJSMessage("Verifique la Edad del Titular..!", this);
                 return;

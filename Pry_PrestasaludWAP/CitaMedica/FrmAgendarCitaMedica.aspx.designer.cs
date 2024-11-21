@@ -177,6 +177,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.WebControls.GridView grdvContadorCitas;
 
         /// <summary>
+        /// Control panelMensaje.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel panelMensaje;
+
+        /// <summary>
+        /// Control idMg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl idMg;
+
+        /// <summary>
         /// Control updCabecera.
         /// </summary>
         /// <remarks>
