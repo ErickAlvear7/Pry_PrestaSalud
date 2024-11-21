@@ -104,7 +104,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["Intervalo"] = 0;
                 Session["codigocita"] = 0;
                 FunContadorCitas();
-                FunValidarEspe();
+                //FunValidarEspe();
                 FunCargaMantenimiento();
                 FunHistorialCitas();
                 FunEliminarReservas();
