@@ -232,22 +232,22 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h5 class="label label-primary" id="idAl" runat="server">ALERTA</h5>
+                                    <h5 class="label label-danger" id="idAl" runat="server">ALERTA</h5>
                                 </td>
                                 <td>
-                                    <h5 class="label label-danger" id="idMg" runat="server"></h5>
+                                    <h5 class="label label-primary" id="idMg" runat="server"></h5>
                                 </td>
                                 <td>
-                                    <h5 class="label label-primary" id="idAle" runat="server">ALERTA</h5>
+                                    <h5 class="label label-danger" id="idAle" runat="server">ALERTA</h5>
                                 </td>
                                 <td>
-                                    <h5 class="label label-danger" id="idEsp" runat="server"></h5>
+                                    <h5 class="label label-primary" id="idEsp" runat="server"></h5>
                                 </td>
                                     <td>
-                                    <h5 class="label label-primary" id="idAla" runat="server">ALERTA</h5>
+                                    <h5 class="label label-danger" id="idAla" runat="server">ALERTA</h5>
                                 </td>
                                 <td>
-                                    <h5 class="label label-danger" id="idLab" runat="server"></h5>
+                                    <h5 class="label label-primary" id="idLab" runat="server"></h5>
                                 </td>
                             </tr>
                         </table>
