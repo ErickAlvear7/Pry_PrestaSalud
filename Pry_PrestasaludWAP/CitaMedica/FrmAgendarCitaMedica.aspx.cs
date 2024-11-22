@@ -311,10 +311,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunValidarEspe()
         {
             idAl.Visible = false;
+            idAle.Visible = false;
+            idAla.Visible = false;
             try
             {
                 Array.Resize(ref objparam, 3);
-                objparam[0] = 0; //Medicina General 
+                objparam[0] = 1; //Medicina General 
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
                 objparam[2] = 174;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
@@ -323,15 +325,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (cmg == 4)
                 {
-                    new Funciones().funShowJSMessage("Exedio el #Citas en Medicina General!!..", this);
+                    new Funciones().funShowJSMessage("Revise #Citas Agendadas!!..", this);
                     idAl.Visible = true;
                     idMg.InnerText = "Excedio el #Citas en Medicina General!!..";
-
-                    
 
                 }
 
                 ViewState["ContMG"] = cmg;
+
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 2; //Especialidades
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 174;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                if (cesp == 3)
+                {
+                    new Funciones().funShowJSMessage("Revise #Citas Agendadas!!..", this);
+                    idAle.Visible = true;
+                    idEsp.InnerText = "Excedio el #Citas en Especialidad!!..";
+
+                }
+
+                ViewState["ContESP"] = cesp;
             }
             catch (Exception ex)
             {

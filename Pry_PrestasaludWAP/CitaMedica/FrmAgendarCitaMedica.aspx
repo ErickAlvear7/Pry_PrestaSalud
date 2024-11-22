@@ -223,10 +223,12 @@
                     <ContentTemplate>
                         <table style="width: 100%">
                             <tr>
-                                <td style="width: 10%"></td>
-                                <td style="width: 50%"></td>
-                                <td style="width: 20%"></td>  
-                                <td style="width: 20%"></td>  
+                                <td style="width: 5%"></td>
+                                <td style="width: 30%"></td>
+                                <td style="width: 5%"></td>  
+                                <td style="width: 30%"></td>
+                                <td style="width: 5%"></td> 
+                                <td style="width: 25%"></td>
                             </tr>
                             <tr>
                                 <td>
@@ -235,13 +237,21 @@
                                 <td>
                                     <h5 class="label label-danger" id="idMg" runat="server"></h5>
                                 </td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    <h5 class="label label-primary" id="idAle" runat="server">ALERTA</h5>
+                                </td>
+                                <td>
+                                    <h5 class="label label-danger" id="idEsp" runat="server"></h5>
+                                </td>
+                                    <td>
+                                    <h5 class="label label-primary" id="idAla" runat="server">ALERTA</h5>
+                                </td>
+                                <td>
+                                    <h5 class="label label-danger" id="idLab" runat="server"></h5>
+                                </td>
                             </tr>
-
                         </table>
                     </ContentTemplate>
-
                 </asp:UpdatePanel>
             </div>
             <div class="panel-body">
