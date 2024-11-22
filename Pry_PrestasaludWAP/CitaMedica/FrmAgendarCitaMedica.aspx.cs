@@ -326,7 +326,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (cmg == 4)
                 {
-                    new Funciones().funShowJSMessage("Revise #Citas Agendadas!!..", this);
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
                     idAl.Visible = true;
                     idMg.InnerText = "Excedio el #Citas en Medicina General!!..";
 
@@ -344,7 +344,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (cesp == 3)
                 {
-                    new Funciones().funShowJSMessage("Revise #Citas Agendadas!!..", this);
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
                     idAle.Visible = true;
                     idEsp.InnerText = "Excedio el #Citas en Especialidad!!..";
 
