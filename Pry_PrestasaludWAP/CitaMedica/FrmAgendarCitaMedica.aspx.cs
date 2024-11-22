@@ -315,6 +315,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             idAla.Visible = false;
             try
             {
+               
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 1; //Medicina General 
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
@@ -1258,7 +1259,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(ddlEspecialidad.SelectedValue.ToString() == "341")
+
+
+            string codEsp = ddlEspecialidad.SelectedValue.ToString();
+
+            Array.Resize(ref objparam, 3);
+            objparam[0] = codEsp; //codigo especialidades
+            objparam[1] = 0;
+            objparam[2] = 175;
+            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+            int cod = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+            if (cod == 1)
             {
                 if(ViewState["ContMG"].ToString() == "4")
                 {
@@ -1267,6 +1280,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     return;
                 }
 
+            }else if(cod == 2 || cod == 5 || cod ==7 || cod ==8 || cod == 24 || cod == 25 || cod == 26)
+                      
+            {
+                if (ViewState["ContESP"].ToString() == "3")
+                {
+                    new Funciones().funShowJSMessage("no permitido", this);
+                    ddlEspecialidad.SelectedIndex = 0;
+                    return;
+                }
             }
             FunCascadaCombos(4);
             FunLimpiarCampos();
