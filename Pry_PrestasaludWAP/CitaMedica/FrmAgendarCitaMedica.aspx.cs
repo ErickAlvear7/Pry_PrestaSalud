@@ -300,6 +300,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     grdvContadorCitas.DataBind();
                 }
 
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 176;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                if (dt != null && dt.Tables[0].Rows.Count > 0)
+                {
+                    grdvSumaLaboratorio.DataSource = dt;
+                    grdvSumaLaboratorio.DataBind();
+                }
+
             }
             catch(Exception ex)
             {

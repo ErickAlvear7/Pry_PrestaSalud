@@ -219,6 +219,36 @@
                 </div>
             </div>
             <div class="panel-body">
+                <div id="lab">
+                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">VALOARES LABORATORIO</h3>
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
+                                <tr>
+                                    <td class="auto-style2"></td>
+                                    <td class="auto-style2"></td>
+                                </tr>
+                                 <tr>
+                                     <td colspan="4">
+                                        <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+			                                <Columns>
+                                                <asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>
+				                                <asp:BoundField DataField="Pvp" HeaderText="PVP" HeaderStyle-BackColor="#e5eaf6"/>
+			                                </Columns>
+			                                <RowStyle Font-Size="X-Small" />
+			                                <HeaderStyle Font-Size="Small" />
+		                                </asp:GridView>
+                                      </td>
+                                  </tr>
+                                </table>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+            <div class="panel-body">
                 <asp:UpdatePanel ID="panelMensaje" runat="server">
                     <ContentTemplate>
                         <table style="width: 100%">
