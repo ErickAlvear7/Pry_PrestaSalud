@@ -64,25 +64,30 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 e.Row.Cells[0].Text = "TOTAL";
             }
 
-
         }
 
         protected void grdvContadorCitas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
           
-
             if (e.Row.RowType == DataControlRowType.Footer)
             {
                
-                if(int.Parse(ViewState["ContMG"].ToString()) > 3)
+                if(int.Parse(ViewState["Mgeneral"].ToString()) == 4)
                 {
-                    e.Row.Cells[1].Text = "BLOQUEAO";
-                    
+                    e.Row.Cells[1].Font.Italic = true;
+                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[1].Text = "XX";
+                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
                 }
-
-               
+          
+                if (int.Parse(ViewState["Especialidad"].ToString()) == 3)
+                {
+                    e.Row.Cells[2].Font.Italic = true;
+                    e.Row.Cells[2].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[2].Text = "XX";
+                    e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
+                }
             }
-
 
         }
         #endregion
@@ -130,7 +135,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 tbCitaMedica.Columns.Add("CodigoPrestadora");
                 tbCitaMedica.Columns.Add("Observacion");
                 ViewState["tbCitaMedica"] = tbCitaMedica;
-                ViewState["ContMG"] = "0";
+                ViewState["Mgeneral"] = 0;
+                ViewState["Especialidad"] = 0;
 
                 lbltitulo.Text = "Agendar Cita";
                 //Session["CodigoTitular"] = Request["CodigoTitular"];
@@ -333,6 +339,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 173;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
+                ViewState["Mgeneral"] = dt.Tables[0].Rows[0][1].ToString();
+                ViewState["Especialidad"] = dt.Tables[0].Rows[0][2].ToString();
+
                 if (dt != null && dt.Tables[0].Rows.Count > 0)
                 {
                     grdvContadorCitas.DataSource = dt;
@@ -363,9 +372,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunValidarEspe()
         {
-            idAl.Visible = false;
-            idAle.Visible = false;
-            idAla.Visible = false;
             try
             {
                
@@ -380,8 +386,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (cmg == 4)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-                  //idAl.Visible = true;
-                  //idMg.InnerText = "Excedio el # Citas en Medicina General!!..";
 
                 }
 
@@ -398,9 +402,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (cesp == 3)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-                    //idAle.Visible = true;
-                    //idEsp.InnerText = "Excedio el # Citas en Especialidad!!..";
-
                 }
 
                 ViewState["ContESP"] = cesp;

@@ -249,42 +249,6 @@
                 </div>
             </div>
             <div class="panel-body">
-                <asp:UpdatePanel ID="panelMensaje" runat="server">
-                    <ContentTemplate>
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 5%"></td>
-                                <td style="width: 30%"></td>
-                                <td style="width: 5%"></td>  
-                                <td style="width: 30%"></td>
-                                <td style="width: 5%"></td> 
-                                <td style="width: 25%"></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5 class="label label-danger" id="idAl" runat="server">ALERTA</h5>
-                                </td>
-                                <td>
-                                    <h5 class="label label-primary" id="idMg" runat="server"></h5>
-                                </td>
-                                <td>
-                                    <h5 class="label label-danger" id="idAle" runat="server">ALERTA</h5>
-                                </td>
-                                <td>
-                                    <h5 class="label label-primary" id="idEsp" runat="server"></h5>
-                                </td>
-                                    <td>
-                                    <h5 class="label label-danger" id="idAla" runat="server">ALERTA</h5>
-                                </td>
-                                <td>
-                                    <h5 class="label label-primary" id="idLab" runat="server"></h5>
-                                </td>
-                            </tr>
-                        </table>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </div>
-            <div class="panel-body">
                 <div id="acordionParametro">
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
                     <asp:UpdatePanel ID="updCabecera" runat="server">
