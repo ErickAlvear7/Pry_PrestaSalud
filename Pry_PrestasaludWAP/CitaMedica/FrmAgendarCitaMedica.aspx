@@ -200,7 +200,7 @@
                                         <td style="width: 5%"></td>
                                     </tr>
                                      <tr>
-                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" OnRowDataBound="grdvContadorCitas_RowDataBound" ShowFooter="True">
 			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 			                                <Columns>
                                                 <asp:BoundField DataField="Tipo" HeaderText="TIPO CLIENTE"></asp:BoundField>
@@ -220,7 +220,7 @@
             </div>
             <div class="panel-body">
                 <div id="lab">
-                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">VALOARES LABORATORIO</h3>
+                    <h3 id="labh3" runat="server" class="label label-primary" style="font-size: 14px; display: block; text-align: left">VALORES LABORATORIO</h3>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                         <ContentTemplate>
                             <div class="table-responsive">
@@ -230,12 +230,12 @@
                                     <td class="auto-style2"></td>
                                 </tr>
                                  <tr>
-                                     <td colspan="4">
-                                        <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+                                     <td>
+                                        <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" ShowFooter="True" OnRowDataBound="grdvSumaLaboratorio_RowDataBound">
 			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 			                                <Columns>
                                                 <asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>
-				                                <asp:BoundField DataField="Pvp" HeaderText="PVP" HeaderStyle-BackColor="#e5eaf6"/>
+				                                <asp:BoundField DataField="Pvp" HeaderText="PVP" HeaderStyle-BackColor="#e5eaf6"  HeaderStyle-HorizontalAlign="Left" DataFormatString="{0:C}"/> 
 			                                </Columns>
 			                                <RowStyle Font-Size="X-Small" />
 			                                <HeaderStyle Font-Size="Small" />

@@ -48,6 +48,43 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DateTime fechaCita, fechaFinCobertura, fechaSistema;
         Thread thrEnviarSMS;
         Byte[] bytes;
+        
+
+        protected void grdvSumaLaboratorio_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+              
+
+
+            }
+
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+                e.Row.Cells[0].Text = "TOTAL";
+            }
+
+
+        }
+
+        protected void grdvContadorCitas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+          
+
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+               
+                if(int.Parse(ViewState["ContMG"].ToString()) > 3)
+                {
+                    e.Row.Cells[1].Text = "BLOQUEAO";
+                    
+                }
+
+               
+            }
+
+
+        }
         #endregion
 
         #region Load
@@ -93,6 +130,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 tbCitaMedica.Columns.Add("CodigoPrestadora");
                 tbCitaMedica.Columns.Add("Observacion");
                 ViewState["tbCitaMedica"] = tbCitaMedica;
+                ViewState["ContMG"] = "0";
 
                 lbltitulo.Text = "Agendar Cita";
                 //Session["CodigoTitular"] = Request["CodigoTitular"];
@@ -294,6 +332,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
                 objparam[2] = 173;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
                 if (dt != null && dt.Tables[0].Rows.Count > 0)
                 {
                     grdvContadorCitas.DataSource = dt;
@@ -305,8 +344,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
                 objparam[2] = 176;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                labh3.Visible = false;
                 if (dt != null && dt.Tables[0].Rows.Count > 0)
                 {
+                    labh3.Visible = true;
                     grdvSumaLaboratorio.DataSource = dt;
                     grdvSumaLaboratorio.DataBind();
                 }
@@ -314,7 +355,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             catch(Exception ex)
             {
-
+                lblerror.Text = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
             }
         
         }
@@ -338,8 +380,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (cmg == 4)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-                    idAl.Visible = true;
-                    idMg.InnerText = "Excedio el # Citas en Medicina General!!..";
+                  //idAl.Visible = true;
+                  //idMg.InnerText = "Excedio el # Citas en Medicina General!!..";
 
                 }
 
@@ -356,8 +398,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (cesp == 3)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-                    idAle.Visible = true;
-                    idEsp.InnerText = "Excedio el # Citas en Especialidad!!..";
+                    //idAle.Visible = true;
+                    //idEsp.InnerText = "Excedio el # Citas en Especialidad!!..";
 
                 }
 
@@ -366,7 +408,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs", ex.ToString(), 1);
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspe", ex.ToString(), 1);
             }
 
         }
