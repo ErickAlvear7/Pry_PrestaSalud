@@ -234,10 +234,16 @@
                                         <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" ShowFooter="True" OnRowDataBound="grdvSumaLaboratorio_RowDataBound">
 			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
 			                                <Columns>
-                                                <asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>
-				                                <asp:BoundField DataField="Pvp" HeaderText="PVP" HeaderStyle-BackColor="#e5eaf6"  HeaderStyle-HorizontalAlign="Left" DataFormatString="{0:C}"/> 
+                                                <%--<asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>--%>
+
+                                                <asp:BoundField DataField="" HeaderText="Cupo Asignado" HeaderStyle-BackColor="#d2f0eb">
+				                                <HeaderStyle BackColor="#D2F0EB" />
+                                                </asp:BoundField>
+				                                <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6"  HeaderStyle-HorizontalAlign="Left" DataFormatString="{0:C}"> 
+			                                    <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="Left" />
+                                                </asp:BoundField>
 			                                </Columns>
-			                                <RowStyle Font-Size="X-Small" />
+			                                <RowStyle Font-Size="Small" />
 			                                <HeaderStyle Font-Size="Small" />
 		                                </asp:GridView>
                                       </td>

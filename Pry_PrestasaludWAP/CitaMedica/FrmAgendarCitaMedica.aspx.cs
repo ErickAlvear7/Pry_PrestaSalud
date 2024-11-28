@@ -318,12 +318,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 176;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 labh3.Visible = false;
-                if (dt != null && dt.Tables[0].Rows.Count > 0)
+
+                string total = dt.Tables[0].Rows[0][0].ToString();
+
+                if(total != "")
                 {
+                  
                     labh3.Visible = true;
                     grdvSumaLaboratorio.DataSource = dt;
-                    grdvSumaLaboratorio.DataBind();
+                    grdvSumaLaboratorio.DataBind();         
+
                 }
+
+                //if (dt != null && dt.Tables[0].Rows.Count > 0)
+                //{
+
+                //    labh3.Visible = true;
+                //    grdvSumaLaboratorio.DataSource = dt;
+                //    grdvSumaLaboratorio.DataBind();
+                //}
 
             }
             catch(Exception ex)
@@ -1883,22 +1896,36 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                totalLAB += Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "Pvp"));
+                totalLAB = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "ValorTotal"));
+                e.Row.Cells[0].Text = "Valor Consumido";
+                e.Row.Cells[1].Text = totalLAB.ToString("c");
                 ViewState["TotalLab"] = totalLAB.ToString();
             }
 
             if (e.Row.RowType == DataControlRowType.Footer)
             {
                 //tPorcentaje = Math.Round((tPresupuesto / tExigible) * 100, 2);
-                decimal _totalfinal = 100 - Convert.ToDecimal(ViewState["TotalLab"].ToString());
-                e.Row.Cells[0].Text = "Total:";
-                e.Row.Cells[1].Text = ViewState["TotalLab"].ToString();
-                //e.Row.Cells[2].Text = _totalfinal.ToString("c");
-                //e.Row.Cells[3].Text = tExigible.ToString("c");
-                //e.Row.Cells[4].Text = tPorcentaje.ToString();
-                //e.Row.Cells[5].Text = tPresupuesto.ToString("c");
-                e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
-                e.Row.Font.Bold = true;
+
+                //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
+                double valorFinal = 100.00;
+                if (totalLAB >= 100)
+                {
+                    e.Row.Cells[0].Text = "Restante";
+                    e.Row.Cells[1].Text = "xx-Sobrepasa Cupo-xx";
+                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
+                    e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
+                }
+                else
+                {
+                    e.Row.Cells[0].Text = "Valor Restante";
+                    double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
+                    e.Row.Cells[1].Text = _totalfinal.ToString("c");
+                    e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
+                    //e.Row.Font.Bold = true;
+
+                }
+
+
             }
 
         }
