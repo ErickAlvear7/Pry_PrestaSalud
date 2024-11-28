@@ -48,54 +48,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DateTime fechaCita, fechaFinCobertura, fechaSistema;
         Thread thrEnviarSMS;
         Byte[] bytes;
-        
+        decimal totalLAB = 0;
 
-        protected void grdvSumaLaboratorio_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-              
-
-
-            }
-
-            if (e.Row.RowType == DataControlRowType.Footer)
-            {
-                e.Row.Cells[0].Text = "TOTAL";
-                string ver = "";
-            }
-
-        }
-
-        protected void grdvContadorCitas_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-          
-            if (e.Row.RowType == DataControlRowType.Footer)
-            {
-               
-                if(int.Parse(ViewState["Mgeneral"].ToString()) == 4)
-                {
-                    e.Row.Cells[1].Font.Italic = true;
-                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Red;
-                    e.Row.Cells[1].Text = "XX";
-                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
-                }
-          
-                if (int.Parse(ViewState["Especialidad"].ToString()) == 3)
-                {
-                    e.Row.Cells[2].Font.Italic = true;
-                    e.Row.Cells[2].ForeColor = System.Drawing.Color.Red;
-                    e.Row.Cells[2].Text = "XX";
-                    e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
-                }
-            }
-
-        }
         #endregion
 
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
+
             if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                 Response.Redirect("~/Reload.html");
             Page.Form.Attributes.Add("enctype", "multipart/form-data");
@@ -351,7 +314,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
                 objparam[2] = 176;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 labh3.Visible = false;
@@ -1915,6 +1878,53 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 lblerror.Text = ex.ToString();
             }
+        }
+        protected void grdvSumaLaboratorio_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                totalLAB += Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "Pvp"));
+                ViewState["TotalLab"] = totalLAB.ToString();
+            }
+
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+                //tPorcentaje = Math.Round((tPresupuesto / tExigible) * 100, 2);
+                decimal _totalfinal = 100 - Convert.ToDecimal(ViewState["TotalLab"].ToString());
+                e.Row.Cells[0].Text = "Total:";
+                e.Row.Cells[1].Text = ViewState["TotalLab"].ToString();
+                //e.Row.Cells[2].Text = _totalfinal.ToString("c");
+                //e.Row.Cells[3].Text = tExigible.ToString("c");
+                //e.Row.Cells[4].Text = tPorcentaje.ToString();
+                //e.Row.Cells[5].Text = tPresupuesto.ToString("c");
+                e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
+                e.Row.Font.Bold = true;
+            }
+
+        }
+
+        protected void grdvContadorCitas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+
+                if (int.Parse(ViewState["Mgeneral"].ToString()) == 4)
+                {
+                    e.Row.Cells[1].Font.Italic = true;
+                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[1].Text = "XX";
+                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
+                }
+
+                if (int.Parse(ViewState["Especialidad"].ToString()) == 3)
+                {
+                    e.Row.Cells[2].Font.Italic = true;
+                    e.Row.Cells[2].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[2].Text = "XX";
+                    e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
+                }
+            }
+
         }
         protected void grdvHistorialCitas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
