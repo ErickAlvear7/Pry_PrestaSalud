@@ -48,6 +48,49 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DateTime fechaCita, fechaFinCobertura, fechaSistema;
         Thread thrEnviarSMS;
         Byte[] bytes;
+        
+
+        protected void grdvSumaLaboratorio_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+              
+
+
+            }
+
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+                e.Row.Cells[0].Text = "TOTAL";
+                string ver = "";
+            }
+
+        }
+
+        protected void grdvContadorCitas_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+          
+            if (e.Row.RowType == DataControlRowType.Footer)
+            {
+               
+                if(int.Parse(ViewState["Mgeneral"].ToString()) == 4)
+                {
+                    e.Row.Cells[1].Font.Italic = true;
+                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[1].Text = "XX";
+                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
+                }
+          
+                if (int.Parse(ViewState["Especialidad"].ToString()) == 3)
+                {
+                    e.Row.Cells[2].Font.Italic = true;
+                    e.Row.Cells[2].ForeColor = System.Drawing.Color.Red;
+                    e.Row.Cells[2].Text = "XX";
+                    e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
+                }
+            }
+
+        }
         #endregion
 
         #region Load
@@ -93,6 +136,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 tbCitaMedica.Columns.Add("CodigoPrestadora");
                 tbCitaMedica.Columns.Add("Observacion");
                 ViewState["tbCitaMedica"] = tbCitaMedica;
+                ViewState["Mgeneral"] = 0;
+                ViewState["Especialidad"] = 0;
 
                 lbltitulo.Text = "Agendar Cita";
                 //Session["CodigoTitular"] = Request["CodigoTitular"];
@@ -294,16 +339,34 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
                 objparam[2] = 173;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                ViewState["Mgeneral"] = dt.Tables[0].Rows[0][1].ToString();
+                ViewState["Especialidad"] = dt.Tables[0].Rows[0][2].ToString();
+
                 if (dt != null && dt.Tables[0].Rows.Count > 0)
                 {
                     grdvContadorCitas.DataSource = dt;
                     grdvContadorCitas.DataBind();
                 }
 
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 176;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                labh3.Visible = false;
+                if (dt != null && dt.Tables[0].Rows.Count > 0)
+                {
+                    labh3.Visible = true;
+                    grdvSumaLaboratorio.DataSource = dt;
+                    grdvSumaLaboratorio.DataBind();
+                }
+
             }
             catch(Exception ex)
             {
-
+                lblerror.Text = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
             }
         
         }
@@ -312,8 +375,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             try
             {
+               
                 Array.Resize(ref objparam, 3);
-                objparam[0] = 0; //Medicina General 
+                objparam[0] = 1; //Medicina General 
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
                 objparam[2] = 174;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
@@ -322,16 +386,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (cmg == 4)
                 {
-                    idMg.InnerText = "YA NO PUEDE AGENDAR";
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
 
-                    //pnlOpcionesCita.Enabled = false;
-                    //new Funciones
                 }
+
+                ViewState["ContMG"] = cmg;
+
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 2; //Especialidades
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 174;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                if (cesp == 3)
+                {
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
+                }
+
+                ViewState["ContESP"] = cesp;
             }
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs", ex.ToString(), 1);
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspe", ex.ToString(), 1);
             }
 
         }
@@ -1235,6 +1314,37 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+
+            string codEsp = ddlEspecialidad.SelectedValue.ToString();
+
+            Array.Resize(ref objparam, 3);
+            objparam[0] = codEsp; //codigo especialidades
+            objparam[1] = 0;
+            objparam[2] = 175;
+            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+            int cod = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+            if (cod == 1)
+            {
+                if(ViewState["ContMG"].ToString() == "4")
+                {
+                    new Funciones().funShowJSMessage("no permitido", this);
+                    ddlEspecialidad.SelectedIndex = 0;
+                    return;
+                }
+
+            }else if(cod == 2 || cod == 5 || cod ==7 || cod ==8 || cod == 24 || cod == 25 || cod == 26)
+                      
+            {
+                if (ViewState["ContESP"].ToString() == "3")
+                {
+                    new Funciones().funShowJSMessage("no permitido", this);
+                    ddlEspecialidad.SelectedIndex = 0;
+                    return;
+                }
+            }
             FunCascadaCombos(4);
             FunLimpiarCampos();
         }
