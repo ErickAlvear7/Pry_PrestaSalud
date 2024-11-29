@@ -1898,6 +1898,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 totalLAB = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "ValorTotal"));
                 e.Row.Cells[0].Text = "Valor Consumido";
+                //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                 e.Row.Cells[1].Text = totalLAB.ToString("c");
                 ViewState["TotalLab"] = totalLAB.ToString();
             }
@@ -1920,6 +1921,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[0].Text = "Valor Restante";
                     double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
                     e.Row.Cells[1].Text = _totalfinal.ToString("c");
+                    //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                     e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
                     //e.Row.Font.Bold = true;
 

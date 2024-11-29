@@ -239,8 +239,8 @@
                                                 <asp:BoundField DataField="" HeaderText="Cupo Asignado" HeaderStyle-BackColor="#d2f0eb">
 				                                <HeaderStyle BackColor="#D2F0EB" />
                                                 </asp:BoundField>
-				                                <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6"  HeaderStyle-HorizontalAlign="Left" DataFormatString="{0:C}"> 
-			                                    <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="Left" />
+				                                <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6" DataFormatString="{0:C}"> 
+			                                    <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="right" />
                                                 </asp:BoundField>
 			                                </Columns>
 			                                <RowStyle Font-Size="Small" />
