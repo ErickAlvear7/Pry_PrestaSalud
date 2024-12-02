@@ -1360,11 +1360,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
             
             if (codme == 2332)
             {
+                int lab = int.Parse(ddlEspecialidad.SelectedValue.ToString());
+                Array.Resize(ref objparam, 3);
+                objparam[0] = lab; //codigo especialidades
+                objparam[1] = 0;
+                objparam[2] = 178;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                double pvp = double.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                double resta = vrestante - pvp;
+                //resta = Math.Round(vrestante, 2);
+
+                if(resta < 0)
+                {
+                    new Funciones().funShowJSMessage("No tiene cupo para tomar el examen", this);
+                    ddlMedico.SelectedIndex = 0;
+                    ddlEspecialidad.SelectedIndex = 0;
+                    return;
+                }
+
                 if (double.Parse(ViewState["TotalRestante"].ToString()) > 0)
                 {
-                    if (vrestante < 5)
+                    if (vrestante < 3)
                     {
-                        new Funciones().funShowJSMessage("Su cupo es menor a $5" + " --> " + "Pvp:" + vrestante, this);
+                        new Funciones().funShowJSMessage("Su cupo es menor a $3" + " --> " + "Pvp:" + vrestante, this);
                         ddlMedico.SelectedIndex = 0;
                         return;
 
@@ -1928,6 +1948,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                 e.Row.Cells[1].Text = totalLAB.ToString("c");
                 ViewState["TotalLab"] = totalLAB.ToString();
+
+                //decimal valor = totalLAB - 100;
+
             }
 
             if (e.Row.RowType == DataControlRowType.Footer)
@@ -1940,7 +1963,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
                 e.Row.Cells[1].Text = _totalfinal.ToString("c");
                 ViewState["TotalRestante"] = _totalfinal.ToString();
-                if(_totalfinal < 5)
+                if(_totalfinal < 3)
                 {
                   e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
                 }
