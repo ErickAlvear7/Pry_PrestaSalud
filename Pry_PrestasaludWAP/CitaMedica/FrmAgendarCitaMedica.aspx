@@ -396,7 +396,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <h5>Obervación:</h5>
+                                                <h5>Observación:</h5>
                                             </td>
                                             <td colspan="3">
                                                 <asp:TextBox ID="txtObservacion" runat="server" onkeydown="return (event.keyCode!=13);" CssClass="form-control upperCase" Height="50px" MaxLength="250" TabIndex="16" TextMode="MultiLine" Width="100%"></asp:TextBox>
