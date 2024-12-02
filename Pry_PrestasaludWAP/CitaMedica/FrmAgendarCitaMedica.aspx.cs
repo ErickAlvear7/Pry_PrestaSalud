@@ -1347,6 +1347,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int codme = int.Parse(ddlMedico.SelectedValue.ToString());
+            double vfinal = double.Parse(ViewState["TotalLab"].ToString());
+            double vrestante = double.Parse(ViewState["TotalRestante"].ToString());
+            vrestante = Math.Round(vrestante, 2);
+            if (codme == 2332)
+            {
+                if(vrestante < 5 )
+                {
+                    new Funciones().funShowJSMessage("Su cupo es menor a $5"+" --> "+"Pvp:" + vrestante, this);
+                    ddlMedico.SelectedIndex = 0;
+                    return;
+                    
+                }
+            }
+
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
@@ -1921,6 +1936,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[0].Text = "Valor Restante";
                     double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
                     e.Row.Cells[1].Text = _totalfinal.ToString("c");
+                    ViewState["TotalRestante"] = _totalfinal.ToString();
                     //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                     e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
                     //e.Row.Font.Bold = true;
