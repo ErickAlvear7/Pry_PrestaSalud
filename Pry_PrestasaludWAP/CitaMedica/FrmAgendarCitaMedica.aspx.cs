@@ -101,6 +101,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["tbCitaMedica"] = tbCitaMedica;
                 ViewState["Mgeneral"] = 0;
                 ViewState["Especialidad"] = 0;
+                ViewState["TotalLab"] = 0;
+                ViewState["TotalRestante"] = 0;
 
                 lbltitulo.Text = "Agendar Cita";
                 //Session["CodigoTitular"] = Request["CodigoTitular"];
@@ -996,6 +998,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunEnviarSMS()
         {
+
+            DateTime fechaSMS = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            string newFechasMms = fechaSMS.ToString("dd/MM/yyyy");
+
             try
             {
                 //Array.Resize(ref objsendsms, 3);
@@ -1077,7 +1083,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _enviarsms += "{\"phoneNumber\":\"" + lblCelular.InnerText + "\",";
                 _enviarsms += "\"messageId\":" + 134056 + ",";
                 _enviarsms += "\"transactionId\":\"" + ViewState["CodigoCita"].ToString() + "\",";
-                _enviarsms += "\"dataVariable\":[\"" + ViewState["Paciente"].ToString() + "\",\"" + ViewState["FechaCita"].ToString() +
+                _enviarsms += "\"dataVariable\":[\"" + ViewState["Paciente"].ToString() + "\",\"" + newFechasMms +
                     "\"" + ",\"" + ViewState["HoraCita"].ToString() + "\"" + ",\"" + ViewState["Ciudad"].ToString() + "\"" + ",\"" +
                     ViewState["Medico"].ToString() + "\"" + ",\"" + ViewState["Prestadora"].ToString() + "\"]}";
 
@@ -1351,15 +1357,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
             double vfinal = double.Parse(ViewState["TotalLab"].ToString());
             double vrestante = double.Parse(ViewState["TotalRestante"].ToString());
             vrestante = Math.Round(vrestante, 2);
+            
             if (codme == 2332)
             {
-                if(vrestante < 5 )
+                if (double.Parse(ViewState["TotalRestante"].ToString()) > 0)
                 {
-                    new Funciones().funShowJSMessage("Su cupo es menor a $5"+" --> "+"Pvp:" + vrestante, this);
-                    ddlMedico.SelectedIndex = 0;
-                    return;
-                    
+                    if (vrestante < 5)
+                    {
+                        new Funciones().funShowJSMessage("Su cupo es menor a $5" + " --> " + "Pvp:" + vrestante, this);
+                        ddlMedico.SelectedIndex = 0;
+                        return;
+
+                    }
+
                 }
+              
             }
 
             lblerror.Text = "";
@@ -1924,23 +1936,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                 double valorFinal = 100.00;
-                if (totalLAB >= 100)
+                e.Row.Cells[0].Text = "Valor Restante";
+                double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
+                e.Row.Cells[1].Text = _totalfinal.ToString("c");
+                ViewState["TotalRestante"] = _totalfinal.ToString();
+                if(_totalfinal < 5)
                 {
-                    e.Row.Cells[0].Text = "Restante";
-                    e.Row.Cells[1].Text = "xx-Sobrepasa Cupo-xx";
-                    e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Center;
-                    e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
+                  e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
                 }
                 else
                 {
-                    e.Row.Cells[0].Text = "Valor Restante";
-                    double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
-                    e.Row.Cells[1].Text = _totalfinal.ToString("c");
-                    ViewState["TotalRestante"] = _totalfinal.ToString();
-                    //e.Row.Cells[1].HorizontalAlign = HorizontalAlign.Right;
                     e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
-                    //e.Row.Font.Bold = true;
-
                 }
 
 
