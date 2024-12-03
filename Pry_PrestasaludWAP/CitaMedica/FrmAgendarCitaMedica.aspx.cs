@@ -1367,18 +1367,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 178;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
+
                 double pvp = double.Parse(dt.Tables[0].Rows[0][0].ToString());
 
-                double resta = vrestante - pvp;
-                //resta = Math.Round(vrestante, 2);
-
-                if(resta < 0)
+                if (vrestante != 0)
                 {
-                    new Funciones().funShowJSMessage("No tiene cupo para tomar el examen", this);
-                    ddlMedico.SelectedIndex = 0;
-                    ddlEspecialidad.SelectedIndex = 0;
-                    return;
+                    double resta = vrestante - pvp;
+                    if (resta < 0)
+                    {
+
+                        new Funciones().funShowJSMessage("No tiene cupo para tomar el examen", this);
+                        ddlMedico.SelectedIndex = 0;
+                        ddlEspecialidad.SelectedIndex = 0;
+                        return;
+                    }
                 }
+              
+                //resta = Math.Round(vrestante, 2);
 
                 if (double.Parse(ViewState["TotalRestante"].ToString()) > 0)
                 {
