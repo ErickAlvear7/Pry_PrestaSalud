@@ -1376,7 +1376,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (resta < 0)
                     {
 
-                        new Funciones().funShowJSMessage("No tiene cupo para tomar el examen", this);
+                        new Funciones().funShowJSMessage("No tiene cupo para tomar el examen..!!", this);
                         ddlMedico.SelectedIndex = 0;
                         ddlEspecialidad.SelectedIndex = 0;
                         return;
