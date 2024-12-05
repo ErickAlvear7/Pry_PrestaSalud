@@ -573,7 +573,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.DataTextField = "Descripcion";
                         ddlTipoPago.DataValueField = "Codigo";
                         ddlTipoPago.DataBind();
-                        ddlTipoPago.SelectedIndex = 3;
+                        ddlTipoPago.SelectedIndex = 2;
 
                         break;
                 }
@@ -694,13 +694,30 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMotivoCita.DataBind();
                         break;
                     case 8:
-                        Array.Resize(ref objparam, 1);
-                        objparam[0] = 55;
-                        ddlTipoPago.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                        ddlTipoPago.DataTextField = "Descripcion";
-                        ddlTipoPago.DataValueField = "Codigo";
-                        ddlTipoPago.DataBind();
-                        ddlTipoPago.SelectedIndex = 3;
+                        int producto = int.Parse(Session["CodigoProducto"].ToString());
+                        if (producto == 225 || producto == 226 || producto == 227)
+                        {
+                            Array.Resize(ref objparam, 1);
+                            objparam[0] = 55;
+                            ddlTipoPago.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                            ddlTipoPago.DataTextField = "Descripcion";
+                            ddlTipoPago.DataValueField = "Codigo";
+                            ddlTipoPago.DataBind();
+                            ddlTipoPago.SelectedIndex = 2;
+
+                        }
+                        else
+                        {
+                            Array.Resize(ref objparam, 1);
+                            objparam[0] = 55;
+                            ddlTipoPago.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                            ddlTipoPago.DataTextField = "Descripcion";
+                            ddlTipoPago.DataValueField = "Codigo";
+                            ddlTipoPago.DataBind();
+                            ddlTipoPago.SelectedIndex = 1;
+                        }
+                      
+                        
 
                         break;
                 }
