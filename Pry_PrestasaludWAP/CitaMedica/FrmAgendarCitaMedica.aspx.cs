@@ -1540,12 +1540,22 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[17] = "";
                 //PREGUNTAR SI EL CLIENTE YA TIENE AGENDADA UNA CITA EN ESTADO ACTIVO
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
-                if (dt.Tables[0].Rows.Count > 0)
+                if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" || Session["CodigoProducto"].ToString() == "227")
                 {
-                    alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
-                    new Funciones().funShowJSMessage(alerta, this);
-                    return;
+
                 }
+                else
+                {
+                    if (dt.Tables[0].Rows.Count > 0)
+                    {
+
+                        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
+                        new Funciones().funShowJSMessage(alerta, this);
+                        return;
+                    }
+
+                }
+                
                 //REALIZAR EL CONTEO DE LAS CITAS SEGUN LA PROGRAMACION DE SU PRODUCTO
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(ViewState["CodigoGrupo"].ToString());
