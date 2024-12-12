@@ -489,6 +489,7 @@ public class Funciones
         body = body.Replace("{FecCita}", fechaCita);
         body = body.Replace("{Horacita}", oBody[5].ToString());
         body = body.Replace("{Prestadora}", oBody[6].ToString());
+        body = body.Replace("{Direccion}", oBody[14].ToString());
         body = body.Replace("{Medico}", oBody[7].ToString());
         body = body.Replace("{Especialidad}", oBody[8].ToString());
         body = body.Replace("{Observa}", oBody[9].ToString());
@@ -497,7 +498,6 @@ public class Funciones
         body = body.Replace("{Tipo}", oBody[11].ToString());
         body = body.Replace("{Paciente}", oBody[12].ToString());
         body = body.Replace("{FecNaci}", fechaNaci);
-        body = body.Replace("{Direccion}", oBody[14].ToString());
         body = body.Replace("{Telefonos}", oBody[15].ToString());
         body = body.Replace("{Usuario}", oBody[21].ToString());
         body = body.Replace("{TipoPago}", oBody[23].ToString());
