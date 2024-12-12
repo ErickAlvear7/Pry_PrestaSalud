@@ -27,6 +27,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         Object[] objsendmails = new Object[3];
         Object[] objsendsms = new Object[3];
         Object[] objconsulta = new Object[3];
+        Object[] objparamdirecpre = new Object[3];
         DataTable tbDatosCita = new DataTable();
         DataTable tbCitaMedica = new DataTable();
         DataTable tbNuevaCitaMedica = new DataTable();
@@ -927,7 +928,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DateTime fecha = DateTime.ParseExact(objparam[4].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     string newFecha = fecha.ToString("dd/MM/yyyy");
                     //string newFecha = DateTime.ParseExact(fecha.ToString("MM/dd/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
-                   
+
+                    Array.Resize(ref objparamdirecpre, 3);
+                    objparamdirecpre[0] = objparam[1];
+                    objparamdirecpre[1] = "";
+                    objparamdirecpre[2] = 180;
+                    
+                    DataSet dtdirec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirecpre);
+                    string direcpres = dtdirec.Tables[0].Rows[0][0].ToString();
+
 
                     objparam[5] = dr[6].ToString();
                     objparam[6] = dr[7].ToString();
@@ -967,7 +976,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DateTime FechaNaci = DateTime.ParseExact(objcitamedica[13].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     string newFechaNaci = FechaNaci.ToString("dd/MM/yyyy");
 
-                    objcitamedica[14] = dt.Tables[0].Rows[0][2].ToString();
+                    objcitamedica[14] = direcpres;
                     //objcitamedica[15] = "";
                     objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
                     objcitamedica[20] = medicamentos;
