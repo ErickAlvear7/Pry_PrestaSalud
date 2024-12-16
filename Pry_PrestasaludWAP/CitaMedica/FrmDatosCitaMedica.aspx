@@ -105,7 +105,7 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <h5><strong>Detalle:</strong></h5>
+                                    <h5><strong>Observacion:</strong></h5>
                                 </td>
                                 <td>
                                     <asp:Label ID="lblDetalle" runat="server" Text=""></asp:Label> 
@@ -146,7 +146,7 @@
                                 </td>
                                 <td></td>
                                  <td>
-                                    <h5><strong>Direccion:</strong></h5>
+                                    <h5><strong>Direccion Prestador:</strong></h5>
                                 </td>
                                 <td>
                                     <asp:Label ID="lblDirec" runat="server" Text=""></asp:Label> 

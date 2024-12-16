@@ -113,7 +113,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Session["Regresar"] = Request["Regresar"];
                 Session["TipoCita"] = "CitaMedica";
                 ViewState["Intervalo"] = 0;
-                Session["codigocita"] = 0;
+                //Session["codigocita"] = 0;
                 FunContadorCitas();
                 FunValidarEspe();
                 FunCargaMantenimiento();
@@ -1001,7 +1001,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //mensaje = "";
                 if (mensaje == "")
                 {
-                    Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
+                    //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
 
                     if (Session["Regresar"].ToString() == "0")
                         Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
@@ -1968,7 +1968,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (codCita > 0)
                     {
                         Session["SalirAgenda"] = "SI";
-                        ViewState["CodigoCitapop"] = codCita;
+                        Session["codigocita"] = codCita;
 
                         FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString());
                     }
