@@ -1464,12 +1464,50 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     int iHorasInterv = (int)intervalo.TotalMinutes;
                     if (iHorasAgenda <= iHorasInterv)
                     {
+                       
                         new Funciones().funShowJSMessage("Lamentamos.. Excede el intervalo de tiempo permitido..!", this);
                         return;
                     }
                 }
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
+
+              
+                
+                Array.Resize(ref objparam, 3);
+                objparam[0] = ddlPrestadora.SelectedValue;
+                objparam[1] = "";
+                objparam[2] = 181;
+                DataSet data = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                if(data.Tables[0].Rows.Count > 0 && data != null)
+                {
+
+                    string fechaInicio = data.Tables[0].Rows[0][0].ToString();
+                    string fechaFin = data.Tables[0].Rows[0][1].ToString();
+
+                    DateTime FechaIni = DateTime.ParseExact(fechaInicio, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime FechaFi = DateTime.ParseExact(fechaFin, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime FechaCita = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    string newFechaCita = FechaCita.ToString("dd/MM/yyyy");
+
+
+                    if (FechaCita >= FechaIni && FechaCita <= FechaFi)
+                    {
+                        new Funciones().funShowJSMessage("Prestador no atendera el " + newFechaCita, this);
+                        return;
+                    }
+
+                }
+
+                    //DateTime fechaIni = Convert.ToDateTime(dt.Tables[0].Rows[0][0].ToString()).Date;
+                    //DateTime fechaFi = Convert.ToDateTime(dt.Tables[0].Rows[0][1].ToString()).Date;
+
+                    //TimeSpan difFechas = fechaFi - fechaIni;
+
+                    // int dias = (int)difFechas.TotalDays;
+                    // string days = Convert.ToString(dias);
+                
                 //Buscar si ya existe alguna reserva realizada
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 2;
@@ -2210,6 +2248,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     tbCitaMedica.Columns.Add("EstatusCita");
                     tbCitaMedica.Columns.Add("Longitud");
                     tbCitaMedica.Columns.Add("Latitud");
+                    tbCitaMedica.Columns.Add("CodigoPrestadora");
                     tbCitaMedica.Columns.Add("Observacion");
                     ViewState["tbCitaMedica"] = tbCitaMedica;
                     Session["SalirAgenda"] = "SI";
