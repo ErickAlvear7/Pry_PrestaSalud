@@ -152,9 +152,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ddl\net.Mensaje.Web.PopupWin.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ddl\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -312,6 +311,7 @@
     <Compile Include="Administrador\FrmRepFactOdonAdmin.aspx.designer.cs">
       <DependentUpon>FrmRepFactOdonAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Api\MethodApi.cs" />
     <Compile Include="CitaMedica\FrmActualizarDatos.aspx.cs">
       <DependentUpon>FrmActualizarDatos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -947,6 +947,7 @@
     <Compile Include="Menu\FrmNuevoMenu.aspx.designer.cs">
       <DependentUpon>FrmNuevoMenu.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\Models.cs" />
     <Compile Include="Old_App_Code\BundleConfig.cs" />
     <Compile Include="Old_App_Code\Conexion.cs" />
     <Compile Include="Old_App_Code\DatosJson.cs" />

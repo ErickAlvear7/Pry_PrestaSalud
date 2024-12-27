@@ -413,6 +413,31 @@
                                         </tr>
                                     </table>
                                 </asp:Panel>
+                                <asp:Panel ID="pnlLink" runat="server" GroupingText="Link Url LLamada" TabIndex="5">
+                                    <table style="width: 100%">
+                                          <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 30%"></td>
+                                            <td style="width: 50%"></td>
+                                            <td style="width: 15%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" />
+                                            </td>
+                                            <td>
+                                                <asp:Label runat="server" ID="lblUrl" Text="copiar url"  />
+                                            </td>
+                                            <td>
+                                                <h5>enviar email</h5>
+                                                <asp:CheckBox runat="server" ID="chkEmail" />
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </asp:Panel>
                                 <table style="width: 100%">
                                     <tr>
                                         <td style="width: 5%"></td>
