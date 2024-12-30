@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -157,12 +158,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ddlOpcion.Enabled = false;
                     imgAgendar.Enabled = false;
                 }
-                
-                if(Session["Regresar"] != null)
+
+                if (Session["Regresar"] != null)
                 {
                     if (Session["Regresar"].ToString() == "1") TrFileUpload.Visible = true;
                 }
-                
+
                 if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
             }
         }
@@ -283,7 +284,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
-    
+
 
         private void FunHistorialCitas()
         {
@@ -334,12 +335,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 string total = dt.Tables[0].Rows[0][0].ToString();
 
-                if(total != "")
+                if (total != "")
                 {
-                  
+
                     labh3.Visible = true;
                     grdvSumaLaboratorio.DataSource = dt;
-                    grdvSumaLaboratorio.DataBind();         
+                    grdvSumaLaboratorio.DataBind();
 
                 }
 
@@ -352,19 +353,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //}
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
             }
-        
+
         }
 
         private void FunValidarEspe()
         {
             try
             {
-               
+
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 1; //Medicina General 
                 objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
@@ -727,8 +728,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlTipoPago.DataBind();
                             ddlTipoPago.SelectedIndex = 1;
                         }
-                      
-                        
+
+
 
                         break;
                 }
@@ -943,7 +944,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparamdirecpre[0] = objparam[1];
                     objparamdirecpre[1] = "";
                     objparamdirecpre[2] = 180;
-                    
+
                     DataSet dtdirec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirecpre);
                     string direcpres = dtdirec.Tables[0].Rows[0][0].ToString();
 
@@ -1005,8 +1006,154 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
                         ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
-                    
+
                 }
+
+                //mensaje = "";
+                if (mensaje == "")
+                {
+                    //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
+
+                    if (Session["Regresar"].ToString() == "0")
+                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
+                    else
+                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
+                }
+                else
+                {
+                    if (Session["Regresar"].ToString() == "0")
+                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                    else
+                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+            }
+        }
+        private void FunEnviarMailCitalink(int codicita, string fechacita, string horacita)
+        {
+            try
+            {
+                Array.Resize(ref objparam, 3);
+                objparam[0] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[1] = "";
+                objparam[2] = 107;
+                dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                mailsU = dtusu.Tables[0].Rows[0][0].ToString();
+                //Thread.Sleep(300);
+
+                Array.Resize(ref objcitamedica, 24);
+
+                objcitamedica[16] = "";
+                objcitamedica[17] = "";
+                objcitamedica[18] = "";
+                objcitamedica[19] = "";
+                Array.Resize(ref objparam, 1);
+                objparam[0] = 16;
+                dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                if (dt.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+                        if (dr[0].ToString() == "PIE1") objcitamedica[16] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE2") objcitamedica[17] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE3") objcitamedica[18] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE4") objcitamedica[19] = dr[1].ToString();
+                    }
+                }
+                //filePath = Server.MapPath("~" + "\\CitasAgendadas\\");
+                fileTemplate = Server.MapPath("~/Template/HtmlTemplate.html");
+                fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
+                subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
+                subject = subject.Replace('\r', ' ').Replace('\n', ' ');
+
+                Array.Resize(ref objparam, 18);
+                objparam[0] = 8;
+                objparam[13] = "";
+                objparam[14] = "";
+                objparam[15] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[16] = Session["MachineName"].ToString();
+                objparam[17] = "";
+
+                objcitamedica[0] = ViewState["Campaing"].ToString();
+                objcitamedica[1] = ViewState["Producto"].ToString();
+
+                mailsP = FunMailsEnviar(int.Parse(ddlPrestadora.SelectedValue));
+
+                if (string.IsNullOrEmpty(mailsP))
+                {
+                    mensaje = "Hubo errores en el envío, Defina mails de la Prestadora..!";
+                    lblerror.Text = "Defina mails de envío de la Prestadora..!";
+                    return;
+                }
+                //Traer mail del usuario, si esta vacio coger los alternativos
+                mailsA = FunMailsAlterna();
+                mailsD = FunMailsMedicos(int.Parse(ddlMedico.SelectedValue));
+
+                ViewState["FechaCita"] = objparam[4].ToString();
+                DateTime fecha = DateTime.ParseExact(objparam[4].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                string newFecha = fecha.ToString("dd/MM/yyyy");
+                //string newFecha = DateTime.ParseExact(fecha.ToString("MM/dd/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
+
+                Array.Resize(ref objparamdirecpre, 3);
+                objparamdirecpre[0] = objparam[1];
+                objparamdirecpre[1] = "";
+                objparamdirecpre[2] = 180;
+
+                DataSet dtdirec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirecpre);
+                string direcpres = dtdirec.Tables[0].Rows[0][0].ToString();
+
+
+                ViewState["HoraCita"] = objparam[6].ToString();
+
+
+                ViewState["CodigoCita"] = codigocita.ToString();
+                //medicamentos = FunGetMedicamento(int.Parse(ViewState["CodigoGrupo"].ToString()));
+                objcitamedica[2] = codigocita;
+                objcitamedica[3] = "";
+                ViewState["Ciudad"] = objcitamedica[3].ToString();
+                objcitamedica[4] = "";
+                objcitamedica[5] = "";
+                objcitamedica[6] = "";
+                ViewState["Prestadora"] = objcitamedica[6].ToString();
+                objcitamedica[7] = "";
+                ViewState["Medico"] = objcitamedica[7].ToString();
+                objcitamedica[8] = "";
+                ViewState["Especialidad"] = objcitamedica[8].ToString();
+                objcitamedica[9] = FunGetMotivo(ddlMotivoCita.SelectedValue);
+                objcitamedica[10] = ViewState["Indentificacion"].ToString();
+                objcitamedica[11] = ViewState["TipoCliente"].ToString() == "T" ? "TITULAR" : "BENEFICIARIO";
+                objcitamedica[12] = "";
+                ViewState["Paciente"] = objcitamedica[12].ToString();
+                objdatostitu[0] = ViewState["TipoCliente"].ToString() == "T" ? 2 : 3;
+                objdatostitu[1] = "";
+                objdatostitu[2] = "";
+                objdatostitu[3] = 0;
+                dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
+                objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
+                //objcitamedica[13].ToString();
+                DateTime FechaNaci = DateTime.ParseExact(objcitamedica[13].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                string newFechaNaci = FechaNaci.ToString("dd/MM/yyyy");
+
+                objcitamedica[14] = direcpres;
+                //objcitamedica[15] = "";
+                objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
+                objcitamedica[20] = medicamentos;
+                objcitamedica[21] = Session["usuLogin"].ToString();
+                objcitamedica[22] = "";
+                objcitamedica[23] = "";
+
+                //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
+                //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
+
+                mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                    ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
+                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+
+
+
 
                 //mensaje = "";
                 if (mensaje == "")
@@ -1332,7 +1479,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
 
             string codEsp = ddlEspecialidad.SelectedValue.ToString();
 
@@ -1346,15 +1493,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             if (cod == 1)
             {
-                if(ViewState["ContMG"].ToString() == "4")
+                if (ViewState["ContMG"].ToString() == "4")
                 {
                     new Funciones().funShowJSMessage("no permitido", this);
                     ddlEspecialidad.SelectedIndex = 0;
                     return;
                 }
 
-            }else if(cod == 2 || cod == 5 || cod ==7 || cod ==8 || cod == 24 || cod == 25 || cod == 26)
-                      
+            }
+            else if (cod == 2 || cod == 5 || cod == 7 || cod == 8 || cod == 24 || cod == 25 || cod == 26)
+
             {
                 if (ViewState["ContESP"].ToString() == "3")
                 {
@@ -1394,7 +1542,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             double vfinal = double.Parse(ViewState["TotalLab"].ToString());
             double vrestante = double.Parse(ViewState["TotalRestante"].ToString());
             vrestante = Math.Round(vrestante, 2);
-            
+
             if (codme == 2332)
             {
                 int lab = int.Parse(ddlEspecialidad.SelectedValue.ToString());
@@ -1419,7 +1567,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         return;
                     }
                 }
-              
+
                 //resta = Math.Round(vrestante, 2);
 
                 if (double.Parse(ViewState["TotalRestante"].ToString()) > 0)
@@ -1433,10 +1581,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
 
                 }
-              
+
             }
 
-            if(codme == 2969)
+            if (codme == 2969)
             {
                 pnlLink.Visible = true;
                 ddlOpcion.Enabled = false;
@@ -1452,7 +1600,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnLink_Click(object sender, EventArgs e)
         {
 
-            btnLink.Enabled = true;
+            btnLink.Enabled = false;
             DataSet api = new DataSet();
             DataSet link = new DataSet();
 
@@ -1523,7 +1671,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
 
                 //GET DATOS TITULAR Y BENEFICIARIO
-                if(idtitu != 0)
+                //if(ViewState["TipoCliente"].ToString() == "T")
+                if (idtitu != 0)
                 {
                     Array.Resize(ref objlink, 3);
                     objlink[0] = 0;
@@ -1541,41 +1690,43 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         email = dr[5].ToString();
                     }
 
-                //}else if(idbene != 0)
-                //{
-                //    Array.Resize(ref objlink, 3);
-                //    objlink[0] = 1;
-                //    objlink[1] = 0;
-                //    objlink[2] = idbene;
-                //    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
-
-                //    foreach (DataRow dr in dt.Tables[0].Rows)
-                //    {
-                //        nombre = dr[0].ToString();
-                //        apellido = dr[1].ToString();
-                //        genero = dr[2].ToString();
-                //        fechanac = dr[3].ToString();
-                //        celular = dr[4].ToString();
-                //        email = dr[5].ToString();
-                //    }
-
-                //}
-             
-
-                if(email == "")
+                }
+                else if (idbene != 0)
                 {
-                    new Funciones().funShowJSMessage("Titular requiere un email",this);
+                    Array.Resize(ref objlink, 3);
+                    objlink[0] = 1;
+                    objlink[1] = 0;
+                    objlink[2] = idbene;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+                        nombre = dr[0].ToString();
+                        apellido = dr[1].ToString();
+                        genero = dr[2].ToString();
+                        fechanac = dr[3].ToString();
+                        celular = dr[4].ToString();
+                        email = dr[5].ToString();
+                    }
+
+                }
+
+
+                if (email == "")
+                {
+                    new Funciones().funShowJSMessage("Titular requiere un email", this);
+                    btnLink.Enabled = true;
                     return;
                 }
 
-                if(genero == "M")
+                if (genero == "M")
                 {
                     genero = "h";
                 }
                 else
                 {
                     genero = "m";
-                } 
+                }
 
                 DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
@@ -1627,12 +1778,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
             _datalink = new MethodApi().Consultas("https://api.eh.ehealthcenter.io/", dataconsulta, _token);
 
-            if(_datalink != "")
+            if (_datalink != "")
             {
                 dynamic urlLink = JObject.Parse(_datalink);
                 url = urlLink.url_llamada;
                 fecha = urlLink.fecha;
                 motivo = urlLink.motivo;
+
+                string xfecha = fecha.Substring(0, 10);
+                string xhora = fecha.Substring(11, 5);
 
                 lblUrl.Text = url;
 
@@ -1640,10 +1794,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
                 //imgAgendar_Click
 
+                Array.Resize(ref objparam, 7);
+                objparam[0] = 0;
+                objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
+                objparam[2] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[3] = Session["MachineName"].ToString();
+                objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                objparam[5] = "";
+                //objparam[6] = ddlTipoPago.SelectedValue;
+                DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
+                int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+                if (codCita > 0)
+                {
+                    Session["SalirAgenda"] = "SI";
+                    Session["codigocita"] = codCita;
+
+                    FunEnviarMailCitalink(codCita, xfecha, xhora);
+                }
 
             }
 
-         
+
 
 
         }
@@ -1682,7 +1853,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     int iHorasInterv = (int)intervalo.TotalMinutes;
                     if (iHorasAgenda <= iHorasInterv)
                     {
-                       
+
                         new Funciones().funShowJSMessage("Lamentamos.. Excede el intervalo de tiempo permitido..!", this);
                         return;
                     }
@@ -1690,15 +1861,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
 
-              
-                
+
+
                 Array.Resize(ref objparam, 3);
                 objparam[0] = ddlPrestadora.SelectedValue;
                 objparam[1] = "";
                 objparam[2] = 181;
                 DataSet data = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                if(data.Tables[0].Rows.Count > 0 && data != null)
+                if (data.Tables[0].Rows.Count > 0 && data != null)
                 {
 
                     string fechaInicio = data.Tables[0].Rows[0][0].ToString();
@@ -1718,14 +1889,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
-                    //DateTime fechaIni = Convert.ToDateTime(dt.Tables[0].Rows[0][0].ToString()).Date;
-                    //DateTime fechaFi = Convert.ToDateTime(dt.Tables[0].Rows[0][1].ToString()).Date;
+                //DateTime fechaIni = Convert.ToDateTime(dt.Tables[0].Rows[0][0].ToString()).Date;
+                //DateTime fechaFi = Convert.ToDateTime(dt.Tables[0].Rows[0][1].ToString()).Date;
 
-                    //TimeSpan difFechas = fechaFi - fechaIni;
+                //TimeSpan difFechas = fechaFi - fechaIni;
 
-                    // int dias = (int)difFechas.TotalDays;
-                    // string days = Convert.ToString(dias);
-                
+                // int dias = (int)difFechas.TotalDays;
+                // string days = Convert.ToString(dias);
+
                 //Buscar si ya existe alguna reserva realizada
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 2;
@@ -1820,7 +1991,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
 
                 }
-                
+
                 //REALIZAR EL CONTEO DE LAS CITAS SEGUN LA PROGRAMACION DE SU PRODUCTO
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(ViewState["CodigoGrupo"].ToString());
@@ -2260,9 +2431,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 double _totalfinal = valorFinal - Convert.ToDouble(ViewState["TotalLab"].ToString());
                 e.Row.Cells[1].Text = _totalfinal.ToString("c");
                 ViewState["TotalRestante"] = _totalfinal.ToString();
-                if(_totalfinal < 3)
+                if (_totalfinal < 3)
                 {
-                  e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
+                    e.Row.Cells[1].BackColor = System.Drawing.Color.LightPink;
                 }
                 else
                 {

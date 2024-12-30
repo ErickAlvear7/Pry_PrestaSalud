@@ -651,6 +651,37 @@ public class Conexion
         }
 
     }
+    public DataSet FunCodigoCitalINK(object[] objparam)
+    {
+        try
+        {
+            using (SqlCommand cmd = new SqlCommand("sp_AgendaMedicaLink"))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = Sqlcn;
+                cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
+                cmd.Parameters.AddWithValue("@in_codigoproducto", int.Parse(objparam[1].ToString()));
+                cmd.Parameters.AddWithValue("@in_usucodigo", objparam[2]);
+                cmd.Parameters.AddWithValue("@in_terminal", objparam[3]);
+                cmd.Parameters.AddWithValue("@in_observacion", objparam[4]);
+                cmd.Parameters.AddWithValue("@in_fuente", objparam[5]);
+                cmd.Parameters.AddWithValue("@in_tipopago", objparam[6]);
+                cmd.Parameters.AddWithValue("@EmptyCitaMedica", dt);
+                Sqlcn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                mensaje = "";
+                //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+            }
+            return ds;
+        }
+
+        catch (Exception ex)
+        {
+            return ds = null;
+        }
+
+    }
     public string FunAgendaCitaOdonto(object[] objparam, DataTable dt)
     {
         try
