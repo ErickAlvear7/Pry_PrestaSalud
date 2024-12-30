@@ -1389,11 +1389,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //pnlLink.Visible = false;
-            //ddlOpcion.Enabled = true;
-            //ddlMotivoCita.Enabled = true;
-            //ddlTipoPago.Enabled = true;
-            //txtObservacion.Enabled = true;
 
             int codme = int.Parse(ddlMedico.SelectedValue.ToString());
             double vfinal = double.Parse(ViewState["TotalLab"].ToString());
@@ -1444,10 +1439,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             if(codme == 2969)
             {
                 pnlLink.Visible = true;
-                //ddlOpcion.Enabled = false;
+                ddlOpcion.Enabled = false;
                 //ddlMotivoCita.Enabled = false;
-                //ddlTipoPago.Enabled = false;
-                //txtObservacion.Enabled = false;
+                ddlTipoPago.Enabled = false;
+                txtObservacion.Enabled = false;
             }
 
             lblerror.Text = "";
@@ -1539,6 +1534,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     email = dr[5].ToString();
                 }
 
+                if(email == "")
+                {
+                    new Funciones().funShowJSMessage("Titular/beneficiario requiere un email",this);
+                    return;
+                }
+
                 if(genero == "M")
                 {
                     genero = "h";
@@ -1556,7 +1557,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     name = nombre,
                     surnames = apellido,
                     email = email,
-                    birthdate = "1982-08-15",
+                    birthdate = newFechaNaci,
                     gender = genero,
                     phone = celular,
                     contractId = _idcont
