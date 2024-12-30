@@ -63,7 +63,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
-            pnlLink.Visible = false;
+            //pnlLink.Visible = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
             Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
 
@@ -1444,10 +1444,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             if(codme == 2969)
             {
                 pnlLink.Visible = true;
-                ddlOpcion.Enabled = false;
-                ddlMotivoCita.Enabled = false;
-                ddlTipoPago.Enabled = false;
-                txtObservacion.Enabled = false;
+                //ddlOpcion.Enabled = false;
+                //ddlMotivoCita.Enabled = false;
+                //ddlTipoPago.Enabled = false;
+                //txtObservacion.Enabled = false;
             }
 
             lblerror.Text = "";
@@ -1523,33 +1523,42 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
 
                 //GET DATOS TITULAR Y BENEFICIARIO
-                //Array.Resize(ref objlink, 3);
-                //objlink[0] = 0;
-                //objlink[1] = idtitu;
-                //objlink[2] = idbene;
-                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+                Array.Resize(ref objlink, 3);
+                objlink[0] = 0;
+                objlink[1] = idtitu;
+                objlink[2] = idbene;
+                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
 
-                //foreach (DataRow dr in dt.Tables[0].Rows)
-                //{
-                //    nombre = dr[0].ToString();
-                //    apellido = dr[1].ToString();
-                //    genero = dr[2].ToString();
-                //    fechanac = dr[3].ToString();
-                //    celular = dr[4].ToString();
-                //    email = dr[5].ToString();
-                //}
+                foreach (DataRow dr in dt.Tables[0].Rows)
+                {
+                    nombre = dr[0].ToString();
+                    apellido = dr[1].ToString();
+                    genero = dr[2].ToString();
+                    fechanac = dr[3].ToString();
+                    celular = dr[4].ToString();
+                    email = dr[5].ToString();
+                }
 
-                //DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                //         newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
+                if(genero == "M")
+                {
+                    genero = "h";
+                }
+                else
+                {
+                    genero = "m";
+                } 
+
+                DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
                 var patient = new Patient
                 {
-                    name = "ERICK",
-                    surnames = "ALVEAR",
-                    email = "erick@gmail.com",
+                    name = nombre,
+                    surnames = apellido,
+                    email = email,
                     birthdate = "1982-08-15",
-                    gender = "m",
-                    phone = "0962655679",
+                    gender = genero,
+                    phone = celular,
                     contractId = _idcont
                 };
 
@@ -1597,6 +1606,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 motivo = urlLink.motivo;
 
                 lblUrl.Text = url;
+
+
+                //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
+                //imgAgendar_Click
+
 
             }
 

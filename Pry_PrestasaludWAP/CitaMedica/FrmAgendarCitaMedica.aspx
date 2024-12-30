@@ -362,7 +362,7 @@
                                                 </asp:DropDownList>
                                             </td>
                                             <td style="text-align: center">
-                                                <asp:ImageButton ID="imgHorarios" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" ToolTip="Ver Horarios" OnClick="imgHorarios_Click" TabIndex="12" />
+                                                <asp:ImageButton ID="imgHorarios" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" ToolTip="Ver Horarios" TabIndex="12" OnClick="imgAgendar_Click" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -413,7 +413,7 @@
                                         </tr>
                                     </table>
                                 </asp:Panel>
-                                <asp:Panel ID="pnlLink" runat="server" GroupingText="Link Url LLamada" TabIndex="5">
+                                <asp:Panel ID="pnlLink" runat="server" GroupingText="Link Url LLamada" TabIndex="5" Visible="False">
                                     <table style="width: 100%">
                                           <tr>
                                             <td style="width: 5%"></td>
@@ -592,7 +592,7 @@
                         </Triggers>
                     </asp:UpdatePanel>
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">HISTORIAL CITAS MEDICAS</h3>
-                  <%--  <div class="panel-info">
+                    <div class="panel-info">
                         <asp:UpdateProgress ID="UpdateProgress1" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCancelarCita">
                             <ProgressTemplate>
                                 <div class="overlay" />
@@ -602,7 +602,7 @@
                                 </div>
                             </ProgressTemplate>
                         </asp:UpdateProgress>
-                    </div>--%>
+                    </div>
                     <asp:UpdatePanel ID="updDetalle" runat="server">
                         <ContentTemplate>
                             <div class="table-responsive">
