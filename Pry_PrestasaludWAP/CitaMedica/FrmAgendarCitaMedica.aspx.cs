@@ -1451,6 +1451,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void btnLink_Click(object sender, EventArgs e)
         {
+
+            btnLink.Enabled = true;
             DataSet api = new DataSet();
             DataSet link = new DataSet();
 
@@ -1491,6 +1493,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string _apikey = JsonConvert.SerializeObject(apikey);
             string _token = new MethodApi().GetToken("https://api.eh.ehealthcenter.io/apikey/", _apikey);
 
+            //GUARDAR ID
+
+
             //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
             Array.Resize(ref objparam, 3);
             objparam[0] = idtitu;
@@ -1518,25 +1523,48 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
 
                 //GET DATOS TITULAR Y BENEFICIARIO
-                Array.Resize(ref objlink, 3);
-                objlink[0] = 0;
-                objlink[1] = idtitu;
-                objlink[2] = idbene;
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
-
-                foreach (DataRow dr in dt.Tables[0].Rows)
+                if(idtitu != 0)
                 {
-                    nombre = dr[0].ToString();
-                    apellido = dr[1].ToString();
-                    genero = dr[2].ToString();
-                    fechanac = dr[3].ToString();
-                    celular = dr[4].ToString();
-                    email = dr[5].ToString();
-                }
+                    Array.Resize(ref objlink, 3);
+                    objlink[0] = 0;
+                    objlink[1] = idtitu;
+                    objlink[2] = 0;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+                        nombre = dr[0].ToString();
+                        apellido = dr[1].ToString();
+                        genero = dr[2].ToString();
+                        fechanac = dr[3].ToString();
+                        celular = dr[4].ToString();
+                        email = dr[5].ToString();
+                    }
+
+                //}else if(idbene != 0)
+                //{
+                //    Array.Resize(ref objlink, 3);
+                //    objlink[0] = 1;
+                //    objlink[1] = 0;
+                //    objlink[2] = idbene;
+                //    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+                //    foreach (DataRow dr in dt.Tables[0].Rows)
+                //    {
+                //        nombre = dr[0].ToString();
+                //        apellido = dr[1].ToString();
+                //        genero = dr[2].ToString();
+                //        fechanac = dr[3].ToString();
+                //        celular = dr[4].ToString();
+                //        email = dr[5].ToString();
+                //    }
+
+                //}
+             
 
                 if(email == "")
                 {
-                    new Funciones().funShowJSMessage("Titular/beneficiario requiere un email",this);
+                    new Funciones().funShowJSMessage("Titular requiere un email",this);
                     return;
                 }
 
