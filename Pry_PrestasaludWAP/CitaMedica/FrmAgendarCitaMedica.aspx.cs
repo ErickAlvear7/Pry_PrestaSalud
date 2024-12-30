@@ -1389,11 +1389,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pnlLink.Visible = false;
-            ddlOpcion.Enabled = true;
-            ddlMotivoCita.Enabled = true;
-            ddlTipoPago.Enabled = true;
-            txtObservacion.Enabled = true;
+            //pnlLink.Visible = false;
+            //ddlOpcion.Enabled = true;
+            //ddlMotivoCita.Enabled = true;
+            //ddlTipoPago.Enabled = true;
+            //txtObservacion.Enabled = true;
 
             int codme = int.Parse(ddlMedico.SelectedValue.ToString());
             double vfinal = double.Parse(ViewState["TotalLab"].ToString());
@@ -1475,6 +1475,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
             int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
             int idprod = int.Parse(Session["CodigoProducto"].ToString());
+            string fecha = "";
+            string motivo = "";
+            string url = "";
+
             //CONSULTAR API-KEY BDD
             Array.Resize(ref objparam, 3);
             objparam[0] = 0;
@@ -1519,33 +1523,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
 
                 //GET DATOS TITULAR Y BENEFICIARIO
-                Array.Resize(ref objlink, 3);
-                objlink[0] = 0;
-                objlink[1] = idtitu;
-                objlink[2] = idbene;
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+                //Array.Resize(ref objlink, 3);
+                //objlink[0] = 0;
+                //objlink[1] = idtitu;
+                //objlink[2] = idbene;
+                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
 
-                foreach (DataRow dr in dt.Tables[0].Rows)
-                {
-                    nombre = dr[0].ToString();
-                    apellido = dr[1].ToString();
-                    genero = dr[2].ToString();
-                    fechanac = dr[3].ToString();
-                    celular = dr[4].ToString();
-                    email = dr[5].ToString();
-                }
+                //foreach (DataRow dr in dt.Tables[0].Rows)
+                //{
+                //    nombre = dr[0].ToString();
+                //    apellido = dr[1].ToString();
+                //    genero = dr[2].ToString();
+                //    fechanac = dr[3].ToString();
+                //    celular = dr[4].ToString();
+                //    email = dr[5].ToString();
+                //}
 
-                DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                         newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
+                //DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                //         newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
                 var patient = new Patient
                 {
-                    name = "Erick",
-                    surnames = "Alvear",
-                    email = "",
+                    name = "ERICK",
+                    surnames = "ALVEAR",
+                    email = "erick@gmail.com",
                     birthdate = "1982-08-15",
                     gender = "m",
-                    phone = "0995677298",
+                    phone = "0962655679",
                     contractId = _idcont
                 };
 
@@ -1585,12 +1589,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
             _datalink = new MethodApi().Consultas("https://api.eh.ehealthcenter.io/", dataconsulta, _token);
 
-            //dynamic urlLink = JObject.Parse(_datalink);
-            //string url = urlLink.url_llamada;
-            //string fecha = urlLink.fecha;
-            //string motivo = urlLink.motivo;
+            if(_datalink != "")
+            {
+                dynamic urlLink = JObject.Parse(_datalink);
+                url = urlLink.url_llamada;
+                fecha = urlLink.fecha;
+                motivo = urlLink.motivo;
 
-            //lblUrl.Text = url;
+                lblUrl.Text = url;
+
+            }
+
+         
 
 
         }
