@@ -1617,6 +1617,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string newFechaNaci = "";
             string celular = "";
             string email = "";
+            string tipo = ViewState["TipoCliente"].ToString();
             int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
             int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
             int idprod = int.Parse(Session["CodigoProducto"].ToString());
@@ -1672,7 +1673,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 //GET DATOS TITULAR Y BENEFICIARIO
                 //if(ViewState["TipoCliente"].ToString() == "T")
-                if (idtitu != 0)
+                if (ViewState["TipoCliente"].ToString() == "T")
                 {
                     Array.Resize(ref objlink, 3);
                     objlink[0] = 0;
@@ -1691,7 +1692,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
 
                 }
-                else if (idbene != 0)
+                else if (ViewState["TipoCliente"].ToString() == "B")
                 {
                     Array.Resize(ref objlink, 3);
                     objlink[0] = 1;
@@ -1794,23 +1795,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
                 //imgAgendar_Click
 
-                Array.Resize(ref objparam, 7);
-                objparam[0] = 0;
-                objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
-                objparam[2] = int.Parse(Session["usuCodigo"].ToString());
-                objparam[3] = Session["MachineName"].ToString();
-                objparam[4] = txtObservacionG.Text.Trim().ToUpper();
-                objparam[5] = "";
+                //Array.Resize(ref objparam, 7);
+                //objparam[0] = 0;
+                //objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
+                //objparam[2] = int.Parse(Session["usuCodigo"].ToString());
+                //objparam[3] = Session["MachineName"].ToString();
+                //objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                //objparam[5] = "";
                 //objparam[6] = ddlTipoPago.SelectedValue;
-                DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
-                int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
-                if (codCita > 0)
-                {
-                    Session["SalirAgenda"] = "SI";
-                    Session["codigocita"] = codCita;
+                //DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
+                //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+                //if (codCita > 0)
+                //{
+                //    Session["SalirAgenda"] = "SI";
+                //    Session["codigocita"] = codCita;
 
-                    FunEnviarMailCitalink(codCita, xfecha, xhora);
-                }
+                //    FunEnviarMailCitalink(codCita, xfecha, xhora);
+                //}
 
             }
 
