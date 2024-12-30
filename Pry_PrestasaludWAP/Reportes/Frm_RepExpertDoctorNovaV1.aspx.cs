@@ -85,15 +85,23 @@ namespace Pry_PrestasaludWAP.Reportes
                 return;
             }
 
-            DateTime fecha = DateTime.ParseExact("10/01/2024", "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime fecha = DateTime.ParseExact("09/01/2024", "MM/dd/yyyy", CultureInfo.InvariantCulture);
             DateTime fechaInicio = DateTime.ParseExact(txtFechaInicio.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             DateTime fechaFin = DateTime.ParseExact(txtFechaFinal.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
-            TimeSpan tiempo = fechaFin.Subtract(fechaInicio);
+            TimeSpan tiempo = fechaInicio.Subtract(fecha);
             int dia = tiempo.Days;
-            if(dia > 90)
+            if(dia < 0)
             {
                 new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
+                return;
+            }
+
+            TimeSpan tiempom = fechaFin.Subtract(fechaInicio);
+            int diam = tiempom.Days;
+            if (diam > 120)
+            {
+                new Funciones().funShowJSMessage("No se puede sacar reportes pasado 120 dias", this);
                 return;
             }
 
