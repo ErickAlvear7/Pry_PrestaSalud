@@ -1584,14 +1584,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            if (codme == 2969)
-            {
-                pnlLink.Visible = true;
-                ddlOpcion.Enabled = false;
-                //ddlMotivoCita.Enabled = false;
-                ddlTipoPago.Enabled = false;
-                txtObservacion.Enabled = false;
-            }
+            //if (codme == 2969)
+            //{
+            //    pnlLink.Visible = true;
+            //    ddlOpcion.Enabled = false;
+            //    //ddlMotivoCita.Enabled = false;
+            //    ddlTipoPago.Enabled = false;
+            //    txtObservacion.Enabled = false;
+            //}
 
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
@@ -1862,33 +1862,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
 
+                //----BLOQUEAR PRESTADOR POR FECHA DE ATENCION ----
+
+                //Array.Resize(ref objparam, 3);
+                //objparam[0] = ddlPrestadora.SelectedValue;
+                //objparam[1] = "";
+                //objparam[2] = 181;
+                //DataSet data = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                //if (data.Tables[0].Rows.Count > 0 && data != null)
+                //{
+
+                //    string fechaInicio = data.Tables[0].Rows[0][0].ToString();
+                //    string fechaFin = data.Tables[0].Rows[0][1].ToString();
+
+                //    DateTime FechaIni = DateTime.ParseExact(fechaInicio, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                //    DateTime FechaFi = DateTime.ParseExact(fechaFin, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                //    DateTime FechaCita = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                //    string newFechaCita = FechaCita.ToString("dd/MM/yyyy");
 
 
-                Array.Resize(ref objparam, 3);
-                objparam[0] = ddlPrestadora.SelectedValue;
-                objparam[1] = "";
-                objparam[2] = 181;
-                DataSet data = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                //    if (FechaCita >= FechaIni && FechaCita <= FechaFi)
+                //    {
+                //        new Funciones().funShowJSMessage("Prestador no atendera el " + newFechaCita, this);
+                //        return;
+                //    }
 
-                if (data.Tables[0].Rows.Count > 0 && data != null)
-                {
-
-                    string fechaInicio = data.Tables[0].Rows[0][0].ToString();
-                    string fechaFin = data.Tables[0].Rows[0][1].ToString();
-
-                    DateTime FechaIni = DateTime.ParseExact(fechaInicio, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                    DateTime FechaFi = DateTime.ParseExact(fechaFin, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                    DateTime FechaCita = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                    string newFechaCita = FechaCita.ToString("dd/MM/yyyy");
-
-
-                    if (FechaCita >= FechaIni && FechaCita <= FechaFi)
-                    {
-                        new Funciones().funShowJSMessage("Prestador no atendera el " + newFechaCita, this);
-                        return;
-                    }
-
-                }
+                //}
 
                 //DateTime fechaIni = Convert.ToDateTime(dt.Tables[0].Rows[0][0].ToString()).Date;
                 //DateTime fechaFi = Convert.ToDateTime(dt.Tables[0].Rows[0][1].ToString()).Date;

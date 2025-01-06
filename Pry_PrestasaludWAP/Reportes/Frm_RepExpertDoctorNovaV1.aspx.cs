@@ -99,7 +99,7 @@ namespace Pry_PrestasaludWAP.Reportes
 
             TimeSpan tiempom = fechaFin.Subtract(fechaInicio);
             int diam = tiempom.Days;
-            if (diam > 120)
+            if (diam > 150)
             {
                 new Funciones().funShowJSMessage("No se puede sacar reportes pasado 120 dias", this);
                 return;
