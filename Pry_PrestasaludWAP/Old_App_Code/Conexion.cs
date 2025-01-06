@@ -659,14 +659,19 @@ public class Conexion
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Connection = Sqlcn;
-                cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
-                cmd.Parameters.AddWithValue("@in_codigoproducto", int.Parse(objparam[1].ToString()));
-                cmd.Parameters.AddWithValue("@in_usucodigo", objparam[2]);
-                cmd.Parameters.AddWithValue("@in_terminal", objparam[3]);
-                cmd.Parameters.AddWithValue("@in_observacion", objparam[4]);
-                cmd.Parameters.AddWithValue("@in_fuente", objparam[5]);
-                cmd.Parameters.AddWithValue("@in_tipopago", objparam[6]);
-                cmd.Parameters.AddWithValue("@EmptyCitaMedica", dt);
+                cmd.Parameters.AddWithValue("@in_tipo", objparam[0]);
+                cmd.Parameters.AddWithValue("@in_preecod", objparam[1]);
+                cmd.Parameters.AddWithValue("@in_medicod", objparam[2]);
+                cmd.Parameters.AddWithValue("@in_tipocliente", objparam[3]);
+                cmd.Parameters.AddWithValue("@in_titucod", objparam[4]);
+                cmd.Parameters.AddWithValue("@in_benecod", objparam[5]);
+                cmd.Parameters.AddWithValue("@in_paren", objparam[6]);
+                cmd.Parameters.AddWithValue("@in_fechacita", objparam[7]);
+                cmd.Parameters.AddWithValue("@in_diacita", objparam[8]);
+                cmd.Parameters.AddWithValue("@in_horacita", objparam[9]);
+                cmd.Parameters.AddWithValue("@in_usucodigo", objparam[10]);
+                cmd.Parameters.AddWithValue("@in_terminal", objparam[11]);
+                cmd.Parameters.AddWithValue("@in_observacion", objparam[12]);
                 Sqlcn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(ds);

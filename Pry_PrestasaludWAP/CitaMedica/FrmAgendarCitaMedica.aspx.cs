@@ -1490,6 +1490,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
             int cod = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+            ViewState["CodEspe"] = cod;
 
             if (cod == 1)
             {
@@ -1542,6 +1543,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             double vfinal = double.Parse(ViewState["TotalLab"].ToString());
             double vrestante = double.Parse(ViewState["TotalRestante"].ToString());
             vrestante = Math.Round(vrestante, 2);
+            ViewState["CodMed"] = codme;
 
             if (codme == 2332)
             {
@@ -1584,14 +1586,22 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            //if (codme == 2969)
-            //{
-            //    pnlLink.Visible = true;
-            //    ddlOpcion.Enabled = false;
-            //    //ddlMotivoCita.Enabled = false;
-            //    ddlTipoPago.Enabled = false;
-            //    txtObservacion.Enabled = false;
-            //}
+            if (codme == 2971)
+            {
+                pnlLink.Visible = true;
+                ddlOpcion.Enabled = false;
+                //ddlMotivoCita.Enabled = false;
+                ddlTipoPago.Enabled = false;
+                txtObservacion.Enabled = false;
+            }
+            else
+            {
+                pnlLink.Visible = false;
+                ddlOpcion.Enabled = true;
+                ddlTipoPago.Enabled = true;
+                txtObservacion.Enabled = true;
+
+            }
 
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
@@ -1600,7 +1610,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnLink_Click(object sender, EventArgs e)
         {
 
-            btnLink.Enabled = false;
+            //btnLink.Enabled = false;
             DataSet api = new DataSet();
             DataSet link = new DataSet();
 
@@ -1624,6 +1634,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fecha = "";
             string motivo = "";
             string url = "";
+            motivo = ddlMotivoCita.SelectedItem.ToString();
+
+            if (ddlMotivoCita.SelectedValue == "0")
+            {
+                new Funciones().funShowJSMessage("Seleccione Motivo de la Consulta..!!", this);
+                return;
+            }
+
+            if (ViewState["TipoCliente"].ToString() == "B")
+            {
+                new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
+                return;
+
+            }
 
             //CONSULTAR API-KEY BDD
             Array.Resize(ref objparam, 3);
@@ -1641,8 +1665,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //OBTENER TOKEN
             string _apikey = JsonConvert.SerializeObject(apikey);
             string _token = new MethodApi().GetToken("https://api.eh.ehealthcenter.io/apikey/", _apikey);
-
-            //GUARDAR ID
 
 
             //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
@@ -1672,7 +1694,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
 
                 //GET DATOS TITULAR Y BENEFICIARIO
-                //if(ViewState["TipoCliente"].ToString() == "T")
                 if (ViewState["TipoCliente"].ToString() == "T")
                 {
                     Array.Resize(ref objlink, 3);
@@ -1694,28 +1715,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 else if (ViewState["TipoCliente"].ToString() == "B")
                 {
-                    Array.Resize(ref objlink, 3);
-                    objlink[0] = 1;
-                    objlink[1] = 0;
-                    objlink[2] = idbene;
-                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
-
-                    foreach (DataRow dr in dt.Tables[0].Rows)
-                    {
-                        nombre = dr[0].ToString();
-                        apellido = dr[1].ToString();
-                        genero = dr[2].ToString();
-                        fechanac = dr[3].ToString();
-                        celular = dr[4].ToString();
-                        email = dr[5].ToString();
-                    }
+                    new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
+                    return;
 
                 }
 
-
                 if (email == "")
                 {
-                    new Funciones().funShowJSMessage("Titular requiere un email", this);
+                    new Funciones().funShowJSMessage("Se requiere un email", this);
                     btnLink.Enabled = true;
                     return;
                 }
@@ -1773,7 +1780,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idContrato = _idcont,
                 idEspecialidad = _idespe,
                 idServicio = _idserv,
-                reason = "dolor de cabeza",
+                reason = motivo,
             };
 
             var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
@@ -1795,28 +1802,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
                 //imgAgendar_Click
 
-                //Array.Resize(ref objparam, 7);
-                //objparam[0] = 0;
-                //objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
-                //objparam[2] = int.Parse(Session["usuCodigo"].ToString());
-                //objparam[3] = Session["MachineName"].ToString();
-                //objparam[4] = txtObservacionG.Text.Trim().ToUpper();
-                //objparam[5] = "";
-                //objparam[6] = ddlTipoPago.SelectedValue;
-                //DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
-                //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
-                //if (codCita > 0)
-                //{
-                //    Session["SalirAgenda"] = "SI";
-                //    Session["codigocita"] = codCita;
+                Array.Resize(ref objparam, 13);
+                objparam[0] = 0;
+                objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
+                objparam[2] = ViewState["CodMed"];
+                objparam[3] = ViewState["TipoCliente"].ToString();
+                objparam[4] = idtitu;
+                objparam[5] = 0;
+                objparam[6] = "V";
+                objparam[7] = xfecha;
+                objparam[8] = "";
+                objparam[9] = xhora;
+                objparam[10] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[11] = Session["MachineName"].ToString();
+                objparam[12] = motivo;
+                DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
+                int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+                if (codCita > 0)
+                {
+                    Session["SalirAgenda"] = "SI";
+                    Session["codigocita"] = codCita;
 
-                //    FunEnviarMailCitalink(codCita, xfecha, xhora);
-                //}
+                    //FunEnviarMailCitalink(codCita, xfecha, xhora);
+                }
 
             }
-
-
-
 
         }
         protected void imgSelecc_Click(object sender, ImageClickEventArgs e)
