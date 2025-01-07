@@ -1032,146 +1032,80 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = ex.ToString();
             }
         }
-        private void FunEnviarMailCitalink(int codicita, string fechacita, string horacita)
+        private void FunEnviarMailCitalink(int codicita,string fechacita,string horacita,string medico,string url,string motivo)
         {
             try
             {
+                //Consultar email usaurio
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[1] = "";
                 objparam[2] = 107;
                 dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 mailsU = dtusu.Tables[0].Rows[0][0].ToString();
-                //Thread.Sleep(300);
-
-                Array.Resize(ref objcitamedica, 24);
-
-                objcitamedica[16] = "";
-                objcitamedica[17] = "";
-                objcitamedica[18] = "";
-                objcitamedica[19] = "";
+           
                 Array.Resize(ref objparam, 1);
                 objparam[0] = 16;
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+
+                //pie de pagina email y datos link
+                Array.Resize(ref objcitamedica, 7);
+                objcitamedica[0] = url;
+                objcitamedica[1] = fechacita;
+                objcitamedica[2] = horacita;
+                objcitamedica[3] = medico;
+                objcitamedica[4] = motivo;
+                
                 if (dt.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow dr in dt.Tables[0].Rows)
                     {
-                        if (dr[0].ToString() == "PIE1") objcitamedica[16] = dr[1].ToString();
-                        if (dr[0].ToString() == "PIE2") objcitamedica[17] = dr[1].ToString();
-                        if (dr[0].ToString() == "PIE3") objcitamedica[18] = dr[1].ToString();
-                        if (dr[0].ToString() == "PIE4") objcitamedica[19] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE1") objcitamedica[5] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE2") objcitamedica[6] = dr[1].ToString();
+                        //if (dr[0].ToString() == "PIE3") objcitamedica[7] = dr[1].ToString();
+                        //if (dr[0].ToString() == "PIE4") objcitamedica[8] = dr[1].ToString();
                     }
                 }
+
+
                 //filePath = Server.MapPath("~" + "\\CitasAgendadas\\");
-                fileTemplate = Server.MapPath("~/Template/HtmlTemplate.html");
-                fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
-                subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
+                fileTemplate = Server.MapPath("~/Template/HtmlLinkTemplate.html");
+                //fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
+                subject = "Video Llamada - " + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
 
-                Array.Resize(ref objparam, 18);
-                objparam[0] = 8;
-                objparam[13] = "";
-                objparam[14] = "";
-                objparam[15] = int.Parse(Session["usuCodigo"].ToString());
-                objparam[16] = Session["MachineName"].ToString();
-                objparam[17] = "";
-
-                objcitamedica[0] = ViewState["Campaing"].ToString();
-                objcitamedica[1] = ViewState["Producto"].ToString();
-
-                mailsP = FunMailsEnviar(int.Parse(ddlPrestadora.SelectedValue));
-
-                if (string.IsNullOrEmpty(mailsP))
+       
+                if (string.IsNullOrEmpty(mailsU))
                 {
                     mensaje = "Hubo errores en el envío, Defina mails de la Prestadora..!";
                     lblerror.Text = "Defina mails de envío de la Prestadora..!";
                     return;
                 }
-                //Traer mail del usuario, si esta vacio coger los alternativos
-                mailsA = FunMailsAlterna();
-                mailsD = FunMailsMedicos(int.Parse(ddlMedico.SelectedValue));
 
-                ViewState["FechaCita"] = objparam[4].ToString();
-                DateTime fecha = DateTime.ParseExact(objparam[4].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                string newFecha = fecha.ToString("dd/MM/yyyy");
-                //string newFecha = DateTime.ParseExact(fecha.ToString("MM/dd/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
-
-                Array.Resize(ref objparamdirecpre, 3);
-                objparamdirecpre[0] = objparam[1];
-                objparamdirecpre[1] = "";
-                objparamdirecpre[2] = 180;
-
-                DataSet dtdirec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirecpre);
-                string direcpres = dtdirec.Tables[0].Rows[0][0].ToString();
-
-
-                ViewState["HoraCita"] = objparam[6].ToString();
-
-
-                ViewState["CodigoCita"] = codigocita.ToString();
-                //medicamentos = FunGetMedicamento(int.Parse(ViewState["CodigoGrupo"].ToString()));
-                objcitamedica[2] = codigocita;
-                objcitamedica[3] = "";
-                ViewState["Ciudad"] = objcitamedica[3].ToString();
-                objcitamedica[4] = "";
-                objcitamedica[5] = "";
-                objcitamedica[6] = "";
-                ViewState["Prestadora"] = objcitamedica[6].ToString();
-                objcitamedica[7] = "";
-                ViewState["Medico"] = objcitamedica[7].ToString();
-                objcitamedica[8] = "";
-                ViewState["Especialidad"] = objcitamedica[8].ToString();
-                objcitamedica[9] = FunGetMotivo(ddlMotivoCita.SelectedValue);
-                objcitamedica[10] = ViewState["Indentificacion"].ToString();
-                objcitamedica[11] = ViewState["TipoCliente"].ToString() == "T" ? "TITULAR" : "BENEFICIARIO";
-                objcitamedica[12] = "";
-                ViewState["Paciente"] = objcitamedica[12].ToString();
-                objdatostitu[0] = ViewState["TipoCliente"].ToString() == "T" ? 2 : 3;
-                objdatostitu[1] = "";
-                objdatostitu[2] = "";
-                objdatostitu[3] = 0;
-                dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
-                objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
-                //objcitamedica[13].ToString();
-                DateTime FechaNaci = DateTime.ParseExact(objcitamedica[13].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                string newFechaNaci = FechaNaci.ToString("dd/MM/yyyy");
-
-                objcitamedica[14] = direcpres;
-                //objcitamedica[15] = "";
-                objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
-                objcitamedica[20] = medicamentos;
-                objcitamedica[21] = Session["usuLogin"].ToString();
-                objcitamedica[22] = "";
-                objcitamedica[23] = "";
-
-                //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
-                //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
-
-                mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                mensaje = new Funciones().funEnviarMailLink(mailsU,subject,objcitamedica,fileTemplate,
                     ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString());
 
 
 
 
                 //mensaje = "";
-                if (mensaje == "")
-                {
-                    //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
+                //if (mensaje == "")
+                //{
+                //    //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
 
-                    if (Session["Regresar"].ToString() == "0")
-                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
-                    else
-                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
-                }
-                else
-                {
-                    if (Session["Regresar"].ToString() == "0")
-                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
-                    else
-                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
-                }
+                //    if (Session["Regresar"].ToString() == "0")
+                //        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
+                //    else
+                //        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
+                //}
+                //else
+                //{
+                //    if (Session["Regresar"].ToString() == "0")
+                //        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                //    else
+                //        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                //}
             }
             catch (Exception ex)
             {
@@ -1627,6 +1561,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string newFechaNaci = "";
             string celular = "";
             string email = "";
+            string medicoNombre = "";
+            string medicoApellido = "";
+            string medico = "";
             string tipo = ViewState["TipoCliente"].ToString();
             int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
             int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
@@ -1792,16 +1729,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 url = urlLink.url_llamada;
                 fecha = urlLink.fecha;
                 motivo = urlLink.motivo;
-
+                medicoNombre = urlLink.doctor.nombre;
+                medicoApellido = urlLink.doctor.apellidos;
+                medico = medicoNombre + " " +  medicoApellido;
                 string xfecha = fecha.Substring(0, 10);
                 string xhora = fecha.Substring(11, 5);
 
+                //selecciona dia de la fecha
+                DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                string newDia = dia.DayOfWeek.ToString();
+
                 lblUrl.Text = url;
 
-
                 //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
-                //imgAgendar_Click
-
                 Array.Resize(ref objparam, 13);
                 objparam[0] = 0;
                 objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
@@ -1811,7 +1751,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[5] = 0;
                 objparam[6] = "V";
                 objparam[7] = xfecha;
-                objparam[8] = "";
+                objparam[8] = newDia;
                 objparam[9] = xhora;
                 objparam[10] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[11] = Session["MachineName"].ToString();
@@ -1823,11 +1763,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     Session["SalirAgenda"] = "SI";
                     Session["codigocita"] = codCita;
 
-                    //FunEnviarMailCitalink(codCita, xfecha, xhora);
+                    if (chkEmail.Checked)
+                    {
+                        FunEnviarMailCitalink(codCita,xfecha,xhora,medico,url,motivo);
+                    }    
                 }
 
             }
-
         }
         protected void imgSelecc_Click(object sender, ImageClickEventArgs e)
         {

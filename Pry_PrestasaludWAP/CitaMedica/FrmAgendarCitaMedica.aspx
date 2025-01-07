@@ -431,7 +431,7 @@
                                             </td>
                                             <td>
                                                 <h5>enviar email</h5>
-                                                <asp:CheckBox runat="server" ID="chkEmail" />
+                                                <asp:CheckBox runat="server" ID="chkEmail" Checked="True" />
                                             </td>
                                         </tr>
 

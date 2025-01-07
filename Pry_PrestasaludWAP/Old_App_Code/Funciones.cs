@@ -473,7 +473,24 @@ public class Funciones
         return mensaje;
     }
 
-    private string ReplaceBody(object[] oBody,string eTemplate, string fechaCita, string fechaNaci)
+    public string funEnviarMailLink(string mailsTo,string subject, object[] objBody,string emailTemplate,
+     string host,int port,bool enableSSl,string usuario,string password)
+    {
+        string mensaje = "";
+        try
+        {
+            string body = ReplaceBodyLink(objBody, emailTemplate);
+            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password);
+
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.Message;
+        }
+        return mensaje;
+    }
+
+    private string ReplaceBody(object[] oBody,string eTemplate,string fechaCita,string fechaNaci)
     {
         string body = "";
         using (StreamReader reader = new StreamReader(eTemplate))
@@ -507,6 +524,27 @@ public class Funciones
         body = body.Replace("{Pie4}", oBody[19].ToString());
         return body;
     }
+
+    private string ReplaceBodyLink(object[] oBody, string eTemplate)
+    {
+        string body = "";
+        using (StreamReader reader = new StreamReader(eTemplate))
+        {
+            body = reader.ReadToEnd();
+        }
+
+        body = body.Replace("{url}", oBody[0].ToString());
+        body = body.Replace("{fecha}", oBody[1].ToString());
+        body = body.Replace("{hora}", oBody[2].ToString());
+        body = body.Replace("{medico}", oBody[3].ToString());
+        body = body.Replace("{motivo}", oBody[4].ToString());
+        body = body.Replace("{Pie1}", oBody[5].ToString());
+        body = body.Replace("{Pie2}", oBody[6].ToString());
+        //body = body.Replace("{Pie3}", oBody[7].ToString());
+        //body = body.Replace("{Pie4}", oBody[8].ToString());
+        return body;
+    }
+
 
     public string funEnviarMailCancel(string mailsTo, string subject, object[] objBody, string emailTemplate,
         string host, int port, bool enableSSl, string usuario, string password, string ePathAttach, string ePathLogo,
@@ -611,6 +649,54 @@ public class Funciones
                         mailMessage.Bcc.Add(usMails);
                     }
                 }
+                //mailMessage.Attachments.Add(archivo);
+                System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+                NetworkCred.UserName = eusername;
+                NetworkCred.Password = epassword;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Credentials = NetworkCred;
+                smtp.Host = ehost;
+                smtp.Port = eport;
+                smtp.EnableSsl = eEnableSSL;
+                smtp.Send(mailMessage);
+                mensaje = "";
+            }
+            catch (Exception ex)
+            {
+                mensaje = ex.Message;
+                funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
+            }
+            return mensaje;
+        }
+    }
+
+    private string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
+    string eusername,string epassword)
+    {
+        string mensaje = "";
+        using (MailMessage mailMessage = new MailMessage())
+        {
+            try
+            {
+                //Attachment archivo = new Attachment(pathAttach);
+                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                //LinkedResource theEmailImage = new LinkedResource(pathLogo);
+                //theEmailImage.ContentId = "myImageID";
+                //htmlView.LinkedResources.Add(theEmailImage);
+                mailMessage.AlternateViews.Add(htmlView);
+                mailMessage.From = new MailAddress(eusername);
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+                if (!string.IsNullOrEmpty(mailTO))
+                {
+                    string[] manyMails = mailTO.Split(',');
+                    foreach (string toMails in manyMails)
+                    {
+                        mailMessage.To.Add(new MailAddress(toMails));
+                    }
+                }
+             
                 //mailMessage.Attachments.Add(archivo);
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
                 NetworkCred.UserName = eusername;

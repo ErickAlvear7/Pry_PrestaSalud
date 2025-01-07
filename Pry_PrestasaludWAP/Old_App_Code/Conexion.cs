@@ -676,7 +676,6 @@ public class Conexion
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(ds);
                 mensaje = "";
-                //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
             }
             return ds;
         }
