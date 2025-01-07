@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+	<meta charset='utf-8' />
+	<style>
+		#customers {
+		  font-family: Arial, Helvetica, sans-serif;
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+		
+		#customers td, #customers th {
+		  border: 1px solid #ddd;
+		  padding: 8px;
+		}
+		
+		#customers tr:nth-child(even){background-color: #f2f2f2;}
+		
+		#customers tr:hover {background-color: #ddd;}
+		
+		#customers th {
+		  padding-top: 12px;
+		  padding-bottom: 12px;
+		  text-align: left;
+		  background-color: #d6dad6;
+		  color: red;
+		}
+		
+		
+		/**
+			COLORES
+			Rojo Uanataca:  #da272f
+			Celeste gris:   #5d91ab
+		**/
+		
+	</style>	
+</head>
+<body>
+    <div>
+        <h5>Saludos Cordiales</h5>
+        <h5>Datos para registrar la Cita Agendada</h5>
+
+        <span style="font-family:Arial;font-size:10pt">
+			<table class="table table-border" style="width: 70%; border: 1px; " id="customers" >
+				<tr>
+					<td style="width:40%">Link Url:</td>
+					<td style="width:60%">{url}</td>
+				</tr>			
+				<tr>
+					<td style="width:40%">Fecha:</td>
+					<td style="width:60%">{fecha}</td>
+				</tr>					
+				<tr>
+					<td style="width:40%">Hora:</td>
+					<td style="width:60%">{hora}</td>
+				</tr>					
+				<tr>
+					<td style="width:40%">Medico</td>
+					<td style="width:60%">{medico}</td>
+				</tr>				
+				<tr>
+					<td style="width:40%">Motivo</td>
+					<td style="width:60%">{motivo}</td>
+				</tr>				
+					
+			</table>
+        </span>
+        <br />
+        <br /><br />
+        <img src=cid:myImageID>
+        <br /><br />
+        <span style="font-family:Arial;font-size:10pt;color:blue">
+            {Pie1}
+            <br />
+            {Pie2}
+            <!--<br />
+            {Pie3}
+            <br />
+            {Pie4}-->
+        </span>
+</div>
+</body>
+</html>
