@@ -474,13 +474,13 @@ public class Funciones
     }
 
     public string funEnviarMailLink(string mailsTo,string subject, object[] objBody,string emailTemplate,
-     string host,int port,bool enableSSl,string usuario,string password)
+     string host,int port,bool enableSSl,string usuario,string password,string email)
     {
         string mensaje = "";
         try
         {
             string body = ReplaceBodyLink(objBody, emailTemplate);
-            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password);
+            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password,email);
 
         }
         catch (Exception ex)
@@ -538,8 +538,11 @@ public class Funciones
         body = body.Replace("{hora}", oBody[2].ToString());
         body = body.Replace("{medico}", oBody[3].ToString());
         body = body.Replace("{motivo}", oBody[4].ToString());
-        body = body.Replace("{Pie1}", oBody[5].ToString());
-        body = body.Replace("{Pie2}", oBody[6].ToString());
+        body = body.Replace("{patient}", oBody[5].ToString());
+        body = body.Replace("{documento}", oBody[6].ToString());
+        body = body.Replace("{producto}", oBody[7].ToString());
+        body = body.Replace("{Pie1}", oBody[8].ToString());
+        body = body.Replace("{Pie2}", oBody[9].ToString());
         //body = body.Replace("{Pie3}", oBody[7].ToString());
         //body = body.Replace("{Pie4}", oBody[8].ToString());
         return body;
@@ -671,7 +674,7 @@ public class Funciones
     }
 
     private string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
-    string eusername,string epassword)
+    string eusername,string epassword,string email)
     {
         string mensaje = "";
         using (MailMessage mailMessage = new MailMessage())
@@ -688,15 +691,24 @@ public class Funciones
                 mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
-                if (!string.IsNullOrEmpty(mailTO))
+                //if (!string.IsNullOrEmpty(mailTO))
+                //{
+                //    string[] manyMails = mailTO.Split(',');
+                //    foreach (string toMails in manyMails)
+                //    {
+                //        mailMessage.To.Add(new MailAddress(toMails));
+                //    }
+                //}
+
+                if (!string.IsNullOrEmpty(email))
                 {
-                    string[] manyMails = mailTO.Split(',');
-                    foreach (string toMails in manyMails)
+                    string[] alterMails = email.Split(',');
+                    foreach (string alMalis in alterMails)
                     {
-                        mailMessage.To.Add(new MailAddress(toMails));
+                        mailMessage.CC.Add(alMalis);
                     }
                 }
-             
+
                 //mailMessage.Attachments.Add(archivo);
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
                 NetworkCred.UserName = eusername;

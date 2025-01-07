@@ -1032,7 +1032,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = ex.ToString();
             }
         }
-        private void FunEnviarMailCitalink(int codicita,string fechacita,string horacita,string medico,string url,string motivo)
+        private void FunEnviarMailCitalink(int codicita,string fechacita,string horacita,string medico,string url,string motivo,string patient,string email,string documento,string producto)
         {
             try
             {
@@ -1043,32 +1043,35 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 107;
                 dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 mailsU = dtusu.Tables[0].Rows[0][0].ToString();
+
+                //aki traerse mail del paciente
            
                 Array.Resize(ref objparam, 1);
                 objparam[0] = 16;
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
 
                 //pie de pagina email y datos link
-                Array.Resize(ref objcitamedica, 7);
+                Array.Resize(ref objcitamedica, 10);
                 objcitamedica[0] = url;
                 objcitamedica[1] = fechacita;
                 objcitamedica[2] = horacita;
                 objcitamedica[3] = medico;
                 objcitamedica[4] = motivo;
-                
+                objcitamedica[5] = patient;
+                objcitamedica[6] = documento;
+                objcitamedica[7] = producto;
+
                 if (dt.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow dr in dt.Tables[0].Rows)
                     {
-                        if (dr[0].ToString() == "PIE1") objcitamedica[5] = dr[1].ToString();
-                        if (dr[0].ToString() == "PIE2") objcitamedica[6] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE1") objcitamedica[8] = dr[1].ToString();
+                        if (dr[0].ToString() == "PIE2") objcitamedica[9] = dr[1].ToString();
                         //if (dr[0].ToString() == "PIE3") objcitamedica[7] = dr[1].ToString();
                         //if (dr[0].ToString() == "PIE4") objcitamedica[8] = dr[1].ToString();
                     }
                 }
 
-
-                //filePath = Server.MapPath("~" + "\\CitasAgendadas\\");
                 fileTemplate = Server.MapPath("~/Template/HtmlLinkTemplate.html");
                 //fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
                 subject = "Video Llamada - " + "-" + ViewState["Producto"].ToString();
@@ -1084,7 +1087,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 mensaje = new Funciones().funEnviarMailLink(mailsU,subject,objcitamedica,fileTemplate,
                     ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString());
+                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),email);
 
 
 
@@ -1561,6 +1564,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string newFechaNaci = "";
             string celular = "";
             string email = "";
+            string patientNombre = "";
+            string patientApelllido = "";
+            string patient = "";
             string medicoNombre = "";
             string medicoApellido = "";
             string medico = "";
@@ -1568,6 +1574,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
             int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
             int idprod = int.Parse(Session["CodigoProducto"].ToString());
+            string documento = ViewState["Indentificacion"].ToString();
+            string producto = ViewState["Producto"].ToString();
             string fecha = "";
             string motivo = "";
             string url = "";
@@ -1676,7 +1684,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
-                var patient = new Patient
+                var paciente = new Patient
                 {
                     name = nombre,
                     surnames = apellido,
@@ -1687,7 +1695,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     contractId = _idcont
                 };
 
-                var data = new JavaScriptSerializer().Serialize(patient);
+                var data = new JavaScriptSerializer().Serialize(paciente);
                 _idpatient = new MethodApi().PostCreatePatient("https://api.eh.ehealthcenter.io/", data, _token);
 
                 Array.Resize(ref objlinkid, 8);
@@ -1729,6 +1737,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 url = urlLink.url_llamada;
                 fecha = urlLink.fecha;
                 motivo = urlLink.motivo;
+                patientNombre = urlLink.patient.nombre;
+                patientApelllido = urlLink.patient.apellidos;
+                patient = patientNombre + " " + patientApelllido;
                 medicoNombre = urlLink.doctor.nombre;
                 medicoApellido = urlLink.doctor.apellidos;
                 medico = medicoNombre + " " +  medicoApellido;
@@ -1765,7 +1776,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (chkEmail.Checked)
                     {
-                        FunEnviarMailCitalink(codCita,xfecha,xhora,medico,url,motivo);
+                        FunEnviarMailCitalink(codCita,xfecha,xhora,medico,url,motivo, patient,email,documento,producto);
                     }    
                 }
 
