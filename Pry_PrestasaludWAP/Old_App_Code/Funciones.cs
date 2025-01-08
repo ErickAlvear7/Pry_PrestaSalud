@@ -474,18 +474,19 @@ public class Funciones
     }
 
     public string funEnviarMailLink(string mailsTo,string subject, object[] objBody,string emailTemplate,
-     string host,int port,bool enableSSl,string usuario,string password,string email)
+     string host,int port,bool enableSSl,string usuario,string password,string email,string pathLogo)
     {
         string mensaje = "";
         try
         {
             string body = ReplaceBodyLink(objBody, emailTemplate);
-            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password,email);
+            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password,email,pathLogo);
 
         }
         catch (Exception ex)
         {
             mensaje = ex.Message;
+            new Funciones().funCrearLogAuditoria(1, "Funciones.cs/funEnviarMailLink", ex.ToString(), 1);
         }
         return mensaje;
     }
@@ -674,7 +675,7 @@ public class Funciones
     }
 
     private string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
-    string eusername,string epassword,string email)
+    string eusername,string epassword,string email,string pathLogo)
     {
         string mensaje = "";
         using (MailMessage mailMessage = new MailMessage())
@@ -683,31 +684,25 @@ public class Funciones
             {
                 //Attachment archivo = new Attachment(pathAttach);
                 AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                //LinkedResource theEmailImage = new LinkedResource(pathLogo);
-                //theEmailImage.ContentId = "myImageID";
-                //htmlView.LinkedResources.Add(theEmailImage);
+                LinkedResource theEmailImage = new LinkedResource(pathLogo);
+                theEmailImage.ContentId = "myImageID";
+                htmlView.LinkedResources.Add(theEmailImage);
                 mailMessage.AlternateViews.Add(htmlView);
                 mailMessage.From = new MailAddress(eusername);
                 mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
-                //if (!string.IsNullOrEmpty(mailTO))
-                //{
-                //    string[] manyMails = mailTO.Split(',');
-                //    foreach (string toMails in manyMails)
-                //    {
-                //        mailMessage.To.Add(new MailAddress(toMails));
-                //    }
-                //}
+
+                if (!string.IsNullOrEmpty(mailTO))
+                {
+                    mailMessage.To.Add(new MailAddress(mailTO));
+                }
 
                 if (!string.IsNullOrEmpty(email))
                 {
-                    string[] alterMails = email.Split(',');
-                    foreach (string alMalis in alterMails)
-                    {
-                        mailMessage.CC.Add(alMalis);
-                    }
+                    mailMessage.CC.Add(email);
                 }
+
 
                 //mailMessage.Attachments.Add(archivo);
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
@@ -724,7 +719,7 @@ public class Funciones
             catch (Exception ex)
             {
                 mensaje = ex.Message;
-                funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
+                new Funciones().funCrearLogAuditoria(1, "Funciones.cs/SendHtmlEmailLink", ex.ToString(), 1);
             }
             return mensaje;
         }
