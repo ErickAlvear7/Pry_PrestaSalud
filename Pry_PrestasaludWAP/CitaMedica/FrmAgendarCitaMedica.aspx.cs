@@ -1773,6 +1773,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     string newDia = dia.DayOfWeek.ToString();
 
+                    txtUrl.Visible = true;
                     txtUrl.Text = url;
 
                     //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
