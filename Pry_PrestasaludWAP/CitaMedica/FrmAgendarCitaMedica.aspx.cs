@@ -1595,7 +1595,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             if(ViewState["TipoCliente"] == null)
             {
-                new Funciones().funShowJSMessage("Seleccione TITULAR para agendar video llamada..!!", this);
+                new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
                 return;
             }
 
