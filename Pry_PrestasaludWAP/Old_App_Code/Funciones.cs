@@ -474,13 +474,13 @@ public class Funciones
     }
 
     public string funEnviarMailLink(string mailsTo,string subject, object[] objBody,string emailTemplate,
-     string host,int port,bool enableSSl,string usuario,string password,string email,string pathLogo)
+     string host,int port,bool enableSSl,string usuario,string password,string email,string pathLogo, string mailsalterna)
     {
         string mensaje = "";
         try
         {
             string body = ReplaceBodyLink(objBody, emailTemplate);
-            mensaje = SendHtmlEmailLink(mailsTo,subject,body,host,port,enableSSl,usuario,password,email,pathLogo);
+            mensaje = SendHtmlEmailLink(mailsTo, subject, body, host, port, enableSSl, usuario, password, email, pathLogo, mailsalterna);
 
         }
         catch (Exception ex)
@@ -675,7 +675,7 @@ public class Funciones
     }
 
     private string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
-    string eusername,string epassword,string email,string pathLogo)
+    string eusername,string epassword,string email,string pathLogo, string mailsalterna)
     {
         string mensaje = "";
         using (MailMessage mailMessage = new MailMessage())
@@ -701,6 +701,16 @@ public class Funciones
                 if (!string.IsNullOrEmpty(email))
                 {
                     mailMessage.CC.Add(email);
+                }
+
+                if (!string.IsNullOrEmpty(mailsalterna))
+                {
+                    string[] docMails = mailsalterna.Split(',');
+                    foreach (string doMails in docMails)
+                    {
+                        //mailMessage.Bcc.Add(doMails); COPIA OCULTA
+                        mailMessage.CC.Add(doMails);
+                    }
                 }
 
 

@@ -840,6 +840,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["tbDatosCita"] = tbDatosCita;
             grdvDatosCitas.DataSource = tbDatosCita;
             grdvDatosCitas.DataBind();
+            ddlMotivoCita.SelectedValue = "0";
+            if(ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
+            {
+                CalendarioCita.Visible = false;
+                pnlAgendamientos.Visible = false;
+                grdvDatosCitas.DataSource = null;
+                grdvDatosCitas.DataBind();
+            }
         }
         private void FunLimpiarAgendamiento()
         {
@@ -1055,10 +1063,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 107;
                 dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 mailsU = dtusu.Tables[0].Rows[0][0].ToString();
-
+                mailsA = FunMailsAlternaLink();
                 //Consultar email del paciente cuando llega vacio
 
-                if(email == "")
+                if (email == "")
                 {
                     Array.Resize(ref objparam, 3);
                     objparam[0] = int.Parse(Session["CodigoTitular"].ToString());
@@ -1105,9 +1113,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     return;
                 }
 
-                mensaje = new Funciones().funEnviarMailLink(mailsU,subject,objcitamedica,fileTemplate,
+                mensaje = new Funciones().funEnviarMailLink(mailsU, subject, objcitamedica, fileTemplate,
                     ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),email,fileLogo);
+                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), email, fileLogo, mailsA);
 
 
 
@@ -1278,6 +1286,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
             Array.Resize(ref objsendmails, 3);
             objsendmails[0] = 0;
             objsendmails[1] = "MAILS ALTERNATIVOS";
+            objsendmails[2] = 43;
+            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objsendmails);
+            foreach (DataRow dr in dt.Tables[0].Rows)
+            {
+                sendmails = sendmails + dr[0].ToString() + ",";
+            }
+            if (!string.IsNullOrEmpty(sendmails)) x = sendmails.LastIndexOf(",");
+            if (x > 0) sendmails = sendmails.Remove(x, 1);
+            return sendmails;
+        }
+        private string FunMailsAlternaLink()
+        {
+            sendmails = "";
+            x = 0;
+            Array.Resize(ref objsendmails, 3);
+            objsendmails[0] = 0;
+            objsendmails[1] = "MAILS LINK";
             objsendmails[2] = 43;
             dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objsendmails);
             foreach (DataRow dr in dt.Tables[0].Rows)
@@ -1568,6 +1593,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnLink_Click(object sender, EventArgs e)
         {
 
+            if(ViewState["TipoCliente"] == null)
+            {
+                new Funciones().funShowJSMessage("Seleccione TITULAR para agendar video llamada..!!", this);
+                return;
+            }
+
             //btnLink.Enabled = false;
             DataSet api = new DataSet();
             DataSet link = new DataSet();
@@ -1796,7 +1827,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (codCita > 0)
                     {
                         Session["SalirAgenda"] = "SI";
-                        Session["codigocita"] = codCita;
+                        //Session["codigocita"] = codCita;
+                        Session["codigocita"] = 0;
 
                         if (chkEmail.Checked)
                         {
