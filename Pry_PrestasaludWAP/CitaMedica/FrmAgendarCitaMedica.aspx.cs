@@ -1456,6 +1456,48 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlPrestadora_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string prestador = ddlPrestadora.SelectedItem.ToString();
+
+
+            if (prestador == "VIDEO LLAMADA")
+            {
+                string codPro = Session["CodigoProducto"].ToString();
+                bool activo = false;
+
+                //CONSULTAR A LA BDD LOS ID PARA LA VIDEO LLAMADA
+                Array.Resize(ref objparam, 1);
+                objparam[0] = 60;
+                dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+
+                if (dt.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+
+                        if (dr[1].ToString() == codPro)
+                        {
+                            activo = true;
+                            break;
+                        }
+
+      
+                    }
+
+                    if (activo)
+                    {
+                        
+                    }
+                    else
+                    {
+                        ddlPrestadora.SelectedValue = "0";
+                        new Funciones().funShowJSMessage("SERVICIO NO ACTIVO PARA ESTE PRODUCTO", this);
+                        return;
+                    }
+                
+                }
+
+            }
+
             FunCascadaCombos(3);
             FunLimpiarCampos();
         }
