@@ -600,6 +600,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.SelectedIndex = 2;
 
                         break;
+
+                    //case 9:
+
+
+                    //    break;
                 }
 
             }
@@ -1480,7 +1485,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             break;
                         }
 
-      
                     }
 
                     if (activo)
