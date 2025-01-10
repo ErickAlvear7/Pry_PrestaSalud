@@ -1462,6 +1462,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlPrestadora_SelectedIndexChanged(object sender, EventArgs e)
         {
             string prestador = ddlPrestadora.SelectedItem.ToString();
+            pnlLink.Visible = false;
+            ddlOpcion.Enabled = true;
+            ddlTipoPago.Enabled = true;
+            txtObservacion.Enabled = true;
 
 
             if (prestador == "VIDEO LLAMADA")
@@ -1489,10 +1493,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (activo)
                     {
-                        
+                        pnlLink.Visible = true;
+                        ddlOpcion.Enabled = false;
+                        ddlTipoPago.Enabled = false;
+                        txtObservacion.Enabled = false;
+
                     }
                     else
                     {
+                       
                         ddlPrestadora.SelectedValue = "0";
                         new Funciones().funShowJSMessage("SERVICIO NO ACTIVO PARA ESTE PRODUCTO", this);
                         return;
@@ -1615,22 +1624,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            if (codme == 2971)
-            {
-                pnlLink.Visible = true;
-                ddlOpcion.Enabled = false;
-                //ddlMotivoCita.Enabled = false;
-                ddlTipoPago.Enabled = false;
-                txtObservacion.Enabled = false;
-            }
-            else
-            {
-                pnlLink.Visible = false;
-                ddlOpcion.Enabled = true;
-                ddlTipoPago.Enabled = true;
-                txtObservacion.Enabled = true;
-
-            }
 
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
@@ -1853,7 +1846,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     txtUrl.Visible = true;
                     txtUrl.Text = url;
 
-                    //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
                     Array.Resize(ref objparam, 13);
                     objparam[0] = 0;
                     objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
@@ -1875,7 +1867,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         Session["SalirAgenda"] = "SI";
                         //Session["codigocita"] = codCita;
                         Session["codigocita"] = 0;
-
+                        //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
                         if (chkEmail.Checked)
                         {
                             FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
