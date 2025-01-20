@@ -25,7 +25,7 @@
                 $('#txtFechaIni').datepicker(
                   {
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "yy-mm-dd",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -42,7 +42,7 @@
                 $('#txtFechaFin').datepicker(
                   {
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "yy-mm/dd",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -289,11 +289,9 @@
                                         <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
                                         <asp:BoundField DataField="Costo" HeaderText="Costo" />
                                         <asp:BoundField DataField="IdBeneficiario" HeaderText="IdBeneficiario" />
-                                        <asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
+
+                                        <asp:BoundField DataField="ObservaG" HeaderText="ObservaG" />
 
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />

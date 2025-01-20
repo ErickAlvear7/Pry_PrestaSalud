@@ -75,7 +75,21 @@ public class Funciones
         return bValid;
     }
 
+    public bool IsDateNewx(string strFecha)
+    {
+        bool bValid;
+        try
+        {
+            DateTime myDT = DateTime.ParseExact(strFecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            bValid = true;
+        }
+        catch
+        {
+            bValid = false;
+        }
 
+        return bValid;
+    }
 
 
     public String funCrearLogsAuditoria(String rutalog, String category, String fuente, String description)

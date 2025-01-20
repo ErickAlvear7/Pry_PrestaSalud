@@ -33,8 +33,8 @@ namespace Pry_PrestasaludWAP.Reportes
                         Response.Redirect("~/CitaOdontologica/FrmAgendarCitaOdonto.aspx?Tipo=" + "E" + "&CodigoTitular=" + Session["CodigoTitular"].ToString() + "&CodigoProducto=" + Session["CodigoProducto"].ToString(), true);
                     return;
                 }
-                txtFechaIni.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                txtFechaFin.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                txtFechaFin.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 lbltitulo.Text = "Reportes Expert Doctor <BASICO 1.0>";
                 FunCascadaCombos(0);
                 FunCascadaCombos(1);
@@ -78,19 +78,19 @@ namespace Pry_PrestasaludWAP.Reportes
             //    return; 
             //}
 
-            if (!new Funciones().IsDate(txtFechaIni.Text))
+            if (!new Funciones().IsDateNewx(txtFechaIni.Text))
             {
                 new Funciones().funShowJSMessage("No es una fecha válida..!", this);
                 return;
             }
 
-            if (!new Funciones().IsDate(txtFechaFin.Text))
+            if (!new Funciones().IsDateNewx(txtFechaFin.Text))
             {
                 new Funciones().funShowJSMessage("No es una fecha válida..!", this);
                 return;
             }
 
-            if (DateTime.ParseExact(txtFechaIni.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture))
+            if (DateTime.ParseExact(txtFechaIni.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture))
             {
                 new Funciones().funShowJSMessage("La Fecha de Inicio no puede ser mayor a la Fecha de Fin..!", this);
                 return;
@@ -174,18 +174,19 @@ namespace Pry_PrestasaludWAP.Reportes
             if (ddlCliente.SelectedValue == "0") objparam[0] = 0;
             if (ddlCliente.SelectedValue != "0")  objparam[0] = 1;
 
-            System.Threading.Thread.Sleep(500);            
+            //System.Threading.Thread.Sleep(500);            
             objparam[1] = txtFechaIni.Text;
             objparam[2] = txtFechaFin.Text;
             objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
             objparam[4] = "0";
             ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctor", objparam);
-            
-            grdvDatos.DataSource = ds;
-            grdvDatos.DataBind();
-            ViewState["grdvDatos"] = grdvDatos.DataSource;
-            if (ds.Tables[0].Rows.Count > 0)
+                        
+            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null )
             {
+                grdvDatos.DataSource = ds;
+                grdvDatos.DataBind();
+                ViewState["grdvDatos"] = grdvDatos.DataSource;
+
                 imgExportar.Visible = true;
                 lblExportar.Visible = true;
             }else
