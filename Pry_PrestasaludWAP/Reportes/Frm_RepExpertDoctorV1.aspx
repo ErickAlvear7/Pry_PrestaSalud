@@ -42,7 +42,7 @@
                 $('#txtFechaFin').datepicker(
                   {
                       inline: true,
-                      dateFormat: "yy-mm/dd",
+                      dateFormat: "yy-mm-dd",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
