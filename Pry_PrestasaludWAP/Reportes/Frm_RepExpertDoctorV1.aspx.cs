@@ -2,6 +2,7 @@
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -180,15 +181,15 @@ namespace Pry_PrestasaludWAP.Reportes
             objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
             objparam[4] = "0";
 
-
             ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
-
 
             if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null )
             {
-                grdvDatos.DataSource = ds;
+                DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
+
+                grdvDatos.DataSource = dtresul;
                 grdvDatos.DataBind();
-                ViewState["grdvDatos"] = grdvDatos.DataSource;
+                ViewState["grdvDatos"] = ds.Tables[0];
 
                 imgExportar.Visible = true;
                 lblExportar.Visible = true;
