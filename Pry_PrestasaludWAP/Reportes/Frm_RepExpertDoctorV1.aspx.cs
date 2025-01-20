@@ -177,7 +177,7 @@ namespace Pry_PrestasaludWAP.Reportes
             System.Threading.Thread.Sleep(500);            
             objparam[1] = txtFechaIni.Text;
             objparam[2] = txtFechaFin.Text;
-            objparam[3] = ddlCliente.SelectedValue;
+            objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
             objparam[4] = "0";
             ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctor", objparam);
             
