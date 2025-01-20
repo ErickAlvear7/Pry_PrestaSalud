@@ -179,8 +179,11 @@ namespace Pry_PrestasaludWAP.Reportes
             objparam[2] = txtFechaFin.Text;
             objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
             objparam[4] = "0";
-            ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctor", objparam);
-                        
+
+
+            ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
+
+
             if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null )
             {
                 grdvDatos.DataSource = ds;

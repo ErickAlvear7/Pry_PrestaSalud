@@ -143,7 +143,7 @@ public class Conexion
                 {
                     strSelectCommandText = strSelectCommandText + "," + objparam[i].ToString();
                 }
-            }            
+            }
             new SqlDataAdapter(strSelectCommandText, Sqlcn).Fill(dsData);            
             Sqlcn.Close();
             return dsData;
@@ -203,6 +203,34 @@ public class Conexion
                 da.Fill(ds);
                 return ds;
             }
+        }
+        catch (Exception ex)
+        {
+            return ds = null;
+        }
+    }
+
+    public DataSet FunReportesDoctorV1(object[] objparam)
+    {
+        try
+        {
+            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctor"))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = Sqlcn;
+                cmd.CommandTimeout = 200;
+                cmd.Parameters.AddWithValue("@in_tipo", objparam[0]);
+                cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
+                cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
+                cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3]);
+                cmd.Parameters.AddWithValue("@in_tipocliente", objparam[4].ToString());
+                Sqlcn.Open();
+                //cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+
         }
         catch (Exception ex)
         {
