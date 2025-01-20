@@ -289,10 +289,8 @@
                                         <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
                                         <asp:BoundField DataField="Costo" HeaderText="Costo" />
                                         <asp:BoundField DataField="IdBeneficiario" HeaderText="IdBeneficiario" />
-                                        <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
-
                                         <asp:BoundField DataField="ObservaG" HeaderText="ObservaG" />
-
+                                        <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />
                                 </asp:GridView>
