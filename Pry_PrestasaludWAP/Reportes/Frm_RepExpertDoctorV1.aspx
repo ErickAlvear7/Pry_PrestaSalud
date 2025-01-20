@@ -170,7 +170,7 @@
                                 <td style="width: 15%"></td>
                                 <td style="width: 35%"></td>
                             </tr>
-                            <tr>
+                         <%--   <tr>
                                 <td>
                                     <h5>Tipo Agenda:</h5>
                                 </td>
@@ -189,7 +189,7 @@
                                     </asp:DropDownList>
                                 </td>
                                 <td></td>
-                            </tr>
+                            </tr>--%>
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -292,7 +292,7 @@
                                         <asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
                                             <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />
+                                        <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
 
                                     </Columns>

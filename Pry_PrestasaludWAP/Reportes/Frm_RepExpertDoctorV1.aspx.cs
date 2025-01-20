@@ -51,10 +51,10 @@ namespace Pry_PrestasaludWAP.Reportes
                 case 0:
                     Array.Resize(ref objparam, 1);
                     objparam[0] = 38;
-                    ddlTipoAgenda.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                    ddlTipoAgenda.DataTextField = "Descripcion";
-                    ddlTipoAgenda.DataValueField = "Codigo";
-                    ddlTipoAgenda.DataBind();
+                    //ddlTipoAgenda.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                    //ddlTipoAgenda.DataTextField = "Descripcion";
+                    //ddlTipoAgenda.DataValueField = "Codigo";
+                    //ddlTipoAgenda.DataBind();
                     break;
                 case 1:
                     Array.Resize(ref objparam, 1);
@@ -72,11 +72,11 @@ namespace Pry_PrestasaludWAP.Reportes
         protected void btnProcesar_Click(object sender, EventArgs e)
         {
             lblerror.Text = "";
-            if (ddlTipoAgenda.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Seleccione Tipo Agenda..!", this);
-                return; 
-            }
+            //if (ddlTipoAgenda.SelectedValue == "0")
+            //{
+            //    new Funciones().funShowJSMessage("Seleccione Tipo Agenda..!", this);
+            //    return; 
+            //}
 
             if (!new Funciones().IsDate(txtFechaIni.Text))
             {
@@ -162,20 +162,23 @@ namespace Pry_PrestasaludWAP.Reportes
             #endregion
 
             Array.Resize(ref objparam, 5);
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 2;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 3;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 4;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 5;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 2;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 3;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 4;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 5;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
+
+            if (ddlCliente.SelectedValue == "0") objparam[0] = 0;
+            if (ddlCliente.SelectedValue != "0")  objparam[0] = 1;
 
             System.Threading.Thread.Sleep(500);            
             objparam[1] = txtFechaIni.Text;
             objparam[2] = txtFechaFin.Text;
             objparam[3] = ddlCliente.SelectedValue;
-            objparam[4] = ddlTipoCliente.SelectedValue;
+            objparam[4] = "0";
             ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctor", objparam);
             
             grdvDatos.DataSource = ds;

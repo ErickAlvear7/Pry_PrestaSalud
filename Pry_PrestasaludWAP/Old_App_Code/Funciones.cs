@@ -77,6 +77,7 @@ public class Funciones
 
 
 
+
     public String funCrearLogsAuditoria(String rutalog, String category, String fuente, String description)
     {
 
