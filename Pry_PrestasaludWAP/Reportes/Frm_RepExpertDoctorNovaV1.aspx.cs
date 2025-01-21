@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 namespace Pry_PrestasaludWAP.Reportes
 {
-    public partial class Frm_RepExpertDoctorNovaV1 : System.Web.UI.Page
+    public partial class Frm_RepExpertDoctorNovaV1 : Page
     {
         #region Variables
         Object[] objparam = new Object[1];

@@ -103,6 +103,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
+
             <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCabecera">
                     <ProgressTemplate>
@@ -114,8 +115,9 @@
                     </ProgressTemplate>
                 </asp:UpdateProgress>
             </div>
+
             <div class="panel-body">
-                <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Conditional">
+                <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Always">
                     <ContentTemplate>
                         <table style="width: 100%">
                             <tr>
@@ -211,6 +213,7 @@
                                 </tr>
                             </table>
                         </div>
+
                         <div class="panel panel-default">
                             <table style="width: 100%">
                                 <tr>
@@ -225,6 +228,7 @@
                                 </tr>
                             </table>
                         </div>
+
                         <div class="panel-info">
                             <div style="overflow: scroll; width: 1024px; height: 300px" runat="server" id="divBeneficiario">
                                 <asp:GridView ID="grdvDatos" runat="server" Width="100%"
