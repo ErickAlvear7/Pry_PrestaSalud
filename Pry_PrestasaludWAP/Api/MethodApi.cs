@@ -44,7 +44,10 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetToken", mensaje, 49);
+
             }
 
             return "";
@@ -81,7 +84,8 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetIdContract", mensaje, 88);
 
             }
 
@@ -92,85 +96,113 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetServicios(string url, string idcont, string auth)
         {
-            HttpClient _servicio = new HttpClient();
+            try
             {
-                _servicio.BaseAddress = new Uri(url);
-                _servicio.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                HttpClient _servicio = new HttpClient();
+                {
+                    _servicio.BaseAddress = new Uri(url);
+                    _servicio.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                }
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resServId = _servicio.GetAsync("services/" + idcont).Result;
+
+                if (resServId.IsSuccessStatusCode)
+                {
+                    var serviceId = resServId.Content.ReadAsStringAsync().Result;
+
+                    dynamic dataSer = JArray.Parse(serviceId);
+                    string ideser = dataSer[0].id;
+                    return ideser;
+                }
+                else
+                {
+                    MessageBox.Show(resServId.StatusCode.ToString());
+                }
+
+
             }
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            var resServId = _servicio.GetAsync("services/" + idcont).Result;
-
-            if (resServId.IsSuccessStatusCode)
+            catch (Exception ex)
             {
-                var serviceId = resServId.Content.ReadAsStringAsync().Result;
-
-                dynamic dataSer = JArray.Parse(serviceId);
-                string ideser = dataSer[0].id;
-                return ideser;
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetServicios", mensaje, 129);
             }
-            else
-            {
-                MessageBox.Show(resServId.StatusCode.ToString());
-            }
-
+          
             return "";
         }
 
         public string GetEspecialidad(string url, string auth, string idcont)
         {
-            HttpClient _espec = new HttpClient();
+            try
             {
-                _espec.BaseAddress = new Uri(url);
-                _espec.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                HttpClient _espec = new HttpClient();
+                {
+                    _espec.BaseAddress = new Uri(url);
+                    _espec.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                }
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var resEspeId = _espec.GetAsync("specialties/" + idcont).Result;
+
+                if (resEspeId.IsSuccessStatusCode)
+                {
+                    var espeId = resEspeId.Content.ReadAsStringAsync().Result;
+
+                    dynamic dataEsp = JArray.Parse(espeId);
+                    string idespe = dataEsp[0].id;
+                    return idespe;
+                }
+                else
+                {
+                    MessageBox.Show(resEspeId.StatusCode.ToString());
+                }
+
             }
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var resEspeId = _espec.GetAsync("specialties/" + idcont).Result;
-
-            if (resEspeId.IsSuccessStatusCode)
+            catch (Exception ex)
             {
-                var espeId = resEspeId.Content.ReadAsStringAsync().Result;
-
-                dynamic dataEsp = JArray.Parse(espeId);
-                string idespe = dataEsp[0].id;
-                return idespe;
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetEspecialidad", mensaje, 165);
             }
-            else
-            {
-                MessageBox.Show(resEspeId.StatusCode.ToString());
-            }
+         
 
             return "";
         }
 
         public string PostCreatePatient(string url, string dataPatient, string auth)
         {
-
-            HttpClient _patient = new HttpClient();
+            try
             {
-                _patient.BaseAddress = new Uri(url);
-                _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                HttpContent _content = new StringContent(dataPatient, Encoding.UTF8, "application/json");
-                var _resPatient = _patient.PostAsync("patient", _content).Result;
-
-                if (_resPatient.IsSuccessStatusCode)
+                HttpClient _patient = new HttpClient();
                 {
-                    var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
-                    dynamic idpat = JObject.Parse(responseContent);
-                    return idpat.patient.id;
-                }
-                else
-                {
-                    MessageBox.Show(_resPatient.StatusCode.ToString());
+                    _patient.BaseAddress = new Uri(url);
+                    _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                    HttpContent _content = new StringContent(dataPatient, Encoding.UTF8, "application/json");
+                    var _resPatient = _patient.PostAsync("patient", _content).Result;
+
+                    if (_resPatient.IsSuccessStatusCode)
+                    {
+                        var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
+                        dynamic idpat = JObject.Parse(responseContent);
+                        return idpat.patient.id;
+                    }
+                    else
+                    {
+                        MessageBox.Show(_resPatient.StatusCode.ToString());
+
+                    }
 
                 }
-
             }
+            catch (Exception ex)
+            {
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/PostCreatePatient", mensaje, 203);
+            }
+
             return "";
         }
 
@@ -205,7 +237,8 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", mensaje, 241);
             }
 
             return "";
