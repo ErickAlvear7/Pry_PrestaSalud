@@ -196,8 +196,8 @@ namespace Pry_PrestasaludWAP.Api
                     else
                     {
                         //MessageBox.Show(_resConsulta.StatusCode.ToString());
-                        MessageBox.Show("Horario no disponible");
-                        return "";
+                        string mensaje = "Horario no disponible";
+                        return mensaje;
                     }
 
                 }

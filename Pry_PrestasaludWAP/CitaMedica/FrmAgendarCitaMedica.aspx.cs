@@ -1731,7 +1731,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //GET ID ESPECIALIDAD
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
 
-                    //GET DATOS TITULAR Y BENEFICIARIO
+                    //GET DATOS TITULAR 
                     if (ViewState["TipoCliente"].ToString() == "T")
                     {
                         Array.Resize(ref objlink, 3);
@@ -1823,6 +1823,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
                 _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
+
+                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/RespuestaApiGeneraLink", _datalink, 1);
+
+                if(_datalink == "Horario no disponible")
+                {
+                    new Funciones().funShowJSMessage("No hay horarios disponibles", this);
+                    return;
+                }
 
                 if (_datalink != "")
                 {
