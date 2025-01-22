@@ -1021,8 +1021,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objcitamedica[23] = parametro1;
                     if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
                     {
-                        thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
-                        thrEnviarSMS.Start();
+                        //thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
+                        //thrEnviarSMS.Start();
                     }
 
                     //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
