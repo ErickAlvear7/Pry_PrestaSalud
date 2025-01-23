@@ -1653,10 +1653,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string medicoNombre = "";
             string medicoApellido = "";
             string medico = "";
-            string tipo = ViewState["TipoCliente"].ToString();
-            int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
-            int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
-            int idprod = int.Parse(Session["CodigoProducto"].ToString());
+            //string tipo = ViewState["TipoCliente"].ToString();
+            //int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
+            //int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
+            //int idprod = int.Parse(Session["CodigoProducto"].ToString());
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
             string fecha = "";
@@ -1670,6 +1670,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 return;
             }
 
+            if (ddlEspecialidad.SelectedValue == "0")
+            {
+                new Funciones().funShowJSMessage("Seleccione Especialidad..!!", this);
+                return;
+            }
+
 
             if (ddlMedico.SelectedValue == "0")
             {
@@ -1677,12 +1683,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 return;
             }
 
-            if (ddlEspecialidad.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Seleccione Especialidad..!!", this);
-                return;
-            }
-
+          
             if (ddlMotivoCita.SelectedValue == "0")
             {
                 new Funciones().funShowJSMessage("Seleccione Motivo de la Consulta..!!", this);
@@ -1721,7 +1722,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
                     Array.Resize(ref objparam, 3);
-                    objparam[0] = idtitu;
+                    objparam[0] = int.Parse(ViewState["TituCodigo"].ToString());
                     objparam[1] = "";
                     objparam[2] = 183;
                     link = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
@@ -1750,7 +1751,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             Array.Resize(ref objlink, 3);
                             objlink[0] = 0;
-                            objlink[1] = idtitu;
+                            objlink[1] = int.Parse(ViewState["TituCodigo"].ToString());
                             objlink[2] = 0;
                             dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
 
@@ -1807,9 +1808,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         Array.Resize(ref objlinkid, 8);
                         objlinkid[0] = 0;
-                        objlinkid[1] = idtitu;
-                        objlinkid[2] = idbene;
-                        objlinkid[3] = idprod;
+                        objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString()); 
+                        objlinkid[2] = int.Parse(ViewState["BeneCodigo"].ToString()); 
+                        objlinkid[3] = int.Parse(Session["CodigoProducto"].ToString()); 
                         objlinkid[4] = _idpatient;
                         objlinkid[5] = _idcont;
                         objlinkid[6] = _idespe;
@@ -1838,9 +1839,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
                     _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
-                    if (_datalink == "Horario no disponible")
+                    if (_datalink == "Horario")
                     {
-                        new Funciones().funShowJSMessage("No hay horarios disponibles", this);
+                        new Funciones().funShowJSMessage("Sin turnos intente en 5 min..!!", this);
                         return;
                     }
 
@@ -1871,7 +1872,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
                         objparam[2] = ViewState["CodMed"];
                         objparam[3] = ViewState["TipoCliente"].ToString();
-                        objparam[4] = idtitu;
+                        objparam[4] = int.Parse(ViewState["TituCodigo"].ToString());
                         objparam[5] = 0;
                         objparam[6] = "V";
                         objparam[7] = xfecha;

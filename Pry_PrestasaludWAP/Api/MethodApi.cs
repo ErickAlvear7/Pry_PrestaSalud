@@ -25,7 +25,6 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (_response.IsSuccessStatusCode)
                 {
-                    new Funciones().funCrearLogAuditoria(1, "SUCCESS", "OK", 1);
                     var responseContent = _response.Content.ReadAsStringAsync().Result;
                     dynamic token = JObject.Parse(responseContent);
                     return token.token;
@@ -218,7 +217,7 @@ namespace Pry_PrestasaludWAP.Api
                     }
                     else
                     {
-                        return "Horario no disponible";
+                        return "Horario";
                     }
 
                 }
