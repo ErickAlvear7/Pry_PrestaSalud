@@ -1653,10 +1653,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string medicoNombre = "";
             string medicoApellido = "";
             string medico = "";
-            //string tipo = ViewState["TipoCliente"].ToString();
-            //int idtitu = int.Parse(ViewState["TituCodigo"].ToString());
-            //int idbene = int.Parse(ViewState["BeneCodigo"].ToString());
-            //int idprod = int.Parse(Session["CodigoProducto"].ToString());
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
             string fecha = "";
