@@ -296,8 +296,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
-
-
         private void FunHistorialCitas()
         {
             try
@@ -1632,7 +1630,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnLink_Click(object sender, EventArgs e)
         {
 
-            if(ViewState["TipoCliente"] == null)
+            new Funciones().funCrearLogAuditoria(1, "TIPO CLIENTE", ViewState["TipoCliente"].ToString(), 1);
+
+            if (ViewState["TipoCliente"] == null)
             {
                 new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
                 return;
@@ -1700,188 +1700,200 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     api_key = dtApi
                 };
 
+                new Funciones().funCrearLogAuditoria(1, "Obtiene APIKEY", dtApi, 1);
+
                 //OBTENER TOKEN
                 string _apikey = JsonConvert.SerializeObject(apikey);
+
+                new Funciones().funCrearLogAuditoria(1, "SERIALIZANDO APIKEY", _apikey, 1);
+
                 string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/apikey/", _apikey);
 
+                new Funciones().funCrearLogAuditoria(1, "OBTENIENDO TOKEN", _token, 1);
 
-                //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
-                Array.Resize(ref objparam, 3);
-                objparam[0] = idtitu;
-                objparam[1] = "";
-                objparam[2] = 183;
-                link = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                int _cotinuar = 1;
 
-                if (link != null && link.Tables[0].Rows.Count > 0)
+                if (_cotinuar == 1)
                 {
-                    foreach (DataRow dr in link.Tables[0].Rows)
-                    {
-                        _idpatient = dr[0].ToString();
-                        _idcont = dr[1].ToString();
-                        _idespe = dr[2].ToString();
-                        _idserv = dr[3].ToString();
-                    }
-                }
-                else
-                {
-                    //GET ID CONTRACT
-                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
-                    //GET ID SERVICIOS
-                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
-                    //GET ID ESPECIALIDAD
-                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
 
-                    //GET DATOS TITULAR 
-                    if (ViewState["TipoCliente"].ToString() == "T")
-                    {
-                        Array.Resize(ref objlink, 3);
-                        objlink[0] = 0;
-                        objlink[1] = idtitu;
-                        objlink[2] = 0;
-                        dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+                    //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = idtitu;
+                    objparam[1] = "";
+                    objparam[2] = 183;
+                    link = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                        foreach (DataRow dr in dt.Tables[0].Rows)
+                    if (link != null && link.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in link.Tables[0].Rows)
                         {
-                            nombre = dr[0].ToString();
-                            apellido = dr[1].ToString();
-                            genero = dr[2].ToString();
-                            fechanac = dr[3].ToString();
-                            celular = dr[4].ToString();
-                            email = dr[5].ToString();
+                            _idpatient = dr[0].ToString();
+                            _idcont = dr[1].ToString();
+                            _idespe = dr[2].ToString();
+                            _idserv = dr[3].ToString();
                         }
-
-                    }
-                    else if (ViewState["TipoCliente"].ToString() == "B")
-                    {
-                        new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
-                        return;
-
-                    }
-
-                    if (email == "")
-                    {
-                        new Funciones().funShowJSMessage("Se requiere un email", this);
-                        btnLink.Enabled = true;
-                        return;
-                    }
-
-                    if (genero == "M")
-                    {
-                        genero = "h";
                     }
                     else
                     {
-                        genero = "m";
-                    }
+                        //GET ID CONTRACT
+                        _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
+                        //GET ID SERVICIOS
+                        _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
+                        //GET ID ESPECIALIDAD
+                        _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
 
-                    DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
-
-                    var paciente = new Patient
-                    {
-                        name = nombre,
-                        surnames = apellido,
-                        email = email,
-                        birthdate = newFechaNaci,
-                        gender = genero,
-                        phone = celular,
-                        contractId = _idcont
-                    };
-
-                    var data = new JavaScriptSerializer().Serialize(paciente);
-                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
-
-                    Array.Resize(ref objlinkid, 8);
-                    objlinkid[0] = 0;
-                    objlinkid[1] = idtitu;
-                    objlinkid[2] = idbene;
-                    objlinkid[3] = idprod;
-                    objlinkid[4] = _idpatient;
-                    objlinkid[5] = _idcont;
-                    objlinkid[6] = _idespe;
-                    objlinkid[7] = _idserv;
-
-                    link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
-
-                    foreach (DataRow dr in link.Tables[0].Rows)
-                    {
-                        _idpatient = dr[0].ToString();
-                        _idcont = dr[1].ToString();
-                        _idespe = dr[2].ToString();
-                        _idserv = dr[3].ToString();
-                    }
-                }
-
-                var consulta = new Consulta
-                {
-                    idPatient = _idpatient,
-                    idContrato = _idcont,
-                    idEspecialidad = _idespe,
-                    idServicio = _idserv,
-                    reason = motivo,
-                };
-
-                var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
-                _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
-
-                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/RespuestaApiGeneraLink", _datalink, 1);
-
-                if(_datalink == "Horario no disponible")
-                {
-                    new Funciones().funShowJSMessage("No hay horarios disponibles", this);
-                    return;
-                }
-
-                if (_datalink != "")
-                {
-                    dynamic urlLink = JObject.Parse(_datalink);
-                    url = urlLink.url_llamada;
-                    fecha = urlLink.fecha;
-                    motivo = urlLink.motivo;
-                    patientNombre = urlLink.patient.nombre;
-                    patientApelllido = urlLink.patient.apellidos;
-                    patient = patientNombre + " " + patientApelllido;
-                    medicoNombre = urlLink.doctor.nombre;
-                    medicoApellido = urlLink.doctor.apellidos;
-                    medico = medicoNombre + " " + medicoApellido;
-                    string xfecha = fecha.Substring(0, 10);
-                    string xhora = fecha.Substring(11, 5);
-
-                    //selecciona dia de la fecha
-                    DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    string newDia = dia.DayOfWeek.ToString();
-
-                    txtUrl.Visible = true;
-                    txtUrl.Text = url;
-
-                    Array.Resize(ref objparam, 13);
-                    objparam[0] = 0;
-                    objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
-                    objparam[2] = ViewState["CodMed"];
-                    objparam[3] = ViewState["TipoCliente"].ToString();
-                    objparam[4] = idtitu;
-                    objparam[5] = 0;
-                    objparam[6] = "V";
-                    objparam[7] = xfecha;
-                    objparam[8] = newDia;
-                    objparam[9] = xhora;
-                    objparam[10] = int.Parse(Session["usuCodigo"].ToString());
-                    objparam[11] = Session["MachineName"].ToString();
-                    objparam[12] = motivo;
-                    DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
-                    int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
-                    if (codCita > 0)
-                    {
-                        Session["SalirAgenda"] = "SI";
-                        //Session["codigocita"] = codCita;
-                        Session["codigocita"] = 0;
-                        //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
-                        if (chkEmail.Checked)
+                        //GET DATOS TITULAR 
+                        if (ViewState["TipoCliente"].ToString() == "T")
                         {
-                            FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
+                            Array.Resize(ref objlink, 3);
+                            objlink[0] = 0;
+                            objlink[1] = idtitu;
+                            objlink[2] = 0;
+                            dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+                            foreach (DataRow dr in dt.Tables[0].Rows)
+                            {
+                                nombre = dr[0].ToString();
+                                apellido = dr[1].ToString();
+                                genero = dr[2].ToString();
+                                fechanac = dr[3].ToString();
+                                celular = dr[4].ToString();
+                                email = dr[5].ToString();
+                            }
+
+                        }
+                        else if (ViewState["TipoCliente"].ToString() == "B")
+                        {
+                            new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
+                            return;
+
+                        }
+
+                        if (email == "")
+                        {
+                            new Funciones().funShowJSMessage("Se requiere un email", this);
+                            btnLink.Enabled = true;
+                            return;
+                        }
+
+                        if (genero == "M")
+                        {
+                            genero = "h";
+                        }
+                        else
+                        {
+                            genero = "m";
+                        }
+
+                        DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
+
+                        var paciente = new Patient
+                        {
+                            name = nombre,
+                            surnames = apellido,
+                            email = email,
+                            birthdate = newFechaNaci,
+                            gender = genero,
+                            phone = celular,
+                            contractId = _idcont
+                        };
+
+                        var data = new JavaScriptSerializer().Serialize(paciente);
+                        _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
+
+                        Array.Resize(ref objlinkid, 8);
+                        objlinkid[0] = 0;
+                        objlinkid[1] = idtitu;
+                        objlinkid[2] = idbene;
+                        objlinkid[3] = idprod;
+                        objlinkid[4] = _idpatient;
+                        objlinkid[5] = _idcont;
+                        objlinkid[6] = _idespe;
+                        objlinkid[7] = _idserv;
+
+                        link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
+
+                        foreach (DataRow dr in link.Tables[0].Rows)
+                        {
+                            _idpatient = dr[0].ToString();
+                            _idcont = dr[1].ToString();
+                            _idespe = dr[2].ToString();
+                            _idserv = dr[3].ToString();
                         }
                     }
 
+                    var consulta = new Consulta
+                    {
+                        idPatient = _idpatient,
+                        idContrato = _idcont,
+                        idEspecialidad = _idespe,
+                        idServicio = _idserv,
+                        reason = motivo,
+                    };
+
+                    var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
+                    _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
+
+                    new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/RespuestaApiGeneraLink", _datalink, 1);
+
+                    if (_datalink == "Horario no disponible")
+                    {
+                        new Funciones().funShowJSMessage("No hay horarios disponibles", this);
+                        return;
+                    }
+
+                    if (_datalink != "")
+                    {
+                        dynamic urlLink = JObject.Parse(_datalink);
+                        url = urlLink.url_llamada;
+                        fecha = urlLink.fecha;
+                        motivo = urlLink.motivo;
+                        patientNombre = urlLink.patient.nombre;
+                        patientApelllido = urlLink.patient.apellidos;
+                        patient = patientNombre + " " + patientApelllido;
+                        medicoNombre = urlLink.doctor.nombre;
+                        medicoApellido = urlLink.doctor.apellidos;
+                        medico = medicoNombre + " " + medicoApellido;
+                        string xfecha = fecha.Substring(0, 10);
+                        string xhora = fecha.Substring(11, 5);
+
+                        //selecciona dia de la fecha
+                        DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        string newDia = dia.DayOfWeek.ToString();
+
+                        txtUrl.Visible = true;
+                        txtUrl.Text = url;
+
+                        Array.Resize(ref objparam, 13);
+                        objparam[0] = 0;
+                        objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
+                        objparam[2] = ViewState["CodMed"];
+                        objparam[3] = ViewState["TipoCliente"].ToString();
+                        objparam[4] = idtitu;
+                        objparam[5] = 0;
+                        objparam[6] = "V";
+                        objparam[7] = xfecha;
+                        objparam[8] = newDia;
+                        objparam[9] = xhora;
+                        objparam[10] = int.Parse(Session["usuCodigo"].ToString());
+                        objparam[11] = Session["MachineName"].ToString();
+                        objparam[12] = motivo;
+                        DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
+                        int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+                        if (codCita > 0)
+                        {
+                            Session["SalirAgenda"] = "SI";
+                            //Session["codigocita"] = codCita;
+                            Session["codigocita"] = 0;
+                            //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
+                            if (chkEmail.Checked)
+                            {
+                                FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
+                            }
+                        }
+
+                    }
                 }
 
             }

@@ -9,25 +9,32 @@ namespace Pry_PrestasaludWAP.Api
 {
     public class MethodApi
     {
-
         public string GetToken(string url, string _apikey)
         {
-
             try
             {
+                new Funciones().funCrearLogAuditoria(1, "INGRESA AL HTTPCLIENTE", url, 1);
 
                 HttpClient _client = new HttpClient();
                 {
                     _client.BaseAddress = new Uri(url);
                 }
 
+                new Funciones().funCrearLogAuditoria(1, "CONEXION DEL ENDPOIT", url, 1);
+
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+                new Funciones().funCrearLogAuditoria(1, "PASO SEGURIDAD", "", 1);
+
                 HttpContent _content = new StringContent(_apikey, Encoding.UTF8, "application/json");
+
+                new Funciones().funCrearLogAuditoria(1, "GET CONTENET", _content.ToString(), 1);
+
                 var _response = _client.PostAsync("login", _content).Result;
 
                 if (_response.IsSuccessStatusCode)
                 {
+                    new Funciones().funCrearLogAuditoria(1, "SUCCESS", "OK", 1);
                     var responseContent = _response.Content.ReadAsStringAsync().Result;
                     dynamic token = JObject.Parse(responseContent);
 
@@ -35,16 +42,12 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-
+                    new Funciones().funCrearLogAuditoria(1, "ISSUE", "INSSUE", 1);
                     MessageBox.Show(_response.StatusCode.ToString());
-                    
-
                 }
-
             }
             catch (Exception ex)
             {
-
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetToken", mensaje, 49);
 
