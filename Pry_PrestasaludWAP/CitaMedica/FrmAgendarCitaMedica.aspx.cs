@@ -1629,15 +1629,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void btnLink_Click(object sender, EventArgs e)
         {
-
-            new Funciones().funCrearLogAuditoria(1, "TIPO CLIENTE", ViewState["TipoCliente"].ToString(), 1);
-
-            if (ViewState["TipoCliente"] == null)
-            {
-                new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
-                return;
-            }
-
+ 
             //btnLink.Enabled = false;
             DataSet api = new DataSet();
             DataSet link = new DataSet();
@@ -1672,6 +1664,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string url = "";
             motivo = ddlMotivoCita.SelectedItem.ToString();
 
+            if (ViewState["TipoCliente"] == null)
+            {
+                new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
+                return;
+            }
+
+
+            if (ddlMedico.SelectedValue == "0")
+            {
+                new Funciones().funShowJSMessage("Seleccione Medico..!!", this);
+                return;
+            }
+
+            if (ddlEspecialidad.SelectedValue == "0")
+            {
+                new Funciones().funShowJSMessage("Seleccione Especialidad..!!", this);
+                return;
+            }
+
             if (ddlMotivoCita.SelectedValue == "0")
             {
                 new Funciones().funShowJSMessage("Seleccione Motivo de la Consulta..!!", this);
@@ -1700,20 +1711,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     api_key = dtApi
                 };
 
-                new Funciones().funCrearLogAuditoria(1, "Obtiene APIKEY", dtApi, 1);
-
                 //OBTENER TOKEN
                 string _apikey = JsonConvert.SerializeObject(apikey);
 
-                new Funciones().funCrearLogAuditoria(1, "SERIALIZANDO APIKEY", _apikey, 1);
-
                 string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/apikey/", _apikey);
 
-                new Funciones().funCrearLogAuditoria(1, "OBTENIENDO TOKEN", _token, 1);
-
-                int _cotinuar = 1;
-
-                if (_cotinuar == 1)
+                if (_token != "")
                 {
 
                     //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
@@ -1835,8 +1838,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
                     _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
-                    new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/RespuestaApiGeneraLink", _datalink, 1);
-
                     if (_datalink == "Horario no disponible")
                     {
                         new Funciones().funShowJSMessage("No hay horarios disponibles", this);
@@ -1895,12 +1896,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     }
                 }
+                else
+                {
+                    new Funciones().funShowJSMessage("No se genero Token", this);
+                    new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No se genero el token", 1716);
+                    return;
+                }
 
             }
             catch (Exception ex)
             {
                 mensaje = ex.Message;
-                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/btnLink", mensaje, 1);
+                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/btnLink error catch", mensaje, 1);
             }
 
         }

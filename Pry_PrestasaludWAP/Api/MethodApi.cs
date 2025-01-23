@@ -13,22 +13,13 @@ namespace Pry_PrestasaludWAP.Api
         {
             try
             {
-                new Funciones().funCrearLogAuditoria(1, "INGRESA AL HTTPCLIENTE", url, 1);
-
                 HttpClient _client = new HttpClient();
                 {
                     _client.BaseAddress = new Uri(url);
                 }
 
-                new Funciones().funCrearLogAuditoria(1, "CONEXION DEL ENDPOIT", url, 1);
-
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                new Funciones().funCrearLogAuditoria(1, "PASO SEGURIDAD", "", 1);
-
                 HttpContent _content = new StringContent(_apikey, Encoding.UTF8, "application/json");
-
-                new Funciones().funCrearLogAuditoria(1, "GET CONTENET", _content.ToString(), 1);
 
                 var _response = _client.PostAsync("login", _content).Result;
 
@@ -37,7 +28,6 @@ namespace Pry_PrestasaludWAP.Api
                     new Funciones().funCrearLogAuditoria(1, "SUCCESS", "OK", 1);
                     var responseContent = _response.Content.ReadAsStringAsync().Result;
                     dynamic token = JObject.Parse(responseContent);
-
                     return token.token;
                 }
                 else
@@ -61,7 +51,6 @@ namespace Pry_PrestasaludWAP.Api
         {
             try
             {
-
                 HttpClient _contract = new HttpClient();
                 {
                     _contract.BaseAddress = new Uri(url);
@@ -82,6 +71,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resConId.StatusCode.ToString());
+                    return "";
                 }
 
             }
@@ -92,10 +82,8 @@ namespace Pry_PrestasaludWAP.Api
 
             }
 
-
             return "";
         }
-
 
         public string GetServicios(string url, string idcont, string auth)
         {
@@ -108,7 +96,6 @@ namespace Pry_PrestasaludWAP.Api
                 }
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
                 var resServId = _servicio.GetAsync("services/" + idcont).Result;
 
                 if (resServId.IsSuccessStatusCode)
@@ -122,8 +109,8 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resServId.StatusCode.ToString());
+                    return "";
                 }
-
 
             }
             catch (Exception ex)
@@ -159,6 +146,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resEspeId.StatusCode.ToString());
+                    return "";
                 }
 
             }
@@ -168,7 +156,6 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetEspecialidad", mensaje, 165);
             }
          
-
             return "";
         }
 
@@ -195,6 +182,7 @@ namespace Pry_PrestasaludWAP.Api
                     else
                     {
                         MessageBox.Show(_resPatient.StatusCode.ToString());
+                        return "";
 
                     }
 
@@ -230,9 +218,7 @@ namespace Pry_PrestasaludWAP.Api
                     }
                     else
                     {
-                        //MessageBox.Show(_resConsulta.StatusCode.ToString());
-                        string mensaje = "Horario no disponible";
-                        return mensaje;
+                        return "Horario no disponible";
                     }
 
                 }
