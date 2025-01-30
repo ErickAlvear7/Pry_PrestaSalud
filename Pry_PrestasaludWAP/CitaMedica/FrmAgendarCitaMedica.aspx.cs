@@ -1466,6 +1466,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ddlTipoPago.Enabled = true;
             txtObservacion.Enabled = true;
 
+
+            //levantar popup para agendar medilink
             if (codprestador == 28)
             {
                 if(ViewState["TituCodigo"] != null)
