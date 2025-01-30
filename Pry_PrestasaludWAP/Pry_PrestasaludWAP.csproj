@@ -327,6 +327,13 @@
     <Compile Include="CitaMedica\FrmAgendarCitaMedica.aspx.designer.cs">
       <DependentUpon>FrmAgendarCitaMedica.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CitaMedica\FrmAgendarMediLink.aspx.cs">
+      <DependentUpon>FrmAgendarMediLink.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CitaMedica\FrmAgendarMediLink.aspx.designer.cs">
+      <DependentUpon>FrmAgendarMediLink.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CitaMedica\FrmCitaMedicaAdmin.aspx.cs">
       <DependentUpon>FrmCitaMedicaAdmin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1487,6 +1494,7 @@
     <Content Include="Botones\variablesgris.png" />
     <Content Include="CitaMedica\FrmActualizarDatos.aspx" />
     <Content Include="CitaMedica\FrmAgendarCitaMedica.aspx" />
+    <Content Include="CitaMedica\FrmAgendarMediLink.aspx" />
     <Content Include="CitaMedica\FrmCitaMedicaAdmin.aspx" />
     <Content Include="CitaMedica\FrmDatosCitaMedica.aspx" />
     <Content Include="CitaMedica\FrmDatosMedicoHorarios.aspx" />
