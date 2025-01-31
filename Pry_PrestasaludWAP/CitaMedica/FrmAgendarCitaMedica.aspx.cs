@@ -685,6 +685,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
+                        if (ddlPrestadora.SelectedValue.ToString() == "460")
+                        {
+                            ddlEspecialidad.SelectedValue = "2447";
+                            FunCascadaCombos(4);
+                        }
                         break;
                     case 4:
                         Array.Resize(ref objparam, 3);
@@ -695,6 +700,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
+                        if (ddlEspecialidad.SelectedValue.ToString() == "2447")
+                        {
+                            ddlMedico.SelectedValue = "2974";
+                            FunCascadaCombos(7);
+                        }
+
                         break;
                     case 5:
                         Array.Resize(ref objparam, 1);
@@ -719,6 +730,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMotivoCita.DataTextField = "Descripcion";
                         ddlMotivoCita.DataValueField = "Codigo";
                         ddlMotivoCita.DataBind();
+                        if (ddlEspecialidad.SelectedValue.ToString() == "2447")
+                        {
+                            /*Array.Resize(ref objparam, 1);
+                            objparam[0] = 19;
+                            ddlMotivoCita.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                            ddlMotivoCita.DataTextField = "Descripcion";
+                            ddlMotivoCita.DataValueField = "Codigo";
+                            ddlMotivoCita.DataBind();
+                            ddlMotivoCita.SelectedIndex = 7;*/
+                            ddlMotivoCita.SelectedValue = "C";
+
+                            
+                        }
                         break;
                     case 8:
                         int producto = int.Parse(Session["CodigoProducto"].ToString());
@@ -843,7 +867,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["tbDatosCita"] = tbDatosCita;
             grdvDatosCitas.DataSource = tbDatosCita;
             grdvDatosCitas.DataBind();
-            ddlMotivoCita.SelectedValue = "0";
+            
+            ddlMotivoCita.SelectedValue = "0"; //este le vuelve a poner en vacio, aki hay que buscar glaguna logica
+
             if(ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
             {
                 CalendarioCita.Visible = false;
@@ -1464,7 +1490,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             pnlLink.Visible = false;
             ddlOpcion.Enabled = true;
             ddlTipoPago.Enabled = true;
-            txtObservacion.Enabled = true;
+            txtObservacion.Enabled = true;  
 
 
             //levantar popup para agendar medilink
