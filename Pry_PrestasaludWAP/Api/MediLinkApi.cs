@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Windows.Forms;
 
@@ -26,6 +28,10 @@ namespace Pry_PrestasaludWAP.Api
                     string token = accessToken.datos.accesToken;
                     return token;
                 }
+                else
+                {
+                    MessageBox.Show(resLogin.StatusCode.ToString());
+                }
 
             }
             catch (Exception ex)
@@ -33,6 +39,53 @@ namespace Pry_PrestasaludWAP.Api
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostAccesLogin", mensaje, 36);
             }
+            return "";
+        }
+
+
+        public string GetVerificarPaciente(string url,string token,string documento,string tipo)
+        {
+            try
+            {
+                HttpClient _paciente = new HttpClient();
+                _paciente.BaseAddress = new Uri(url);
+                _paciente.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
+                _paciente.DefaultRequestHeaders.Add("Accept", "*/*");
+                _paciente.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                _paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
+                _paciente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                //var parameter = new Dictionary<string, string>()
+                //{
+                //    ["identificacion"] = documento,
+                //    ["tipoIdentificacion"] = tipo
+
+                //};
+
+                //var parameter = new Dictionary<string, string>();
+                //parameter.Add("identifiacion", documento);
+                //parameter.Add("tipoIdentificacion", tipo);
+
+                var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
+                if (resPaciente.IsSuccessStatusCode)
+                {
+                    var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
+                    dynamic dataPaciente = JObject.Parse(responseContent);
+                }
+                else
+                {
+                    MessageBox.Show(resPaciente.StatusCode.ToString());
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetVerificarPaciente", mensaje, 57);
+            }
+
             return "";
         }
     }

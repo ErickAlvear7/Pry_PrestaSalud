@@ -20,6 +20,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string user = "";
         string pass = "";
         string documento = "";
+        string response = "";
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
         protected void Page_Load(object sender, EventArgs e)
@@ -58,7 +59,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         
         protected void Button1_Click(object sender, EventArgs e)
         {
-         
+
+            response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec/", accessToken, documento,"C");
         }
 
         
