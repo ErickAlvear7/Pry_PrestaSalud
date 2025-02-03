@@ -19,6 +19,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string idtitular = "";
         string user = "";
         string pass = "";
+        string documento = "";
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
         protected void Page_Load(object sender, EventArgs e)
@@ -43,10 +44,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var data = new JavaScriptSerializer().Serialize(login);
             accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec/", data);
 
+            //GET CEDULA TITULAR
+            Array.Resize(ref objparam, 3);
+            objparam[0] = int.Parse(idtitular);
+            objparam[1] = "";
+            objparam[2] = 185;
+            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            documento = dt.Tables[0].Rows[0][0].ToString();
+            lblDocumento.Text = documento;
+
 
         }
+        
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+         
+        }
 
-        //GET CEDULA TITULAR VERIFICAR SI EXISTE EN BDD MEDIKINK
+        
 
 
 
