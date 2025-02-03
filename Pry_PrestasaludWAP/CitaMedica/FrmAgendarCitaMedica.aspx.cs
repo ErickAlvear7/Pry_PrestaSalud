@@ -1909,7 +1909,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         Array.Resize(ref objparam, 13);
                         objparam[0] = 0;
                         objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
-                        objparam[2] = ViewState["CodMed"];
+                        objparam[2] = int.Parse(ddlMedico.SelectedValue);
                         objparam[3] = ViewState["TipoCliente"].ToString();
                         objparam[4] = int.Parse(ViewState["TituCodigo"].ToString());
                         objparam[5] = 0;
