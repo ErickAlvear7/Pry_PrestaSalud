@@ -312,6 +312,7 @@
     <Compile Include="Administrador\FrmRepFactOdonAdmin.aspx.designer.cs">
       <DependentUpon>FrmRepFactOdonAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Api\MediLinkApi.cs" />
     <Compile Include="Api\MethodApi.cs" />
     <Compile Include="CitaMedica\FrmActualizarDatos.aspx.cs">
       <DependentUpon>FrmActualizarDatos.aspx</DependentUpon>
@@ -955,6 +956,7 @@
     <Compile Include="Menu\FrmNuevoMenu.aspx.designer.cs">
       <DependentUpon>FrmNuevoMenu.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\MediLinkModel.cs" />
     <Compile Include="Modelo\Models.cs" />
     <Compile Include="Old_App_Code\BundleConfig.cs" />
     <Compile Include="Old_App_Code\Conexion.cs" />
