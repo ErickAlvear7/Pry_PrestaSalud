@@ -52,7 +52,7 @@ namespace Pry_PrestasaludWAP.Api
                 _paciente.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
                 _paciente.DefaultRequestHeaders.Add("Accept", "*/*");
                 _paciente.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                _paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
+                //_paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
                 _paciente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 //var parameter = new Dictionary<string, string>()
@@ -66,7 +66,11 @@ namespace Pry_PrestasaludWAP.Api
                 //parameter.Add("identifiacion", documento);
                 //parameter.Add("tipoIdentificacion", tipo);
 
-                var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
+                //var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
+                string urlget = "api/VerificarPaciente/:identificacion/:tipoIdentificacion?identificacion=" + documento + "&tipoIdentificacion=" + tipo;
+
+                var resPaciente = _paciente.GetAsync(urlget).Result;
+                
                 if (resPaciente.IsSuccessStatusCode)
                 {
                     var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
