@@ -23,6 +23,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
 
             idtitular = Request["CodigoTitular"];
+            idbene = Request["CodigoBene"];
             //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
             objparam[0] = 61;
             dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
@@ -49,9 +50,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
             documento = dt.Tables[0].Rows[0][0].ToString();
             lblDocumento.Text = documento;
-            */
-
-
+            
         }
         
         protected void Button1_Click(object sender, EventArgs e)
