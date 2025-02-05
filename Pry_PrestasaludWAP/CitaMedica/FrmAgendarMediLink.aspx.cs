@@ -17,6 +17,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         string accessToken = "";
         string idtitular = "";
+        string idbene = "";
         string user = "";
         string pass = "";
         string documento = "";
@@ -27,6 +28,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
 
             idtitular = Request["CodigoTitular"];
+            idbene = Request["CodigoBene"];
             //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
             objparam[0] = 61;
             dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
