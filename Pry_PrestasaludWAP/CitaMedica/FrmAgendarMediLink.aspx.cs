@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Script.Serialization;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Pry_PrestasaludWAP.Api;
 using System.Data;
-using Pry_PrestasaludWAP.Modelo;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
+using Pry_PrestasaludWAP.Api;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 
 namespace Pry_PrestasaludWAP.CitaMedica
@@ -92,14 +87,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
             documento = dt.Tables[0].Rows[0][0].ToString();
             lblDocumento.Text = documento;
 
-            response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec/", accessToken, documento, "C");
+            //response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec/", accessToken, documento, "C");
+
+            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec/", accessToken);
+
+            dynamic dataCiudad = JObject.Parse(response);
+
         }
-
-        
-
-
-
-
-
     }
 }
