@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using AjaxControlToolkit.HTMLEditor.Popups;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -52,7 +53,7 @@ namespace Pry_PrestasaludWAP.Api
                 _paciente.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
                 _paciente.DefaultRequestHeaders.Add("Accept", "*/*");
                 _paciente.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                _paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
+                //_paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
                 _paciente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 //var parameter = new Dictionary<string, string>()
@@ -66,7 +67,11 @@ namespace Pry_PrestasaludWAP.Api
                 //parameter.Add("identifiacion", documento);
                 //parameter.Add("tipoIdentificacion", tipo);
 
-                var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
+                //var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
+                string urlget = "api/VerificarPaciente/:identificacion/:tipoIdentificacion?identificacion=" + documento + "&tipoIdentificacion=" + tipo;
+
+                var resPaciente = _paciente.GetAsync(urlget).Result;
+                
                 if (resPaciente.IsSuccessStatusCode)
                 {
                     var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
@@ -76,9 +81,6 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     MessageBox.Show(resPaciente.StatusCode.ToString());
                 }
-
-
-
             }
             catch (Exception ex)
             {
@@ -87,6 +89,42 @@ namespace Pry_PrestasaludWAP.Api
             }
 
             return "";
+        }
+
+        public string GetCiudad(string url, string token)
+        {
+            //var responseContent;
+            string responseContent = "";
+            try
+            {
+                
+                HttpClient _ciudad = new HttpClient();
+                _ciudad.BaseAddress = new Uri(url);
+                _ciudad.DefaultRequestHeaders.Add("Accept", "*/*");
+                _ciudad.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resCiudad = _ciudad.GetAsync("api/ObtenerCodCiudad").Result;
+
+                if (resCiudad.IsSuccessStatusCode)
+                {
+                    responseContent = resCiudad.Content.ReadAsStringAsync().Result;
+                    //dynamic dataCiudad = JObject.Parse(responseContent);
+                }
+                else
+                {
+                    //MessageBox.Show(resCiudad.StatusCode.ToString());
+                    responseContent = resCiudad.StatusCode.ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetVerificarPaciente", mensaje, 57);
+            }
+
+            return responseContent;
         }
     }
 }
