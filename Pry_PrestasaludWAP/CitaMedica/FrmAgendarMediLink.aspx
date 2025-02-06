@@ -42,12 +42,8 @@
                                     <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label> 
                                 </td>
                                 <td></td>
-                                <td>
-                                    <h5><strong>Validar:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:Button ID="Button1" runat="server" Text="Button" Width="100%" OnClick="Button1_Click" />
-                                </td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                           <tr>

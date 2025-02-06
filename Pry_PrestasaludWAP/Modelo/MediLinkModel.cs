@@ -13,5 +13,24 @@ namespace Pry_PrestasaludWAP.Modelo
             public string username { get; set; }
             public string password { get; set; }
         }
+
+        public class Ciudad
+        {
+            //public string[] codCiudad { get; set; }
+            //public string[] distritoProvincia { get; set; }
+            public string[] nombreCiudad { get; set; }
+
+            public Ciudad(string codCiudad)
+            {
+                codCiudad = codCiudad;
+            //    distritoProvincia = distritoProvincia;
+            //    nombreCiudad = nombreCiudad;
+            }
+
+            public Ciudad()
+            {
+
+            }
+        }
     }
 }

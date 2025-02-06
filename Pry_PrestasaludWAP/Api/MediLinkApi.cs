@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Windows.Forms;
+using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 
 namespace Pry_PrestasaludWAP.Api
 {
@@ -93,7 +94,6 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetCiudad(string url, string token)
         {
-            //var responseContent;
             string responseContent = "";
             try
             {
@@ -109,11 +109,9 @@ namespace Pry_PrestasaludWAP.Api
                 if (resCiudad.IsSuccessStatusCode)
                 {
                     responseContent = resCiudad.Content.ReadAsStringAsync().Result;
-                    //dynamic dataCiudad = JObject.Parse(responseContent);
                 }
                 else
                 {
-                    //MessageBox.Show(resCiudad.StatusCode.ToString());
                     responseContent = resCiudad.StatusCode.ToString();
                 }
 
@@ -121,7 +119,7 @@ namespace Pry_PrestasaludWAP.Api
             catch (Exception ex)
             {
                 var mensaje = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetVerificarPaciente", mensaje, 57);
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetCiudad", mensaje, 57);
             }
 
             return responseContent;
