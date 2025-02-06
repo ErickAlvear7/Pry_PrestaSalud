@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using System.Web.Script.Serialization;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pry_PrestasaludWAP.Api;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
@@ -54,15 +57,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
             response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec/", accessToken);
             dynamic dataCiudad = JObject.Parse(response);
 
-            //var ciudad = new Ciudad();
-            JavaScriptSerializer _convert = new JavaScriptSerializer();
-            Ciudad _ciudad = _convert.Deserialize<Ciudad>(response);
+            var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
 
-            for (int i = 0; i < _ciudad.nombreCiudad.Length; i++)
+            ddlciudad.Items.Clear();
+            ListItem i;
+            i = new ListItem("--Seleccione Ciudad--", "0");
+            ddlciudad.Items.Add(i);
+            foreach (var item in Resultjson.datos)
             {
-                this.ddlciudad.Items.Add(_ciudad.nombreCiudad[i]);
+                string codigoCiudad = item.codCiudad.ToString();
+                string provincia = item.distritoProvincia;
+                string ciudad = item.nombreCiudad;
+
+                i = new ListItem(ciudad, codigoCiudad);
+
+                ddlciudad.Items.Add(i);
+
             }
 
+            ddlciudad.SelectedValue = "1180";
 
         }
         
