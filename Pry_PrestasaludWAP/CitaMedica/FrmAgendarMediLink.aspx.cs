@@ -54,6 +54,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
             documento = dt.Tables[0].Rows[0][0].ToString();
             lblDocumento.Text = documento;
 
+            bool existe = true;
+
+            if (!IsPostBack)
+            {
+                if (existe)
+                {
+                    FunGetCiudad();
+                }
+
+            }
+             
+
+            
+        }
+
+
+        private void FunGetCiudad()
+        {
+
             response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec/", accessToken);
             dynamic dataCiudad = JObject.Parse(response);
 
@@ -75,10 +94,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            ddlciudad.SelectedValue = "1180";
+            //ddlciudad.SelectedValue = "1180";
+
 
         }
-        
-    
+
+
+
+
+
+
+
+
+
+
     }
 }
