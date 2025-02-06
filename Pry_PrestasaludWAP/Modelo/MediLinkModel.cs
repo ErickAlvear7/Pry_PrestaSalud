@@ -14,25 +14,6 @@ namespace Pry_PrestasaludWAP.Modelo
             public string password { get; set; }
         }
 
-        public class Ciudad
-        {
-            //public string[] codCiudad { get; set; }
-            //public string[] distritoProvincia { get; set; }
-            public string[] nombreCiudad { get; set; }
-
-            public Ciudad(string codCiudad)
-            {
-                codCiudad = codCiudad;
-            //    distritoProvincia = distritoProvincia;
-            //    nombreCiudad = nombreCiudad;
-            }
-
-            public Ciudad()
-            {
-
-            }
-        }
-
         public class DatoObj
         {
             public List<Dato> datos { get; set; }

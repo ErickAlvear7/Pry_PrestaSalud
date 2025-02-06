@@ -16,6 +16,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string accessToken = "";
         string idtitular = "";
         string idbene = "";
+        string idpro = "";
         string user = "";
         string pass = "";
         string documento = "";
@@ -27,6 +28,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             idtitular = Request["CodigoTitular"];
             idbene = Request["CodigoBene"];
+            idpro = Request["CodigoPro"];
+
             //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
             objparam[0] = 61;
             dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
@@ -54,6 +57,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
             documento = dt.Tables[0].Rows[0][0].ToString();
             lblDocumento.Text = documento;
 
+
+            if (idbene != "")
+            {
+
+            }
+
+
+
+
             bool existe = true;
 
             if (!IsPostBack)
@@ -64,9 +76,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
 
             }
-             
+            else
+            {
 
-            
+                //Array.Resize(ref objlink, 3);
+                //objlink[0] = 0;
+                //objlink[1] = int.Parse(ViewState["TituCodigo"].ToString());
+                //objlink[2] = 0;
+                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+            }
+
+
+
         }
 
 
@@ -74,7 +96,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
 
             response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec/", accessToken);
-            dynamic dataCiudad = JObject.Parse(response);
+            //dynamic dataCiudad = JObject.Parse(response);
 
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
 
