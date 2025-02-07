@@ -22,12 +22,13 @@
             scriptManager.RegisterPostBackControl(this.imgExportar);
             if (!IsPostBack)
             {
-                txtFechaIni.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                txtFechaFin.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                txtFechaFin.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 lbltitulo.Text = "Reportes Expert Doctor <BASICO 1.0>";
                 funCascadaCombos(0);
                 funCascadaCombos(1);
             }
+            else grdvDatos.DataSource = ViewState["grdvDatos"];
         }
         #endregion
 
@@ -39,10 +40,10 @@
                 case 0:
                     Array.Resize(ref objparam, 1);
                     objparam[0] = 38;
-                    ddlTipoAgenda.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                    ddlTipoAgenda.DataTextField = "Descripcion";
-                    ddlTipoAgenda.DataValueField = "Codigo";
-                    ddlTipoAgenda.DataBind();
+                    //ddlTipoAgenda.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                    //ddlTipoAgenda.DataTextField = "Descripcion";
+                    //ddlTipoAgenda.DataValueField = "Codigo";
+                    //ddlTipoAgenda.DataBind();
                     break;
                 case 1:
                     Array.Resize(ref objparam, 1);
@@ -64,50 +65,56 @@
         protected void btnProcesar_Click(object sender, EventArgs e)
         {
             lblerror.Text = "";
-            if (ddlTipoAgenda.SelectedValue == "0")
-            {
-                lblerror.Text = "Seleccione Tipo de Agenda..!";
-                return;
-            }
-            if (!new Funciones().IsDate(txtFechaIni.Text))
+  
+            if (!new Funciones().IsDateNewx(txtFechaIni.Text))
             {
                 lblerror.Text = "No es una fecha válida..!";
                 return;
             }
-            if (!new Funciones().IsDate(txtFechaFin.Text))
+            if (!new Funciones().IsDateNewx(txtFechaFin.Text))
             {
                 lblerror.Text = "No es una fecha válida..!";
                 return;
             }
-            if (DateTime.ParseExact(txtFechaIni.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "MM/dd/yyyy", CultureInfo.InvariantCulture))
+            if (DateTime.ParseExact(txtFechaIni.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture))
             {
                 lblerror.Text = "La Fecha de Inicio no puede ser mayor a la Fecha de Fin..!";
                 return;
             }
             System.Threading.Thread.Sleep(300);
             Array.Resize(ref objparam, 6);
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 2;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 3;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 4;
-            if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 5;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
-            if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 2;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 3;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 4;
+            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 5;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
+            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
 
-            objparam[1] = ddlCliente.SelectedValue;
-            objparam[2] = ddlTipoAgenda.SelectedValue;
-            objparam[3] = ddlTipoCliente.SelectedValue;
+            imgExportar.Visible = true;
+            lblExportar.Visible = true;
+
+            if (ddlCliente.SelectedValue == "0") objparam[0] = 0;
+            if (ddlCliente.SelectedValue != "0") objparam[0] = 1;
+
+
+            objparam[1] = int.Parse(ddlCliente.SelectedValue.ToString());
+            objparam[2] = "";
+            objparam[3] = "";
             objparam[4] = txtFechaIni.Text;
             objparam[5] = txtFechaFin.Text;
-            ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertOdonto", objparam);            
-            grdvDatos.DataSource = ds;
-            grdvDatos.DataBind();
-            ViewState["grdvDatos"] = grdvDatos.DataSource;
-            if (ds.Tables[0].Rows.Count > 0)
+            ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertOdonto", objparam);
+ 
+            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
             {
-                imgExportar.Visible = true;
-                lblExportar.Visible = true;
+                grdvDatos.DataSource = ds.Tables[0];
+                grdvDatos.DataBind();
+                
+            }
+            else
+            {
+                new Funciones().funShowJSMessage("No se encontraron datos..!", this);
             }
         }
         protected void imgExportar_Click(object sender, ImageClickEventArgs e)

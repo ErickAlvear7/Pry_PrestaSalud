@@ -25,7 +25,7 @@
                 $('#txtFechaIni').datepicker(
                   {
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "yy-mm-dd",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -42,7 +42,7 @@
                 $('#txtFechaFin').datepicker(
                   {
                       inline: true,
-                      dateFormat: "mm/dd/yy",
+                      dateFormat: "yy-mm-dd",
                       monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                       monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                       dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -160,7 +160,7 @@
                                 <td style="width: 15%"></td>
                                 <td style="width: 35%"></td>
                             </tr>
-                            <tr>
+                        <%--    <tr>
                                 <td>
                                     <h5>Tipo Agenda:</h5>
                                 </td>
@@ -179,7 +179,7 @@
                                     </asp:DropDownList>
                                 </td>
                                 <td></td>
-                            </tr>
+                            </tr>--%>
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -287,7 +287,7 @@
                                         <asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
                                             <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />
+                                        <asp:BoundField DataField="Provincia" HeaderText="ProvinciaNacimiento" />
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />

@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Reportes {
-    
-    
-    public partial class FrmRepExpertOdontoV1 {
-        
+namespace Pry_PrestasaludWAP.Reportes
+{
+
+
+    public partial class FrmRepExpertOdontoV1
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control lbltitulo.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbltitulo;
-        
+
         /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// Control updError.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updError;
-        
+
         /// <summary>
         /// Control lblerror.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblerror;
-        
+
         /// <summary>
         /// Control updProgress.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress updProgress;
-        
+
         /// <summary>
         /// Control updCabecera.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updCabecera;
-        
+
         /// <summary>
         /// Control ddlCliente.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCliente;
-        
+
         /// <summary>
         /// Control txtFechaIni.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaIni;
-        
+
         /// <summary>
         /// Control txtFechaFin.
         /// </summary>
@@ -101,25 +103,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaFin;
-        
-        /// <summary>
-        /// Control ddlTipoAgenda.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoAgenda;
-        
-        /// <summary>
-        /// Control ddlTipoCliente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoCliente;
-        
+
         /// <summary>
         /// Control btnProcesar.
         /// </summary>
@@ -128,7 +112,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnProcesar;
-        
+
         /// <summary>
         /// Control btnSalir.
         /// </summary>
@@ -137,7 +121,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSalir;
-        
+
         /// <summary>
         /// Control imgExportar.
         /// </summary>
@@ -146,7 +130,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgExportar;
-        
+
         /// <summary>
         /// Control lblExportar.
         /// </summary>
@@ -155,7 +139,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblExportar;
-        
+
         /// <summary>
         /// Control divBeneficiario.
         /// </summary>
@@ -164,7 +148,7 @@ namespace Pry_PrestasaludWAP.Reportes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divBeneficiario;
-        
+
         /// <summary>
         /// Control grdvDatos.
         /// </summary>
