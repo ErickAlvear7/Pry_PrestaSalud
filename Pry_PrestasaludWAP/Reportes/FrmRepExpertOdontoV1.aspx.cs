@@ -109,6 +109,7 @@
             if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
             {
                 grdvDatos.DataSource = ds.Tables[0];
+                ViewState["grdvDatos"] = ds.Tables[0];
                 grdvDatos.DataBind();
                 
             }
@@ -129,7 +130,7 @@
             {
                 HtmlTextWriter hw = new HtmlTextWriter(sw);
                 grdvDatos.AllowPaging = false;
-                grdvDatos.DataSource = (DataSet)ViewState["grdvDatos"];
+                grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
                 grdvDatos.DataBind();
                 //grdvDatos.HeaderRow.BackColor = Color.White;
                 foreach (GridViewRow row in grdvDatos.Rows)
