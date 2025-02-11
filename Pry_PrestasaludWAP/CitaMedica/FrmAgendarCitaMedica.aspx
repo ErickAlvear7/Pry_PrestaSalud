@@ -96,7 +96,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-            <%--            <div class="panel-info">
+            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -106,7 +106,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>--%>
+            </div>
             <asp:UpdatePanel ID="updTimer" runat="server">
                 <ContentTemplate>
                     <asp:Timer ID="tmrdat" runat="server" OnTick="tmrdat_Tick">
@@ -424,7 +424,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" />
+                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled='true';return true;" />
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>

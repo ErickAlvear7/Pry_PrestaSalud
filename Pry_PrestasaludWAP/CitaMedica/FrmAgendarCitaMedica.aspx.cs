@@ -869,11 +869,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
             grdvDatosCitas.DataBind();
             
             ddlMotivoCita.SelectedValue = "0"; //este le vuelve a poner en vacio, aki hay que buscar glaguna logica
+            updCitaMedica.Visible = true;
 
-            if(ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
+            if (ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
             {
                 CalendarioCita.Visible = false;
                 pnlAgendamientos.Visible = false;
+                updCitaMedica.Visible = false;
                 grdvDatosCitas.DataSource = null;
                 grdvDatosCitas.DataBind();
             }
@@ -1492,7 +1494,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ddlTipoPago.Enabled = true;
             txtObservacion.Enabled = true;  
 
-
             //levantar popup para agendar medilink
             if (codprestador == 28)
             {
@@ -1505,10 +1506,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     new Funciones().funShowJSMessage("Seleccione Titular", this);
                     ddlPrestadora.SelectedValue = "0";
                     return;
-                }
-                
+                }             
             }
-
 
             if (prestador == "VIDEO LLAMADA")
             {
@@ -1539,6 +1538,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlOpcion.Enabled = false;
                         ddlTipoPago.Enabled = false;
                         txtObservacion.Enabled = false;
+                        updCitaMedica.Visible = false;
 
                     }
                     else
@@ -1550,7 +1550,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                 
                 }
-
             }
 
             FunCascadaCombos(3);
@@ -1559,7 +1558,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
-
 
             string codEsp = ddlEspecialidad.SelectedValue.ToString();
 
