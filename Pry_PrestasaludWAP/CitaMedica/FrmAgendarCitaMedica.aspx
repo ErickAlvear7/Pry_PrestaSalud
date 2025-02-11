@@ -424,7 +424,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled=true;" />
+                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" />
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>

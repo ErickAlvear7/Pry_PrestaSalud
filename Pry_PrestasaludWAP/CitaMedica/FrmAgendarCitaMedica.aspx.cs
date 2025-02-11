@@ -1699,9 +1699,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string medico = "";
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
+            string idproducto = Session["CodigoProducto"].ToString();
             string fecha = "";
             string motivo = "";
             string url = "";
+            string grupo = "";
             motivo = ddlMotivoCita.SelectedItem.ToString();
 
             if (ViewState["TipoCliente"] == null)
@@ -1842,6 +1844,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             gender = genero,
                             phone = celular,
                             contractId = _idcont
+                            
                         };
 
                         var data = new JavaScriptSerializer().Serialize(paciente);
@@ -1868,6 +1871,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
                     }
 
+                    //consultar nombre del grupo 
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                    objparam[1] = "";
+                    objparam[2] = 187;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    grupo = dt.Tables[0].Rows[0][0].ToString();
+
                     var consulta = new Consulta
                     {
                         idPatient = _idpatient,
@@ -1875,6 +1886,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         idEspecialidad = _idespe,
                         idServicio = _idserv,
                         reason = motivo,
+                        customId = grupo
                     };
 
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
@@ -1940,7 +1952,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 else
                 {
-                    new Funciones().funShowJSMessage("No se genero Token", this);
+                    new Funciones().funShowJSMessage("No se pudo generar Link", this);
                     new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No se genero el token", 1716);
                     return;
                 }
