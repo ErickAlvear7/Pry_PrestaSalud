@@ -42,8 +42,12 @@
                                     <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label> 
                                 </td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                     <h5><strong>Consultar:</strong></h5>
+                                </td>
+                                <td>
+                                    <asp:Button ID="btnConsul" runat="server" Width="100%" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnConsul_Click" Text="Consultar" />
+                                </td>
                                 <td></td>
                             </tr>
                           <tr>
@@ -52,7 +56,7 @@
                                     <h5><strong>Ciudad:</strong></h5>
                               </td>
                               <td>
-                                    <asp:DropDownList ID="ddlciudad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlciudad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
                               </td>
                               <td></td>
                                <td>

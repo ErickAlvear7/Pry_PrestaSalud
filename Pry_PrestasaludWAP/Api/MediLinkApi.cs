@@ -47,6 +47,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetVerificarPaciente(string url,string token,string documento,string tipo)
         {
+            string responsePaciente = "";
             try
             {
                 HttpClient _paciente = new HttpClient();
@@ -54,34 +55,21 @@ namespace Pry_PrestasaludWAP.Api
                 _paciente.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
                 _paciente.DefaultRequestHeaders.Add("Accept", "*/*");
                 _paciente.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                //_paciente.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("nl-NL"));
-                _paciente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                //var parameter = new Dictionary<string, string>()
-                //{
-                //    ["identificacion"] = documento,
-                //    ["tipoIdentificacion"] = tipo
 
-                //};
+                var resPaciente = _paciente.GetAsync("api/VerificarPaciente/" + documento + "/" + tipo).Result;
 
-                //var parameter = new Dictionary<string, string>();
-                //parameter.Add("identifiacion", documento);
-                //parameter.Add("tipoIdentificacion", tipo);
-
-                //var resPaciente = _paciente.GetAsync(string.Format($"api/VerificarPaciente?identificacion={documento}&tipoIdentificacion={tipo}")).Result;
-                string urlget = "api/VerificarPaciente/:identificacion/:tipoIdentificacion?identificacion=" + documento + "&tipoIdentificacion=" + tipo;
-
-                var resPaciente = _paciente.GetAsync(urlget).Result;
-                
                 if (resPaciente.IsSuccessStatusCode)
                 {
-                    var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
-                    dynamic dataPaciente = JObject.Parse(responseContent);
+                    responsePaciente = "SI";
                 }
                 else
                 {
-                    MessageBox.Show(resPaciente.StatusCode.ToString());
+                    responsePaciente = "NO";
                 }
+
+
+                
             }
             catch (Exception ex)
             {
@@ -89,7 +77,7 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetVerificarPaciente", mensaje, 57);
             }
 
-            return "";
+            return responsePaciente;
         }
 
         public string GetCiudad(string url, string token)

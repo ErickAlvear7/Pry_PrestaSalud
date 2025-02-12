@@ -58,40 +58,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lblDocumento.Text = documento;
 
 
+
+
             if (idbene != "")
             {
 
             }
 
-
-
-
             bool existe = true;
 
             if (!IsPostBack)
             {
+
+
                 if (existe)
                 {
                     FunGetCiudad();
-                    FunGetEspe();
+                    
                 }
 
             }
-            else
-            {
-
-                //Array.Resize(ref objlink, 3);
-                //objlink[0] = 0;
-                //objlink[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                //objlink[2] = 0;
-                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
-
-            }
+            
 
 
 
         }
 
+       
 
         private void FunGetCiudad()
         {
@@ -140,6 +133,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+        }
 
+        protected void btnConsul_Click(object sender, EventArgs e)
+        {
+            response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec:443/", accessToken, documento, "C");
+            if(response == "SI")
+            {
+
+            }
+
+        }
     }
 }
