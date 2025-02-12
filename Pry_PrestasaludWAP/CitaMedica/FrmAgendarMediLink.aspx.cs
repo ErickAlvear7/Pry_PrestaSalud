@@ -46,7 +46,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             };
 
             var data = new JavaScriptSerializer().Serialize(login);
-            accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec/", data);
+            accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec:443/", data);
 
             //GET CEDULA TITULAR
             Array.Resize(ref objparam, 3);
@@ -73,6 +73,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (existe)
                 {
                     FunGetCiudad();
+                    FunGetEspe();
                 }
 
             }
@@ -95,7 +96,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunGetCiudad()
         {
 
-            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec/", accessToken);
+            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec:443/", accessToken);
             //dynamic dataCiudad = JObject.Parse(response);
 
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
@@ -116,18 +117,28 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            //ddlciudad.SelectedValue = "1180";
+        }
+
+        private void FunGetEspe()
+        {
+            response = new MediLinkApi().GetEspecialidad("https://testagendamiento.medilink.com.ec:443/", accessToken, 1);
+            var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
+            ListItem e;
+            e = new ListItem("--Seleccione Especialidad--", "0");
+            ddlEspecialidad.Items.Add(e);
+
+            foreach (var espe in Resultjson.datos)
+            {
+                string codigoEspecialidad = espe.codEspecialidad.ToString();
+                string codigoSucursal = espe.codSucursal.ToString();
+                string espeNombre = espe.espNombre;
+
+                e = new ListItem(espeNombre, codigoEspecialidad);
+                ddlEspecialidad.Items.Add(e);
+            }
 
 
         }
-
-
-
-
-
-
-
-
 
 
     }

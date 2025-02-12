@@ -119,10 +119,45 @@ namespace Pry_PrestasaludWAP.Api
             catch (Exception ex)
             {
                 var mensaje = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetCiudad", mensaje, 57);
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetCiudad", mensaje, 122);
             }
 
             return responseContent;
+        }
+
+
+        public string GetEspecialidad(string url,string token, int sucursal)
+        {
+            string responseEspe = "";
+
+            try
+            {
+                HttpClient _espec = new HttpClient();
+                _espec.BaseAddress = new Uri(url);
+                _espec.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resEspe = _espec.GetAsync("api/ObtenerEspecialidad/" + sucursal).Result;
+
+                if (resEspe.IsSuccessStatusCode)
+                {
+                    responseEspe = resEspe.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    responseEspe = resEspe.StatusCode.ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetEspecialidad", mensaje, 157);
+            }
+
+            return responseEspe;
+
         }
     }
 }

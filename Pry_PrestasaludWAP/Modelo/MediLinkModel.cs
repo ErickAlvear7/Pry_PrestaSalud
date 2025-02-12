@@ -17,6 +17,7 @@ namespace Pry_PrestasaludWAP.Modelo
         public class DatoObj
         {
             public List<Dato> datos { get; set; }
+        
         }
 
         public class Dato
@@ -24,6 +25,20 @@ namespace Pry_PrestasaludWAP.Modelo
             public string codCiudad { get; set; }
             public string distritoProvincia { get; set; }
             public string nombreCiudad { get; set; }
+        }
+
+        public class EspeObj
+        {
+            public List<Especialidad> datos { get; set; }
+
+        }
+
+
+        public class Especialidad
+        {
+            public string codEspecialidad { get; set; }
+            public string codSucursal { get; set; }
+            public string espNombre { get; set; }
         }
 
     }
