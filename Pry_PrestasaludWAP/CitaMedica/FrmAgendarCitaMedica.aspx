@@ -386,7 +386,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <h5>Tipo Pago:</h5>
+                                                <h5 runat="server" id="txtPago">Tipo Pago:</h5>
                                             </td>
                                             <td>
                                                 <asp:DropDownList ID="ddlTipoPago" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="15">
@@ -424,15 +424,15 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Generar Link" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled='true';return true;" />
+                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled='true';return true;" />
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
                                                <asp:TextBox ID="txtUrl" runat="server" Width="468px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="false"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <h5>enviar email</h5>
-                                                <asp:CheckBox runat="server" ID="chkEmail" Checked="True" />
+                                               <%-- <h5>enviar email</h5>--%>
+                                                <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
                                             </td>
                                         </tr>
 

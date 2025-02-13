@@ -861,6 +861,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         private void FunLimpiarCampos()
         {
+            grdvDatosCitas.Visible = false;
+            CalendarioCita.Visible = false;
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
             tbDatosCita.Clear();
@@ -869,6 +871,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             grdvDatosCitas.DataBind();
             
             ddlMotivoCita.SelectedValue = "0"; //este le vuelve a poner en vacio, aki hay que buscar glaguna logica
+
+            ddlOpcion.SelectedValue = "0";
+            ddlTipoPago.SelectedValue = "0";
             updCitaMedica.Visible = true;
 
             if (ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
@@ -876,8 +881,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 CalendarioCita.Visible = false;
                 pnlAgendamientos.Visible = false;
                 updCitaMedica.Visible = false;
+                txtObservacionG.Visible = false;
                 grdvDatosCitas.DataSource = null;
                 grdvDatosCitas.DataBind();
+                ddlOpcion.SelectedValue = "0";
+                ddlTipoPago.SelectedValue = "0";
             }
         }
         private void FunLimpiarAgendamiento()
@@ -1490,9 +1498,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string prestador = ddlPrestadora.SelectedItem.ToString();
             int codprestador = ddlPrestadora.SelectedIndex;
             pnlLink.Visible = false;
-            ddlOpcion.Enabled = true;
-            ddlTipoPago.Enabled = true;
-            txtObservacion.Enabled = true;  
+            txtObservacionG.Visible = true;
+            ddlOpcion.Visible = true;
+            ddlTipoPago.Visible = true;
+            txtObservacion.Visible = true;
+            txtObservacionG.Visible = true;
 
             //levantar popup para agendar medilink
             if (codprestador == 28)
@@ -1535,10 +1545,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (activo)
                     {
                         pnlLink.Visible = true;
-                        ddlOpcion.Enabled = false;
-                        ddlTipoPago.Enabled = false;
-                        txtObservacion.Enabled = false;
+                        ddlOpcion.Visible = false;
+                        ddlTipoPago.Visible = false;
+                        txtObservacion.Visible = false;
                         updCitaMedica.Visible = false;
+                        txtObservacionG.Visible = false;
 
                     }
                     else
@@ -1940,10 +1951,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             //Session["codigocita"] = codCita;
                             Session["codigocita"] = 0;
                             //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
-                            if (chkEmail.Checked)
-                            {
-                                FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
-                            }
+                            //if (chkEmail.Checked)
+                            //{
+                            //    FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
+                            //}
                         }
 
                     }
@@ -2408,6 +2419,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 pnlAgendamientos.Visible = true;
                 pnlResumenCita.Visible = true;
                 CalendarioCita.Visible = true;
+                grdvDatosCitas.Visible = true;
             }
             else
             {
