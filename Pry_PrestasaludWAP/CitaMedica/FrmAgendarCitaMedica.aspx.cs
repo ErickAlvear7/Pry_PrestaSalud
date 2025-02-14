@@ -863,6 +863,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             grdvDatosCitas.Visible = false;
             CalendarioCita.Visible = false;
+            txtRegistro.Visible = true;
+            txtPago.Visible = true;
+            txtObsev.Visible = true;
+            txtObsvG.Visible = true;
             lblerror.Text = "";
             CalendarioCita.SelectedDate = DateTime.Today;
             tbDatosCita.Clear();
@@ -872,8 +876,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             
             ddlMotivoCita.SelectedValue = "0"; //este le vuelve a poner en vacio, aki hay que buscar glaguna logica
 
-            ddlOpcion.SelectedValue = "0";
-            ddlTipoPago.SelectedValue = "0";
+            //ddlOpcion.SelectedValue = "0";
+            //ddlTipoPago.SelectedValue = "0";
             updCitaMedica.Visible = true;
 
             if (ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
@@ -886,6 +890,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 grdvDatosCitas.DataBind();
                 ddlOpcion.SelectedValue = "0";
                 ddlTipoPago.SelectedValue = "0";
+                txtRegistro.Visible = false;
+                txtPago.Visible = false;
+                txtObsev.Visible = false;
+                txtObsvG.Visible = false;
             }
         }
         private void FunLimpiarAgendamiento()
@@ -1497,6 +1505,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             string prestador = ddlPrestadora.SelectedItem.ToString();
             int codprestador = ddlPrestadora.SelectedIndex;
+            int codproducto = int.Parse(Session["CodigoProducto"].ToString());
             pnlLink.Visible = false;
             txtObservacionG.Visible = true;
             ddlOpcion.Visible = true;

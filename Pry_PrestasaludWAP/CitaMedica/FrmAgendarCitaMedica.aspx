@@ -368,7 +368,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <h5>Registro:</h5>
+                                                <h5 runat="server" id="txtRegistro">Registro:</h5>
                                             </td>
                                             <td>
                                                 <asp:DropDownList ID="ddlOpcion" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlOpcion_SelectedIndexChanged" TabIndex="13">
@@ -396,7 +396,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <h5>Observación:</h5>
+                                                <h5 runat="server" id="txtObsev">Observación:</h5>
                                             </td>
                                             <td colspan="3">
                                                 <asp:TextBox ID="txtObservacion" runat="server" onkeydown="return (event.keyCode!=13);" CssClass="form-control upperCase" Height="50px" MaxLength="250" TabIndex="16" TextMode="MultiLine" Width="100%"></asp:TextBox>
@@ -494,7 +494,7 @@
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <h5>Observación General:</h5>
+                                            <h5 runat="server" id="txtObsvG">Observación General:</h5>
                                         </td>
                                         <td></td>
                                         <td>
