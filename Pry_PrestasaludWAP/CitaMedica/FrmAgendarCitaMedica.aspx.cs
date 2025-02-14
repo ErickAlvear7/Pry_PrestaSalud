@@ -1880,6 +1880,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
                     }
 
+                    //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
+                    string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, "2025-02-14", _idpatient, _idserv, _idespe);
+                    //var Resultjson = JsonConvert.DeserializeObject<EspeObj>(medicos);
+
+
                     //consultar nombre del grupo 
                     Array.Resize(ref objparam, 3);
                     objparam[0] = int.Parse(Session["CodigoProducto"].ToString());

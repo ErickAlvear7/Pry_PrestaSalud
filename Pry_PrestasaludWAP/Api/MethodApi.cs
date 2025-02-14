@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Pry_PrestasaludWAP.Api
 {
@@ -227,6 +228,48 @@ namespace Pry_PrestasaludWAP.Api
             {
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", mensaje, 241);
+            }
+
+            return "";
+        }
+
+        public string GetMedicos(string url,string auth,string fecha,string idpaciente,string idservicio,string idespeci)
+        {
+            try
+            {
+                HttpClient _medicos = new HttpClient();
+                {
+                    _medicos.BaseAddress = new Uri(url);
+                    _medicos.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+
+                }
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var queryString = new StringBuilder();
+                queryString.Append("?fecha=").Append(Uri.EscapeDataString("2025-02-14"));
+                queryString.Append("&id_paciente=").Append(Uri.EscapeDataString(idpaciente));
+                queryString.Append("&id_servicio=").Append(Uri.EscapeDataString(idservicio));
+                queryString.Append("&id_especialidad=").Append(Uri.EscapeDataString(idespeci));
+
+                var resMedicos = _medicos.GetAsync("consultas/schedule/" + queryString).Result;
+
+
+                if (resMedicos.IsSuccessStatusCode)
+                {
+                    var responseContent = resMedicos.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    MessageBox.Show(resMedicos.StatusCode.ToString());
+                    return "";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetMedicos", mensaje, 263);
             }
 
             return "";
