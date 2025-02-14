@@ -1506,6 +1506,30 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string prestador = ddlPrestadora.SelectedItem.ToString();
             int codprestador = ddlPrestadora.SelectedIndex;
             int codproducto = int.Parse(Session["CodigoProducto"].ToString());
+            ddlOpcion.SelectedValue = "0";
+
+            if (codproducto == 225 || codproducto == 226 || codproducto == 227)
+            {
+                Array.Resize(ref objparam, 1);
+                objparam[0] = 55;
+                ddlTipoPago.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                ddlTipoPago.DataTextField = "Descripcion";
+                ddlTipoPago.DataValueField = "Codigo";
+                ddlTipoPago.DataBind();
+                ddlTipoPago.SelectedIndex = 2;
+            }
+            else
+            {
+                Array.Resize(ref objparam, 1);
+                objparam[0] = 55;
+                ddlTipoPago.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                ddlTipoPago.DataTextField = "Descripcion";
+                ddlTipoPago.DataValueField = "Codigo";
+                ddlTipoPago.DataBind();
+                ddlTipoPago.SelectedIndex = 1;
+            }
+
+
             pnlLink.Visible = false;
             txtObservacionG.Visible = true;
             ddlOpcion.Visible = true;
