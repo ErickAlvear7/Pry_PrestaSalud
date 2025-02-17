@@ -41,5 +41,28 @@ namespace Pry_PrestasaludWAP.Modelo
             public string espNombre { get; set; }
         }
 
+        public class Paciente
+        {
+            public string tipoIdentificacion { get; set; }
+            public string numeroIdentificacion { get; set; }
+            public string primerNombre { get; set; }
+            public string segundoNombre { get; set; }
+            public string primerApellido { get; set; }
+            public string segundoApellido { get; set; }
+            public string fechaNacimiento { get; set; }
+            public string email { get; set; }
+            public string sexo { get; set; }
+            public string telefonioMovil { get; set; }
+
+        }
+
+        public class Admision
+        {
+
+            public string identificacion { get; set; }
+            public string empresaAdmision { get; set; }
+
+        }
+
     }
 }

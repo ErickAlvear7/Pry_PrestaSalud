@@ -14,7 +14,7 @@
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
     <script type="text/javascript" src="../../JS/DatePicker/jquery-ui.js"></script>
-    <script type="text/javascript">
+   <%-- <script type="text/javascript">
         function pageLoad(sender, arg)
         {
             $(document).ready(function () {
@@ -34,8 +34,13 @@
                     });
             });
 
-        }
+        }--%>
     </script>
+    <style type="text/css">
+        .auto-style1 {
+            height: 36px;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -86,7 +91,7 @@
                         <tr>
                             <td style="width: 5%"></td>
                             <td style="width: 10%"></td>
-                            <td style="width: 30%"></td>
+                            <td style="width: 30%" aria-hidden="False"></td>
                             <td style="width: 10%"></td>
                             <td style="width: 10%"></td>
                             <td style="width: 30%"></td>
@@ -95,14 +100,14 @@
                         <tr>
                             <td></td>
                             <td>
-                                 <h5><strong>1 Nombre:</strong></h5>
+                                 <h5><strong>Nombre 1:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtNombre1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                              </td>
                             <td></td>
                             <td>
-                                 <h5><strong>2 Nombre:</strong></h5>
+                                 <h5><strong>Nombre 2:</strong></h5>
                             </td>
                              <td>
                                  <asp:TextBox ID="txtNombre2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
@@ -112,17 +117,17 @@
                          <tr>
                             <td></td>
                             <td>
-                                 <h5><strong>1 Apellido:</strong></h5>
+                                 <h5><strong>Apellido 1:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="TextBox1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtApellido1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                              </td>
                             <td></td>
                             <td>
-                                 <h5><strong>2 Apellido:</strong></h5>
+                                 <h5><strong>Apellido 2:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtApellido2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                             </td>
                              <td></td>
                         </tr>
@@ -132,24 +137,24 @@
                                  <h5><strong>Email:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="TextBox3" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                              </td>
                             <td></td>
                             <td>
                                  <h5><strong>Direccion:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="TextBox4" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtDireccion" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                             </td>
                              <td></td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                 <h5><strong>Telefono:</strong></h5>
+                                 <h5><strong>Celular:</strong></h5>
                             </td>
                              <td>
-                                 <asp:TextBox ID="TextBox5" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
+                                 <asp:TextBox ID="txtCelular" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                              </td>
                             <td></td>
                             <td>
@@ -161,22 +166,22 @@
                              <td></td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td>
-                               <asp:Button ID="Button1" runat="server" Width="50%" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnConsul_Click" Text="Registrar" />
+                            <td class="auto-style1"></td>
+                            <td class="auto-style1"></td>
+                            <td class="auto-style1">
+                                <asp:Button ID="Button1" runat="server"  CssClass="button" OnClick="Button1_Click" Text="Registrar" Width="148px" />
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td class="auto-style1"></td>
+                            <td class="auto-style1"></td>
+                            <td class="auto-style1"></td>
+                            <td class="auto-style1"></td>
                         </tr>
                     </table>
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
         <div class="panel-body">
-            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
                       <table style="width: 100%">
                           <tr>
@@ -198,13 +203,31 @@
 	                          </td>
 	                          <td></td>
 	                           <td>
-			                        <h5><strong>Especialidad:</strong></h5>
+			                        <h5><strong>Sucursal:</strong></h5>
 	                          </td>
 	                          <td>
-			                        <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%"></asp:DropDownList>
+			                        <asp:DropDownList ID="ddlSucursal" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%"></asp:DropDownList>
 	                          </td>
 	                          <td></td>
                           </tr>
+                          <tr>
+	                          <td></td>
+	                          <td>
+			                        <h5><strong>Especialidad:</strong></h5>
+	                          </td>
+	                          <td>
+			                        <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
+	                          </td>
+	                          <td></td>
+	                           <td>
+			                        <h5><strong>Medicos:</strong></h5>
+	                          </td>
+	                          <td>
+			                        <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%"></asp:DropDownList>
+	                          </td>
+	                          <td></td>
+                          </tr>
+
                       </table>
                 </ContentTemplate>
             </asp:UpdatePanel>

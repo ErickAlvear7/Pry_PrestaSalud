@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.UI.WebControls;
@@ -21,6 +22,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string pass = "";
         string documento = "";
         string response = "";
+        string nombre1 = "";
+        string nombre2 = "";
+        string apellido1 = "";
+        string apellido2 = "";
+        string genero = "";
+        string fechanac = "";
+        string celular = "";
+        string email = "";
+        string direccion = "";
+        int codCiudad = 0;
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
         protected void Page_Load(object sender, EventArgs e)
@@ -29,6 +40,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             idtitular = Request["CodigoTitular"];
             idbene = Request["CodigoBene"];
             idpro = Request["CodigoPro"];
+            //updPaciente.Visible = false;
+            //updCombos.Visible = false;
 
             //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
             objparam[0] = 61;
@@ -57,30 +70,45 @@ namespace Pry_PrestasaludWAP.CitaMedica
             documento = dt.Tables[0].Rows[0][0].ToString();
             lblDocumento.Text = documento;
 
-
-
-
             if (idbene != "")
             {
 
             }
 
-            bool existe = true;
 
             if (!IsPostBack)
             {
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 1;
+                objparam[1] = int.Parse(idtitular);
+                objparam[2] = 0;
+                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
 
-
-                if (existe)
+                foreach (DataRow dr in dt.Tables[0].Rows)
                 {
-                    FunGetCiudad();
-                    
+                    nombre1 = dr[0].ToString();
+                    nombre2 = dr[1].ToString();
+                    apellido1 = dr[2].ToString();
+                    apellido2 = dr[3].ToString();
+                    genero = dr[4].ToString();
+                    fechanac = dr[5].ToString();
+                    celular = dr[6].ToString();
+                    email = dr[7].ToString();
+                    direccion = dr[8].ToString();
                 }
 
+                txtNombre1.Text = nombre1;
+                txtNombre2.Text = nombre2;
+                txtApellido1.Text = apellido1;
+                txtApellido2.Text = apellido2;
+                txtCelular.Text = celular;
+                txtEmail.Text = email;
+                txtFecha.Text = fechanac;
+                txtDireccion.Text = direccion;
+
+                FunGetCiudad();
+
             }
-            
-
-
 
         }
 
@@ -112,6 +140,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        private void FunGetSucursal(int codciudad)
+        {
+
+            response = new MediLinkApi().GetSucursal("https://testagendamiento.medilink.com.ec:443/", accessToken, codCiudad);
+
+        }
+
+
         private void FunGetEspe()
         {
             response = new MediLinkApi().GetEspecialidad("https://testagendamiento.medilink.com.ec:443/", accessToken, 1);
@@ -133,19 +169,72 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        private void FunRegistrarPaciente()
+        {
+
+            //validar admision
+            var admision = new Admision
+            {
+                identificacion = documento,
+                empresaAdmision = "1792206979001"
+
+            };
+
+            var dataAdmision = new JavaScriptSerializer().Serialize(admision);
+
+            response = new MediLinkApi().PostAdmision("https://testagendamiento.medilink.com.ec:443/", dataAdmision, accessToken);
+
+
+            DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
+
+            var paciente = new Paciente
+            {
+                tipoIdentificacion = "C",
+                numeroIdentificacion = documento,
+                primerNombre = nombre1,
+                segundoNombre = nombre2,
+                primerApellido = apellido1,
+                segundoApellido = apellido2,
+                fechaNacimiento = newFechaNaci,
+                email = email,
+                sexo = genero,
+                telefonioMovil = celular
+            };
+
+            var data = new JavaScriptSerializer().Serialize(paciente);
+            response = new MediLinkApi().PostCrearPaciente("https://testagendamiento.medilink.com.ec:443/", data, accessToken);
+        }
+
         protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
         {
             int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            FunGetSucursal(codCiudad);
+
         }
+
+       
+
 
         protected void btnConsul_Click(object sender, EventArgs e)
         {
             response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec:443/", accessToken, documento, "C");
             if(response == "SI")
             {
+                FunGetCiudad();
+            }
+            else if(response == "NO")
+            {
+
+                updPaciente.Visible = true;
 
             }
 
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            FunRegistrarPaciente();
         }
     }
 }

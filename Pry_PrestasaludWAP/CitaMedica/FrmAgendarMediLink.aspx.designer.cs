@@ -78,13 +78,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.UpdatePanel updPaciente;
 
         /// <summary>
-        /// Control txtNombre.
+        /// Control txtNombre1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNombre;
+        protected global::System.Web.UI.WebControls.TextBox txtNombre1;
 
         /// <summary>
         /// Control txtNombre2.
@@ -96,49 +96,49 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.WebControls.TextBox txtNombre2;
 
         /// <summary>
-        /// Control TextBox1.
+        /// Control txtApellido1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.WebControls.TextBox txtApellido1;
 
         /// <summary>
-        /// Control TextBox2.
+        /// Control txtApellido2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox txtApellido2;
 
         /// <summary>
-        /// Control TextBox3.
+        /// Control txtEmail.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox3;
+        protected global::System.Web.UI.WebControls.TextBox txtEmail;
 
         /// <summary>
-        /// Control TextBox4.
+        /// Control txtDireccion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox4;
+        protected global::System.Web.UI.WebControls.TextBox txtDireccion;
 
         /// <summary>
-        /// Control TextBox5.
+        /// Control txtCelular.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox5;
+        protected global::System.Web.UI.WebControls.TextBox txtCelular;
 
         /// <summary>
         /// Control txtFecha.
@@ -159,13 +159,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
-        /// Control UpdatePanel1.
+        /// Control updCombos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+        protected global::System.Web.UI.UpdatePanel updCombos;
 
         /// <summary>
         /// Control ddlciudad.
@@ -177,6 +177,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.WebControls.DropDownList ddlciudad;
 
         /// <summary>
+        /// Control ddlSucursal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSucursal;
+
+        /// <summary>
         /// Control ddlEspecialidad.
         /// </summary>
         /// <remarks>
@@ -184,5 +193,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEspecialidad;
+
+        /// <summary>
+        /// Control ddlMedicos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMedicos;
     }
 }

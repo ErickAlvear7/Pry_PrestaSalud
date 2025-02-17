@@ -113,6 +113,40 @@ namespace Pry_PrestasaludWAP.Api
             return responseContent;
         }
 
+        public string GetSucursal(string url,string token, int cuidad)
+        {
+
+            string responseSucursal = "";
+            try
+            {
+                HttpClient _sucursal = new HttpClient();
+                _sucursal.BaseAddress = new Uri(url);
+                _sucursal.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resSucursal = _sucursal.GetAsync("api/obtener_sucursales/" + cuidad).Result;
+
+                if (resSucursal.IsSuccessStatusCode)
+                {
+                    responseSucursal = resSucursal.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    responseSucursal = resSucursal.StatusCode.ToString();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetSucursal", mensaje, 144);
+            }
+               
+                return responseSucursal;
+        }
+
 
         public string GetEspecialidad(string url,string token, int sucursal)
         {
@@ -146,6 +180,69 @@ namespace Pry_PrestasaludWAP.Api
 
             return responseEspe;
 
+        }
+
+        public string PostAdmision(string url,string dataAdmision,string token)
+        {
+            try
+            {
+                HttpClient _admision = new HttpClient();
+                {
+                    _admision.BaseAddress = new Uri(url);
+                    _admision.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    HttpContent _content = new StringContent(dataAdmision, Encoding.UTF8, "application/json");
+                    var _resAdmision = _admision.PostAsync("api/admisionPaciente", _content).Result;
+
+                    if (_resAdmision.IsSuccessStatusCode)
+                    {
+                        var responseAdmision = _resAdmision.Content.ReadAsStringAsync().Result;
+                        return responseAdmision;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostAdmision", mensaje, 161);
+            }
+          
+            return "";
+        }
+
+        public string PostCrearPaciente(string url, string data,string token)
+        {
+            try
+            {
+
+                HttpClient _patient = new HttpClient();
+                {
+
+                    _patient.BaseAddress = new Uri(url);
+                    _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    HttpContent _content = new StringContent(data, Encoding.UTF8, "application/json");
+                    var _resPatient = _patient.PostAsync("api/RegistrarPaciente", _content).Result;
+
+                    if (_resPatient.IsSuccessStatusCode)
+                    {
+                        var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostCrearPaciente", mensaje, 207);
+            }
+
+
+            return "";
         }
     }
 }
