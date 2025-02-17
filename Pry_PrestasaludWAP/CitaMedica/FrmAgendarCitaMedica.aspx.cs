@@ -863,6 +863,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             grdvDatosCitas.Visible = false;
             CalendarioCita.Visible = false;
+            ddlOpcion.SelectedValue = "0";
             txtRegistro.Visible = true;
             txtPago.Visible = true;
             txtObsev.Visible = true;
@@ -1491,6 +1492,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void ddlProvincia_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddlTipoPago.Visible = true;
+            ddlOpcion.Visible = true;
+            txtObservacion.Visible = true;
+            pnlLink.Visible = false;
+            pnlAgendamientos.Visible = false;
+            txtObservacionG.Visible = true;
+            pnlResumenCita.Visible = false;
             FunCascadaCombos(0);
             FunLimpiarCampos();
         }
@@ -1506,6 +1514,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string prestador = ddlPrestadora.SelectedItem.ToString();
             int codprestador = ddlPrestadora.SelectedIndex;
             int codproducto = int.Parse(Session["CodigoProducto"].ToString());
+            pnlResumenCita.Visible = false;
+            pnlAgendamientos.Visible = false;
             ddlOpcion.SelectedValue = "0";
 
             if (codproducto == 225 || codproducto == 226 || codproducto == 227)
@@ -1583,6 +1593,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         txtObservacion.Visible = false;
                         updCitaMedica.Visible = false;
                         txtObservacionG.Visible = false;
+                        pnlResumenCita.Visible = false;
 
                     }
                     else
