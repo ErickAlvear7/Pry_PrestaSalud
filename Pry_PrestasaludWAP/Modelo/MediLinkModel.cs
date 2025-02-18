@@ -17,7 +17,7 @@ namespace Pry_PrestasaludWAP.Modelo
         public class DatoObj
         {
             public List<Dato> datos { get; set; }
-        
+
         }
 
         public class Dato
@@ -64,7 +64,7 @@ namespace Pry_PrestasaludWAP.Modelo
 
         }
 
-        public class Sucursal 
+        public class Sucursal
         {
             public string idSucursal { get; set; }
             public string nombreCentromedico { get; set; }
@@ -73,6 +73,17 @@ namespace Pry_PrestasaludWAP.Modelo
         public class SucursalObj
         {
             public List<Sucursal> datos { get; set; }
+        }
+
+        public class Medicos
+        {
+            public string idMedico { get; set; }
+            public string nombreCompleto { get; set; }
+        }
+
+        public class MedicoObj
+        {
+            public List<Medicos> datos { get; set; }
         }
 
     }

@@ -13,7 +13,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 {
     public partial class FrmAgendarMediLink : System.Web.UI.Page
     {
-
+        #region Variables
         string accessToken = "";
         string idtitular = "";
         string idbene = "";
@@ -34,6 +34,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         int codCiudad = 0;
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
+        #endregion
+
+        #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -119,15 +122,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     txtApellido1.Enabled = false;
                 }
-
-                //FunGetCiudad();
-
             }
-
         }
+        #endregion
 
-       
-
+        #region Funciones
+        //Llenar combo Ciudad
         private void FunGetCiudad()
         {
 
@@ -154,6 +154,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        //Llenar combo Sucursal
         private void FunGetSucursal(int codciudad)
         {
             response = new MediLinkApi().GetSucursal("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codCiudad);
@@ -161,26 +162,26 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
 
             ddlSucursal.Items.Clear();
-            ListItem i;
-            i = new ListItem("--Seleccione Sucursal--", "0");
-            ddlSucursal.Items.Add(i);
+            ListItem s;
+            s = new ListItem("--Seleccione Sucursal--", "0");
+            ddlSucursal.Items.Add(s);
             foreach (var item in Resultjson.datos)
             {
                 string codigosucursal = item.idSucursal;
                 string nombrecentromedico = item.nombreCentromedico;
 
-                i = new ListItem(nombrecentromedico, codigosucursal);
+                s = new ListItem(nombrecentromedico, codigosucursal);
 
-                ddlSucursal.Items.Add(i);
+                ddlSucursal.Items.Add(s);
 
             }
 
         }
 
-
-        private void FunGetEspe()
+        //Llenar combo Especialidad
+        private void FunGetEspe(int codSucursal)
         {
-            response = new MediLinkApi().GetEspecialidad("https://testagendamiento.medilink.com.ec:443/", accessToken, 1);
+            response = new MediLinkApi().GetEspecialidad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codSucursal);
             var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
             ListItem e;
             e = new ListItem("--Seleccione Especialidad--", "0");
@@ -196,9 +197,34 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ddlEspecialidad.Items.Add(e);
             }
 
+        }
+
+        //Llenar combo Medico
+        private void FunGetMedico(int codEspe, int CodSucur)
+        {
+            response = new MediLinkApi().GetMedicos("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codEspe, CodSucur);
+            var Resultjson = JsonConvert.DeserializeObject<MedicoObj>(response);
+
+            ListItem m;
+            m = new ListItem("--Seleccione Medico--", "0");
+            ddlMedicos.Items.Add(m);
+            foreach (var med in Resultjson.datos)
+            {
+                string codigoMedico = med.idMedico.ToString();
+                string medicoNombre = med.nombreCompleto.ToString();
+
+                m = new ListItem(medicoNombre, codigoMedico);
+                ddlMedicos.Items.Add(m);
+            }
 
         }
 
+        //Obtener disponibilidad
+
+
+
+
+        //Registrar Paciente
         private void FunRegistrarPaciente()
         {
 
@@ -235,37 +261,42 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var data = new JavaScriptSerializer().Serialize(paciente);
             response = new MediLinkApi().PostCrearPaciente("https://testagendamiento.medilink.com.ec:443/", data, accessToken);
         }
+        #endregion
+
+        #region Eventos
 
         protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
         {
             int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            ViewState["codCiudad"] = codCiudad;
             FunGetSucursal(codCiudad);
         }
 
-        protected void btnConsul_Click(object sender, EventArgs e)
-        {
-            response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec:443/", accessToken, documento, "C");
-            if(response == "SI")
-            {
-                FunGetCiudad();
-            }
-            else if(response == "NO")
-            {
-
-                updPaciente.Visible = true;
-
-            }
-
-        }
 
         protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            int codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+            ViewState["codSucursal"] = codSucursal;
+            FunGetEspe(codSucursal);
         }
 
         protected void btnRegistrar_Click(object sender, EventArgs e)
         {
             FunRegistrarPaciente();
         }
+
+        protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
+            ViewState["codEspecialidad"] = codEspe;
+            FunGetMedico(codEspe, int.Parse(ViewState["codSucursal"].ToString()));
+        }
+
+        protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int codMedico = int.Parse(ddlMedicos.SelectedValue.ToString());
+            ViewState["codMedico"] = codMedico;
+        }
+        #endregion
     }
 }

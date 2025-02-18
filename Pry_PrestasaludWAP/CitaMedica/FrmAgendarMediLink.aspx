@@ -14,7 +14,7 @@
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
     <script type="text/javascript" src="../../JS/DatePicker/jquery-ui.js"></script>
-    <%-- <script type="text/javascript">
+<%--    <script type="text/javascript">
         function pageLoad(sender, arg)
         {
             $(document).ready(function () {
@@ -34,7 +34,9 @@
                     });
             });
 
-        }--%></script>
+        }
+
+    </script>--%>
     <style type="text/css">
         .auto-style1 {
             height: 36px;
@@ -63,20 +65,15 @@
                             <td style="width: 60%"></td>
                         </tr>
                         <tr>
+                            <td>
+                               <h5><strong>Documento:</strong></h5>
+                            </td>
+                            <td>
+                               <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
+                            </td>
                             <td></td>
-                            <td>
-                                <h5><strong>Documento:</strong></h5>
-                            </td>
-                            <td>
-                                <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
-                            </td>
                             <td></td>
-                            <td>
-                                
-                            </td>
-                            <td>
-                                <asp:Button ID="btnConsul" runat="server" Width="30%" CausesValidation="False" CssClass="button" TabIndex="1" OnClick="btnConsul_Click" Text="Consultar" Visible="False" />
-                            </td>
+                            <td></td>
                             <td></td>
                         </tr>
                     </table>
@@ -84,7 +81,6 @@
             </asp:UpdatePanel>
         </div>
         <div class="panel-body">
-
             <asp:UpdatePanel ID="updPaciente" runat="server">
                 <ContentTemplate>
                     <asp:Panel ID="pnlPaciente" runat="server" GroupingText="Datos Personales" Height="280px" ScrollBars="Vertical" Visible="False">
@@ -185,7 +181,7 @@
         <div class="panel-body">
             <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="Opciones de Registro" Height="180px" ScrollBars="Vertical" Visible="False">
+                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="Agendamiento" Height="180px" ScrollBars="Vertical" Visible="False">
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 5%"></td>
@@ -219,14 +215,14 @@
                                     <h5><strong>Especialidad:</strong></h5>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                                 <td></td>
                                 <td>
                                     <h5><strong>Medicos:</strong></h5>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                                 <td></td>
                             </tr>

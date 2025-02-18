@@ -182,6 +182,40 @@ namespace Pry_PrestasaludWAP.Api
 
         }
 
+        public string GetMedicos(string url,string token,int codEspeci, int codSucursal)
+        {
+            string responseMed = "";
+            try
+            {
+
+                HttpClient _medico = new HttpClient();
+                _medico.BaseAddress = new Uri(url);
+                _medico.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resMedico = _medico.GetAsync("api/ObtenerMedicos/" + codEspeci + "/" + codSucursal).Result;
+
+                if (resMedico.IsSuccessStatusCode)
+                {
+                    responseMed = resMedico.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    responseMed = resMedico.StatusCode.ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetMedicos", mensaje, 212);
+            }
+
+
+            return responseMed;
+        }
+
         public string PostAdmision(string url,string dataAdmision,string token)
         {
             try
