@@ -86,5 +86,14 @@ namespace Pry_PrestasaludWAP.Modelo
             public List<Medicos> datos { get; set; }
         }
 
+        public class Parametros
+        {
+            public int codCiudad { get; set; }
+
+            public int codEspecialidad { get; set; }
+
+            public int codSucursal { get; set; }
+        }
+
     }
 }

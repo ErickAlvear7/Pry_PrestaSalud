@@ -1,13 +1,9 @@
-﻿using AjaxControlToolkit.HTMLEditor.Popups;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Windows.Forms;
-using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 
 namespace Pry_PrestasaludWAP.Api
 {
@@ -277,6 +273,45 @@ namespace Pry_PrestasaludWAP.Api
 
 
             return "";
+        }
+
+        public string GetDisponibilidad(string url,string token,int codCiudad,int codEspe,int codSucur)
+        {
+            string responDispo = "";
+            try
+            {
+                HttpClient _dispo = new HttpClient();
+                _dispo.BaseAddress = new Uri(url);
+                _dispo.DefaultRequestHeaders.Add("Accept", "*/*");
+                _dispo.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var queryString = new StringBuilder();
+                queryString.Append("?fechaFin=").Append(Uri.EscapeDataString("20250220"));
+                queryString.Append("&fechaInit=").Append(Uri.EscapeDataString("20250218"));
+
+                var resDispo = _dispo.GetAsync("api/ObtenerDisponibilidades/" + codCiudad + "/" + codEspe + "/" + codSucur + queryString).Result;
+                
+
+                if (resDispo.IsSuccessStatusCode)
+                {
+                    var responseContent = resDispo.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    MessageBox.Show(resDispo.StatusCode.ToString());
+                    return "";
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return responDispo;
         }
     }
 }

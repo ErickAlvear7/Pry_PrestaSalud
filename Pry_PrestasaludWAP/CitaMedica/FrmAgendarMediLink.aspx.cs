@@ -220,7 +220,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
 
         //Obtener disponibilidad
+         private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur)
+         {
+            response = new MediLinkApi().GetDisponibilidad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur);
 
+
+         }
 
 
 
@@ -289,7 +294,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             ViewState["codEspecialidad"] = codEspe;
-            FunGetMedico(codEspe, int.Parse(ViewState["codSucursal"].ToString()));
+            FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, /*int.Parse(ViewState["codSucursal"].ToString())*/ 1);
         }
 
         protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)
