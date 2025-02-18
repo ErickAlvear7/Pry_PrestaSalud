@@ -37,76 +37,90 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            idtitular = Request["CodigoTitular"];
-            idbene = Request["CodigoBene"];
-            idpro = Request["CodigoPro"];
-            //updPaciente.Visible = false;
-            //updCombos.Visible = false;
-
-            //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
-            objparam[0] = 61;
-            dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-            if(dt != null && dt.Tables[0].Rows.Count > 0)
-            {
-                user = dt.Tables[0].Rows[0][1].ToString().Trim();
-                pass = dt.Tables[0].Rows[1][1].ToString().Trim();
-            }
-
-            var login = new LoginApi
-           {
-               username = user,
-               password = pass
-            };
-
-            var data = new JavaScriptSerializer().Serialize(login);
-            accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec:443/", data);
-
-            //GET CEDULA TITULAR
-            Array.Resize(ref objparam, 3);
-            objparam[0] = int.Parse(idtitular);
-            objparam[1] = "";
-            objparam[2] = 185;
-            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-            documento = dt.Tables[0].Rows[0][0].ToString();
-            lblDocumento.Text = documento;
-
-            if (idbene != "")
-            {
-
-            }
-
-
             if (!IsPostBack)
             {
-                Array.Resize(ref objparam, 3);
-                objparam[0] = 1;
-                objparam[1] = int.Parse(idtitular);
-                objparam[2] = 0;
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
+                idtitular = Request["CodigoTitular"];
+                idbene = Request["CodigoBene"];
+                idpro = Request["CodigoPro"];
+                //updPaciente.Visible = false;
+                //updCombos.Visible = false;
 
-                foreach (DataRow dr in dt.Tables[0].Rows)
+                //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
+                objparam[0] = 61;
+                dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                if (dt != null && dt.Tables[0].Rows.Count > 0)
                 {
-                    nombre1 = dr[0].ToString();
-                    nombre2 = dr[1].ToString();
-                    apellido1 = dr[2].ToString();
-                    apellido2 = dr[3].ToString();
-                    genero = dr[4].ToString();
-                    fechanac = dr[5].ToString();
-                    celular = dr[6].ToString();
-                    email = dr[7].ToString();
-                    direccion = dr[8].ToString();
+                    user = dt.Tables[0].Rows[0][1].ToString().Trim();
+                    pass = dt.Tables[0].Rows[1][1].ToString().Trim();
                 }
 
-                txtNombre1.Text = nombre1;
-                txtNombre2.Text = nombre2;
-                txtApellido1.Text = apellido1;
-                txtApellido2.Text = apellido2;
-                txtCelular.Text = celular;
-                txtEmail.Text = email;
-                txtFecha.Text = fechanac;
-                txtDireccion.Text = direccion;
+                var login = new LoginApi
+                {
+                    username = user,
+                    password = pass
+                };
 
-                FunGetCiudad();
+                var data = new JavaScriptSerializer().Serialize(login);
+                accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec:443/", data);
+
+                Session["AccessToken"] = accessToken;
+
+                //GET CEDULA TITULAR
+                Array.Resize(ref objparam, 3);
+                objparam[0] = int.Parse(idtitular);
+                objparam[1] = "";
+                objparam[2] = 185;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                documento = dt.Tables[0].Rows[0][0].ToString();
+                lblDocumento.Text = documento;
+
+                if (idbene != "")
+                {
+
+                }
+
+                response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec:443/", accessToken, documento, "C");
+
+                if (response == "SI")
+                {
+                    FunGetCiudad();
+                    pnlOpciones.Visible = true;
+                }
+                else if (response == "NO")
+                {
+                    pnlPaciente.Visible = true;
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = 1;
+                    objparam[1] = int.Parse(idtitular);
+                    objparam[2] = 0;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
+
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+                        nombre1 = dr[0].ToString();
+                        nombre2 = dr[1].ToString();
+                        apellido1 = dr[2].ToString();
+                        apellido2 = dr[3].ToString();
+                        genero = dr[4].ToString();
+                        fechanac = dr[5].ToString();
+                        celular = dr[6].ToString();
+                        email = dr[7].ToString();
+                        direccion = dr[8].ToString();
+                    }
+
+                    txtNombre1.Text = nombre1;
+                    txtNombre2.Text = nombre2;
+                    txtApellido1.Text = apellido1;
+                    txtApellido2.Text = apellido2;
+                    txtCelular.Text = celular;
+                    txtEmail.Text = email;
+                    txtFecha.Text = fechanac;
+                    txtDireccion.Text = direccion;
+
+                    txtApellido1.Enabled = false;
+                }
+
+                //FunGetCiudad();
 
             }
 
@@ -117,7 +131,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunGetCiudad()
         {
 
-            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec:443/", accessToken);
+            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString());
             //dynamic dataCiudad = JObject.Parse(response);
 
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
@@ -142,8 +156,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunGetSucursal(int codciudad)
         {
+            response = new MediLinkApi().GetSucursal("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codCiudad);
 
-            response = new MediLinkApi().GetSucursal("https://testagendamiento.medilink.com.ec:443/", accessToken, codCiudad);
+            var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
+
+            ddlSucursal.Items.Clear();
+            ListItem i;
+            i = new ListItem("--Seleccione Sucursal--", "0");
+            ddlSucursal.Items.Add(i);
+            foreach (var item in Resultjson.datos)
+            {
+                string codigosucursal = item.idSucursal;
+                string nombrecentromedico = item.nombreCentromedico;
+
+                i = new ListItem(nombrecentromedico, codigosucursal);
+
+                ddlSucursal.Items.Add(i);
+
+            }
 
         }
 
@@ -210,11 +240,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             FunGetSucursal(codCiudad);
-
         }
-
-       
-
 
         protected void btnConsul_Click(object sender, EventArgs e)
         {
@@ -232,7 +258,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
+        protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnRegistrar_Click(object sender, EventArgs e)
         {
             FunRegistrarPaciente();
         }

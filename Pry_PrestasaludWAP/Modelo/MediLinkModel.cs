@@ -64,5 +64,16 @@ namespace Pry_PrestasaludWAP.Modelo
 
         }
 
+        public class Sucursal 
+        {
+            public string idSucursal { get; set; }
+            public string nombreCentromedico { get; set; }
+        }
+
+        public class SucursalObj
+        {
+            public List<Sucursal> datos { get; set; }
+        }
+
     }
 }
