@@ -214,6 +214,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string PostAdmision(string url,string dataAdmision,string token)
         {
+            string responseAdmi = "";
             try
             {
                 HttpClient _admision = new HttpClient();
@@ -226,8 +227,12 @@ namespace Pry_PrestasaludWAP.Api
 
                     if (_resAdmision.IsSuccessStatusCode)
                     {
-                        var responseAdmision = _resAdmision.Content.ReadAsStringAsync().Result;
-                        return responseAdmision;
+                        responseAdmi = _resAdmision.Content.ReadAsStringAsync().Result;
+
+                    }
+                    else
+                    {
+                        responseAdmi = _resAdmision.StatusCode.ToString();
                     }
 
                 }
@@ -240,11 +245,12 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostAdmision", mensaje, 161);
             }
           
-            return "";
+            return responseAdmi;
         }
 
         public string PostCrearPaciente(string url, string data,string token)
         {
+            string responsePaciente = "";
             try
             {
 
@@ -259,7 +265,11 @@ namespace Pry_PrestasaludWAP.Api
 
                     if (_resPatient.IsSuccessStatusCode)
                     {
-                        var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
+                        responsePaciente = _resPatient.Content.ReadAsStringAsync().Result;
+                    }
+                    else
+                    {
+                        responsePaciente = _resPatient.StatusCode.ToString();
                     }
                 }
 
@@ -272,7 +282,7 @@ namespace Pry_PrestasaludWAP.Api
             }
 
 
-            return "";
+            return responsePaciente;
         }
 
         public string GetDisponibilidad(string url,string token,int codCiudad,int codEspe,int codSucur, string fechadispon)

@@ -22,6 +22,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string pass = "";
         string documento = "";
         string response = "";
+        string tipodocumento = "";
         string nombre1 = "";
         string nombre2 = "";
         string apellido1 = "";
@@ -46,8 +47,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idtitular = Request["CodigoTitular"];
                 idbene = Request["CodigoBene"];
                 idpro = Request["CodigoPro"];
-                //updPaciente.Visible = false;
-                //updCombos.Visible = false;
 
                 //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
                 objparam[0] = 61;
@@ -70,60 +69,125 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Session["AccessToken"] = accessToken;
                 txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
-                //GET CEDULA TITULAR
-                Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(idtitular);
-                objparam[1] = "";
-                objparam[2] = 185;
-                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                documento = dt.Tables[0].Rows[0][0].ToString();
-                lblDocumento.Text = documento;
-
-                if (idbene != "")
+                if(idtitular != "" && idbene == "0")
                 {
-
-                }
-
-                response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, "C");
-
-                if (response == "SI")
-                {
-                    FunGetCiudad();
-                    pnlOpciones.Visible = true;
-                }
-                else if (response == "NO")
-                {
-                    pnlPaciente.Visible = true;
+                    //GET CEDULA TITULAR
                     Array.Resize(ref objparam, 3);
-                    objparam[0] = 1;
+                    objparam[0] = int.Parse(idtitular);
+                    objparam[1] = "";
+                    objparam[2] = 185;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    documento = dt.Tables[0].Rows[0][0].ToString();
+                    lblDocumento.Text = documento;
+
+                    //verificar su paciente esta registrado en MEDILINK
+                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, "C");
+
+                    if (response == "SI")
+                    {
+                        FunGetCiudad();
+                        pnlOpciones.Visible = true;
+                    }
+                    else if (response == "NO")
+                    {
+                        pnlPaciente.Visible = true;
+                        Array.Resize(ref objparam, 3);
+                        objparam[0] = 1;
+                        objparam[1] = int.Parse(idtitular);
+                        objparam[2] = 0;
+                        dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
+
+                        foreach (DataRow dr in dt.Tables[0].Rows)
+                        {
+                            tipodocumento = dr[0].ToString();
+                            nombre1 = dr[1].ToString();
+                            nombre2 = dr[2].ToString();
+                            apellido1 = dr[3].ToString();
+                            apellido2 = dr[4].ToString();
+                            genero = dr[5].ToString();
+                            fechanac = dr[6].ToString();
+                            celular = dr[7].ToString();
+                            email = dr[8].ToString();
+                            direccion = dr[9].ToString();
+                        }
+
+                            txtNombre1.Text = nombre1;
+                            txtNombre2.Text = nombre2;
+                            txtApellido1.Text = apellido1;
+                            txtApellido2.Text = apellido2;
+                            txtCelular.Text = celular;
+                            txtEmail.Text = email;
+                            txtFecha.Text = fechanac;
+                            txtDireccion.Text = direccion;
+
+                            txtNombre1.Enabled = false;
+                            txtNombre2.Enabled = false;
+                            txtApellido1.Enabled = false;
+                            txtApellido2.Enabled = false;
+                            txtCelular.Enabled = false;
+                            txtEmail.Enabled = false;
+                            txtFecha.Enabled = false;
+                            txtDireccion.Enabled = false;
+                    }
+
+                }else if(idtitular != "" && idbene != "")
+                {
+
+                    //DATOS BENEFICIARIO
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = 2;
                     objparam[1] = int.Parse(idtitular);
-                    objparam[2] = 0;
+                    objparam[2] = int.Parse(idbene); ;
                     dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
 
                     foreach (DataRow dr in dt.Tables[0].Rows)
                     {
-                        nombre1 = dr[0].ToString();
-                        nombre2 = dr[1].ToString();
-                        apellido1 = dr[2].ToString();
-                        apellido2 = dr[3].ToString();
-                        genero = dr[4].ToString();
-                        fechanac = dr[5].ToString();
-                        celular = dr[6].ToString();
-                        email = dr[7].ToString();
+                        tipodocumento = dr[0].ToString();
+                        documento = dr[1].ToString();
+                        nombre1 = dr[2].ToString();
+                        nombre2 = dr[3].ToString();
+                        apellido1 = dr[4].ToString();
+                        apellido2 = dr[5].ToString();
+                        genero = dr[6].ToString();
+                        fechanac = dr[7].ToString();
                         direccion = dr[8].ToString();
+                        celular = dr[9].ToString();
+                        email = dr[10].ToString();   
                     }
 
-                    txtNombre1.Text = nombre1;
-                    txtNombre2.Text = nombre2;
-                    txtApellido1.Text = apellido1;
-                    txtApellido2.Text = apellido2;
-                    txtCelular.Text = celular;
-                    txtEmail.Text = email;
-                    txtFecha.Text = fechanac;
-                    txtDireccion.Text = direccion;
+                    lblDocumento.Text = documento;
 
-                    txtApellido1.Enabled = false;
+                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipodocumento);
+                    if (response == "SI")
+                    {
+                        FunGetCiudad();
+                        pnlOpciones.Visible = true;
+                    }
+                    else
+                    {
+
+                        pnlPaciente.Visible = true;
+                        txtNombre1.Text = nombre1;
+                        txtNombre2.Text = nombre2;
+                        txtApellido1.Text = apellido1;
+                        txtApellido2.Text = apellido2;
+                        txtCelular.Text = celular;
+                        txtEmail.Text = email;
+                        txtFecha.Text = fechanac;
+                        txtDireccion.Text = direccion;
+
+                        txtNombre1.Enabled = false;
+                        txtNombre2.Enabled = false;
+                        txtApellido1.Enabled = false;
+                        txtApellido2.Enabled = false;
+                        txtCelular.Enabled = false;
+                        txtEmail.Enabled = false;
+                        txtFecha.Enabled = false;
+                        txtDireccion.Enabled = false;
+                    }
+
                 }
+
             }
         }
         #endregion
@@ -265,15 +329,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             var dataAdmision = new JavaScriptSerializer().Serialize(admision);
 
-            response = new MediLinkApi().PostAdmision(_url, dataAdmision, accessToken);
+            response = new MediLinkApi().PostAdmision(_url, dataAdmision, Session["AccessToken"].ToString());
 
 
             DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             string newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
+
             var paciente = new Paciente
             {
-                tipoIdentificacion = "C",
+                tipoIdentificacion = tipodocumento,
                 numeroIdentificacion = documento,
                 primerNombre = nombre1,
                 segundoNombre = nombre2,
