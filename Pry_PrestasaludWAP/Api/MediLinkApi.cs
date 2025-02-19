@@ -275,7 +275,7 @@ namespace Pry_PrestasaludWAP.Api
             return "";
         }
 
-        public string GetDisponibilidad(string url,string token,int codCiudad,int codEspe,int codSucur)
+        public string GetDisponibilidad(string url,string token,int codCiudad,int codEspe,int codSucur, string fechadispon)
         {
             string responDispo = "";
             try
@@ -288,8 +288,8 @@ namespace Pry_PrestasaludWAP.Api
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var queryString = new StringBuilder();
-                queryString.Append("?fechaFin=").Append(Uri.EscapeDataString("20250220"));
-                queryString.Append("&fechaInit=").Append(Uri.EscapeDataString("20250218"));
+                queryString.Append("?fechaFin=").Append(Uri.EscapeDataString(fechadispon));
+                queryString.Append("&fechaInit=").Append(Uri.EscapeDataString(fechadispon));
 
                 var resDispo = _dispo.GetAsync("api/ObtenerDisponibilidades/" + codCiudad + "/" + codEspe + "/" + codSucur + queryString).Result;
                 

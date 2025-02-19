@@ -31,6 +31,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string celular = "";
         string email = "";
         string direccion = "";
+        string _url = "https://testagendamiento.medilink.com.ec:443/";
         int codCiudad = 0;
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
@@ -64,9 +65,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 };
 
                 var data = new JavaScriptSerializer().Serialize(login);
-                accessToken = new MediLinkApi().PostAccesLogin("https://testagendamiento.medilink.com.ec:443/", data);
+                accessToken = new MediLinkApi().PostAccesLogin(_url, data);
 
                 Session["AccessToken"] = accessToken;
+                txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
                 //GET CEDULA TITULAR
                 Array.Resize(ref objparam, 3);
@@ -82,7 +84,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
-                response = new MediLinkApi().GetVerificarPaciente("https://testagendamiento.medilink.com.ec:443/", accessToken, documento, "C");
+                response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, "C");
 
                 if (response == "SI")
                 {
@@ -131,7 +133,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunGetCiudad()
         {
 
-            response = new MediLinkApi().GetCiudad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString());
+            response = new MediLinkApi().GetCiudad(_url, Session["AccessToken"].ToString());
             //dynamic dataCiudad = JObject.Parse(response);
 
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
@@ -157,7 +159,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Sucursal
         private void FunGetSucursal(int codciudad)
         {
-            response = new MediLinkApi().GetSucursal("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codCiudad);
+            response = new MediLinkApi().GetSucursal(_url, Session["AccessToken"].ToString(), codCiudad);
 
             var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
 
@@ -181,7 +183,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Especialidad
         private void FunGetEspe(int codSucursal)
         {
-            response = new MediLinkApi().GetEspecialidad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codSucursal);
+            response = new MediLinkApi().GetEspecialidad(_url, Session["AccessToken"].ToString(), codSucursal);
             var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
             ListItem e;
             e = new ListItem("--Seleccione Especialidad--", "0");
@@ -202,7 +204,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Medico
         private void FunGetMedico(int codEspe, int CodSucur)
         {
-            response = new MediLinkApi().GetMedicos("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codEspe, CodSucur);
+            response = new MediLinkApi().GetMedicos(_url, Session["AccessToken"].ToString(), codEspe, CodSucur);
             var Resultjson = JsonConvert.DeserializeObject<MedicoObj>(response);
 
             ListItem m;
@@ -220,12 +222,32 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
 
         //Obtener disponibilidad
-         private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur)
+         private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechacita)
          {
-            response = new MediLinkApi().GetDisponibilidad("https://testagendamiento.medilink.com.ec:443/", Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur);
+            string fechanew = DateTime.ParseExact(fechacita, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
+            response = new MediLinkApi().GetDisponibilidad(_url, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechanew);
+
+            var Resultjson = JsonConvert.DeserializeObject<DisponibilidadObj>(response);
+
+            foreach (var _dat in Resultjson.datos)
+            {
+                string codigosucursal = _dat.codigoSucursal;
 
 
-         }
+                foreach (var _fec in _dat.disponibilidad)
+                {
+                    string _fechadisponible = _fec.fechaDisponibilidad;
+
+                    foreach (var _hor in _fec.horario) 
+                    {
+                        string idhorario = _hor.idHorarioDisponible;
+                    }
+
+                }
+
+            }
+
+        }
 
 
 
@@ -243,7 +265,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             var dataAdmision = new JavaScriptSerializer().Serialize(admision);
 
-            response = new MediLinkApi().PostAdmision("https://testagendamiento.medilink.com.ec:443/", dataAdmision, accessToken);
+            response = new MediLinkApi().PostAdmision(_url, dataAdmision, accessToken);
 
 
             DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -264,7 +286,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             };
 
             var data = new JavaScriptSerializer().Serialize(paciente);
-            response = new MediLinkApi().PostCrearPaciente("https://testagendamiento.medilink.com.ec:443/", data, accessToken);
+            response = new MediLinkApi().PostCrearPaciente(_url, data, accessToken);
         }
         #endregion
 
@@ -294,7 +316,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             ViewState["codEspecialidad"] = codEspe;
-            FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, /*int.Parse(ViewState["codSucursal"].ToString())*/ 1);
+            //FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, int.Parse(ViewState["codSucursal"].ToString()), txtFechaIni.Text);
+            FunDisponibilidades(int.Parse(ddlciudad.SelectedValue), codEspe, 1, txtFechaIni.Text);
         }
 
         protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)

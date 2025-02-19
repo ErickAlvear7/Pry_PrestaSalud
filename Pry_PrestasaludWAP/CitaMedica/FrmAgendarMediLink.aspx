@@ -14,12 +14,11 @@
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
     <script type="text/javascript" src="../../JS/DatePicker/jquery-ui.js"></script>
-<%--    <script type="text/javascript">
-        function pageLoad(sender, arg)
-        {
+    <script type="text/javascript">
+        function pageLoad(sender, arg) {
             $(document).ready(function () {
                 $.datepicker.setDefaults($.datepicker.regional['es']);
-                $('#txtFecha').datepicker(
+                $('#txtFechaIni').datepicker(
                     {
                         inline: true,
                         dateFormat: "yy-mm-dd",
@@ -36,7 +35,7 @@
 
         }
 
-    </script>--%>
+    </script>
     <style type="text/css">
         .auto-style1 {
             height: 36px;
@@ -66,10 +65,10 @@
                         </tr>
                         <tr>
                             <td>
-                               <h5><strong>Documento:</strong></h5>
+                                <h5><strong>Documento:</strong></h5>
                             </td>
                             <td>
-                               <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
                             </td>
                             <td></td>
                             <td></td>
@@ -209,6 +208,18 @@
                                 </td>
                                 <td></td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <h5><strong>Fecha Cita:</strong></h5>
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtFechaIni" runat="server" CssClass="form-control" Width="100%" TabIndex="2"></asp:TextBox>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
                             <tr>
                                 <td></td>
                                 <td>
