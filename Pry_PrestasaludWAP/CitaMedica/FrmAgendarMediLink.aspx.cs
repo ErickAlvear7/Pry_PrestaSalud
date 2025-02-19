@@ -209,14 +209,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             ListItem m;
             m = new ListItem("--Seleccione Medico--", "0");
-            ddlMedicos.Items.Add(m);
+            //ddlMedicos.Items.Add(m);
             foreach (var med in Resultjson.datos)
             {
                 string codigoMedico = med.idMedico.ToString();
                 string medicoNombre = med.nombreCompleto.ToString();
 
                 m = new ListItem(medicoNombre, codigoMedico);
-                ddlMedicos.Items.Add(m);
+                //ddlMedicos.Items.Add(m);
             }
 
         }
@@ -320,11 +320,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             FunDisponibilidades(int.Parse(ddlciudad.SelectedValue), codEspe, 1, txtFechaIni.Text);
         }
 
-        protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int codMedico = int.Parse(ddlMedicos.SelectedValue.ToString());
-            ViewState["codMedico"] = codMedico;
-        }
+        //protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    //int codMedico = int.Parse(ddlMedicos.SelectedValue.ToString());
+        //    //ViewState["codMedico"] = codMedico;
+        //}
         #endregion
     }
 }

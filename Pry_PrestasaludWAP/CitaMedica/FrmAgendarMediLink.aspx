@@ -217,23 +217,28 @@
                                     <asp:TextBox ID="txtFechaIni" runat="server" CssClass="form-control" Width="100%" TabIndex="2"></asp:TextBox>
                                 </td>
                                 <td></td>
-                                <td></td>
+                                <td>
+                                    <h5><strong>Especialidad:</strong></h5>
+                                </td>
+                                <td>
+                                     <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td></td>
                                 <td>
-                                    <h5><strong>Especialidad:</strong></h5>
+                                    
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
+                                   
                                 </td>
                                 <td></td>
                                 <td>
-                                    <h5><strong>Medicos:</strong></h5>
+                                    <%--<h5><strong>Medicos:</strong></h5>--%>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>
+                                   <%-- <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>--%>
                                 </td>
                                 <td></td>
                             </tr>

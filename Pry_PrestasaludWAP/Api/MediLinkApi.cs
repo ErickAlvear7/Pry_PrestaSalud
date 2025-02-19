@@ -296,7 +296,7 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (resDispo.IsSuccessStatusCode)
                 {
-                    var responseContent = resDispo.Content.ReadAsStringAsync().Result;
+                    responDispo = resDispo.Content.ReadAsStringAsync().Result;
                 }
                 else
                 {
@@ -308,7 +308,8 @@ namespace Pry_PrestasaludWAP.Api
             catch (Exception ex)
             {
 
-                throw;
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetDisponibilidad", mensaje, 312);
             }
 
             return responDispo;
