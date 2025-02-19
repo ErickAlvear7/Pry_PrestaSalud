@@ -428,7 +428,7 @@
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
-                                               <asp:TextBox ID="txtUrl" runat="server" Width="468px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="false"></asp:TextBox>
+                                               <asp:TextBox ID="txtUrl" runat="server" Width="468px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="true"></asp:TextBox>
                                             </td>
                                             <td>
                                                <%-- <h5>enviar email</h5>--%>
