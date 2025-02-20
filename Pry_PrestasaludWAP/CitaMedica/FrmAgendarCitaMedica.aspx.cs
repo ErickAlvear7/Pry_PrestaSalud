@@ -1944,7 +1944,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         idEspecialidad = _idespe,
                         idServicio = _idserv,
                         reason = motivo,
-                        customId = grupo
+                        //customId = grupo
                     };
 
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
@@ -1975,7 +1975,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                         string newDia = dia.DayOfWeek.ToString();
 
-                        txtUrl.Visible = true;
+                        //txtUrl.Visible = true;
                         txtUrl.Text = url;
 
                         Array.Resize(ref objparam, 13);
