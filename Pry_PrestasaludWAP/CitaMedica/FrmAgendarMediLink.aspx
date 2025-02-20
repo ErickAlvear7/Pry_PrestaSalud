@@ -61,10 +61,11 @@
                         <tr>
                             <td style="width: 5%"></td>
                             <td style="width: 10%"></td>
-                            <td style="width: 10%"></td>
                             <td style="width: 5%"></td>
-                            <td style="width: 10%"></td>
-                            <td style="width: 60%"></td>
+                            <td style="width: 5%"></td>
+                            <td style="width: 30%"></td>
+                            <td style="width: 5%"></td>
+                            <td style="width: 5%"></td>
                         </tr>
                         <tr>
                             <td>
@@ -74,9 +75,18 @@
                                 <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
                             </td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                 <h5 class="label label-primary">Nombres:</h5>
+                            </td>
+                            <td>
+                                <asp:Label ID="lblNombresCompletos" runat="server" Text=""></asp:Label>
+                            </td>
+                            <td>
+                                 <h5 class="label label-primary">Registro:</h5> 
+                            </td>
+                            <td>
+                                <asp:Label ID="lblRegistro" CssClass="bg-success" runat="server" Text=""></asp:Label>
+                            </td>
                         </tr>
                     </table>
                 </ContentTemplate>

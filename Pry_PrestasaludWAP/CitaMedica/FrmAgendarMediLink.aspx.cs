@@ -23,6 +23,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string documento = "";
         string response = "";
         string tipodocumento = "";
+        string tipoidentificacion = "";
+        string nombresCompletos = "";
         string nombre1 = "";
         string nombre2 = "";
         string apellido1 = "";
@@ -94,15 +96,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[1] = "";
                     objparam[2] = 185;
                     dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                   
+
+                    foreach (DataRow dr in dt.Tables[0].Rows)
+                    {
+                        tipoidentificacion = dr[0].ToString();
+                        documento = dr[1].ToString();
+                        nombresCompletos = dr[2].ToString();
+                    }
+
+                    lblDocumento.Text = documento;
+                    lblNombresCompletos.Text = nombresCompletos;
 
                     //verificar su paciente esta registrado en MEDILINK
-                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, "C");
+                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipoidentificacion);
 
                     if (response == "SI")
                     {
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
+                        lblRegistro.Text = "Activo";
                     }
                     else if (response == "NO")
                     {
@@ -126,6 +138,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             email = dr[8].ToString();
                             direccion = dr[9].ToString();
                         }
+
+                        //REGISTRAR PACIENTE
 
                     }
 
