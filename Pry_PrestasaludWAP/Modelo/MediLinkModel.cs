@@ -86,23 +86,10 @@ namespace Pry_PrestasaludWAP.Modelo
             public List<Medicos> datos { get; set; }
         }
 
-        public class Parametros
-        {
-            public int codCiudad { get; set; }
-
-            public int codEspecialidad { get; set; }
-
-            public int codSucursal { get; set; }
-        }
 
         public class Disponibilidad 
         {
-            public string codigoSucursal { get; set; }
-            public string nombreSucursal { get; set; }
-            public string codigoMedico { get; set; }
-            public string tipoIdentificacionMedico { get; set; }
-            public string numeroIdentificacionMedico { get; set; }
-            public string nombreMedico { get; set; }
+            public List<DatosSucursal> datossucursal { get; set; }
             public List<Disponibles> disponibilidad { get; set; }
         }
 
@@ -116,6 +103,16 @@ namespace Pry_PrestasaludWAP.Modelo
         {
             public string fechaDisponibilidad { get; set; }
             public List<Horarios> horario { get; set; }
+        }
+
+        public class DatosSucursal 
+        {
+            public string codigoSucursal { get; set; }
+            public string nombreSucursal { get; set; }
+            public string codigoMedico { get; set; }
+            public string tipoIdentificacionMedico { get; set; }
+            public string numeroIdentificacionMedico { get; set; }
+            public string nombreMedico { get; set; }
         }
 
         public class Horarios 

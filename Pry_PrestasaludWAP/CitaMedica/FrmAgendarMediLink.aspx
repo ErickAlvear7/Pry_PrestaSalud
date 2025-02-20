@@ -68,7 +68,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <h5><strong>Documento:</strong></h5>
+                                <h5 class="label label-primary">Documento:</h5>
                             </td>
                             <td>
                                 <asp:Label ID="lblDocumento" runat="server" Text=""></asp:Label>
@@ -82,7 +82,7 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
-        <div class="panel-body">
+<%--        <div class="panel-body">
             <asp:UpdatePanel ID="updPaciente" runat="server">
                 <ContentTemplate>
                     <asp:Panel ID="pnlPaciente" runat="server" GroupingText="Datos Personales" Height="280px" ScrollBars="Vertical" Visible="False">
@@ -179,11 +179,12 @@
                     </asp:Panel>
                 </ContentTemplate>
             </asp:UpdatePanel>
-        </div>
+        </div>--%>
         <div class="panel-body">
             <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="Agendamiento" Height="180px" ScrollBars="Vertical" Visible="False">
+                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" Visible="False">
+                        <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 5%"></td>

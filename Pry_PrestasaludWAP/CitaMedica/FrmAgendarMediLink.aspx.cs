@@ -94,8 +94,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[1] = "";
                     objparam[2] = 185;
                     dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    documento = dt.Tables[0].Rows[0][0].ToString();
-                    lblDocumento.Text = documento;
+                   
 
                     //verificar su paciente esta registrado en MEDILINK
                     response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, "C");
@@ -107,7 +106,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else if (response == "NO")
                     {
-                        pnlPaciente.Visible = true;
+                        //pnlPaciente.Visible = true;
                         Array.Resize(ref objparam, 3);
                         objparam[0] = 1;
                         objparam[1] = int.Parse(idtitular);
@@ -128,23 +127,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             direccion = dr[9].ToString();
                         }
 
-                            txtNombre1.Text = nombre1;
-                            txtNombre2.Text = nombre2;
-                            txtApellido1.Text = apellido1;
-                            txtApellido2.Text = apellido2;
-                            txtCelular.Text = celular;
-                            txtEmail.Text = email;
-                            txtFecha.Text = fechanac;
-                            txtDireccion.Text = direccion;
-
-                            txtNombre1.Enabled = false;
-                            txtNombre2.Enabled = false;
-                            txtApellido1.Enabled = false;
-                            txtApellido2.Enabled = false;
-                            txtCelular.Enabled = false;
-                            txtEmail.Enabled = false;
-                            txtFecha.Enabled = false;
-                            txtDireccion.Enabled = false;
                     }
 
                 }else if(idtitular != "" && idbene != "")
@@ -183,24 +165,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     else
                     {
 
-                        pnlPaciente.Visible = true;
-                        txtNombre1.Text = nombre1;
-                        txtNombre2.Text = nombre2;
-                        txtApellido1.Text = apellido1;
-                        txtApellido2.Text = apellido2;
-                        txtCelular.Text = celular;
-                        txtEmail.Text = email;
-                        txtFecha.Text = fechanac;
-                        txtDireccion.Text = direccion;
+                        //pnlPaciente.Visible = true;
+                        //txtNombre1.Text = nombre1;
+                        //txtNombre2.Text = nombre2;
+                        //txtApellido1.Text = apellido1;
+                        //txtApellido2.Text = apellido2;
+                        //txtCelular.Text = celular;
+                        //txtEmail.Text = email;
+                        //txtFecha.Text = fechanac;
+                        //txtDireccion.Text = direccion;
 
-                        txtNombre1.Enabled = false;
-                        txtNombre2.Enabled = false;
-                        txtApellido1.Enabled = false;
-                        txtApellido2.Enabled = false;
-                        txtCelular.Enabled = false;
-                        txtEmail.Enabled = false;
-                        txtFecha.Enabled = false;
-                        txtDireccion.Enabled = false;
+                        //txtNombre1.Enabled = false;
+                        //txtNombre2.Enabled = false;
+                        //txtApellido1.Enabled = false;
+                        //txtApellido2.Enabled = false;
+                        //txtCelular.Enabled = false;
+                        //txtEmail.Enabled = false;
+                        //txtFecha.Enabled = false;
+                        //txtDireccion.Enabled = false;
                     }
 
                 }
@@ -316,7 +298,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             _datosDisponible = (DataTable)ViewState["DatosDisponibles"];
             _datosDisponible.Clear();
 
-            foreach (var _dat in Resultjson.datos)
+            /*foreach (var _dat in Resultjson.datos)
             {
 
                 DataRow rowMedico = _datosMedico.NewRow();
@@ -342,7 +324,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
-            }
+            }*/
 
             FunLlenarListMedico();
 
