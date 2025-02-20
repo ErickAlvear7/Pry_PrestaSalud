@@ -40,6 +40,9 @@
         .auto-style1 {
             height: 36px;
         }
+        .auto-style2 {
+            height: 48px;
+        }
     </style>
 </head>
 <body>
@@ -94,21 +97,21 @@
                                 <td style="width: 5%"></td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td>
+                                <td class="auto-style2"></td>
+                                <td class="auto-style2">
                                     <h5><strong>Nombre 1:</strong></h5>
                                 </td>
-                                <td>
+                                <td class="auto-style2">
                                     <asp:TextBox ID="txtNombre1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="2" Width="100%"></asp:TextBox>
                                 </td>
-                                <td></td>
-                                <td>
+                                <td class="auto-style2"></td>
+                                <td class="auto-style2">
                                     <h5><strong>Nombre 2:</strong></h5>
                                 </td>
-                                <td>
+                                <td class="auto-style2">
                                     <asp:TextBox ID="txtNombre2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
                                 </td>
-                                <td></td>
+                                <td class="auto-style2"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -229,7 +232,7 @@
                                 <td></td>
                                 <td>
                                     
-                                </td>
+                                    &nbsp;</td>
                                 <td>
                                    
                                 </td>
