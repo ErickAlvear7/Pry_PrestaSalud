@@ -36,6 +36,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         int codCiudad = 0;
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
+
+        DataTable datosMedico = new DataTable();
+        DataTable datosDisponibie = new DataTable();
+
+        DataTable _datosMedico = new DataTable();
+        DataTable _datosDisponible = new DataTable();
+
         #endregion
 
         #region Load
@@ -69,7 +76,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Session["AccessToken"] = accessToken;
                 txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
-                if(idtitular != "" && idbene == "0")
+                datosMedico.Columns.Add("codigoMedico");
+                datosMedico.Columns.Add("nombreMedico");
+                ViewState["DatosMedico"] = datosMedico;
+
+                datosDisponibie.Columns.Add("codigoMedico");
+                datosDisponibie.Columns.Add("idHorarioDisponible");
+                datosDisponibie.Columns.Add("horaDisponible");
+                ViewState["DatosDisponibles"] = datosDisponibie;
+
+
+                if (idtitular != "" && idbene == "0")
                 {
                     //GET CEDULA TITULAR
                     Array.Resize(ref objparam, 3);
@@ -293,10 +310,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             var Resultjson = JsonConvert.DeserializeObject<DisponibilidadObj>(response);
 
+            _datosMedico = (DataTable)ViewState["DatosMedico"];
+            _datosMedico.Clear();
+
+            _datosDisponible = (DataTable)ViewState["DatosDisponibles"];
+            _datosDisponible.Clear();
+
             foreach (var _dat in Resultjson.datos)
             {
-                string codigosucursal = _dat.codigoSucursal;
 
+                DataRow rowMedico = _datosMedico.NewRow();
+                rowMedico["codigoMedico"] = _dat.codigoMedico;
+                rowMedico["nombreMedico"] = _dat.nombreMedico;
+                _datosMedico.Rows.Add(rowMedico);
 
                 foreach (var _fec in _dat.disponibilidad)
                 {
@@ -305,15 +331,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     foreach (var _hor in _fec.horario) 
                     {
                         string idhorario = _hor.idHorarioDisponible;
+
+                        DataRow rowDisponible = _datosDisponible.NewRow();
+                        rowDisponible["codigoMedico"] = _dat.codigoMedico;
+                        rowDisponible["idHorarioDisponible"] = _hor.idHorarioDisponible;
+                        rowDisponible["horaDisponible"] = _hor.horaInicio + "-" + _hor.horaFin;
+                        _datosDisponible.Rows.Add(rowDisponible);
+
                     }
 
                 }
 
             }
 
+            FunLlenarListMedico();
+
         }
 
+        private void FunLlenarListMedico() 
+        {
 
+        }
 
         //Registrar Paciente
         private void FunRegistrarPaciente()
