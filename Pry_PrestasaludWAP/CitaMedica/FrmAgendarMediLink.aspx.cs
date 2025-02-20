@@ -118,7 +118,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else if (response == "NO")
                     {
-                        //pnlPaciente.Visible = true;
                         Array.Resize(ref objparam, 3);
                         objparam[0] = 1;
                         objparam[1] = int.Parse(idtitular);
@@ -140,6 +139,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
 
                         //REGISTRAR PACIENTE
+                        string respuesta = FunRegistrarPaciente();
 
                     }
 
@@ -157,46 +157,40 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     {
                         tipodocumento = dr[0].ToString();
                         documento = dr[1].ToString();
-                        nombre1 = dr[2].ToString();
-                        nombre2 = dr[3].ToString();
-                        apellido1 = dr[4].ToString();
-                        apellido2 = dr[5].ToString();
-                        genero = dr[6].ToString();
-                        fechanac = dr[7].ToString();
-                        direccion = dr[8].ToString();
-                        celular = dr[9].ToString();
-                        email = dr[10].ToString();   
+                        nombresCompletos = dr[2].ToString();
+                        nombre1 = dr[3].ToString();
+                        nombre2 = dr[4].ToString();
+                        apellido1 = dr[5].ToString();
+                        apellido2 = dr[6].ToString();
+                        genero = dr[7].ToString();
+                        fechanac = dr[8].ToString();
+                        direccion = dr[9].ToString();
+                        celular = dr[10].ToString();
+                        email = dr[11].ToString();   
                     }
 
                     lblDocumento.Text = documento;
+                    lblNombresCompletos.Text = nombresCompletos;
 
                     response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipodocumento);
                     if (response == "SI")
                     {
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
+                        lblRegistro.Text = "Activo";
                     }
-                    else
+                    else if(response == "NO")
                     {
+                        string respuesta = "OK";
+                        //REGUSTRAR BENEFICIARIO
+                       //string respuesta = FunRegistrarPaciente();
+                        if(respuesta == "OK")
+                        {
+                            FunGetCiudad();
+                            pnlOpciones.Visible = true;
+                            lblRegistro.Text = "Nuevo";
+                        }
 
-                        //pnlPaciente.Visible = true;
-                        //txtNombre1.Text = nombre1;
-                        //txtNombre2.Text = nombre2;
-                        //txtApellido1.Text = apellido1;
-                        //txtApellido2.Text = apellido2;
-                        //txtCelular.Text = celular;
-                        //txtEmail.Text = email;
-                        //txtFecha.Text = fechanac;
-                        //txtDireccion.Text = direccion;
-
-                        //txtNombre1.Enabled = false;
-                        //txtNombre2.Enabled = false;
-                        //txtApellido1.Enabled = false;
-                        //txtApellido2.Enabled = false;
-                        //txtCelular.Enabled = false;
-                        //txtEmail.Enabled = false;
-                        //txtFecha.Enabled = false;
-                        //txtDireccion.Enabled = false;
                     }
 
                 }
@@ -350,7 +344,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
 
         //Registrar Paciente
-        private void FunRegistrarPaciente()
+        private string FunRegistrarPaciente()
         {
 
             //validar admision
@@ -386,6 +380,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             var data = new JavaScriptSerializer().Serialize(paciente);
             response = new MediLinkApi().PostCrearPaciente(_url, data, accessToken);
+
+            return "";
         }
         #endregion
 
