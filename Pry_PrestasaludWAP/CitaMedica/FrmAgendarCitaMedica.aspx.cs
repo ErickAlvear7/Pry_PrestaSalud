@@ -415,6 +415,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        //BOTON PARA AGENDAR MEDILINK
+        protected void btnMedilink_Clik(object sender, EventArgs e)
+        {
+            if (ViewState["TituCodigo"] != null)
+            {
+                ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmAgendarMediLink.aspx?CodigoTitular=" + ViewState["TituCodigo"].ToString() + "&CodigoBene=" + ViewState["BeneCodigo"].ToString() + "&CodigoPro=" + Session["CodigoProducto"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=800px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
+            }
+            else
+            {
+                new Funciones().funShowJSMessage("Seleccione Titular..!!", this);
+                return;
+            }
+                
+        }
+
         private void FunEliminarReservas()
         {
             try
@@ -1546,21 +1561,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ddlTipoPago.Visible = true;
             txtObservacion.Visible = true;
             txtObservacionG.Visible = true;
-
-            //levantar popup para agendar medilink
-            if (codprestador == 28)
-            {
-                if(ViewState["TituCodigo"] != null)
-                {
-                    ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmAgendarMediLink.aspx?CodigoTitular=" + ViewState["TituCodigo"].ToString() + "&CodigoBene=" + ViewState["BeneCodigo"].ToString() + "&CodigoPro=" + Session["CodigoProducto"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=800px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
-                }
-                else
-                {
-                    new Funciones().funShowJSMessage("Seleccione Titular", this);
-                    ddlPrestadora.SelectedValue = "0";
-                    return;
-                }             
-            }
 
             if (prestador == "VIDEO LLAMADA")
             {

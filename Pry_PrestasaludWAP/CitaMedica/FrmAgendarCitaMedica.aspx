@@ -301,6 +301,22 @@
                                     </table>
                                 </asp:Panel>
                                 <asp:Panel ID="pnlOpcionesCita" runat="server" GroupingText="Opciones Cita" TabIndex="5">
+                                    <div>
+                                        <table>
+                                            <tr>
+                                                <td style="width: 20%"></td>
+                                                <td style="width: 75%"></td>
+                                                <td style="width: 5%"></td>  
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" />
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                     <table style="width: 100%">
                                         <tr>
                                             <td style="width: 5%"></td>
