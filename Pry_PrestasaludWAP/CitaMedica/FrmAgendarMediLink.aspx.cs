@@ -297,6 +297,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
          {
             string fechanew = DateTime.ParseExact(fechacita, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
             response = new MediLinkApi().GetDisponibilidad(_url, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechanew);
+            if (response != "") lstBoxMedicos.Visible = true;
 
             var Resultjson = JsonConvert.DeserializeObject<DisponibilidadObj>(response);
 
@@ -422,6 +423,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string _codMedico = lstBoxMedicos.SelectedItem.Value;
             ViewState["codMedico"] = _codMedico;
             DataTable dttDisponibles = (DataTable)ViewState["DatosDisponibles"];
+            if (dttDisponibles.ToString() != "") LstBoxHorario.Visible = true;
 
             DataRow[] _datorow = dttDisponibles.Select("codigoMedico=" + _codMedico);
 
