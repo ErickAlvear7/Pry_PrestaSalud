@@ -42,8 +42,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <asp:Label ID="lbltitulo" runat="server" CssClass="text-center">MEDILINK</asp:Label>
-                <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-                </asp:ToolkitScriptManager>
+                <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
             </div>
         </div>
         <div class="panel-body">
@@ -250,18 +249,15 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
-
         <div class="panel-body">
             <asp:UpdatePanel ID="updMedico" runat="server">
                 <ContentTemplate>
                     <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" >
                         <table style="width: 100%">
                             <tr>
-                                <td style="width: 45%">
-                                </td>
+                                <td style="width: 45%"></td>
                                 <td style="width: 10%"></td>
-                                <td style="width: 45%">
-                                </td>
+                                <td style="width: 45%"></td>
                             </tr>
                             <tr>
                                 <td>
@@ -271,7 +267,6 @@
                                 <td>
                                     <asp:ListBox ID="LstBoxHorario" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxHorasMedicos_SelectedIndexChanged" Visible="False"></asp:ListBox>
                                 </td>
-
                             </tr>
                         </table>
                     </asp:Panel>
