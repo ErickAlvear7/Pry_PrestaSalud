@@ -36,15 +36,7 @@
         }
 
     </script>
-    <style type="text/css">
-        .auto-style1 {
-            height: 36px;
-        }
-        .auto-style2 {
-            height: 48px;
-        }
-    </style>
-</head>
+    </head>
 <body>
     <form id="form1" runat="server">
         <div class="panel panel-primary">
@@ -76,13 +68,13 @@
                             </td>
                             <td></td>
                             <td>
-                                 <h5 class="label label-primary">Nombres:</h5>
+                                <h5 class="label label-primary">Nombres:</h5>
                             </td>
                             <td>
                                 <asp:Label ID="lblNombresCompletos" runat="server" Text=""></asp:Label>
                             </td>
                             <td>
-                                 <h5 class="label label-primary">Registro:</h5> 
+                                <h5 class="label label-primary">Registro:</h5>
                             </td>
                             <td>
                                 <asp:Label ID="lblRegistro" CssClass="bg-success" runat="server" Text=""></asp:Label>
@@ -92,7 +84,7 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
-<%--        <div class="panel-body">
+        <%--        <div class="panel-body">
             <asp:UpdatePanel ID="updPaciente" runat="server">
                 <ContentTemplate>
                     <asp:Panel ID="pnlPaciente" runat="server" GroupingText="Datos Personales" Height="280px" ScrollBars="Vertical" Visible="False">
@@ -235,28 +227,52 @@
                                     <h5><strong>Especialidad:</strong></h5>
                                 </td>
                                 <td>
-                                     <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td></td>
-                                <td>
-                                    
-                                    &nbsp;</td>
-                                <td>
-                                   
-                                </td>
+                                <td>&nbsp;</td>
+                                <td></td>
                                 <td></td>
                                 <td>
                                     <%--<h5><strong>Medicos:</strong></h5>--%>
                                 </td>
                                 <td>
-                                   <%-- <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>--%>
+                                    <%-- <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>--%>
                                 </td>
                                 <td></td>
                             </tr>
 
+                        </table>
+                    </asp:Panel>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+
+        <div class="panel-body">
+            <asp:UpdatePanel ID="updMedico" runat="server">
+                <ContentTemplate>
+                    <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" >
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 45%">
+                                </td>
+                                <td style="width: 10%"></td>
+                                <td style="width: 45%">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:ListBox ID="lstBoxMedicos" runat="server"></asp:ListBox>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <asp:ListBox ID="LstBoxHorario" runat="server" Height="149px" Width="467px"></asp:ListBox>
+                                </td>
+
+                            </tr>
                         </table>
                     </asp:Panel>
                 </ContentTemplate>

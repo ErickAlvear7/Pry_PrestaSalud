@@ -306,33 +306,26 @@ namespace Pry_PrestasaludWAP.CitaMedica
             _datosDisponible = (DataTable)ViewState["DatosDisponibles"];
             _datosDisponible.Clear();
 
-            /*foreach (var _dat in Resultjson.datos)
+            foreach (var _datos in Resultjson.datos)
             {
-
                 DataRow rowMedico = _datosMedico.NewRow();
-                rowMedico["codigoMedico"] = _dat.codigoMedico;
-                rowMedico["nombreMedico"] = _dat.nombreMedico;
+                rowMedico["codigoMedico"] = _datos.codigoMedico;
+                rowMedico["nombreMedico"] = _datos.nombreMedico;
                 _datosMedico.Rows.Add(rowMedico);
 
-                foreach (var _fec in _dat.disponibilidad)
+                foreach (var _datosdisponibles in _datos.disponibilidad)
                 {
-                    string _fechadisponible = _fec.fechaDisponibilidad;
-
-                    foreach (var _hor in _fec.horario) 
+                    foreach (var _horarios in _datosdisponibles.horario)
                     {
-                        string idhorario = _hor.idHorarioDisponible;
-
                         DataRow rowDisponible = _datosDisponible.NewRow();
-                        rowDisponible["codigoMedico"] = _dat.codigoMedico;
-                        rowDisponible["idHorarioDisponible"] = _hor.idHorarioDisponible;
-                        rowDisponible["horaDisponible"] = _hor.horaInicio + "-" + _hor.horaFin;
+                        rowDisponible["codigoMedico"] = _datos.codigoMedico;
+                        rowDisponible["idHorarioDisponible"] = _horarios.idHorarioDisponible;
+                        rowDisponible["horaDisponible"] = _horarios.horaInicio + "-" + _horarios.horaFin;
                         _datosDisponible.Rows.Add(rowDisponible);
-
                     }
 
                 }
-
-            }*/
+            }
 
             FunLlenarListMedico();
 
@@ -340,7 +333,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunLlenarListMedico() 
         {
+            
+            foreach (DataRow _row in _datosMedico.Rows)
+            {
+                var newItem = new ListItem();
 
+                newItem.Value = _row["codigoMedico"].ToString();
+                newItem.Text = _row["nombreMedico"].ToString();
+                lstBoxMedicos.Items.Add(newItem);
+            }
         }
 
         //Registrar Paciente

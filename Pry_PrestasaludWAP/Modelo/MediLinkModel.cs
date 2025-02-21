@@ -30,9 +30,7 @@ namespace Pry_PrestasaludWAP.Modelo
         public class EspeObj
         {
             public List<Especialidad> datos { get; set; }
-
         }
-
 
         public class Especialidad
         {
@@ -89,15 +87,25 @@ namespace Pry_PrestasaludWAP.Modelo
 
         public class Disponibilidad 
         {
-            public List<DatosSucursal> datossucursal { get; set; }
+            //public List<DatosSucursal> datossucursal { get; set; }
+            public string codigoSucursal { get; set; }
+            public string nombreSucursal { get; set; }
+            public string codigoMedico { get; set; }
+            public string tipoIdentificacionMedico { get; set; }
+            public string numeroIdentificacionMedico { get; set; }
+            public string nombreMedico { get; set; }
             public List<Disponibles> disponibilidad { get; set; }
         }
 
         public class DisponibilidadObj 
         {
             public string estado { get; set; }
-            public string mensajes { get; set; }
+            public MensajesDispo mensajex { get; set; }
             public List<Disponibilidad> datos { get; set; }
+        }
+        public class MensajesDispo 
+        {
+            public string mensajes { get; set; }
         }
         public class Disponibles 
         {
