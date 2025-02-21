@@ -386,6 +386,28 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             return "";
         }
+
+        private void FunAgendarCita(int idPaciente,int idCiudad,int idMedico,int idSucur,int idEspeci,int idHorario)
+        {
+            
+            var crearCita = new CrearCita
+            {
+                idPaciente = idPaciente,
+                idCiudad = idCiudad,
+                idMedico = idMedico,
+                idSucursal = idSucur,
+                idEspecialidad = idEspeci,
+                horarioDisponible = new HorarioDisponible
+                {
+                    idHorarioDisponible = idHorario
+                }
+            };
+
+            
+
+            var cita = new JavaScriptSerializer().Serialize(crearCita);
+            response = new MediLinkApi().PostCrearCita(_url, Session["AccessToken"].ToString(), cita);
+        }
         #endregion
 
         #region Eventos
@@ -442,7 +464,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             string _codHoraMed = LstBoxHorario.SelectedItem.Value;
             ViewState["codHoraMed"] = _codHoraMed;
+            btnCrearCita.Visible = true;
         }
         #endregion
+
+        protected void btnAgendar_Click(object sender, EventArgs e)
+        {
+
+            FunAgendarCita(1, int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()));
+
+        }
     }
 }

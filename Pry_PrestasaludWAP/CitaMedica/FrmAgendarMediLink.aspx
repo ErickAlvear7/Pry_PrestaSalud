@@ -273,6 +273,26 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
+         <div class="panel-body">
+             <asp:UpdatePanel ID="updAgendar" runat="server" Visible="true">
+                  <ContentTemplate>
+                      <asp:Panel ID="Panel1" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" >
+                           <table style="width: 100%">
+                                <tr>
+                                    <td style="width: 5%"></td>
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 85%"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <asp:Button ID="btnCrearCita" runat="server" Text="Agendar" CssClass="button" CausesValidation="false" Visible="False" OnClick="btnAgendar_Click" />
+                                    </td>
+                                </tr>
+                           </table>
+                      </asp:Panel>
+                  </ContentTemplate>
+             </asp:UpdatePanel>
+         </div>
     </form>
 </body>
 </html>

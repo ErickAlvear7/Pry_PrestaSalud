@@ -130,5 +130,20 @@ namespace Pry_PrestasaludWAP.Modelo
             public string horaFin { get; set; }
         }
 
+        public class HorarioDisponible
+        {
+            public int idHorarioDisponible { get; set; }
+        }
+
+        public class CrearCita
+        {
+            public int idPaciente { get; set; }
+            public int idCiudad { get; set; }
+            public int idMedico { get; set; }
+            public int idSucursal { get; set; }
+            public int idEspecialidad { get; set; }
+            public HorarioDisponible horarioDisponible { get; set; }
+        }
+
     }
 }

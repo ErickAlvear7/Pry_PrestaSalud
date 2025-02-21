@@ -325,5 +325,44 @@ namespace Pry_PrestasaludWAP.Api
 
             return responDispo;
         }
+
+        public string PostCrearCita(string url,string token,string cita)
+        {
+            string responseCita = "";
+
+            try
+            {
+                HttpClient _agendar = new HttpClient();
+                _agendar.BaseAddress = new Uri(url);
+                _agendar.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
+                _agendar.DefaultRequestHeaders.Add("Accept", "*/*");
+                _agendar.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                HttpContent _content = new StringContent(cita, Encoding.UTF8, "application/json");
+
+                var resCita = _agendar.PostAsync("api/CrearCita/", _content).Result;
+
+                if (resCita.IsSuccessStatusCode)
+                {
+                    responseCita = resCita.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    MessageBox.Show(resCita.StatusCode.ToString());
+                    return "";
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostCrearCita", mensaje, 361);
+            }
+
+
+            return responseCita;
+        }
     }
 }
