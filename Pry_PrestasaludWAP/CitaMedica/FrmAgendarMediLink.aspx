@@ -265,11 +265,11 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <asp:ListBox ID="lstBoxMedicos" runat="server"></asp:ListBox>
+                                    <asp:ListBox ID="lstBoxMedicos" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxMedicos_SelectedIndexChanged"></asp:ListBox>
                                 </td>
                                 <td></td>
                                 <td>
-                                    <asp:ListBox ID="LstBoxHorario" runat="server" Height="149px" Width="467px"></asp:ListBox>
+                                    <asp:ListBox ID="LstBoxHorario" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxHorasMedicos_SelectedIndexChanged"></asp:ListBox>
                                 </td>
 
                             </tr>

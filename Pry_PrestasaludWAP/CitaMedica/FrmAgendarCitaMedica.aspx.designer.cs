@@ -231,13 +231,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected global::System.Web.UI.WebControls.GridView grdvTitulares;
 
         /// <summary>
-        /// Control pnlOpcionesCita.
+        /// Control Panel4.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlOpcionesCita;
+        protected global::System.Web.UI.WebControls.Panel Panel4;
 
         /// <summary>
         /// Control btnMedilink.
@@ -247,6 +247,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnMedilink;
+
+        /// <summary>
+        /// Control pnlOpcionesCita.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlOpcionesCita;
 
         /// <summary>
         /// Control ddlProvincia.

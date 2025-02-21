@@ -300,7 +300,7 @@
                                         </tr>
                                     </table>
                                 </asp:Panel>
-                                <asp:Panel ID="pnlOpcionesCita" runat="server" GroupingText="Opciones Cita" TabIndex="5">
+                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5">
                                     <div>
                                         <table>
                                             <tr>
@@ -317,6 +317,9 @@
                                             </tr>
                                         </table>
                                     </div>
+                                </asp:Panel>
+                                <asp:Panel ID="pnlOpcionesCita" runat="server" GroupingText="Opciones Cita" TabIndex="5">
+                               
                                     <table style="width: 100%">
                                         <tr>
                                             <td style="width: 5%"></td>

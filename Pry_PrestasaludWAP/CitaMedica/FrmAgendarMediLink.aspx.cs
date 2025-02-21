@@ -322,6 +322,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         rowDisponible["idHorarioDisponible"] = _horarios.idHorarioDisponible;
                         rowDisponible["horaDisponible"] = _horarios.horaInicio + "-" + _horarios.horaFin;
                         _datosDisponible.Rows.Add(rowDisponible);
+                        ViewState["DatosDisponibles"] = _datosDisponible;
                     }
 
                 }
@@ -416,11 +417,30 @@ namespace Pry_PrestasaludWAP.CitaMedica
             FunDisponibilidades(int.Parse(ddlciudad.SelectedValue), codEspe, 1, txtFechaIni.Text);
         }
 
-        //protected void ddlmedico_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    //int codMedico = int.Parse(ddlMedicos.SelectedValue.ToString());
-        //    //ViewState["codMedico"] = codMedico;
-        //}
+        protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string _codMedico = lstBoxMedicos.SelectedItem.Value;
+            ViewState["codMedico"] = _codMedico;
+            DataTable dttDisponibles = (DataTable)ViewState["DatosDisponibles"];
+
+            DataRow[] _datorow = dttDisponibles.Select("codigoMedico=" + _codMedico);
+
+            foreach (var _datosdisponibles in _datorow)
+            {
+            
+                var newItem = new ListItem();
+                newItem.Value = _datosdisponibles["idHorarioDisponible"].ToString();
+                newItem.Text = _datosdisponibles["horaDisponible"].ToString(); 
+                LstBoxHorario.Items.Add(newItem);
+            }
+
+        }
+
+        protected void lstBoxHorasMedicos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string _codHoraMed = LstBoxHorario.SelectedItem.Value;
+            ViewState["codHoraMed"] = _codHoraMed;
+        }
         #endregion
     }
 }
