@@ -281,11 +281,17 @@
                                 <tr>
                                     <td style="width: 5%"></td>
                                     <td style="width: 10%"></td>
-                                    <td style="width: 85%"></td>
+                                    <td style="width: 15%"></td>
+                                    <td style="width: 70%"></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <asp:Button ID="btnCrearCita" runat="server" Text="Agendar" CssClass="button" CausesValidation="false" Visible="False" OnClick="btnAgendar_Click" />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <asp:Label ID="lblCita" runat="server" Visible="false"></asp:Label>
                                     </td>
                                 </tr>
                            </table>

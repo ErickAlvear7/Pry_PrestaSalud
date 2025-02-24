@@ -58,6 +58,9 @@ namespace Pry_PrestasaludWAP.Api
                 if (resPaciente.IsSuccessStatusCode)
                 {
                     responsePaciente = "SI";
+                    var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
+                    dynamic idpaciente = JObject.Parse(responseContent);
+                    string id = idpaciente.datos.idPersona;
                 }
                 else
                 {
@@ -227,8 +230,9 @@ namespace Pry_PrestasaludWAP.Api
 
                     if (_resAdmision.IsSuccessStatusCode)
                     {
-                        responseAdmi = _resAdmision.Content.ReadAsStringAsync().Result;
+                        //responseAdmi = _resAdmision.Content.ReadAsStringAsync().Result;
 
+                        responseAdmi = "OK";
                     }
                     else
                     {
@@ -334,18 +338,18 @@ namespace Pry_PrestasaludWAP.Api
             {
                 HttpClient _agendar = new HttpClient();
                 _agendar.BaseAddress = new Uri(url);
-                _agendar.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
+                HttpContent _content = new StringContent(cita, Encoding.UTF8, "application/json");
                 _agendar.DefaultRequestHeaders.Add("Accept", "*/*");
+                _agendar.DefaultRequestHeaders.Add("rucEmpresa", "1792206979001");
                 _agendar.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                HttpContent _content = new StringContent(cita, Encoding.UTF8, "application/json");
-
-                var resCita = _agendar.PostAsync("api/CrearCita/", _content).Result;
+                var resCita = _agendar.PostAsync("api/CrearCita", _content).Result;
 
                 if (resCita.IsSuccessStatusCode)
                 {
                     responseCita = resCita.Content.ReadAsStringAsync().Result;
+
                 }
                 else
                 {

@@ -16,6 +16,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         #region Variables
         string accessToken = "";
         string idtitular = "";
+        string idpaciente = "";
         string idbene = "";
         string idpro = "";
         string user = "";
@@ -90,7 +91,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (idtitular != "" && idbene == "0")
                 {
-                    //GET CEDULA TITULAR
+                    //GET DATOS TITULAR
                     Array.Resize(ref objparam, 3);
                     objparam[0] = int.Parse(idtitular);
                     objparam[1] = "";
@@ -115,8 +116,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
+
+                        //TRAER DE BASE DE  DATOS
+                        Array.Resize(ref objparam, 3);
+                        objparam[0] = int.Parse(idtitular);
+                        objparam[1] = "";
+                        objparam[2] = 188;
+                        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        idpaciente = dt.Tables[0].Rows[0][0].ToString();
+                        ViewState["idPaciente"] = idpaciente;
                     }
-                    else if (response == "NO")
+                    else 
                     {
                         Array.Resize(ref objparam, 3);
                         objparam[0] = 1;
@@ -178,6 +188,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
+
+                        //OBTENER ID 
                     }
                     else if(response == "NO")
                     {
@@ -307,29 +319,37 @@ namespace Pry_PrestasaludWAP.CitaMedica
             _datosDisponible = (DataTable)ViewState["DatosDisponibles"];
             _datosDisponible.Clear();
 
-            foreach (var _datos in Resultjson.datos)
+            if(Resultjson != null)
             {
-                DataRow rowMedico = _datosMedico.NewRow();
-                rowMedico["codigoMedico"] = _datos.codigoMedico;
-                rowMedico["nombreMedico"] = _datos.nombreMedico;
-                _datosMedico.Rows.Add(rowMedico);
-
-                foreach (var _datosdisponibles in _datos.disponibilidad)
+                foreach (var _datos in Resultjson.datos)
                 {
-                    foreach (var _horarios in _datosdisponibles.horario)
-                    {
-                        DataRow rowDisponible = _datosDisponible.NewRow();
-                        rowDisponible["codigoMedico"] = _datos.codigoMedico;
-                        rowDisponible["idHorarioDisponible"] = _horarios.idHorarioDisponible;
-                        rowDisponible["horaDisponible"] = _horarios.horaInicio + "-" + _horarios.horaFin;
-                        _datosDisponible.Rows.Add(rowDisponible);
-                        ViewState["DatosDisponibles"] = _datosDisponible;
-                    }
+                    DataRow rowMedico = _datosMedico.NewRow();
+                    rowMedico["codigoMedico"] = _datos.codigoMedico;
+                    rowMedico["nombreMedico"] = _datos.nombreMedico;
+                    _datosMedico.Rows.Add(rowMedico);
 
+                    foreach (var _datosdisponibles in _datos.disponibilidad)
+                    {
+                        foreach (var _horarios in _datosdisponibles.horario)
+                        {
+                            DataRow rowDisponible = _datosDisponible.NewRow();
+                            rowDisponible["codigoMedico"] = _datos.codigoMedico;
+                            rowDisponible["idHorarioDisponible"] = _horarios.idHorarioDisponible;
+                            rowDisponible["horaDisponible"] = _horarios.horaInicio + "-" + _horarios.horaFin;
+                            _datosDisponible.Rows.Add(rowDisponible);
+                            ViewState["DatosDisponibles"] = _datosDisponible;
+                        }
+
+                    }
                 }
+
+                FunLlenarListMedico();
+            }
+            else
+            {
+                new Funciones().funShowJSMessage("Sin Medicos", this);
             }
 
-            FunLlenarListMedico();
 
         }
 
@@ -366,25 +386,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             string newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
-
-            var paciente = new Paciente
+            if(response == "OK")
             {
-                tipoIdentificacion = tipodocumento,
-                numeroIdentificacion = documento,
-                primerNombre = nombre1,
-                segundoNombre = nombre2,
-                primerApellido = apellido1,
-                segundoApellido = apellido2,
-                fechaNacimiento = newFechaNaci,
-                email = email,
-                sexo = genero,
-                telefonioMovil = celular
-            };
 
-            var data = new JavaScriptSerializer().Serialize(paciente);
-            response = new MediLinkApi().PostCrearPaciente(_url, data, accessToken);
+                var paciente = new Paciente
+                {
+                    tipoIdentificacion = tipodocumento,
+                    numeroIdentificacion = documento,
+                    primerNombre = nombre1,
+                    segundoNombre = nombre2,
+                    primerApellido = apellido1,
+                    segundoApellido = apellido2,
+                    fechaNacimiento = newFechaNaci,
+                    email = email,
+                    sexo = genero,
+                    telefonioMovil = celular
+                };
 
-            return "";
+                var data = new JavaScriptSerializer().Serialize(paciente);
+                response = new MediLinkApi().PostCrearPaciente(_url, data, accessToken);
+
+            }
+            else
+            {
+                string res = "FALLO";
+            }
+
+            return "OK";
         }
 
         private void FunAgendarCita(int idPaciente,int idCiudad,int idMedico,int idSucur,int idEspeci,int idHorario)
@@ -402,11 +430,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     idHorarioDisponible = idHorario
                 }
             };
-
-            
-
+   
             var cita = new JavaScriptSerializer().Serialize(crearCita);
             response = new MediLinkApi().PostCrearCita(_url, Session["AccessToken"].ToString(), cita);
+
+            if(response != "")
+            {
+                dynamic datoscita = JObject.Parse(response);
+                string codigo = datoscita.datos.codigoCita;
+                string mensaje = "CITA AGENDADA CORRECTAMENTE";
+
+                lblCita.Visible = true;
+                lblCita.Text = mensaje;
+            }
         }
         #endregion
 
@@ -471,7 +507,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
 
-            FunAgendarCita(1, int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()));
+            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()));
 
         }
     }
