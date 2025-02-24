@@ -1944,7 +1944,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         idEspecialidad = _idespe,
                         idServicio = _idserv,
                         reason = motivo,
-                        //customId = "Nuevo producto"
+                        //customId = grupo
                     };
 
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
