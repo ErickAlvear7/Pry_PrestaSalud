@@ -36,6 +36,11 @@
         }
 
     </script>
+    <style type="text/css">
+        .auto-style1 {
+            height: 20px;
+        }
+    </style>
     </head>
 <body>
     <form id="form1" runat="server">
@@ -174,9 +179,6 @@
                                         <asp:Button ID="btnCrearCita" runat="server" Text="Agendar" CssClass="button" CausesValidation="false" Visible="False" OnClick="btnAgendar_Click" />
                                     </td>
                                     <td></td>
-                                   <%-- <td>
-                                        <asp:Label ID="lblCita" runat="server" Visible="false"></asp:Label>
-                                    </td>--%>
                                 </tr>
                            </table>
                       </asp:Panel>
@@ -186,29 +188,132 @@
          <div class="panel-body">
              <asp:UpdatePanel ID="updDetalleCita" runat="server" Visible="true">
                  <ContentTemplate>
-                      <asp:Panel ID="Panel2" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical">
+                      <asp:Panel ID="Panel2" runat="server" GroupingText="" Height="280px" ScrollBars="Vertical">
                            <h3 id="txtTitCita" runat="server" class="label label-primary" style="font-size: 14px; display: block; text-align: left" visible="false">DETALLE CITA</h3>
                            <table style="width: 100%">
                                <tr>
                                     <td style="width: 10%"></td>
-                                    <td style="width: 90%"></td>
+                                    <td style="width: 35%"></td>
+                                    <td style="width: 5%"></td>
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 40%"></td>
                                 </tr>
                                  <tr>
+                                    <td>
+                                         <h5 id="txtCodCita" runat="server" class="label label-primary" Visible="false">Codigo Cita:</h5>
+                                    </td>
                                      <td>
-                                          <h5 id="txtCodCita" runat="server" class="label label-primary" Visible="false">Codigo cita:</h5>
+                                         <asp:Label ID="lblCodigo" runat="server"></asp:Label>
+                                     </td>
+                                     <td></td>
+                                     <td></td>
+                                     <td></td>
+                                 </tr>
+                                 <tr>
+                                     <td>
+                                         <h5 id="txtCiudad" runat="server" class="label label-primary" Visible="false">Ciudad Cita:</h5>
+                                    </td>
+                                      <td>
+                                         <asp:Label ID="lblCiudad" runat="server"></asp:Label>
+                                     </td>
+                                     <td></td>
+                                     <td>
+                                          <h5 id="txtFecha" runat="server" class="label label-primary" Visible="false">Fecha Cita:</h5>
                                      </td>
                                      <td>
-                                         <asp:Label ID="lblCodigo" runat="server" Visible="false"></asp:Label>
+                                          <asp:Label ID="lblFecha" runat="server"></asp:Label>
                                      </td>
                                  </tr>
                                <tr>
                                    <td>
-                                       <h5 id="txtDirec" runat="server" class="label label-primary" Visible="false">Direccion:</h5>
+                                       <h5 id="txtHora" runat="server" class="label label-primary" Visible="false">Hora Cita:</h5>
                                    </td>
                                    <td>
-                                       <asp:Label ID="lblDireccion" runat="server" Visible="false"></asp:Label>
+                                         <asp:Label ID="lblHora" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtPrestador" runat="server" class="label label-primary" Visible="false">Prestador:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblPrestador" runat="server"></asp:Label>
                                    </td>
                                </tr>
+                               <tr>
+                                    <td>
+                                       <h5 id="txtMedico" runat="server" class="label label-primary" Visible="false">Medico:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblMedico" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtEspe" runat="server" class="label label-primary" Visible="false">Especialidad:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblEspe" runat="server"></asp:Label>
+                                   </td>
+                               </tr>
+                                <tr>
+                                    <td>
+                                       <h5 id="txtObservacion" runat="server" class="label label-primary" Visible="false">Observacion:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblObser" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtCedula" runat="server" class="label label-primary" Visible="false">Cedula:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblCedula" runat="server"></asp:Label>
+                                   </td>
+                               </tr>
+                                <tr>
+                                    <td>
+                                       <h5 id="txtTipo" runat="server" class="label label-primary" Visible="false">Tipo:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblTipo" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtPaciente" runat="server" class="label label-primary" Visible="false">Paciente:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblPaciente" runat="server"></asp:Label>
+                                   </td>
+                               </tr>
+                                    <tr>
+                                    <td>
+                                       <h5 id="txtFechaNaci" runat="server" class="label label-primary" Visible="false">Fecha Nacimiento:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblFechaNaci" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtDireccion" runat="server" class="label label-primary" Visible="false">Direc.Prestador:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblDireccion" runat="server"></asp:Label>
+                                   </td>
+                               </tr>
+                                <tr>
+                                    <td>
+                                       <h5 id="txtTelefono" runat="server" class="label label-primary" Visible="false">Telefono:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblTelefono" runat="server"></asp:Label>
+                                   </td>
+                                   <td></td>
+                                   <td>
+                                       <h5 id="txtOb" runat="server" class="label label-primary" Visible="false">Observacion:</h5>
+                                   </td>
+                                   <td>
+                                         <asp:Label ID="lblOb" runat="server"></asp:Label>
+                                   </td>
+                                </tr>
                            </table>
                       </asp:Panel>
                  </ContentTemplate>

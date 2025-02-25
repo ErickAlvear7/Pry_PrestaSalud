@@ -108,6 +108,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
 
+                    ViewState["Cedula"] = documento;
+                    ViewState["Titular"] = "TITULAR";
+                    ViewState["Nombres"] = nombresCompletos;
+
                     //verificar su paciente esta registrado en MEDILINK
                     response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipoidentificacion);
 
@@ -147,6 +151,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             email = dr[8].ToString();
                             direccion = dr[9].ToString();
                         }
+
+                        ViewState["FechaNaci"] = fechanac;
 
                         //REGISTRAR PACIENTE
                         string respuesta = FunRegistrarPaciente();
@@ -234,9 +240,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 i = new ListItem(ciudad, codigoCiudad);
 
                 ddlciudad.Items.Add(i);
-
             }
-
         }
 
         //Llenar combo Sucursal
@@ -258,9 +262,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 s = new ListItem(nombrecentromedico, codigosucursal);
 
                 ddlSucursal.Items.Add(s);
-
             }
-
         }
 
         //Llenar combo Especialidad
@@ -281,7 +283,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 e = new ListItem(espeNombre, codigoEspecialidad);
                 ddlEspecialidad.Items.Add(e);
             }
-
         }
 
         //Llenar combo Medico
@@ -350,7 +351,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("Sin Medicos", this);
             }
 
-
         }
 
         private void FunLlenarListMedico() 
@@ -409,7 +409,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
-                string res = "FALLO";
+                new Funciones().funShowJSMessage("Fallo Admision", this);
             }
 
             return "OK";
@@ -439,24 +439,40 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 dynamic datoscita = JObject.Parse(response);
                 string codigo = datoscita.datos.codigoCita;
                 string direccion = datoscita.datos.direccion;
-                string mensaje = "CITA AGENDADA CORRECTAMENTE";
-
-                //lblCita.Visible = true;
-                //lblCita.Text = mensaje;
+                
                 txtTitCita.Visible = true;
                 txtCodCita.Visible = true;
-                lblCodigo.Visible = true;
                 lblCodigo.Text = codigo;
-                txtDirec.Visible = true;
-                lblDireccion.Visible = true;
+                txtCiudad.Visible = true;
+                lblCiudad.Text = ViewState["Ciudad"].ToString();
+                txtFecha.Visible = true;
+                lblFecha.Text = "";
+                txtHora.Visible = true;
+                lblHora.Text = ViewState["Hora"].ToString();
+                txtPrestador.Visible = true;
+                lblPrestador.Text = ViewState["Sucursal"].ToString();
+                txtMedico.Visible = true;
+                lblMedico.Text = ViewState["Medico"].ToString();
+                txtEspe.Visible = true;
+                lblEspe.Text = ViewState["Especialidad"].ToString();
+                txtObservacion.Visible = true;
+                lblObser.Text = "";
+                txtCedula.Visible = true;
+                lblCedula.Text = ViewState["Cedula"].ToString();
+                txtTipo.Visible = true;
+                lblTipo.Text = ViewState["Titular"].ToString();
+                txtPaciente.Visible = true;
+                lblPaciente.Text = ViewState["Nombres"].ToString();
+                txtFechaNaci.Visible = true;
+                lblFechaNaci.Text = "";
+                txtDireccion.Visible = true;
                 lblDireccion.Text = direccion;
-                //updDetalleCita.Visible = true;
-                //lblCodigo.Text = codigo;
-                //lblDireccion.Text = direccion;
+                txtTelefono.Visible = true;
+                lblTelefono.Text = "";
             }
             else
             {
-
+                new Funciones().funShowJSMessage("No se genero Cita", this);
             }
         }
         #endregion
@@ -466,7 +482,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
         {
             int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            string ciudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
+            ViewState["Ciudad"] = ciudad;
             FunGetSucursal(codCiudad);
         }
 
@@ -474,7 +492,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
             int codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+            string sucursal = ddlSucursal.SelectedItem.ToString();
             ViewState["codSucursal"] = codSucursal;
+            ViewState["Sucursal"] = sucursal;
             FunGetEspe(codSucursal);
         }
 
@@ -486,7 +506,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
             int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
+            string espe = ddlEspecialidad.SelectedItem.ToString();
             ViewState["codEspecialidad"] = codEspe;
+            ViewState["Especialidad"] = espe;
             //FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, int.Parse(ViewState["codSucursal"].ToString()), txtFechaIni.Text);
             FunDisponibilidades(int.Parse(ddlciudad.SelectedValue), codEspe, 1, txtFechaIni.Text);
         }
@@ -494,7 +516,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
         {
             string _codMedico = lstBoxMedicos.SelectedItem.Value;
+            string medico = lstBoxMedicos.SelectedItem.ToString();
             ViewState["codMedico"] = _codMedico;
+            ViewState["Medico"] = medico;
             DataTable dttDisponibles = (DataTable)ViewState["DatosDisponibles"];
             if (dttDisponibles.ToString() != "") LstBoxHorario.Visible = true;
 
@@ -514,7 +538,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void lstBoxHorasMedicos_SelectedIndexChanged(object sender, EventArgs e)
         {
             string _codHoraMed = LstBoxHorario.SelectedItem.Value;
+            string hora = LstBoxHorario.SelectedItem.ToString();
             ViewState["codHoraMed"] = _codHoraMed;
+            ViewState["Hora"] = hora;
             btnCrearCita.Visible = true;
         }
         #endregion
