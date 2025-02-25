@@ -438,10 +438,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 dynamic datoscita = JObject.Parse(response);
                 string codigo = datoscita.datos.codigoCita;
+                string direccion = datoscita.datos.direccion;
                 string mensaje = "CITA AGENDADA CORRECTAMENTE";
 
-                lblCita.Visible = true;
-                lblCita.Text = mensaje;
+                //lblCita.Visible = true;
+                //lblCita.Text = mensaje;
+                txtTitCita.Visible = true;
+                txtCodCita.Visible = true;
+                lblCodigo.Visible = true;
+                lblCodigo.Text = codigo;
+                txtDirec.Visible = true;
+                lblDireccion.Visible = true;
+                lblDireccion.Text = direccion;
+                //updDetalleCita.Visible = true;
+                //lblCodigo.Text = codigo;
+                //lblDireccion.Text = direccion;
+            }
+            else
+            {
+
             }
         }
         #endregion

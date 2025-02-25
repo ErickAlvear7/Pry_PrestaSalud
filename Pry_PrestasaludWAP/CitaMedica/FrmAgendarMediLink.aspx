@@ -83,104 +83,6 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
-        <%--        <div class="panel-body">
-            <asp:UpdatePanel ID="updPaciente" runat="server">
-                <ContentTemplate>
-                    <asp:Panel ID="pnlPaciente" runat="server" GroupingText="Datos Personales" Height="280px" ScrollBars="Vertical" Visible="False">
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 5%"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 30%" aria-hidden="False"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 30%"></td>
-                                <td style="width: 5%"></td>
-                            </tr>
-                            <tr>
-                                <td class="auto-style2"></td>
-                                <td class="auto-style2">
-                                    <h5><strong>Nombre 1:</strong></h5>
-                                </td>
-                                <td class="auto-style2">
-                                    <asp:TextBox ID="txtNombre1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="2" Width="100%"></asp:TextBox>
-                                </td>
-                                <td class="auto-style2"></td>
-                                <td class="auto-style2">
-                                    <h5><strong>Nombre 2:</strong></h5>
-                                </td>
-                                <td class="auto-style2">
-                                    <asp:TextBox ID="txtNombre2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
-                                </td>
-                                <td class="auto-style2"></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Apellido 1:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtApellido1" runat="server" CssClass="form-control" MaxLength="50" TabIndex="4" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Apellido 2:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtApellido2" runat="server" CssClass="form-control" MaxLength="50" TabIndex="5" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Email:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Direccion:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtDireccion" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Celular:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtCelular" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Fecha.Nacimiento:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtFecha" runat="server" CssClass="form-control" MaxLength="50" TabIndex="3" Width="100%"></asp:TextBox>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td class="auto-style1"></td>
-                                <td class="auto-style1"></td>
-                                <td class="auto-style1">
-                                    <asp:Button ID="btnRegistrar" runat="server" CssClass="button" OnClick="btnRegistrar_Click" Text="Registrar" Width="148px" />
-                                </td>
-                                <td class="auto-style1"></td>
-                                <td class="auto-style1"></td>
-                                <td class="auto-style1"></td>
-                                <td class="auto-style1"></td>
-                            </tr>
-                        </table>
-                    </asp:Panel>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-        </div>--%>
         <div class="panel-body">
             <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
@@ -229,21 +131,6 @@
                                     <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td></td>
-                                <td>&nbsp;</td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <%--<h5><strong>Medicos:</strong></h5>--%>
-                                </td>
-                                <td>
-                                    <%-- <asp:DropDownList ID="ddlMedicos" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlmedico_SelectedIndexChanged"></asp:DropDownList>--%>
-                                </td>
-                                <td></td>
-                            </tr>
-
                         </table>
                     </asp:Panel>
                 </ContentTemplate>
@@ -276,20 +163,16 @@
          <div class="panel-body">
              <asp:UpdatePanel ID="updAgendar" runat="server" Visible="true">
                   <ContentTemplate>
-                      <asp:Panel ID="Panel1" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" >
+                      <asp:Panel ID="Panel1" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical">
                            <table style="width: 100%">
                                 <tr>
                                     <td style="width: 5%"></td>
-                                    <td style="width: 10%"></td>
-                                    <td style="width: 15%"></td>
-                                    <td style="width: 70%"></td>
+                                    <td style="width: 95%"></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <asp:Button ID="btnCrearCita" runat="server" Text="Agendar" CssClass="button" CausesValidation="false" Visible="False" OnClick="btnAgendar_Click" />
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                     <td>
                                         <asp:Label ID="lblCita" runat="server" Visible="false"></asp:Label>
                                     </td>
@@ -297,6 +180,37 @@
                            </table>
                       </asp:Panel>
                   </ContentTemplate>
+             </asp:UpdatePanel>
+         </div>
+         <div class="panel-body">
+             <asp:UpdatePanel ID="updDetalleCita" runat="server" Visible="true">
+                 <ContentTemplate>
+                      <asp:Panel ID="Panel2" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical">
+                           <h3 id="txtTitCita" runat="server" class="label label-primary" style="font-size: 14px; display: block; text-align: left" visible="false">DETALLE CITA</h3>
+                           <table style="width: 100%">
+                               <tr>
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 90%"></td>
+                                </tr>
+                                 <tr>
+                                     <td>
+                                          <h5 id="txtCodCita" runat="server" class="label label-primary" Visible="false">Codigo cita:</h5>
+                                     </td>
+                                     <td>
+                                         <asp:Label ID="lblCodigo" runat="server" Visible="false"></asp:Label>
+                                     </td>
+                                 </tr>
+                               <tr>
+                                   <td>
+                                       <h5 id="txtDirec" runat="server" class="label label-primary" Visible="false">Direccion:</h5>
+                                   </td>
+                                   <td>
+                                       <asp:Label ID="lblDireccion" runat="server" Visible="false"></asp:Label>
+                                   </td>
+                               </tr>
+                           </table>
+                      </asp:Panel>
+                 </ContentTemplate>
              </asp:UpdatePanel>
          </div>
     </form>
