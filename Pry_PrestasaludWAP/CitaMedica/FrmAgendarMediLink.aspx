@@ -86,7 +86,7 @@
         <div class="panel-body">
             <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" Visible="False">
+                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="" Height="150px" ScrollBars="Vertical" Visible="False">
                         <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
                         <table style="width: 100%">
                             <tr>
@@ -139,7 +139,7 @@
         <div class="panel-body">
             <asp:UpdatePanel ID="updMedico" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical" >
+                    <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="130px" ScrollBars="Vertical" >
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 45%"></td>
@@ -163,7 +163,7 @@
          <div class="panel-body">
              <asp:UpdatePanel ID="updAgendar" runat="server" Visible="true">
                   <ContentTemplate>
-                      <asp:Panel ID="Panel1" runat="server" GroupingText="" Height="180px" ScrollBars="Vertical">
+                      <asp:Panel ID="Panel1" runat="server" GroupingText="" Height="60px" ScrollBars="Vertical">
                            <table style="width: 100%">
                                 <tr>
                                     <td style="width: 5%"></td>
@@ -173,9 +173,10 @@
                                     <td>
                                         <asp:Button ID="btnCrearCita" runat="server" Text="Agendar" CssClass="button" CausesValidation="false" Visible="False" OnClick="btnAgendar_Click" />
                                     </td>
-                                    <td>
+                                    <td></td>
+                                   <%-- <td>
                                         <asp:Label ID="lblCita" runat="server" Visible="false"></asp:Label>
-                                    </td>
+                                    </td>--%>
                                 </tr>
                            </table>
                       </asp:Panel>
