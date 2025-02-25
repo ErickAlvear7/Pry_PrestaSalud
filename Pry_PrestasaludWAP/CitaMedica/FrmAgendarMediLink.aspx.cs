@@ -22,6 +22,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string user = "";
         string pass = "";
         string documento = "";
+        string fechanacimiento = "";
         string response = "";
         string tipodocumento = "";
         string tipoidentificacion = "";
@@ -33,8 +34,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string genero = "";
         string fechanac = "";
         string celular = "";
+        string telcasa = "";
+        string telcelular = "";
         string email = "";
         string direccion = "";
+        string telefonos = "";
         string _url = "https://testagendamiento.medilink.com.ec:443/";
         int codCiudad = 0;
         Object[] objparam = new Object[1];
@@ -103,7 +107,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         tipoidentificacion = dr[0].ToString();
                         documento = dr[1].ToString();
                         nombresCompletos = dr[2].ToString();
+                        fechanacimiento = dr[3].ToString();
+                        telcasa = dr[4].ToString();
+                        telcelular = dr[5].ToString();
                     }
+
+                    telefonos = telcasa + "/" + telcelular;
+
+                    //DateTime FechaNaci = DateTime.ParseExact(fechanacimiento, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    //string fecha = FechaNaci.ToString("yyyy-MM-dd");
 
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
@@ -111,6 +123,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "TITULAR";
                     ViewState["Nombres"] = nombresCompletos;
+                    ViewState["FechaNaci"] = "";
+                    ViewState["Telefonos"] = telefonos;
 
                     //verificar su paciente esta registrado en MEDILINK
                     response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipoidentificacion);
@@ -340,7 +354,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _datosDisponible.Rows.Add(rowDisponible);
                             ViewState["DatosDisponibles"] = _datosDisponible;
                         }
-
                     }
                 }
 
@@ -375,13 +388,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 identificacion = documento,
                 empresaAdmision = "1792206979001"
-
             };
 
             var dataAdmision = new JavaScriptSerializer().Serialize(admision);
 
             response = new MediLinkApi().PostAdmision(_url, dataAdmision, Session["AccessToken"].ToString());
-
 
             DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             string newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
@@ -464,11 +475,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 txtPaciente.Visible = true;
                 lblPaciente.Text = ViewState["Nombres"].ToString();
                 txtFechaNaci.Visible = true;
-                lblFechaNaci.Text = "";
+                lblFechaNaci.Text = ViewState["FechaNaci"].ToString();
                 txtDireccion.Visible = true;
                 lblDireccion.Text = direccion;
                 txtTelefono.Visible = true;
-                lblTelefono.Text = "";
+                lblTelefono.Text = ViewState["Telefonos"].ToString();
             }
             else
             {
