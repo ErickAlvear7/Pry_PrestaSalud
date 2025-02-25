@@ -114,7 +114,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     telefonos = telcasa + "/" + telcelular;
 
-                    //DateTime FechaNaci = DateTime.ParseExact(fechanacimiento, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    //DateTime FechaNaci = DateTime.ParseExact(fechanacimiento, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     //string fecha = FechaNaci.ToString("yyyy-MM-dd");
 
                     lblDocumento.Text = documento;
