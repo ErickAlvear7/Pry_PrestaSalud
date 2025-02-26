@@ -39,6 +39,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string email = "";
         string direccion = "";
         string telefonos = "";
+        string fechaCita = "";
         string _url = "https://testagendamiento.medilink.com.ec:443/";
         int codCiudad = 0;
         Object[] objparam = new Object[1];
@@ -426,7 +427,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             return "OK";
         }
 
-        private void FunAgendarCita(int idPaciente,int idCiudad,int idMedico,int idSucur,int idEspeci,int idHorario)
+        private void FunAgendarCita(int idPaciente,int idCiudad,int idMedico,int idSucur,int idEspeci,int idHorario,string fechaCita)
         {
             
             var crearCita = new CrearCita
@@ -457,7 +458,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 txtCiudad.Visible = true;
                 lblCiudad.Text = ViewState["Ciudad"].ToString();
                 txtFecha.Visible = true;
-                lblFecha.Text = "";
+                lblFecha.Text = fechaCita;
                 txtHora.Visible = true;
                 lblHora.Text = ViewState["Hora"].ToString();
                 txtPrestador.Visible = true;
@@ -558,8 +559,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
+            fechaCita = txtFechaIni.Text;
 
-            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()));
+            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()),fechaCita);
 
         }
     }
