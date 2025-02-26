@@ -213,7 +213,7 @@ namespace Pry_PrestasaludWAP.Api
                     queryString.Append("&notifyDoctor=").Append(Uri.EscapeDataString("true"));
 
                     HttpContent _content = new StringContent(datacon, Encoding.UTF8, "application/json");
-                    var _resConsulta = _consulta.PostAsync("consulta", _content).Result;
+                        var _resConsulta = _consulta.PostAsync("consulta", _content).Result;
 
                     if (_resConsulta.IsSuccessStatusCode)
                     {

@@ -40,11 +40,11 @@ namespace Pry_PrestasaludWAP.Modelo
             public string idServicio { get; set; }
             //public string date { get; set; }
             //public string hour { get; set; }
-            //public string timeZone { get; set; }
+            public string timeZone { get; set; }
             public string reason { get; set; }
             //public string idMedico { get; set; }
-            //public string customId { get; set; }
-            //public bool oneclick { get; set; }
+            public string customId { get; set; }
+            public bool oneclick { get; set; }
 
         }
 
