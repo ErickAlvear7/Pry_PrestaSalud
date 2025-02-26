@@ -208,6 +208,10 @@ namespace Pry_PrestasaludWAP.Api
 
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+                    var queryString = new StringBuilder();
+                    queryString.Append("?notify=").Append(Uri.EscapeDataString("false"));
+                    queryString.Append("&notifyDoctor=").Append(Uri.EscapeDataString("true"));
+
                     HttpContent _content = new StringContent(datacon, Encoding.UTF8, "application/json");
                     var _resConsulta = _consulta.PostAsync("consulta", _content).Result;
 
@@ -219,6 +223,7 @@ namespace Pry_PrestasaludWAP.Api
                     else
                     {
                         return "Horario";
+                        //new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", _resConsulta.StatusCode.ToString(), 222);
                     }
 
                 }

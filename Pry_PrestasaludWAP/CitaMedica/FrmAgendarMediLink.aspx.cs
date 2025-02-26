@@ -123,7 +123,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "TITULAR";
                     ViewState["Nombres"] = nombresCompletos;
-                    ViewState["FechaNaci"] = "";
+                    ViewState["FechaNaci"] = fechanacimiento;
                     ViewState["Telefonos"] = telefonos;
 
                     //verificar su paciente esta registrado en MEDILINK
