@@ -1671,9 +1671,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-            if (fechabloqueo == "03/01/2025" || fechabloqueo == "03/02/2025")
+            if (fechabloqueo == "03/03/2025" || fechabloqueo == "03/04/2025")
             {
-                lblerror.Text = "Fecha no dispible..!";
+                //lblerror.Text = "Fecha no dispible..!";
+                new Funciones().funShowJSMessage("Fecha no disponible", this);
                 tbDatosCita.Clear();
                 ViewState["tbDatosCita"] = tbDatosCita;
                 grdvDatosCitas.DataSource = tbDatosCita;
