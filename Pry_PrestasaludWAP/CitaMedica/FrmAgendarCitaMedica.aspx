@@ -300,7 +300,7 @@
                                         </tr>
                                     </table>
                                 </asp:Panel>
-                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5">
+                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5" Visible="False">
                                     <div>
                                         <table>
                                             <tr>
@@ -311,7 +311,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" />
+                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" Visible="False" />
                                                 </td>
                                                 <td></td>
                                             </tr>
