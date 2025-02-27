@@ -428,7 +428,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("Seleccione Titular..!!", this);
                 return;
             }
-                
+
         }
 
         private void FunEliminarReservas()
@@ -615,10 +615,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         break;
 
-                    //case 9:
+                        //case 9:
 
 
-                    //    break;
+                        //    break;
                 }
 
             }
@@ -757,7 +757,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlMotivoCita.SelectedIndex = 7;*/
                             ddlMotivoCita.SelectedValue = "C";
 
-                            
+
                         }
                         break;
                     case 8:
@@ -890,7 +890,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["tbDatosCita"] = tbDatosCita;
             grdvDatosCitas.DataSource = tbDatosCita;
             grdvDatosCitas.DataBind();
-            
+
             ddlMotivoCita.SelectedValue = "0"; //este le vuelve a poner en vacio, aki hay que buscar glaguna logica
 
             //ddlOpcion.SelectedValue = "0";
@@ -1116,7 +1116,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = ex.ToString();
             }
         }
-        private void FunEnviarMailCitalink(int codicita,string fechacita,string horacita,string medico,string url,string motivo,string patient,string email,string documento,string producto)
+        private void FunEnviarMailCitalink(int codicita, string fechacita, string horacita, string medico, string url, string motivo, string patient, string email, string documento, string producto)
         {
             try
             {
@@ -1139,7 +1139,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     dtemail = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     email = dtemail.Tables[0].Rows[0][0].ToString();
                 }
-           
+
                 Array.Resize(ref objparam, 1);
                 objparam[0] = 59;
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
@@ -1169,7 +1169,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 subject = "Video Llamada - " + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
 
-       
+
                 if (string.IsNullOrEmpty(mailsU))
                 {
                     mensaje = "Hubo errores en el envío, Defina mails de la Prestadora..!";
@@ -1599,12 +1599,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else
                     {
-                       
+
                         ddlPrestadora.SelectedValue = "0";
                         new Funciones().funShowJSMessage("SERVICIO NO ACTIVO PARA ESTE PRODUCTO", this);
                         return;
                     }
-                
+
                 }
             }
 
@@ -1668,6 +1668,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 grdvDatosCitas.DataBind();
                 return;
             }
+
+            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+
+            if (fechabloqueo == "03/01/2025" || fechabloqueo == "03/02/2025")
+            {
+                lblerror.Text = "Fecha no dispible..!";
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
+                return;
+            }
+
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
