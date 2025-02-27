@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Pry_PrestasaludWAP.Api;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -1758,10 +1759,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string url = "";
             string grupo = "";
             motivo = ddlMotivoCita.SelectedItem.ToString();
-            string fechaActual= DateTime.Now.ToString("yyyy-MM-dd");
+            string fechaActuallink = DateTime.Now.ToString("yyyy-MM-dd");
             DateTime now = DateTime.Now;
-            String horaActual = now.ToString("HH:mm");
-
+            string horaActuallink = now.ToString("HH:mm");
+            string _fechadisponible = "", _horadisponible = "";
 
             if (ViewState["TipoCliente"] == null)
             {
@@ -1931,9 +1932,51 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
                     
 
-                    string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActual, _idpatient, _idserv, _idespe);
-                    var Resultjson = JsonConvert.DeserializeObject<HorariosObj>(medicos);
+                    string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
+                    var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
+                    int _encontro = 0;
+
+                    foreach (var _datosmedico in Resultjson)
+                    {
+                        if(_encontro == 1)
+                        {
+                            break;
+                        } 
+
+                        string id_medico = _datosmedico.id_medico;
+
+                        foreach (var _horarios in _datosmedico.rangos)
+                        {
+                            _fechadisponible = _horarios.date;
+                            _horadisponible = _horarios.hour;
+
+                            DateTime fechalink = DateTime.ParseExact(fechaActuallink, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                            DateTime fechadipon = DateTime.ParseExact(_fechadisponible, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                            TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
+                            TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
+
+                            TimeSpan _resultado = _horadispon.Subtract(_horalink);
+
+                            if (fechadipon == fechalink)
+                            {
+                                if(_resultado.Minutes == 0)
+                                {
+                                }
+
+                                if(_resultado.Minutes ==  1)
+                                {
+                                    _encontro = 1;
+                                    break;
+                                }
+
+                            }else if(fechadipon > fechalink)
+                            {
+                                return;
+                            }
+                        }
+                    }
 
                     //consultar nombre del grupo 
                     Array.Resize(ref objparam, 3);
@@ -1949,11 +1992,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         idContrato = _idcont,
                         idEspecialidad = _idespe,
                         idServicio = _idserv,
-                        date = fechaActual,
-                        hour = horaActual,
+                        date = _fechadisponible,
+                        hour = _horadisponible,
                         timeZone = "America/Guayaquil",
                         reason = motivo,
-                        //idMedico = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        //idMedico = id_medico,
                         customId = "",
                         oneclick = true
                         //customId = grupo

@@ -48,24 +48,18 @@ namespace Pry_PrestasaludWAP.Modelo
 
         }
 
-        public class Rango
-        {
-            public string date { get; set; }
-            public string hour { get; set; }
-        }
-
-        public class HorariosObj
-        {
-            public List<Root> root { get; set; }
-            public List<Rango> rangos { get; set; }
-            
-        }
-
-        public class Root
+        public class MedicoHorarios
         {
             public string id_medico { get; set; }
             public string nombre { get; set; }
             public string apellidos { get; set; }
+            public List<Rango> rangos { get; set; }
+
+        }
+        public class Rango
+        {
+            public string date { get; set; }
+            public string hour { get; set; }
         }
 
     }
