@@ -1973,7 +1973,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                             }else if(fechadipon > fechalink)
                             {
-                                return;
+                                if (_resultado.Minutes == 1)
+                                {
+                                    _encontro = 1;
+                                    break;
+                                }
                             }
                         }
                     }
