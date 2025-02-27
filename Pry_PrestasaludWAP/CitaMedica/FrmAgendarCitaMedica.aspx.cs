@@ -1814,7 +1814,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //OBTENER TOKEN
                 string _apikey = JsonConvert.SerializeObject(apikey);
 
-                string _token = new MethodApi().GetToken("https://api.eh.ehealthcenter.io/apikey/", _apikey);
+                string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/apikey/", _apikey);
 
                 if (_token != "")
                 {
@@ -1839,11 +1839,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     else
                     {
                         //GET ID CONTRACT
-                        _idcont = new MethodApi().GetIdContract("https://api.eh.ehealthcenter.io/", _token);
+                        _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
                         //GET ID SERVICIOS
-                        _idserv = new MethodApi().GetServicios("https://api.eh.ehealthcenter.io/", _idcont, _token);
+                        _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
                         //GET ID ESPECIALIDAD
-                        _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
+                        _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
 
                         //GET DATOS TITULAR 
                         if (ViewState["TipoCliente"].ToString() == "T")
@@ -1905,7 +1905,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         };
 
                         var data = new JavaScriptSerializer().Serialize(paciente);
-                        _idpatient = new MethodApi().PostCreatePatient("https://api.eh.ehealthcenter.io/", data, _token);
+                        _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
 
                         Array.Resize(ref objlinkid, 8);
                         objlinkid[0] = 0;
@@ -1929,8 +1929,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
 
                     //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
-                    //string medicos = new MethodApi().GetMedicos("https://api.eh.ehealthcenter.io/", _token, "2025-02-14", _idpatient, _idserv, _idespe);
-                    //var Resultjson = JsonConvert.DeserializeObject<EspeObj>(medicos);
+                    
+
+                    string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActual, _idpatient, _idserv, _idespe);
+                    var Resultjson = JsonConvert.DeserializeObject<HorariosObj>(medicos);
 
 
                     //consultar nombre del grupo 
@@ -1947,8 +1949,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         idContrato = _idcont,
                         idEspecialidad = _idespe,
                         idServicio = _idserv,
-                        //date = fechaActual,
-                        //hour = horaActual,
+                        date = fechaActual,
+                        hour = horaActual,
                         timeZone = "America/Guayaquil",
                         reason = motivo,
                         //idMedico = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -1958,7 +1960,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     };
 
                     var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
-                    _datalink = new MethodApi().Consultas("https://api.eh.ehealthcenter.io/", dataconsulta, _token);
+                    _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
                     if (_datalink == "Horario")
                     {

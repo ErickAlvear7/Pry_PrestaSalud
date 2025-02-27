@@ -38,8 +38,8 @@ namespace Pry_PrestasaludWAP.Modelo
             public string idContrato { get; set; }
             public string idEspecialidad { get; set; }
             public string idServicio { get; set; }
-            //public string date { get; set; }
-            //public string hour { get; set; }
+            public string date { get; set; }
+            public string hour { get; set; }
             public string timeZone { get; set; }
             public string reason { get; set; }
             //public string idMedico { get; set; }
@@ -48,6 +48,25 @@ namespace Pry_PrestasaludWAP.Modelo
 
         }
 
+        public class Rango
+        {
+            public string date { get; set; }
+            public string hour { get; set; }
+        }
+
+        public class HorariosObj
+        {
+            public List<Root> root { get; set; }
+            public List<Rango> rangos { get; set; }
+            
+        }
+
+        public class Root
+        {
+            public string id_medico { get; set; }
+            public string nombre { get; set; }
+            public string apellidos { get; set; }
+        }
 
     }
 }

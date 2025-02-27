@@ -240,6 +240,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetMedicos(string url,string auth,string fecha,string idpaciente,string idservicio,string idespeci)
         {
+            string responseHorarios = "";
             try
             {
                 HttpClient _medicos = new HttpClient();
@@ -261,7 +262,7 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (resMedicos.IsSuccessStatusCode)
                 {
-                    var responseContent = resMedicos.Content.ReadAsStringAsync().Result;
+                     responseHorarios = resMedicos.Content.ReadAsStringAsync().Result;
                 }
                 else
                 {
@@ -277,7 +278,7 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetMedicos", mensaje, 263);
             }
 
-            return "";
+            return responseHorarios;
         }
 
     }
