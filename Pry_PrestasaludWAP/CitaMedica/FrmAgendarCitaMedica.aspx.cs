@@ -2046,6 +2046,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         //txtUrl.Visible = true;
                         txtUrl.Text = url;
 
+
+
                         Array.Resize(ref objparam, 13);
                         objparam[0] = 0;
                         objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
