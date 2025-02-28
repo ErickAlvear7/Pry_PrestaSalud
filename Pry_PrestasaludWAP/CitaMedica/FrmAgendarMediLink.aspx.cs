@@ -19,6 +19,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string idpaciente = "";
         string idbene = "";
         string idpro = "";
+        int usuario = 0;
+        string machine = "";
         string user = "";
         string pass = "";
         string documento = "";
@@ -62,6 +64,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idtitular = Request["CodigoTitular"];
                 idbene = Request["CodigoBene"];
                 idpro = Request["CodigoPro"];
+                usuario = int.Parse(Request["CodigoUsu"]);
+                machine = Request["MachineName"];
+                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
 
                 //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
                 objparam[0] = 61;
@@ -108,16 +113,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         tipoidentificacion = dr[0].ToString();
                         documento = dr[1].ToString();
                         nombresCompletos = dr[2].ToString();
-                        fechanacimiento = dr[3].ToString();
+                        fechanacimiento = dr[3].ToString(); //yyyy-MM-dd
                         telcasa = dr[4].ToString();
                         telcelular = dr[5].ToString();
                     }
 
                     telefonos = telcasa + "/" + telcelular;
-
-                    //DateTime FechaNaci = DateTime.ParseExact(fechanacimiento, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    //string fecha = FechaNaci.ToString("yyyy-MM-dd");
-
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
 
@@ -136,17 +137,22 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
 
-                        //TRAER DE BASE DE  DATOS
-                        Array.Resize(ref objparam, 3);
-                        objparam[0] = int.Parse(idtitular);
-                        objparam[1] = "";
-                        objparam[2] = 188;
-                        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        //TRAER DE BASE DE  DATOS ID TITULAR MEDILINK
+                        Array.Resize(ref objparam, 7);
+                        objparam[0] = 1;
+                        objparam[1] = 0;
+                        objparam[2] = int.Parse(idtitular);
+                        objparam[3] = 0;
+                        objparam[4] = 0;
+                        objparam[5] = 0;
+                        objparam[6] = "";
+                        dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         idpaciente = dt.Tables[0].Rows[0][0].ToString();
                         ViewState["idPaciente"] = idpaciente;
                     }
                     else 
                     {
+                        //CONSULTAR DATOS DE TITULAR PARA REGISTRAR EN MEDILINK
                         Array.Resize(ref objparam, 3);
                         objparam[0] = 1;
                         objparam[1] = int.Parse(idtitular);
@@ -161,7 +167,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             apellido1 = dr[3].ToString();
                             apellido2 = dr[4].ToString();
                             genero = dr[5].ToString();
-                            fechanac = dr[6].ToString();
+                            fechanac = dr[6].ToString();//yyyy-MM-dd
                             celular = dr[7].ToString();
                             email = dr[8].ToString();
                             direccion = dr[9].ToString();
@@ -172,6 +178,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         //REGISTRAR PACIENTE
                         string respuesta = FunRegistrarPaciente();
 
+                        if(respuesta == "OK")
+                        {
+                            //GUARDAR ID BDD Expert_MEDILINK
+                            Array.Resize(ref objparam, 7);
+                            objparam[0] = 0;
+                            objparam[1] = 810138; //CODIGO DE RESPUESTA REGISTRAR
+                            objparam[2] = int.Parse(idtitular);
+                            objparam[3] = 0;
+                            objparam[4] = int.Parse(idpro);
+                            objparam[5] = usuario;
+                            objparam[6] = "";
+                            dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+
+                        }
+
                     }
 
                 }else if(idtitular != "" && idbene != "")
@@ -181,7 +202,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     Array.Resize(ref objparam, 3);
                     objparam[0] = 2;
                     objparam[1] = int.Parse(idtitular);
-                    objparam[2] = int.Parse(idbene); ;
+                    objparam[2] = int.Parse(idbene); 
                     dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objparam);
 
                     foreach (DataRow dr in dt.Tables[0].Rows)
@@ -194,11 +215,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         apellido1 = dr[5].ToString();
                         apellido2 = dr[6].ToString();
                         genero = dr[7].ToString();
-                        fechanac = dr[8].ToString();
+                        fechanac = dr[8].ToString();//yyyy-MM-dd
                         direccion = dr[9].ToString();
                         celular = dr[10].ToString();
                         email = dr[11].ToString();   
                     }
+
+                    ViewState["FechaNacBen"] = fechanac;
 
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
@@ -206,28 +229,46 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipodocumento);
                     if (response == "SI")
                     {
+                        //TRAER DE BASE DE  DATOS ID BENEFICIARIO MEDILINK
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
-
-                        //OBTENER ID 
+                        Array.Resize(ref objparam, 7);
+                        objparam[0] = 2;
+                        objparam[1] = 0;
+                        objparam[2] = int.Parse(idtitular);
+                        objparam[3] = int.Parse(idbene);
+                        objparam[4] = 0;
+                        objparam[5] = 0;
+                        objparam[6] = "";
+                        dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+                        idpaciente = dt.Tables[0].Rows[0][0].ToString();
                     }
                     else if(response == "NO")
                     {
-                        string respuesta = "OK";
                         //REGUSTRAR BENEFICIARIO
-                       //string respuesta = FunRegistrarPaciente();
-                        if(respuesta == "OK")
+                        string respuestaben = FunRegistrarPaciente();
+
+                        //GUARDAR ID BDD Expert_MEDILINK
+                        Array.Resize(ref objparam, 7);
+                        objparam[0] = 3;
+                        objparam[1] = 810138; //CODIGO DE RESPUESTA REGISTRAR
+                        objparam[2] = int.Parse(idtitular);
+                        objparam[3] = int.Parse(idbene);
+                        objparam[4] = int.Parse(idpro);
+                        objparam[5] = usuario;
+                        objparam[6] = "";
+                        dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+
+                        string respuesta = "OK";
+                        if (respuesta == "OK")
                         {
                             FunGetCiudad();
                             pnlOpciones.Visible = true;
                             lblRegistro.Text = "Nuevo";
                         }
-
                     }
-
                 }
-
             }
         }
         #endregion
@@ -396,9 +437,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             response = new MediLinkApi().PostAdmision(_url, dataAdmision, Session["AccessToken"].ToString());
 
-            DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            string newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
-
             if(response == "OK")
             {
 
@@ -410,7 +448,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     segundoNombre = nombre2,
                     primerApellido = apellido1,
                     segundoApellido = apellido2,
-                    fechaNacimiento = newFechaNaci,
+                    fechaNacimiento = fechanac,
                     email = email,
                     sexo = genero,
                     telefonioMovil = celular
@@ -550,13 +588,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             foreach (var _datosdisponibles in _datorow)
             {
-                
                 var newItem = new ListItem();
                 newItem.Value = _datosdisponibles["idHorarioDisponible"].ToString();
                 newItem.Text = _datosdisponibles["horaDisponible"].ToString(); 
                 LstBoxHorario.Items.Add(newItem);
             }
-
         }
 
         protected void lstBoxHorasMedicos_SelectedIndexChanged(object sender, EventArgs e)

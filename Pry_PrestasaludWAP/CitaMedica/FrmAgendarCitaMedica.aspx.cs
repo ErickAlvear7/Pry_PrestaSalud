@@ -421,7 +421,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             if (ViewState["TituCodigo"] != null)
             {
-                ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmAgendarMediLink.aspx?CodigoTitular=" + ViewState["TituCodigo"].ToString() + "&CodigoBene=" + ViewState["BeneCodigo"].ToString() + "&CodigoPro=" + Session["CodigoProducto"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=800px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
+                ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmAgendarMediLink.aspx?CodigoTitular=" + ViewState["TituCodigo"].ToString() + "&CodigoBene=" + ViewState["BeneCodigo"].ToString() + "&CodigoPro=" + Session["CodigoProducto"].ToString() + "&CodigoUsu=" + int.Parse(Session["usuCodigo"].ToString()) + "&MachineName=" + Session["MachineName"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=800px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
             }
             else
             {
