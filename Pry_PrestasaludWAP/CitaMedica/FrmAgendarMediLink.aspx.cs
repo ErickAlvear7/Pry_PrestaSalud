@@ -243,6 +243,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
 
             ddlciudad.Items.Clear();
+           
             ListItem i;
             i = new ListItem("--Seleccione Ciudad--", "0");
             ddlciudad.Items.Add(i);
@@ -493,6 +494,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddlSucursal.Items.Clear();
+            ddlEspecialidad.Items.Clear();
+            lstBoxMedicos.Visible = false;
+            LstBoxHorario.Visible = false;
             int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             string ciudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
@@ -503,6 +508,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ddlEspecialidad.Items.Clear();
+            lstBoxMedicos.Visible = false;
+            LstBoxHorario.Visible = false;
             int codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
             string sucursal = ddlSucursal.SelectedItem.ToString();
             ViewState["codSucursal"] = codSucursal;
@@ -517,6 +525,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
+            lstBoxMedicos.Items.Clear();
+            LstBoxHorario.Visible = false;
+            LstBoxHorario.Items.Clear();
             int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             string espe = ddlEspecialidad.SelectedItem.ToString();
             ViewState["codEspecialidad"] = codEspe;
@@ -527,6 +538,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LstBoxHorario.Items.Clear();
             string _codMedico = lstBoxMedicos.SelectedItem.Value;
             string medico = lstBoxMedicos.SelectedItem.ToString();
             ViewState["codMedico"] = _codMedico;
@@ -538,7 +550,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             foreach (var _datosdisponibles in _datorow)
             {
-            
+                
                 var newItem = new ListItem();
                 newItem.Value = _datosdisponibles["idHorarioDisponible"].ToString();
                 newItem.Text = _datosdisponibles["horaDisponible"].ToString(); 

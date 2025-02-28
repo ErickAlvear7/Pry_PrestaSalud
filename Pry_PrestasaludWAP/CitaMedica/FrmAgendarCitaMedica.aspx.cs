@@ -1969,6 +1969,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _fechadisponible = _horarios.date;
                             _horadisponible = _horarios.hour;
 
+
                             DateTime fechalink = DateTime.ParseExact(fechaActuallink, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                             DateTime fechadipon = DateTime.ParseExact(_fechadisponible, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
@@ -2045,7 +2046,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         //txtUrl.Visible = true;
                         txtUrl.Text = url;
-
+                        txtHora.Visible = true;
+                        lblHora.Text = _horadisponible;
 
 
                         Array.Resize(ref objparam, 13);

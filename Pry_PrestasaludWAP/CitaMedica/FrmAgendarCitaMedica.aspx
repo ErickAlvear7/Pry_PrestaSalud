@@ -300,7 +300,7 @@
                                         </tr>
                                     </table>
                                 </asp:Panel>
-                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5" Visible="False">
+                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5" Visible="true">
                                     <div>
                                         <table>
                                             <tr>
@@ -311,7 +311,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" Visible="False" />
+                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" Visible="true" />
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -454,9 +454,17 @@
                                                 <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
                                             </td>
                                         </tr>
-
+                                         <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 id="txtHora" runat="server" visible="false">Hora Disponible</h5>
+                                            </td>
+                                            <td>
+                                                <asp:Label ID="lblHora" runat="server" Visible="false"></asp:Label>
+                                            </td>
+                                            <td></td>
+                                        </tr>
                                     </table>
-
                                 </asp:Panel>
                                 <table style="width: 100%">
                                     <tr>
