@@ -265,7 +265,7 @@ namespace Pry_PrestasaludWAP.Api
                     _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                     HttpContent _content = new StringContent(data, Encoding.UTF8, "application/json");
-                    var _resPatient = _patient.PostAsync("api/RegistrarPaciente", _content).Result;
+                    var _resPatient = _patient.PostAsync("api/RegistrarPaciente/", _content).Result;
 
                     if (_resPatient.IsSuccessStatusCode)
                     {

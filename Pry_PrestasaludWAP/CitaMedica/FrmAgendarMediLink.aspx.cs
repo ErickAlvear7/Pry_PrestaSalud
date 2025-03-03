@@ -43,6 +43,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string telefonos = "";
         string fechaCita = "";
         string _url = "https://testagendamiento.medilink.com.ec:443/";
+        string _urlpro = "https://agendamiento.medilink.com.ec:8443/";
         int codCiudad = 0;
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
@@ -84,7 +85,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 };
 
                 var data = new JavaScriptSerializer().Serialize(login);
-                accessToken = new MediLinkApi().PostAccesLogin(_url, data);
+                accessToken = new MediLinkApi().PostAccesLogin(_urlpro, data);
 
                 Session["AccessToken"] = accessToken;
                 txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -129,7 +130,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["Telefonos"] = telefonos;
 
                     //verificar su paciente esta registrado en MEDILINK
-                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipoidentificacion);
+                    response = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipoidentificacion);
 
                     if (response == "SI")
                     {
@@ -226,7 +227,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
 
-                    response = new MediLinkApi().GetVerificarPaciente(_url, accessToken, documento, tipodocumento);
+                    response = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
                     if (response == "SI")
                     {
                         //TRAER DE BASE DE  DATOS ID BENEFICIARIO MEDILINK
@@ -234,7 +235,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
                         Array.Resize(ref objparam, 7);
-                        objparam[0] = 2;
+                        objparam[0] = 3;
                         objparam[1] = 0;
                         objparam[2] = int.Parse(idtitular);
                         objparam[3] = int.Parse(idbene);
@@ -243,15 +244,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[6] = "";
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         idpaciente = dt.Tables[0].Rows[0][0].ToString();
+
+                        //METODO PARA CITA
                     }
                     else if(response == "NO")
                     {
                         //REGUSTRAR BENEFICIARIO
                         string respuestaben = FunRegistrarPaciente();
 
-                        //GUARDAR ID BDD Expert_MEDILINK
+                        //GUARDAR ID BDD Expert_MEDILINKBE
                         Array.Resize(ref objparam, 7);
-                        objparam[0] = 3;
+                        objparam[0] = 2;
                         objparam[1] = 810138; //CODIGO DE RESPUESTA REGISTRAR
                         objparam[2] = int.Parse(idtitular);
                         objparam[3] = int.Parse(idbene);
@@ -266,6 +269,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             FunGetCiudad();
                             pnlOpciones.Visible = true;
                             lblRegistro.Text = "Nuevo";
+
+                            //METODO PARA CITA
                         }
                     }
                 }
@@ -278,7 +283,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunGetCiudad()
         {
 
-            response = new MediLinkApi().GetCiudad(_url, Session["AccessToken"].ToString());
+            response = new MediLinkApi().GetCiudad(_urlpro, Session["AccessToken"].ToString());
             //dynamic dataCiudad = JObject.Parse(response);
 
             var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
@@ -303,7 +308,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Sucursal
         private void FunGetSucursal(int codciudad)
         {
-            response = new MediLinkApi().GetSucursal(_url, Session["AccessToken"].ToString(), codCiudad);
+            response = new MediLinkApi().GetSucursal(_urlpro, Session["AccessToken"].ToString(), codCiudad);
 
             var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
 
@@ -325,7 +330,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Especialidad
         private void FunGetEspe(int codSucursal)
         {
-            response = new MediLinkApi().GetEspecialidad(_url, Session["AccessToken"].ToString(), codSucursal);
+            response = new MediLinkApi().GetEspecialidad(_urlpro, Session["AccessToken"].ToString(), codSucursal);
             var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
             ListItem e;
             e = new ListItem("--Seleccione Especialidad--", "0");
@@ -345,7 +350,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Medico
         private void FunGetMedico(int codEspe, int CodSucur)
         {
-            response = new MediLinkApi().GetMedicos(_url, Session["AccessToken"].ToString(), codEspe, CodSucur);
+            response = new MediLinkApi().GetMedicos(_urlpro, Session["AccessToken"].ToString(), codEspe, CodSucur);
             var Resultjson = JsonConvert.DeserializeObject<MedicoObj>(response);
 
             ListItem m;
@@ -366,7 +371,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
          private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechacita)
          {
             string fechanew = DateTime.ParseExact(fechacita, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
-            response = new MediLinkApi().GetDisponibilidad(_url, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechanew);
+            response = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechanew);
             if (response != "") lstBoxMedicos.Visible = true;
 
             var Resultjson = JsonConvert.DeserializeObject<DisponibilidadObj>(response);
@@ -435,27 +440,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             var dataAdmision = new JavaScriptSerializer().Serialize(admision);
 
-            response = new MediLinkApi().PostAdmision(_url, dataAdmision, Session["AccessToken"].ToString());
+            response = new MediLinkApi().PostAdmision(_urlpro, dataAdmision, Session["AccessToken"].ToString());
 
             if(response == "OK")
             {
 
                 var paciente = new Paciente
                 {
-                    tipoIdentificacion = tipodocumento,
-                    numeroIdentificacion = documento,
-                    primerNombre = nombre1,
-                    segundoNombre = nombre2,
-                    primerApellido = apellido1,
-                    segundoApellido = apellido2,
-                    fechaNacimiento = fechanac,
-                    email = email,
-                    sexo = genero,
-                    telefonioMovil = celular
+                    tipoIdentificacion=tipodocumento,
+                    numeroIdentificacion=documento,
+                    primerNombre=nombre1,
+                    segundoNombre=nombre2,
+                    primerApellido=apellido1,
+                    segundoApellido=apellido2,
+                    fechaNacimiento=fechanac,
+                    email=email,
+                    sexo=genero,
+                    telefonioMovil=celular
                 };
 
                 var data = new JavaScriptSerializer().Serialize(paciente);
-                response = new MediLinkApi().PostCrearPaciente(_url, data, accessToken);
+                response = new MediLinkApi().PostCrearPaciente(_urlpro, data, accessToken);
 
             }
             else
@@ -483,7 +488,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             };
    
             var cita = new JavaScriptSerializer().Serialize(crearCita);
-            response = new MediLinkApi().PostCrearCita(_url, Session["AccessToken"].ToString(), cita);
+            response = new MediLinkApi().PostCrearCita(_urlpro, Session["AccessToken"].ToString(), cita);
 
             if(response != "")
             {
