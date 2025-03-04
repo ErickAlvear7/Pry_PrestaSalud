@@ -9,9 +9,10 @@ namespace Pry_PrestasaludWAP.Api
 {
     public class MediLinkApi
     {
-
+        //METODO PARA LOGUEARSE EN LA ACPLICACION DE MEDILINK
         public string PostAccesLogin(string url,string dataLogin)
         {
+            string token = "";
             try
             {
                 HttpClient _login = new HttpClient();
@@ -23,8 +24,8 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     var responseContent = resLogin.Content.ReadAsStringAsync().Result;
                     dynamic accessToken = JObject.Parse(responseContent);
-                    string token = accessToken.datos.accesToken;
-                    return token;
+                    token = accessToken.datos.accesToken;
+                    
                 }
                 else
                 {
@@ -37,10 +38,10 @@ namespace Pry_PrestasaludWAP.Api
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostAccesLogin", mensaje, 36);
             }
-            return "";
+            return token;
         }
 
-
+        //METODO PARA VERIFICAR SI EL PACIENTE ESTA REGISTRADO EN MEDILINK
         public string GetVerificarPaciente(string url,string token,string documento,string tipo)
         {
             string responsePaciente = "";
@@ -66,8 +67,6 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     responsePaciente = "NO";
                 }
-
-
                 
             }
             catch (Exception ex)
@@ -79,6 +78,7 @@ namespace Pry_PrestasaludWAP.Api
             return responsePaciente;
         }
 
+        //METODO PARA OBTEBER CIUDADES CON SU CODIGO RESPECTIVO
         public string GetCiudad(string url, string token)
         {
             string responseContent = "";
@@ -133,7 +133,6 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     responseSucursal = resSucursal.StatusCode.ToString();
                 }
-
 
             }
             catch (Exception ex)
@@ -215,31 +214,29 @@ namespace Pry_PrestasaludWAP.Api
             return responseMed;
         }
 
+        //METODO PARA ADMISIONAR EL PACIENTE ANTES DE REGISTRARSE
         public string PostAdmision(string url,string dataAdmision,string token)
         {
             string responseAdmi = "";
             try
             {
-                HttpClient _admision = new HttpClient();
+                HttpClient _admision = new HttpClient();             
+                _admision.BaseAddress = new Uri(url);
+                _admision.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                HttpContent _content = new StringContent(dataAdmision, Encoding.UTF8, "application/json");
+                var _resAdmision = _admision.PostAsync("api/admisionPaciente", _content).Result;
+
+                if (_resAdmision.IsSuccessStatusCode)
                 {
-                    _admision.BaseAddress = new Uri(url);
-                    _admision.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    HttpContent _content = new StringContent(dataAdmision, Encoding.UTF8, "application/json");
-                    var _resAdmision = _admision.PostAsync("api/admisionPaciente", _content).Result;
+                    //responseAdmi = _resAdmision.Content.ReadAsStringAsync().Result;
 
-                    if (_resAdmision.IsSuccessStatusCode)
-                    {
-                        //responseAdmi = _resAdmision.Content.ReadAsStringAsync().Result;
-
-                        responseAdmi = "OK";
-                    }
-                    else
-                    {
-                        responseAdmi = _resAdmision.StatusCode.ToString();
-                    }
-
+                    responseAdmi = "OK";
                 }
+                else
+                {
+                    responseAdmi = _resAdmision.StatusCode.ToString();
+                }  
 
             }
             catch (Exception ex)
@@ -258,25 +255,22 @@ namespace Pry_PrestasaludWAP.Api
             try
             {
 
-                HttpClient _patient = new HttpClient();
+                HttpClient _patient = new HttpClient();                         
+                _patient.BaseAddress = new Uri(url);
+                _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                HttpContent _content = new StringContent(data, Encoding.UTF8, "application/json");
+                var _resPatient = _patient.PostAsync("api/RegistrarPaciente/", _content).Result;
+
+                if (_resPatient.IsSuccessStatusCode)
                 {
-
-                    _patient.BaseAddress = new Uri(url);
-                    _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    HttpContent _content = new StringContent(data, Encoding.UTF8, "application/json");
-                    var _resPatient = _patient.PostAsync("api/RegistrarPaciente/", _content).Result;
-
-                    if (_resPatient.IsSuccessStatusCode)
-                    {
-                        responsePaciente = _resPatient.Content.ReadAsStringAsync().Result;
-                    }
-                    else
-                    {
-                        responsePaciente = _resPatient.StatusCode.ToString();
-                    }
+                    responsePaciente = _resPatient.Content.ReadAsStringAsync().Result;
                 }
-
+                else
+                {
+                    responsePaciente = _resPatient.StatusCode.ToString();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -284,7 +278,6 @@ namespace Pry_PrestasaludWAP.Api
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostCrearPaciente", mensaje, 207);
             }
-
 
             return responsePaciente;
         }

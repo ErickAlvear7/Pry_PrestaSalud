@@ -196,7 +196,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     }
 
-                }else if(idtitular != "" && idbene != "")
+                }else if(idtitular != "" && idbene != "")//SI LA CEDUDA ES DEL BENEFICIARIO
                 {
 
                     //DATOS BENEFICIARIO
@@ -222,7 +222,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         email = dr[11].ToString();   
                     }
 
-                    ViewState["FechaNacBen"] = fechanac;
+                    ViewState["FechaNaci"] = fechanac;
 
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
@@ -244,8 +244,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[6] = "";
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         idpaciente = dt.Tables[0].Rows[0][0].ToString();
+                        ViewState["idPaciente"] = idpaciente;
 
-                        //METODO PARA CITA
                     }
                     else if(response == "NO")
                     {
