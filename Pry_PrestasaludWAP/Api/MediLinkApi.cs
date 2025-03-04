@@ -137,14 +137,12 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetSucursal", mensaje, 144);
             }
                
                 return responseSucursal;
         }
-
 
         public string GetEspecialidad(string url,string token, int sucursal)
         {
@@ -171,7 +169,6 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetEspecialidad", mensaje, 157);
             }
@@ -353,11 +350,9 @@ namespace Pry_PrestasaludWAP.Api
             }
             catch (Exception ex)
             {
-
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostCrearCita", mensaje, 361);
             }
-
 
             return responseCita;
         }

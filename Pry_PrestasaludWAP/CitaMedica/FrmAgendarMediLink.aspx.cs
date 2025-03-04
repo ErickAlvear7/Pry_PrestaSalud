@@ -19,8 +19,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string idpaciente = "";
         string idbene = "";
         string idpro = "";
-        int usuario = 0;
-        string machine = "";
+        string usuario = "";
         string user = "";
         string pass = "";
         string documento = "";
@@ -65,9 +64,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idtitular = Request["CodigoTitular"];
                 idbene = Request["CodigoBene"];
                 idpro = Request["CodigoPro"];
-                usuario = int.Parse(Request["CodigoUsu"]);
-                machine = Request["MachineName"];
-                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                usuario = Session["usuLogin"].ToString();
 
                 //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
                 objparam[0] = 61;
@@ -561,10 +558,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             FunGetEspe(codSucursal);
         }
 
-        protected void btnRegistrar_Click(object sender, EventArgs e)
-        {
-            FunRegistrarPaciente();
-        }
+        //protected void btnRegistrar_Click(object sender, EventArgs e)
+        //{
+        //    FunRegistrarPaciente();
+        //}
 
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -608,14 +605,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["Hora"] = hora;
             btnCrearCita.Visible = true;
         }
-        #endregion
 
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
             fechaCita = txtFechaIni.Text;
 
-            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()),int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()),int.Parse(ViewState["codHoraMed"].ToString()),fechaCita);
+            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), fechaCita);
 
         }
+        #endregion
     }
 }
