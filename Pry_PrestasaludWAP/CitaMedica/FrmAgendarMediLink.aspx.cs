@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -44,6 +45,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string _url = "https://testagendamiento.medilink.com.ec:443/";
         string _urlpro = "https://agendamiento.medilink.com.ec:8443/";
         int codCiudad = 0;
+        int codEspe = 0;
+        int codSucursal = 0;
+        string sucursal = "";
+        string espe = "";
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
 
@@ -129,7 +134,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //verificar su paciente esta registrado en MEDILINK
                     response = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipoidentificacion);
 
-                    if (response == "SI")
+                    if (response != "")
                     {
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
@@ -175,13 +180,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         //REGISTRAR PACIENTE
                         string respuesta = FunRegistrarPaciente();
-
-                        if(respuesta == "OK")
+                        
+                        if (respuesta != "")
                         {
                             //GUARDAR ID BDD Expert_MEDILINK
+                            idpaciente = respuesta;
+                            
                             Array.Resize(ref objparam, 7);
                             objparam[0] = 0;
-                            objparam[1] = 810138; //CODIGO DE RESPUESTA REGISTRAR
+                            objparam[1] = int.Parse(idpaciente); 
                             objparam[2] = int.Parse(idtitular);
                             objparam[3] = 0;
                             objparam[4] = int.Parse(idpro);
@@ -189,6 +196,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[6] = "";
                             dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
 
+                            if(dt.Tables[0].Rows[0][0].ToString() == "OK")
+                            {
+                                //TRAER DE BASE DE  DATOS ID TITULAR MEDILINK
+                                Array.Resize(ref objparam, 7);
+                                objparam[0] = 1;
+                                objparam[1] = 0;
+                                objparam[2] = int.Parse(idtitular);
+                                objparam[3] = 0;
+                                objparam[4] = 0;
+                                objparam[5] = 0;
+                                objparam[6] = "";
+                                dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+                                idpaciente = dt.Tables[0].Rows[0][0].ToString();
+                                ViewState["idPaciente"] = idpaciente;
+
+                                FunGetCiudad();
+                                pnlOpciones.Visible = true;
+                                lblRegistro.Text = "Nuevo";
+
+                            }
+
+                        }
+                        else
+                        {
+                            new Funciones().funShowJSMessage("Fallo Registro Paciente", this);
                         }
 
                     }
@@ -282,24 +314,36 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             response = new MediLinkApi().GetCiudad(_urlpro, Session["AccessToken"].ToString());
             //dynamic dataCiudad = JObject.Parse(response);
-
-            var Resultjson = JsonConvert.DeserializeObject<DatoObj>(response);
-
-            ddlciudad.Items.Clear();
-           
-            ListItem i;
-            i = new ListItem("--Seleccione Ciudad--", "0");
-            ddlciudad.Items.Add(i);
-            foreach (var item in Resultjson.datos)
+            if(response != "")
             {
-                string codigoCiudad = item.codCiudad.ToString();
-                string provincia = item.distritoProvincia;
-                string ciudad = item.nombreCiudad;
+                var Resultjson = JsonConvert.DeserializeObject<List<Root>>(response);
 
-                i = new ListItem(ciudad, codigoCiudad);
+                ddlciudad.Items.Clear();
 
+                ListItem i;
+                i = new ListItem("--Seleccione Ciudad--", "0");
                 ddlciudad.Items.Add(i);
+                foreach (var item in Resultjson)
+                {
+                    //string codigoCiudad = item.codCiudad.ToString();
+                    //string provincia = item.distritoProvincia;
+                    //string ciudad = item.nombreCiudad;
+
+                    //i = new ListItem(ciudad, codigoCiudad);
+
+                    //ddlciudad.Items.Add(i);
+
+                    foreach(var ciudades in item.datos)
+                    {
+                        string codigoCiudad = ciudades.codCiudad.ToString();
+                    }
+                }
             }
+            else
+            {
+                new Funciones().funShowJSMessage("No hay Ciudades para listar!!", this);
+            }
+          
         }
 
         //Llenar combo Sucursal
@@ -307,61 +351,85 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             response = new MediLinkApi().GetSucursal(_urlpro, Session["AccessToken"].ToString(), codCiudad);
 
-            var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
-
-            ddlSucursal.Items.Clear();
-            ListItem s;
-            s = new ListItem("--Seleccione Sucursal--", "0");
-            ddlSucursal.Items.Add(s);
-            foreach (var item in Resultjson.datos)
+            if(response != "")
             {
-                string codigosucursal = item.idSucursal;
-                string nombrecentromedico = item.nombreCentromedico;
+                var Resultjson = JsonConvert.DeserializeObject<SucursalObj>(response);
 
-                s = new ListItem(nombrecentromedico, codigosucursal);
-
+                ddlSucursal.Items.Clear();
+                ListItem s;
+                s = new ListItem("--Seleccione Sucursal--", "0");
                 ddlSucursal.Items.Add(s);
+                foreach (var item in Resultjson.datos)
+                {
+                    string codigosucursal = item.idSucursal;
+                    string nombrecentromedico = item.nombreCentromedico;
+
+                    s = new ListItem(nombrecentromedico, codigosucursal);
+
+                    ddlSucursal.Items.Add(s);
+                }
             }
+            else
+            {
+                new Funciones().funShowJSMessage("No hay Sucursales para listar!!", this);
+            }       
         }
 
         //Llenar combo Especialidad
         private void FunGetEspe(int codSucursal)
         {
             response = new MediLinkApi().GetEspecialidad(_urlpro, Session["AccessToken"].ToString(), codSucursal);
-            var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
-            ListItem e;
-            e = new ListItem("--Seleccione Especialidad--", "0");
-            ddlEspecialidad.Items.Add(e);
 
-            foreach (var espe in Resultjson.datos)
+            if(response != "")
             {
-                string codigoEspecialidad = espe.codEspecialidad.ToString();
-                string codigoSucursal = espe.codSucursal.ToString();
-                string espeNombre = espe.espNombre;
-
-                e = new ListItem(espeNombre, codigoEspecialidad);
+                var Resultjson = JsonConvert.DeserializeObject<EspeObj>(response);
+                ListItem e;
+                e = new ListItem("--Seleccione Especialidad--", "0");
                 ddlEspecialidad.Items.Add(e);
+
+                foreach (var espe in Resultjson.datos)
+                {
+                    string codigoEspecialidad = espe.codEspecialidad.ToString();
+                    string codigoSucursal = espe.codSucursal.ToString();
+                    string espeNombre = espe.espNombre;
+
+                    e = new ListItem(espeNombre, codigoEspecialidad);
+                    ddlEspecialidad.Items.Add(e);
+                }
+
             }
+            else
+            {
+                new Funciones().funShowJSMessage("No hay Especialidades para listar!!", this);
+            }
+     
         }
 
         //Llenar combo Medico
         private void FunGetMedico(int codEspe, int CodSucur)
         {
             response = new MediLinkApi().GetMedicos(_urlpro, Session["AccessToken"].ToString(), codEspe, CodSucur);
-            var Resultjson = JsonConvert.DeserializeObject<MedicoObj>(response);
 
-            ListItem m;
-            m = new ListItem("--Seleccione Medico--", "0");
-            //ddlMedicos.Items.Add(m);
-            foreach (var med in Resultjson.datos)
+            if(response != "")
             {
-                string codigoMedico = med.idMedico.ToString();
-                string medicoNombre = med.nombreCompleto.ToString();
+                var Resultjson = JsonConvert.DeserializeObject<MedicoObj>(response);
 
-                m = new ListItem(medicoNombre, codigoMedico);
+                ListItem m;
+                m = new ListItem("--Seleccione Medico--", "0");
                 //ddlMedicos.Items.Add(m);
-            }
+                foreach (var med in Resultjson.datos)
+                {
+                    string codigoMedico = med.idMedico.ToString();
+                    string medicoNombre = med.nombreCompleto.ToString();
 
+                    m = new ListItem(medicoNombre, codigoMedico);
+                    //ddlMedicos.Items.Add(m);
+                }
+            }
+            else
+            {
+                new Funciones().funShowJSMessage("No hay Medicos para listar!!", this);
+            }          
         }
 
         //Obtener disponibilidad
@@ -427,20 +495,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Registrar Paciente
         private string FunRegistrarPaciente()
         {
-
-            //validar admision
-            var admision = new Admision
-            {
-                identificacion = documento,
-                empresaAdmision = "1792206979001"
-            };
-
-            var dataAdmision = new JavaScriptSerializer().Serialize(admision);
-
-            response = new MediLinkApi().PostAdmision(_urlpro, dataAdmision, Session["AccessToken"].ToString());
-
-            if(response == "OK")
-            {
+            string idregistro = "";
 
                 var paciente = new Paciente
                 {
@@ -458,14 +513,33 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 var data = new JavaScriptSerializer().Serialize(paciente);
                 response = new MediLinkApi().PostCrearPaciente(_urlpro, data, accessToken);
+                
+                if(response == "VALIDAR")
+                {
+                    var admision = new Admision
+                    {
+                        identificacion = documento,
+                        empresaAdmision = "1792206979001"
+                    };
 
-            }
-            else
-            {
-                new Funciones().funShowJSMessage("Fallo Admision", this);
-            }
+                    var dataAdmision = new JavaScriptSerializer().Serialize(admision);
 
-            return "OK";
+                    response = new MediLinkApi().PostAdmision(_urlpro, dataAdmision, Session["AccessToken"].ToString());
+
+                    if(response == "OK")
+                    {
+                       idregistro = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipoidentificacion);
+                       
+                    }
+                    else
+                    {
+                       idregistro = "";
+                    }
+
+                }
+                
+
+            return idregistro;
         }
 
         private void FunAgendarCita(int idPaciente,int idCiudad,int idMedico,int idSucur,int idEspeci,int idHorario,string fechaCita)
@@ -538,7 +612,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ddlEspecialidad.Items.Clear();
             lstBoxMedicos.Visible = false;
             LstBoxHorario.Visible = false;
-            int codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             string ciudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
             ViewState["Ciudad"] = ciudad;
@@ -551,8 +625,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ddlEspecialidad.Items.Clear();
             lstBoxMedicos.Visible = false;
             LstBoxHorario.Visible = false;
-            int codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
-            string sucursal = ddlSucursal.SelectedItem.ToString();
+            codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+            sucursal = ddlSucursal.SelectedItem.ToString();
             ViewState["codSucursal"] = codSucursal;
             ViewState["Sucursal"] = sucursal;
             FunGetEspe(codSucursal);
@@ -568,12 +642,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstBoxMedicos.Items.Clear();
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
-            int codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
-            string espe = ddlEspecialidad.SelectedItem.ToString();
+            codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
+            espe = ddlEspecialidad.SelectedItem.ToString();
             ViewState["codEspecialidad"] = codEspe;
             ViewState["Especialidad"] = espe;
             //FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, int.Parse(ViewState["codSucursal"].ToString()), txtFechaIni.Text);
-            FunDisponibilidades(int.Parse(ddlciudad.SelectedValue), codEspe, 1, txtFechaIni.Text);
+            FunDisponibilidades(codCiudad, codEspe, 1, txtFechaIni.Text);
         }
 
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)

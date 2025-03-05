@@ -58,14 +58,13 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (resPaciente.IsSuccessStatusCode)
                 {
-                    responsePaciente = "SI";
                     var responseContent = resPaciente.Content.ReadAsStringAsync().Result;
                     dynamic idpaciente = JObject.Parse(responseContent);
-                    string id = idpaciente.datos.idPersona;
+                    responsePaciente = idpaciente.datos.idPersona;
                 }
                 else
                 {
-                    responsePaciente = "NO";
+                    responsePaciente = "";
                 }
                 
             }
@@ -96,10 +95,12 @@ namespace Pry_PrestasaludWAP.Api
                 if (resCiudad.IsSuccessStatusCode)
                 {
                     responseContent = resCiudad.Content.ReadAsStringAsync().Result;
+
                 }
                 else
                 {
                     responseContent = resCiudad.StatusCode.ToString();
+                    return "";
                 }
 
             }
@@ -132,8 +133,8 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseSucursal = resSucursal.StatusCode.ToString();
+                    return "";
                 }
-
             }
             catch (Exception ex)
             {
@@ -164,6 +165,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseEspe = resEspe.StatusCode.ToString();
+                    return "";
                 }
 
             }
@@ -182,7 +184,6 @@ namespace Pry_PrestasaludWAP.Api
             string responseMed = "";
             try
             {
-
                 HttpClient _medico = new HttpClient();
                 _medico.BaseAddress = new Uri(url);
                 _medico.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -197,16 +198,15 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseMed = resMedico.StatusCode.ToString();
+                    return "";
                 }
 
             }
             catch (Exception ex)
             {
-
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/GetMedicos", mensaje, 212);
             }
-
 
             return responseMed;
         }
@@ -232,7 +232,8 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-                    responseAdmi = _resAdmision.StatusCode.ToString();
+                    //responseAdmi = _resAdmision.StatusCode.ToString();
+                    responseAdmi = "";
                 }  
 
             }
@@ -266,6 +267,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responsePaciente = _resPatient.StatusCode.ToString();
+                    return "VALIDAR";
                 }
                 
             }

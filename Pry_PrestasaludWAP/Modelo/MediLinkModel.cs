@@ -14,18 +14,18 @@ namespace Pry_PrestasaludWAP.Modelo
             public string password { get; set; }
         }
 
-        public class DatoObj
-        {
-            public List<Dato> datos { get; set; }
+        //public class DatoObj
+        //{
+        //    public List<Dato> datos { get; set; }
 
-        }
+        //}
 
-        public class Dato
-        {
-            public string codCiudad { get; set; }
-            public string distritoProvincia { get; set; }
-            public string nombreCiudad { get; set; }
-        }
+        //public class Dato
+        //{
+        //    public string codCiudad { get; set; }
+        //    public string distritoProvincia { get; set; }
+        //    public string nombreCiudad { get; set; }
+        //}
 
         public class EspeObj
         {
@@ -143,6 +143,27 @@ namespace Pry_PrestasaludWAP.Modelo
             public int idSucursal { get; set; }
             public int idEspecialidad { get; set; }
             public HorarioDisponible horarioDisponible { get; set; }
+        }
+
+        public class Dato
+        {
+            public int codCiudad { get; set; }
+            public string distritoProvincia { get; set; }
+            public string nombreCiudad { get; set; }
+            public List<Sucursale> sucursales { get; set; }
+        }
+
+        public class Root
+        {
+            public string estado { get; set; }
+            public List<Dato> datos { get; set; }
+            public List<object> mensajes { get; set; }
+        }
+
+        public class Sucursale
+        {
+            public int codSucursal { get; set; }
+            public string sucursalNombreComercial { get; set; }
         }
 
     }

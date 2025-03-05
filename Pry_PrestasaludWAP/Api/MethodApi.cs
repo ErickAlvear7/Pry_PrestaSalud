@@ -244,11 +244,9 @@ namespace Pry_PrestasaludWAP.Api
             try
             {
                 HttpClient _medicos = new HttpClient();
-                {
-                    _medicos.BaseAddress = new Uri(url);
-                    _medicos.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-
-                }
+                
+                _medicos.BaseAddress = new Uri(url);
+                _medicos.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var queryString = new StringBuilder();
