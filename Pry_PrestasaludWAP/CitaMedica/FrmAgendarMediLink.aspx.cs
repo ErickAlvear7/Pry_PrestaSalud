@@ -192,35 +192,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             //GUARDAR ID BDD Expert_MEDILINK
                             idpaciente = respuesta;
                             
-                            Array.Resize(ref objparam, 7);
+                            Array.Resize(ref objparam, 6);
                             objparam[0] = 0;
                             objparam[1] = int.Parse(idpaciente); 
                             objparam[2] = int.Parse(idtitular);
                             objparam[3] = 0;
                             objparam[4] = int.Parse(idpro);
                             objparam[5] = usuario;
-                            objparam[6] = "";
                             dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
 
-                            if(dt.Tables[0].Rows[0][0].ToString() == "OK")
+                            if (dt.Tables[0].Rows[0][0].ToString() != "")
                             {
-                                //TRAER DE BASE DE  DATOS ID TITULAR MEDILINK
-                                Array.Resize(ref objparam, 7);
-                                objparam[0] = 1;
-                                objparam[1] = 0;
-                                objparam[2] = int.Parse(idtitular);
-                                objparam[3] = 0;
-                                objparam[4] = 0;
-                                objparam[5] = 0;
-                                objparam[6] = "";
-                                dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
-                                idpaciente = dt.Tables[0].Rows[0][0].ToString();
-                                ViewState["idPaciente"] = idpaciente;
-
                                 FunGetCiudad();
                                 pnlOpciones.Visible = true;
                                 lblRegistro.Text = "Nuevo";
-
                             }
 
                         }
