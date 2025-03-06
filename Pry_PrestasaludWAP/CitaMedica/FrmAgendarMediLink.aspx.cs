@@ -213,7 +213,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             new Funciones().funShowJSMessage("Fallo Registro Paciente", this);
                         }
-
                     }
 
                 }else if(idtitular != "" && idbene != "")//SI LA CEDUDA ES DEL BENEFICIARIO
@@ -248,51 +247,59 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblNombresCompletos.Text = nombresCompletos;
 
                     response = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
-                    if (response == "SI")
+
+                    if (response != "")
                     {
-                        //TRAER DE BASE DE  DATOS ID BENEFICIARIO MEDILINK
+                        int idresponse = int.Parse(response.ToString());
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
-                        Array.Resize(ref objparam, 7);
-                        objparam[0] = 3;
-                        objparam[1] = 0;
-                        objparam[2] = int.Parse(idtitular);
-                        objparam[3] = int.Parse(idbene);
-                        objparam[4] = 0;
-                        objparam[5] = 0;
-                        objparam[6] = "";
-                        dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
-                        idpaciente = dt.Tables[0].Rows[0][0].ToString();
-                        ViewState["idPaciente"] = idpaciente;
 
-                    }
-                    else if(response == "NO")
-                    {
-                        //REGUSTRAR BENEFICIARIO
-                        string respuestaben = FunRegistrarPaciente();
-
-                        //GUARDAR ID BDD Expert_MEDILINKBE
-                        Array.Resize(ref objparam, 7);
-                        objparam[0] = 2;
-                        objparam[1] = 810138; //CODIGO DE RESPUESTA REGISTRAR
+                        //INSERT ID O GET ID MEDILINKBE
+                        Array.Resize(ref objparam, 6);
+                        objparam[0] = 1;
+                        objparam[1] = idresponse;
                         objparam[2] = int.Parse(idtitular);
                         objparam[3] = int.Parse(idbene);
                         objparam[4] = int.Parse(idpro);
                         objparam[5] = usuario;
-                        objparam[6] = "";
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+                        idpaciente = dt.Tables[0].Rows[0][0].ToString();
+                        ViewState["idPaciente"] = idpaciente;
+                    }
+                    else
+                    {
+                        string respuesta = FunRegistrarPaciente();
 
-                        string respuesta = "OK";
-                        if (respuesta == "OK")
+                        if (respuesta != "")
                         {
-                            FunGetCiudad();
-                            pnlOpciones.Visible = true;
-                            lblRegistro.Text = "Nuevo";
+                            //GUARDAR ID BDD Expert_MEDILINK
+                            idpaciente = respuesta;
 
-                            //METODO PARA CITA
+                            Array.Resize(ref objparam, 6);
+                            objparam[0] = 1;
+                            objparam[1] = int.Parse(idpaciente);
+                            objparam[2] = int.Parse(idtitular);
+                            objparam[3] = int.Parse(idbene);
+                            objparam[4] = int.Parse(idpro);
+                            objparam[5] = usuario;
+                            dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+
+                            if (dt.Tables[0].Rows[0][0].ToString() != "")
+                            {
+                                FunGetCiudad();
+                                pnlOpciones.Visible = true;
+                                lblRegistro.Text = "Nuevo";
+                            }
+
+                        }
+                        else
+                        {
+                            new Funciones().funShowJSMessage("Fallo Registro Beneficiario", this);
                         }
                     }
+               
+             
                 }
             }
         }
@@ -520,7 +527,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     var admision = new Admision
                     {
                         identificacion = documento,
-                        empresaAdmision = "1792206979001"
+                        empresaAdmision = "1792206979001" //RUC PRESTASALUD
                     };
 
                     var dataAdmision = new JavaScriptSerializer().Serialize(admision);
@@ -529,7 +536,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if(response == "OK")
                     {
-                       idregistro = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipoidentificacion);
+                       idregistro = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
                        
                     }
                     else
