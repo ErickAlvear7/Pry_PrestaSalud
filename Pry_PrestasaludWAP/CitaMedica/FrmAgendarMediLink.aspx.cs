@@ -291,15 +291,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 pnlOpciones.Visible = true;
                                 lblRegistro.Text = "Nuevo";
                             }
-
                         }
                         else
                         {
                             new Funciones().funShowJSMessage("Fallo Registro Beneficiario", this);
                         }
-                    }
-               
-             
+                    }          
                 }
             }
         }
@@ -327,11 +324,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     string codigoCiudad = ciudades.codCiudad.ToString();
                     string ciudad = ciudades.nombreCiudad;
-
+                    
                     i = new ListItem(ciudad, codigoCiudad);
 
                     ddlciudad.Items.Add(i);
-
+               
                     foreach(var sucursales in ciudades.sucursales )
                     {
                         string _codsucursal = sucursales.codSucursal;
@@ -543,10 +540,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     {
                        idregistro = "";
                     }
-
                 }
                 
-
             return idregistro;
         }
 
@@ -644,7 +639,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             //FunGetSucursal(codCiudad);
         }
-
 
         protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
