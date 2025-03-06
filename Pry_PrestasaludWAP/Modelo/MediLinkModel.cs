@@ -145,24 +145,25 @@ namespace Pry_PrestasaludWAP.Modelo
             public HorarioDisponible horarioDisponible { get; set; }
         }
 
-        public class Dato
+        public class DatoCiudad
         {
-            public int codCiudad { get; set; }
+            public string codCiudad { get; set; }
             public string distritoProvincia { get; set; }
             public string nombreCiudad { get; set; }
             public List<Sucursale> sucursales { get; set; }
+            public MensajesDispo mensajes { get; set; }
         }
 
-        public class Root
+        public class CiudadesSucursal
         {
             public string estado { get; set; }
-            public List<Dato> datos { get; set; }
-            public List<object> mensajes { get; set; }
+            public List<DatoCiudad> datos { get; set; }
+            
         }
 
         public class Sucursale
         {
-            public int codSucursal { get; set; }
+            public string codSucursal { get; set; }
             public string sucursalNombreComercial { get; set; }
         }
 

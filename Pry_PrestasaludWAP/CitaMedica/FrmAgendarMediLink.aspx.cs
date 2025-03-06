@@ -58,6 +58,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DataTable _datosMedico = new DataTable();
         DataTable _datosDisponible = new DataTable();
 
+        DataTable dtsucursal = new DataTable();
         #endregion
 
         #region Load
@@ -100,6 +101,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 datosDisponibie.Columns.Add("idHorarioDisponible");
                 datosDisponibie.Columns.Add("horaDisponible");
                 ViewState["DatosDisponibles"] = datosDisponibie;
+
+                
+                dtsucursal.Columns.Add("codCiudad");
+                dtsucursal.Columns.Add("codSucursal");
+                dtsucursal.Columns.Add("sucursalNombreComercial");
 
 
                 if (idtitular != "" && idbene == "0")
@@ -316,28 +322,38 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //dynamic dataCiudad = JObject.Parse(response);
             if(response != "")
             {
-                var Resultjson = JsonConvert.DeserializeObject<List<Root>>(response);
+                //var Resultjson = JsonConvert.DeserializeObject<List<Root>>(response);
+
+                var Resultjson = JsonConvert.DeserializeObject<CiudadesSucursal>(response);
 
                 ddlciudad.Items.Clear();
 
                 ListItem i;
                 i = new ListItem("--Seleccione Ciudad--", "0");
                 ddlciudad.Items.Add(i);
-                foreach (var item in Resultjson)
+                foreach (var ciudades in Resultjson.datos)
                 {
-                    //string codigoCiudad = item.codCiudad.ToString();
-                    //string provincia = item.distritoProvincia;
-                    //string ciudad = item.nombreCiudad;
+                    string codigoCiudad = ciudades.codCiudad.ToString();
+                    string ciudad = ciudades.nombreCiudad;
 
-                    //i = new ListItem(ciudad, codigoCiudad);
+                    i = new ListItem(ciudad, codigoCiudad);
 
-                    //ddlciudad.Items.Add(i);
+                    ddlciudad.Items.Add(i);
 
-                    foreach(var ciudades in item.datos)
+                    foreach(var sucursales in ciudades.sucursales )
                     {
-                        string codigoCiudad = ciudades.codCiudad.ToString();
+                        string _codsucursal = sucursales.codSucursal;
+                        string _nomsucursal = sucursales.sucursalNombreComercial;
+
+                        DataRow rowSucursal = dtsucursal.NewRow();
+                        rowSucursal["codCiudad"] = codigoCiudad;
+                        rowSucursal["codSucursal"] = _codsucursal;
+                        rowSucursal["sucursalNombreComercial"] = _nomsucursal;
+                        dtsucursal.Rows.Add(rowSucursal);
+
                     }
                 }
+                ViewState["DatosSucursal"] = dtsucursal;
             }
             else
             {
@@ -616,7 +632,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string ciudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
             ViewState["Ciudad"] = ciudad;
-            FunGetSucursal(codCiudad);
+
+            DataTable _datossucursal = (DataTable)ViewState["DatosSucursal"];
+
+            DataRow[] _row = _datossucursal.Select("codCiudad=" + codCiudad);
+
+            ddlSucursal.Items.Clear();
+            ListItem s;
+            s = new ListItem("--Seleccione Sucursal--", "0");
+            ddlSucursal.Items.Add(s);
+
+            foreach (var _datos in _row)
+            {
+                s = new ListItem(_datos["sucursalNombreComercial"].ToString(), _datos["codSucursal"].ToString());
+
+                ddlSucursal.Items.Add(s);
+            }
+
+
+            //FunGetSucursal(codCiudad);
         }
 
 
