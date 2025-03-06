@@ -142,19 +142,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (response != "")
                     {
+                        int idresponse = int.Parse(response.ToString());
                         FunGetCiudad();
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
 
-                        //TRAER DE BASE DE  DATOS ID TITULAR MEDILINK
-                        Array.Resize(ref objparam, 7);
-                        objparam[0] = 1;
-                        objparam[1] = 0;
-                        objparam[2] = int.Parse(idtitular);
+                        //INSERT ID O GET ID MEDILINK
+                        Array.Resize(ref objparam, 6);
+                        objparam[0] = 0;
+                        objparam[1] = idresponse;
+                        objparam[2] = int.Parse(idtitular); 
                         objparam[3] = 0;
-                        objparam[4] = 0;
-                        objparam[5] = 0;
-                        objparam[6] = "";
+                        objparam[4] = int.Parse(idpro);
+                        objparam[5] = usuario;
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         idpaciente = dt.Tables[0].Rows[0][0].ToString();
                         ViewState["idPaciente"] = idpaciente;
@@ -666,11 +666,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             FunGetEspe(codSucursal);
         }
 
-        //protected void btnRegistrar_Click(object sender, EventArgs e)
-        //{
-        //    FunRegistrarPaciente();
-        //}
-
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
             lstBoxMedicos.Items.Clear();
@@ -678,10 +673,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Items.Clear();
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             espe = ddlEspecialidad.SelectedItem.ToString();
+            codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            int codsucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
             ViewState["codEspecialidad"] = codEspe;
             ViewState["Especialidad"] = espe;
-            //FunDisponibilidades(int.Parse(ViewState["codCiudad"].ToString()), codEspe, int.Parse(ViewState["codSucursal"].ToString()), txtFechaIni.Text);
-            FunDisponibilidades(codCiudad, codEspe, 1, txtFechaIni.Text);
+            FunDisponibilidades(codCiudad, codEspe, codsucursal, txtFechaIni.Text);
         }
 
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
