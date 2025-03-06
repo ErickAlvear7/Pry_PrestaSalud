@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Web.Script.Serialization;
-using System.Web.UI.WebControls;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pry_PrestasaludWAP.Api;
+using System;
+using System.Data;
+using System.Globalization;
+using System.Web.Script.Serialization;
+using System.Web.UI.WebControls;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 
 namespace Pry_PrestasaludWAP.CitaMedica
