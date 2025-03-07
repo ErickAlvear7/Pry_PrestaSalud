@@ -23,6 +23,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string pass = "";
         string documento = "";
         string fechanacimiento = "";
+        string parentesco = "";
         string response = "";
         string tipodocumento = "";
         string tipoidentificacion = "";
@@ -45,8 +46,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
         int codCiudad = 0;
         int codEspe = 0;
         int codSucursal = 0;
+        int codMedico = 0;
         string sucursal = "";
         string espe = "";
+        
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
 
@@ -131,6 +134,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "TITULAR";
+                    ViewState["Tipo"] = "T";
                     ViewState["Nombres"] = nombresCompletos;
                     ViewState["FechaNaci"] = fechanacimiento;
                     ViewState["Telefonos"] = telefonos;
@@ -234,12 +238,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         apellido2 = dr[6].ToString();
                         genero = dr[7].ToString();
                         fechanac = dr[8].ToString();//yyyy-MM-dd
-                        direccion = dr[9].ToString();
-                        celular = dr[10].ToString();
-                        email = dr[11].ToString();   
+                        parentesco = dr[9].ToString();
+                        direccion = dr[10].ToString();
+                        celular = dr[11].ToString();
+                        email = dr[12].ToString();   
                     }
 
                     ViewState["FechaNaci"] = fechanac;
+                    ViewState["Parentesco"] = parentesco;
+                    ViewState["Titular"] = "BENEFICIARIO";
+                    ViewState["Tipo"] = "B";
 
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
@@ -566,11 +574,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 dynamic datoscita = JObject.Parse(response);
                 string codigo = datoscita.datos.codigoCita;
-                string direccion = datoscita.datos.direccion;
-                
+
+                Array.Resize(ref objparam, 13);
+                objparam[0] = 0;
+                objparam[1] = 0; //CODIGO PRESTADOR
+                objparam[2] = 0;//CODIGO MEDICO
+                objparam[3] = ViewState["Tipo"].ToString();
+                objparam[4] = 0; //CODIGO TITULAR
+                objparam[5] = 0;//CODIGO BENE
+                objparam[6] = ViewState["Parentesco"].ToString(); // PARENTESCO
+                objparam[7] = fechaCita;
+                objparam[8] = "";//DIA CITA
+                objparam[9] = ViewState["Hora"].ToString();
+                objparam[10] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[11] = Session["MachineName"].ToString();
+                objparam[12] = "";//OBSERVACION
+                DataSet ds = new Conexion(2, "").FunCodigoCitaMedilink(objparam);
+                int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+
                 txtTitCita.Visible = true;
                 txtCodCita.Visible = true;
-                lblCodigo.Text = codigo;
+                lblCodigo.Text = codCita.ToString();
                 txtCiudad.Visible = true;
                 lblCiudad.Text = ViewState["Ciudad"].ToString();
                 txtFecha.Visible = true;
@@ -600,7 +624,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
-                new Funciones().funShowJSMessage("No se genero Cita", this);
+                new Funciones().funShowJSMessage("No se Agendo Cita", this);
             }
         }
         #endregion
@@ -667,14 +691,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
         {
             LstBoxHorario.Items.Clear();
-            string _codMedico = lstBoxMedicos.SelectedItem.Value;
+            codMedico = int.Parse(lstBoxMedicos.SelectedItem.Value.ToString());
             string medico = lstBoxMedicos.SelectedItem.ToString();
-            ViewState["codMedico"] = _codMedico;
+            ViewState["codMedico"] = codMedico;
             ViewState["Medico"] = medico;
             DataTable dttDisponibles = (DataTable)ViewState["DatosDisponibles"];
             if (dttDisponibles.ToString() != "") LstBoxHorario.Visible = true;
 
-            DataRow[] _datorow = dttDisponibles.Select("codigoMedico=" + _codMedico);
+            DataRow[] _datorow = dttDisponibles.Select("codigoMedico='" + codMedico + "'");
 
             foreach (var _datosdisponibles in _datorow)
             {
