@@ -15,25 +15,25 @@
     <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
     <script type="text/javascript" src="../../JS/DatePicker/jquery-ui.js"></script>
     <script type="text/javascript">
-        function pageLoad(sender, arg) {
-            $(document).ready(function () {
-                $.datepicker.setDefaults($.datepicker.regional['es']);
-                $('#txtFechaIni').datepicker(
-                    {
-                        inline: true,
-                        dateFormat: "yy-mm-dd",
-                        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                        monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                        numberOfMonths: 1,
-                        showButtonPanel: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-100:+5"
-                    });
-            });
+        //function pageLoad(sender, arg) {
+        //    $(document).ready(function () {
+        //        $.datepicker.setDefaults($.datepicker.regional['es']);
+        //        $('#txtFechaIni').datepicker(
+        //            {
+        //                inline: true,
+        //                dateFormat: "yy-mm-dd",
+        //                monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        //                monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        //                dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        //                numberOfMonths: 1,
+        //                showButtonPanel: true,
+        //                changeMonth: true,
+        //                changeYear: true,
+        //                yearRange: "-100:+5"
+        //            });
+        //    });
 
-        }
+        //}
 
     </script>
     <style type="text/css">
@@ -96,44 +96,30 @@
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 5%"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 30%"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 10%"></td>
-                                <td style="width: 30%"></td>
+                                <td style="width: 25%"></td>
                                 <td style="width: 5%"></td>
+                                <td style="width: 25%"></td>
+                                <td style="width: 10%"></td>
+                                <td style="width: 30%"></td>                            
                             </tr>
                             <tr>
-                                <td></td>
                                 <td>
-                                    <h5><strong>Ciudad:</strong></h5>
+                                    <h5>Ciudad:</h5>
+                               </td>
+                                <td>
+                                     <asp:DropDownList ID="ddlciudad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlciudad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Sucursal:</strong></h5>
+                                   <h5>Sucursal:</h5>
                                 </td>
                                 <td>
                                     <asp:DropDownList ID="ddlSucursal" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlSucursal_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
                                 <td>
-                                    <h5><strong>Fecha Cita:</strong></h5>
+                                   <h5>Especialidad:</h5> 
                                 </td>
                                 <td>
-                                    <asp:TextBox ID="txtFechaIni" runat="server" CssClass="form-control" Width="100%" TabIndex="2"></asp:TextBox>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h5><strong>Especialidad:</strong></h5>
-                                </td>
-                                <td>
-                                    <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
+                                     <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
                             </tr>
                         </table>
