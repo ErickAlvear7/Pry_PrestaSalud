@@ -13,7 +13,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
     public partial class FrmAgendarMediLink : System.Web.UI.Page
     {
         #region Variables
-        string accessToken = "", fechaActual="", fechaDispo="", fechaCalendar="";
+        string accessToken = "", fechaActual="", fechaCalendar="";
         string idtitular = "", idbene="", idpro="", usuario="";
         string _idtitumed = "", _idbenemed;
         string userApikey = "", passApikey = "";
@@ -50,6 +50,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idpro = Request["CodigoPro"];
                 usuario = Session["usuLogin"].ToString();
                 ViewState["IdMedilink"] = "";
+                ViewState["FechaCalendar"] = "";
 
                 //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
                 objparam[0] = 61;
@@ -303,7 +304,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         rowSucursal["codSucursal"] = _codsucursal;
                         rowSucursal["sucursalNombreComercial"] = _nomsucursal;
                         dtsucursal.Rows.Add(rowSucursal);
-
                     }
                 }
                 //s = new ListItem("--Seleccione Sucursal--", "0");
@@ -364,10 +364,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     string codigoSucursal = espe.codSucursal.ToString();
                     string espeNombre = espe.espNombre;
 
-                    e = new ListItem(espeNombre, codigoEspecialidad);
-                    ddlEspecialidad.Items.Add(e);
+                    if(codigoEspecialidad == "11" || codigoEspecialidad == "22" || codigoEspecialidad == "22" || codigoEspecialidad == "42"
+                        || codigoEspecialidad == "44" || codigoEspecialidad == "16" || codigoEspecialidad == "44" || codigoEspecialidad == "16"
+                           || codigoEspecialidad == "23" || codigoEspecialidad == "32" || codigoEspecialidad == "28" || codigoEspecialidad == "20")
+                    {
+                        e = new ListItem(espeNombre, codigoEspecialidad);
+                        ddlEspecialidad.Items.Add(e);
+                    }
+                 
                 }
-
             }
             else
             {
@@ -700,13 +705,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+            ViewState["FechaCalendar"] = fechaCalendar;
 
-            FunDisponibilidades(codCiudad, codEspe, codSucursal, fechaCalendar);
+            FunDisponibilidades(codCiudad, codEspe, codSucursal, ViewState["FechaCalendar"].ToString());
         }
 
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
-            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), fechaActual);
+            FunAgendarCita(int.Parse(ViewState["IdMedilink"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), ViewState["FechaCalendar"].ToString());
         }
         #endregion
     }
