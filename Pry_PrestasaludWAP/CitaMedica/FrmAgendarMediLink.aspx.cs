@@ -370,15 +370,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     {
                         e = new ListItem(espeNombre, codigoEspecialidad);
                         ddlEspecialidad.Items.Add(e);
-                    }
-                 
+                    }                
                 }
             }
             else
             {
                 new Funciones().funShowJSMessage("No hay Especialidades para listar!!", this);
-            }
-     
+            }   
         }
 
         //Llenar combo Medico
@@ -701,6 +699,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Items.Clear();
             DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
             DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            if (dtmFechaCalendar < dtmFechaActual)
+            {
+                new Funciones().funShowJSMessage("Fecha seleccionada menor a la Actual!!", this);
+                Calendar.SelectedDate = DateTime.Now.AddDays(-8);
+                return;
+            }
+
             fechaCalendar = dtmFechaCalendar.ToString("yyyyMMdd");
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
