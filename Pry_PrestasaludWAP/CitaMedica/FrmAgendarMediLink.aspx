@@ -148,7 +148,7 @@
                                 <td></td>
                                 <td></td>
                                 <td>
-                                    <asp:Calendar ID="Calendar" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="139px" Width="91%" Visible="False">
+                                    <asp:Calendar ID="Calendar" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="139px" Width="91%" Visible="False" OnSelectionChanged="Calendar_SelectionChanged">
 			                            <DayHeaderStyle BackColor="#CCCCCC" Font-Bold="True" Font-Size="7pt" />
 			                            <NextPrevStyle VerticalAlign="Bottom" />
 			                            <OtherMonthDayStyle ForeColor="#808080" />

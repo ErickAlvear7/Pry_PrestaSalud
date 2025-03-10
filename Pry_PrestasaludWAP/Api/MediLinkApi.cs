@@ -9,7 +9,6 @@ namespace Pry_PrestasaludWAP.Api
 {
     public class MediLinkApi
     {
-        //METODO PARA LOGUEARSE EN LA ACPLICACION DE MEDILINK
         public string PostAccesLogin(string url,string dataLogin)
         {
             string token = "";
@@ -24,14 +23,12 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     var responseContent = resLogin.Content.ReadAsStringAsync().Result;
                     dynamic accessToken = JObject.Parse(responseContent);
-                    token = accessToken.datos.accesToken;
-                    
+                    token = accessToken.datos.accesToken;                 
                 }
                 else
                 {
                     MessageBox.Show(resLogin.StatusCode.ToString());
                 }
-
             }
             catch (Exception ex)
             {
@@ -41,7 +38,6 @@ namespace Pry_PrestasaludWAP.Api
             return token;
         }
 
-        //METODO PARA VERIFICAR SI EL PACIENTE ESTA REGISTRADO EN MEDILINK
         public string GetVerificarPaciente(string url,string token,string documento,string tipo)
         {
             string responsePaciente = "";
@@ -65,8 +61,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responsePaciente = "";
-                }
-                
+                }              
             }
             catch (Exception ex)
             {
@@ -77,13 +72,11 @@ namespace Pry_PrestasaludWAP.Api
             return responsePaciente;
         }
 
-        //METODO PARA OBTEBER CIUDADES CON SU CODIGO RESPECTIVO
         public string GetCiudad(string url, string token)
         {
             string responseContent = "";
             try
-            {
-                
+            {             
                 HttpClient _ciudad = new HttpClient();
                 _ciudad.BaseAddress = new Uri(url);
                 _ciudad.DefaultRequestHeaders.Add("Accept", "*/*");
@@ -102,7 +95,6 @@ namespace Pry_PrestasaludWAP.Api
                     responseContent = resCiudad.StatusCode.ToString();
                     return "";
                 }
-
             }
             catch (Exception ex)
             {
@@ -115,7 +107,6 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetSucursal(string url,string token, int cuidad)
         {
-
             string responseSucursal = "";
             try
             {
@@ -211,7 +202,6 @@ namespace Pry_PrestasaludWAP.Api
             return responseMed;
         }
 
-        //METODO PARA ADMISIONAR EL PACIENTE ANTES DE REGISTRARSE
         public string PostAdmision(string url,string dataAdmision,string token)
         {
             string responseAdmi = "";
@@ -268,8 +258,7 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     responsePaciente = _resPatient.StatusCode.ToString();
                     return "VALIDAR";
-                }
-                
+                }           
             }
             catch (Exception ex)
             {
@@ -307,8 +296,8 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-                    MessageBox.Show(resDispo.StatusCode.ToString());
-                    return "";
+                    //MessageBox.Show(resDispo.StatusCode.ToString());
+                    return responDispo;
                 }
 
             }
@@ -348,7 +337,6 @@ namespace Pry_PrestasaludWAP.Api
                     MessageBox.Show(resCita.StatusCode.ToString());
                     return "";
                 }
-
             }
             catch (Exception ex)
             {

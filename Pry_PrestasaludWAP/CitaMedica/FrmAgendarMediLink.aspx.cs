@@ -13,7 +13,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
     public partial class FrmAgendarMediLink : System.Web.UI.Page
     {
         #region Variables
-        string accessToken = "", fechaActual="", fechaDispo="";
+        string accessToken = "", fechaActual="", fechaDispo="", fechaCalendar="";
         string idtitular = "", idbene="", idpro="", usuario="";
         string _idtitumed = "", _idbenemed;
         string userApikey = "", passApikey = "";
@@ -25,6 +25,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         int _idresponVP = 0, codsucursal=0;
         int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0;
         string sucursal = "", espe = "";
+        
         
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
@@ -66,10 +67,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 var data = new JavaScriptSerializer().Serialize(login);
                 accessToken = new MediLinkApi().PostAccesLogin(_urlpro, data);
+                fechaCalendar = DateTime.Now.ToString("yyyyMMdd");
+                ViewState["FechaCalendar"] = fechaCalendar;
 
                 Session["AccessToken"] = accessToken;
-                fechaActual = DateTime.Now.ToString("yyyy-MM-dd");
-
+                
                 datosMedico.Columns.Add("codigoMedico");
                 datosMedico.Columns.Add("nombreMedico");
                 ViewState["DatosMedico"] = datosMedico;
@@ -142,8 +144,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ViewState["IdTituMed"] = _idtitumed;
                     }
                     else 
-                    {
-                                   
+                    {                                
                         respRegisPacient = FunRegistrarPaciente();
                         
                         if (respRegisPacient != "")
@@ -269,7 +270,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Llenar combo Ciudad
         private void FunGetCiudad()
         {
-
             respGetCiudad = new MediLinkApi().GetCiudad(_urlpro, Session["AccessToken"].ToString());
             //dynamic dataCiudad = JObject.Parse(response);
             if(respGetCiudad != "")
@@ -406,7 +406,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
          private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechaActual)
          {
             //fechaDispo = DateTime.ParseExact(fechaActual, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
-            respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, "20250310");
+            respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechaActual);
 
             if (respGetDispo != "") lstBoxMedicos.Visible = true;
 
@@ -655,7 +655,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             Calendar.Visible = true;
             lblHorarios.Visible = true;
             lstBoxMedicos.Visible = true;
-            FunDisponibilidades(codCiudad, codEspe, codsucursal, fechaActual);
+            FunDisponibilidades(codCiudad, codEspe, codsucursal, ViewState["FechaCalendar"].ToString());
         }
 
         protected void lstBoxMedicos_SelectedIndexChanged(object sender, EventArgs e)
@@ -688,12 +688,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
             btnCrearCita.Visible = true;
         }
 
+        protected void Calendar_SelectionChanged(object sender, EventArgs e)
+        {
+            lstBoxMedicos.Items.Clear();
+            LstBoxHorario.Items.Clear();
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            fechaCalendar = dtmFechaCalendar.ToString("yyyyMMdd");
+            codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
+            codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
+            codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+
+            FunDisponibilidades(codCiudad, codEspe, codSucursal, fechaCalendar);
+        }
+
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
-          
-
             FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), fechaActual);
-
         }
         #endregion
     }
