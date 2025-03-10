@@ -123,6 +123,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "TITULAR";
                     ViewState["Tipo"] = "T";
+                    ViewState["Parentesco"] = "";
                     ViewState["Nombres"] = nombresCompletos;
                     ViewState["FechaNaci"] = fechanacimiento;
                     ViewState["Telefonos"] = telefonos;
@@ -206,6 +207,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "BENEFICIARIO";
+                    ViewState["Parentesco"] = parentesco;
                     ViewState["Tipo"] = "B";
                     ViewState["Nombres"] = nombresCompletos;
                     ViewState["FechaNaci"] = fechanacimiento;
@@ -301,11 +303,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         string _codsucursal = sucursales.codSucursal;
                         string _nomsucursal = sucursales.sucursalNombreComercial;
 
-                        DataRow rowSucursal = dtsucursal.NewRow();
-                        rowSucursal["codCiudad"] = codigoCiudad;
-                        rowSucursal["codSucursal"] = _codsucursal;
-                        rowSucursal["sucursalNombreComercial"] = _nomsucursal;
-                        dtsucursal.Rows.Add(rowSucursal);
+                        if(_codsucursal =="28" || _codsucursal == "1" || _codsucursal == "3" || _codsucursal == "5")
+                        {
+                            DataRow rowSucursal = dtsucursal.NewRow();
+                            rowSucursal["codCiudad"] = codigoCiudad;
+                            rowSucursal["codSucursal"] = _codsucursal;
+                            rowSucursal["sucursalNombreComercial"] = _nomsucursal;
+                            dtsucursal.Rows.Add(rowSucursal);
+                        }                   
                     }
                 }
                 //s = new ListItem("--Seleccione Sucursal--", "0");
@@ -451,7 +456,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
-                new Funciones().funShowJSMessage("Sin Medicos", this);
+                new Funciones().funShowJSMessage("Sin Turnos Disponibles", this);
+                return;
             }
 
          }
