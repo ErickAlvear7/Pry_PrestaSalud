@@ -24,9 +24,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string _urlpro = "https://agendamiento.medilink.com.ec:8443/", _url = "https://testagendamiento.medilink.com.ec:443/";
         int _idresponVP = 0, codsucursal=0;
         int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0;
-        string sucursal = "", espe = "";
-        
-        
+        string ddlTxtSucursal = "", ddlTxtCiudad="", ddlTxtEspeci="";
+     
+
         Object[] objparam = new Object[1];
         DataSet dt = new DataSet();
 
@@ -49,6 +49,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idbene = Request["CodigoBene"];
                 idpro = Request["CodigoPro"];
                 usuario = Session["usuLogin"].ToString();
+                ViewState["IdMedilink"] = "";
 
                 //GET PARAMETROS USUARIO Y PASSWORD MEDILINK
                 objparam[0] = 61;
@@ -141,7 +142,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[5] = usuario;
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         _idtitumed = dt.Tables[0].Rows[0][0].ToString();
-                        ViewState["IdTituMed"] = _idtitumed;
+                        ViewState["IdMedilink"] = _idtitumed;
                     }
                     else 
                     {                                
@@ -230,7 +231,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[5] = usuario;
                         dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
                         _idbenemed = dt.Tables[0].Rows[0][0].ToString();
-                        ViewState["IdBeneMed"] = _idbenemed;
+                        ViewState["IdMedilink"] = _idbenemed;
                     }
                     else
                     {
@@ -601,9 +602,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Visible = false;
             btnCrearCita.Visible = false;
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
-            string ciudad = ddlciudad.SelectedItem.ToString();
+            ddlTxtCiudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
-            ViewState["Ciudad"] = ciudad;
+            ViewState["Ciudad"] = ddlTxtCiudad;
 
             DataTable _datossucursal = (DataTable)ViewState["DatosSucursal"];
 
@@ -634,9 +635,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Visible = false;
             btnCrearCita.Visible = false;
             codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
-            sucursal = ddlSucursal.SelectedItem.ToString();
+            ddlTxtSucursal = ddlSucursal.SelectedItem.ToString();
             ViewState["codSucursal"] = codSucursal;
-            ViewState["Sucursal"] = sucursal;
+            ViewState["Sucursal"] = ddlTxtSucursal;
             FunGetEspe(codSucursal);
         }
 
@@ -648,11 +649,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             btnCrearCita.Visible = false;
             Calendar.SelectedDate = DateTime.Now.AddDays(-8);
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
-            espe = ddlEspecialidad.SelectedItem.ToString();
+            ddlTxtEspeci = ddlEspecialidad.SelectedItem.ToString();
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             codsucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
             ViewState["codEspecialidad"] = codEspe;
-            ViewState["Especialidad"] = espe;
+            ViewState["Especialidad"] = ddlTxtEspeci;
             Calendar.Visible = true;
             lblHorarios.Visible = true;
             lstBoxMedicos.Visible = true;
