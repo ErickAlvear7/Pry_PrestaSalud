@@ -13,7 +13,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
     public partial class FrmAgendarMediLink : System.Web.UI.Page
     {
         #region Variables
-        string accessToken = "", fechaActual="";
+        string accessToken = "", fechaActual="", fechaDispo="";
         string idtitular = "", idbene="", idpro="", usuario="";
         string _idtitumed = "", _idbenemed;
         string userApikey = "", passApikey = "";
@@ -21,9 +21,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                apellido1 = "", apellido2 = "", genero = "", celular = "", telcasa = "", email = "", direccion = "", telefonos = "";
         string respVerifPacient = "", respRegisPacient="",respGetCiudad="",respGetSucur="",respGetEspe="",respGetMedico="",respGetDispo="",
                respCrearPacient = "",respAdmision="",respCrearCita="";
-        string fechaCita = "";
         string _urlpro = "https://agendamiento.medilink.com.ec:8443/", _url = "https://testagendamiento.medilink.com.ec:443/";
-        int _idresponVP = 0;
+        int _idresponVP = 0, codsucursal=0;
         int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0;
         string sucursal = "", espe = "";
         
@@ -87,22 +86,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (idtitular != "" && idbene == "0")
                 {
-                    //GET DATOS TITULAR
-                    //Array.Resize(ref objparam, 3);
-                    //objparam[0] = int.Parse(idtitular);
-                    //objparam[1] = "";
-                    //objparam[2] = 185;
-                    //dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-                    //foreach (DataRow dr in dt.Tables[0].Rows)
-                    //{
-                    //    tipoidentificacion = dr[0].ToString();
-                    //    documento = dr[1].ToString();
-                    //    nombresCompletos = dr[2].ToString();
-                    //    fechanacimiento = dr[3].ToString(); //yyyy-MM-dd
-                    //    telcasa = dr[4].ToString();
-                    //    telcelular = dr[5].ToString();
-                    //}
+                
                     Array.Resize(ref objparam, 3);
                     objparam[0] = 1;
                     objparam[1] = int.Parse(idtitular);
@@ -137,7 +121,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["FechaNaci"] = fechanacimiento;
                     ViewState["Telefonos"] = telefonos;
 
-                    //verificar si paciente esta registrado en MEDILINK
                     respVerifPacient = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
 
                     if (respVerifPacient != "")
@@ -147,7 +130,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         pnlOpciones.Visible = true;
                         lblRegistro.Text = "Activo";
 
-                       //INSERT ID O GET ID MEDILINK
                         Array.Resize(ref objparam, 6);
                         objparam[0] = 0;
                         objparam[1] = _idresponVP;
@@ -162,12 +144,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     else 
                     {
                                    
-                        //REGISTRAR PACIENTE
                         respRegisPacient = FunRegistrarPaciente();
                         
                         if (respRegisPacient != "")
                         {
-                            //GUARDAR ID BDD Expert_MEDILINK
                             _idtitumed = respRegisPacient;
                             
                             Array.Resize(ref objparam, 6);
@@ -195,8 +175,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }else if(idtitular != "" && idbene != "")//SI LA CEDUDA ES DEL BENEFICIARIO
                 {
-
-                    //DATOS BENEFICIARIO
                     Array.Resize(ref objparam, 3);
                     objparam[0] = 2;
                     objparam[1] = int.Parse(idtitular);
@@ -216,15 +194,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         fechanacimiento = dr[8].ToString();//yyyy-MM-dd
                         parentesco = dr[9].ToString();
                         direccion = dr[10].ToString();
-                        celular = dr[11].ToString();
-                        email = dr[12].ToString();   
+                        telcasa = dr[11].ToString();
+                        celular = dr[12].ToString();
+                        email = dr[13].ToString();   
                     }
 
-                    ViewState["FechaNaci"] = fechanacimiento;
-                    ViewState["Parentesco"] = parentesco;
+                    ViewState["Cedula"] = documento;
                     ViewState["Titular"] = "BENEFICIARIO";
                     ViewState["Tipo"] = "B";
+                    ViewState["Nombres"] = nombresCompletos;
+                    ViewState["FechaNaci"] = fechanacimiento;
+                    ViewState["Telefonos"] = telefonos;
 
+                    telefonos = telcasa + "/" + celular;
                     lblDocumento.Text = documento;
                     lblNombresCompletos.Text = nombresCompletos;
 
@@ -255,7 +237,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         if (respRegisPacient != "")
                         {
-                            //GUARDAR ID BDD Expert_MEDILINK
                             _idbenemed = respRegisPacient;
 
                             Array.Resize(ref objparam, 6);
@@ -324,6 +305,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     }
                 }
+                //s = new ListItem("--Seleccione Sucursal--", "0");
+                //ddlSucursal.Items.Add(s);
                 ViewState["DatosSucursal"] = dtsucursal;
             }
             else
@@ -420,10 +403,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
 
         //Obtener disponibilidad
-         private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechacita)
+         private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechaActual)
          {
-            string fechanew = DateTime.ParseExact(fechacita, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
-            respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechanew);
+            //fechaDispo = DateTime.ParseExact(fechaActual, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
+            respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, "20250310");
+
             if (respGetDispo != "") lstBoxMedicos.Visible = true;
 
             var Resultjson = JsonConvert.DeserializeObject<DisponibilidadObj>(respGetDispo);
@@ -544,7 +528,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             };
    
             var cita = new JavaScriptSerializer().Serialize(crearCita);
-            respCrearCita = new MediLinkApi().PostCrearCita(_urlpro, Session["AccessToken"].ToString(), cita);
+            respCrearCita = new MediLinkApi().PostCrearCita(_urlpro, accessToken, cita);
 
             if(respCrearCita != "")
             {
@@ -611,8 +595,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             ddlSucursal.Items.Clear();
             ddlEspecialidad.Items.Clear();
+            Calendar.Visible = false;
+            lblHorarios.Visible = false;
             lstBoxMedicos.Visible = false;
             LstBoxHorario.Visible = false;
+            btnCrearCita.Visible = false;
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
             string ciudad = ddlciudad.SelectedItem.ToString();
             ViewState["codCiudad"] = codCiudad;
@@ -641,8 +628,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlEspecialidad.Items.Clear();
+            Calendar.Visible = false;
+            lblHorarios.Visible = false;
             lstBoxMedicos.Visible = false;
             LstBoxHorario.Visible = false;
+            btnCrearCita.Visible = false;
             codSucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
             sucursal = ddlSucursal.SelectedItem.ToString();
             ViewState["codSucursal"] = codSucursal;
@@ -655,12 +645,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstBoxMedicos.Items.Clear();
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
+            btnCrearCita.Visible = false;
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             espe = ddlEspecialidad.SelectedItem.ToString();
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
-            int codsucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
+            codsucursal = int.Parse(ddlSucursal.SelectedValue.ToString());
             ViewState["codEspecialidad"] = codEspe;
             ViewState["Especialidad"] = espe;
+            Calendar.Visible = true;
+            lblHorarios.Visible = true;
+            lstBoxMedicos.Visible = true;
             FunDisponibilidades(codCiudad, codEspe, codsucursal, fechaActual);
         }
 
@@ -696,9 +690,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
-            fechaCita = fechaActual;
+          
 
-            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), fechaCita);
+            FunAgendarCita(int.Parse(ViewState["idPaciente"].ToString()), int.Parse(ViewState["codCiudad"].ToString()), int.Parse(ViewState["codMedico"].ToString()), int.Parse(ViewState["codSucursal"].ToString()), int.Parse(ViewState["codEspecialidad"].ToString()), int.Parse(ViewState["codHoraMed"].ToString()), fechaActual);
 
         }
         #endregion

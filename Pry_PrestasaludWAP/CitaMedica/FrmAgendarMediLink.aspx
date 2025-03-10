@@ -91,16 +91,15 @@
         <div class="panel-body">
             <asp:UpdatePanel ID="updCombos" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="" Height="150px" ScrollBars="Vertical" Visible="False">
+                    <asp:Panel ID="pnlOpciones" runat="server" GroupingText="" Height="140px" ScrollBars="Vertical" Visible="False">
                         <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
                         <table style="width: 100%">
                             <tr>
-                                <td style="width: 5%"></td>
-                                <td style="width: 25%"></td>
-                                <td style="width: 5%"></td>
-                                <td style="width: 25%"></td>
+                                <td style="width: 15%"></td>
+                                <td style="width: 30%"></td>
                                 <td style="width: 10%"></td>
-                                <td style="width: 30%"></td>                            
+                                <td style="width: 15%"></td>
+                                <td style="width: 30%"></td>
                             </tr>
                             <tr>
                                 <td>
@@ -109,18 +108,59 @@
                                 <td>
                                      <asp:DropDownList ID="ddlciudad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlciudad_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
+                                <td></td>
                                 <td>
                                    <h5>Sucursal:</h5>
                                 </td>
                                 <td>
                                     <asp:DropDownList ID="ddlSucursal" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlSucursal_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
+                            </tr>
+                            <tr>
                                 <td>
                                    <h5>Especialidad:</h5> 
                                 </td>
                                 <td>
-                                     <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
+	                                 <asp:DropDownList ID="ddlEspecialidad" runat="server" AutoPostBack="true" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlespeci_SelectedIndexChanged"></asp:DropDownList>
                                 </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </asp:Panel>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="panel-body">
+            <asp:UpdatePanel ID="upcCalendario" runat="server">
+                <ContentTemplate>
+                    <asp:Panel ID="Panel3" runat="server" GroupingText="" Height="170px" ScrollBars="Vertical" >
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 15%"></td>
+                                <td style="width: 10%"></td>
+                                <td style="width: 30%"></td>
+                                <td style="width: 10%"></td>
+                                <td style="width: 15%"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <asp:Calendar ID="Calendar" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="139px" Width="91%" Visible="False">
+			                            <DayHeaderStyle BackColor="#CCCCCC" Font-Bold="True" Font-Size="7pt" />
+			                            <NextPrevStyle VerticalAlign="Bottom" />
+			                            <OtherMonthDayStyle ForeColor="#808080" />
+			                            <SelectedDayStyle BackColor="#666666" Font-Bold="True" ForeColor="White" />
+			                            <SelectorStyle BackColor="#CCCCCC" />
+			                            <TitleStyle BackColor="#999999" BorderColor="Black" Font-Bold="True" />
+			                            <TodayDayStyle BackColor="#CCCCCC" ForeColor="Black" />
+			                            <WeekendDayStyle BackColor="#FFFFCC" />
+		                            </asp:Calendar>
+                                </td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table>
                     </asp:Panel>
@@ -130,21 +170,26 @@
         <div class="panel-body">
             <asp:UpdatePanel ID="updMedico" runat="server">
                 <ContentTemplate>
-                    <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="130px" ScrollBars="Vertical" >
+                    <asp:Panel ID="pnlDatosMedicos" runat="server" GroupingText="" Height="170px" ScrollBars="Vertical" >
+                        <h3 id="lblHorarios" runat="server" class="label label-primary" style="font-size: 14px; display: block; text-align: left" visible="false">MEDICOS - HORARIOS DISPONIBLES</h3>
                         <table style="width: 100%">
                             <tr>
-                                <td style="width: 45%"></td>
+                                <td style="width: 15%"></td>
+                                <td style="width: 30%"></td>
                                 <td style="width: 10%"></td>
-                                <td style="width: 45%"></td>
+                                <td style="width: 15%"></td>
+                                <td style="width: 30%"></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <asp:ListBox ID="lstBoxMedicos" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxMedicos_SelectedIndexChanged" Visible="False"></asp:ListBox>
+                                   <asp:ListBox ID="lstBoxMedicos" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxMedicos_SelectedIndexChanged" Visible="False"></asp:ListBox>
                                 </td>
                                 <td></td>
+                                <td></td>
                                 <td>
-                                    <asp:ListBox ID="LstBoxHorario" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxHorasMedicos_SelectedIndexChanged" Visible="False"></asp:ListBox>
+                                   <asp:ListBox ID="LstBoxHorario" runat="server" AutoPostBack="true" Height="106px" Width="374px" OnSelectedIndexChanged="lstBoxHorasMedicos_SelectedIndexChanged" Visible="False"></asp:ListBox>
                                 </td>
+                                 <td></td>
                             </tr>
                         </table>
                     </asp:Panel>
