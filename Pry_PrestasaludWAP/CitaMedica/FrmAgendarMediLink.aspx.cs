@@ -646,6 +646,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
             btnCrearCita.Visible = false;
+            Calendar.SelectedDate = DateTime.Now.AddDays(-8);
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             espe = ddlEspecialidad.SelectedItem.ToString();
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
