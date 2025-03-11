@@ -11,7 +11,7 @@ namespace Pry_PrestasaludWAP.Api
     {
         public string PostAccesLogin(string url,string dataLogin)
         {
-            string token = "";
+            string token = " ";
             try
             {
                 HttpClient _login = new HttpClient();
@@ -28,6 +28,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resLogin.StatusCode.ToString());
+                   
                 }
             }
             catch (Exception ex)
@@ -40,7 +41,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetVerificarPaciente(string url,string token,string documento,string tipo)
         {
-            string responsePaciente = "";
+            string responsePaciente = " ";
             try
             {
                 HttpClient _paciente = new HttpClient();
@@ -60,7 +61,7 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-                    responsePaciente = "";
+                    responsePaciente = " ";
                 }              
             }
             catch (Exception ex)
@@ -74,7 +75,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetCiudad(string url, string token)
         {
-            string responseContent = "";
+            string responseContent = " ";
             try
             {             
                 HttpClient _ciudad = new HttpClient();
@@ -93,7 +94,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseContent = resCiudad.StatusCode.ToString();
-                    return "";
+                    return " ";
                 }
             }
             catch (Exception ex)
@@ -107,7 +108,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetSucursal(string url,string token, int cuidad)
         {
-            string responseSucursal = "";
+            string responseSucursal = " ";
             try
             {
                 HttpClient _sucursal = new HttpClient();
@@ -124,7 +125,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseSucursal = resSucursal.StatusCode.ToString();
-                    return "";
+                    return " ";
                 }
             }
             catch (Exception ex)
@@ -138,7 +139,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetEspecialidad(string url,string token, int sucursal)
         {
-            string responseEspe = "";
+            string responseEspe = " ";
 
             try
             {
@@ -156,7 +157,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseEspe = resEspe.StatusCode.ToString();
-                    return "";
+                    return " ";
                 }
 
             }
@@ -172,7 +173,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetMedicos(string url,string token,int codEspeci, int codSucursal)
         {
-            string responseMed = "";
+            string responseMed = " ";
             try
             {
                 HttpClient _medico = new HttpClient();
@@ -189,7 +190,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     responseMed = resMedico.StatusCode.ToString();
-                    return "";
+                    return " ";
                 }
 
             }
@@ -204,7 +205,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string PostAdmision(string url,string dataAdmision,string token)
         {
-            string responseAdmi = "";
+            string responseAdmi = " ";
             try
             {
                 HttpClient _admision = new HttpClient();             
@@ -222,8 +223,8 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-                    //responseAdmi = _resAdmision.StatusCode.ToString();
-                    responseAdmi = "";
+                    responseAdmi = _resAdmision.StatusCode.ToString();
+                    responseAdmi = " ";
                 }  
 
             }
@@ -238,8 +239,8 @@ namespace Pry_PrestasaludWAP.Api
         }
 
         public string PostCrearPaciente(string url, string data,string token)
-        {
-            string responsePaciente = "";
+        { 
+            string responsePaciente = " ";
             try
             {
 
@@ -272,7 +273,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetDisponibilidad(string url,string token,int codCiudad,int codEspe,int codSucur, string fechadispon)
         {
-            string responDispo = "";
+            string responDispo = " ";
             try
             {
                 HttpClient _dispo = new HttpClient();
@@ -313,7 +314,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string PostCrearCita(string url,string token,string cita)
         {
-            string responseCita = "";
+            string responseCita = " ";
 
             try
             {
@@ -335,7 +336,7 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resCita.StatusCode.ToString());
-                    return "";
+                    return " ";
                 }
             }
             catch (Exception ex)

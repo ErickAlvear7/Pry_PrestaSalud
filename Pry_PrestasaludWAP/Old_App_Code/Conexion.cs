@@ -719,7 +719,7 @@ public class Conexion
     {
         try
         {
-            using (SqlCommand cmd = new SqlCommand("sp_AgendaMedicaLink"))
+            using (SqlCommand cmd = new SqlCommand("sp_AgendaMedicaMedilink"))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Connection = Sqlcn;
