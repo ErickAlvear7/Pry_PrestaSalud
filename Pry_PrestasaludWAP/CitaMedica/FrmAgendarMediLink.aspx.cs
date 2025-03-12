@@ -51,6 +51,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["IdMedilink"] = " ";
                 ViewState["FechaCalendar"] = " ";
                 ViewState["FechaCita"] = " ";
+                ViewState["CodBeneficiario"] = idbene;
+                ViewState["CodTitular"] = idtitular;
 
                 objparam[0] = 61;
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
@@ -603,7 +605,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 foreach (DataRow dr in dt.Tables[0].Rows)
                 {
                     codPrestador = dr[0].ToString();
-                    codMedicopres = dr[0].ToString();
+                    codMedicopres = dr[1].ToString();
                 }
 
                 Array.Resize(ref objparam, 13);
@@ -612,7 +614,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = int.Parse(codMedicopres);//CODIGO MEDICO
                 objparam[3] = ViewState["Tipo"].ToString();
                 objparam[4] = int.Parse(ViewState["CodTitular"].ToString());
-                objparam[5] = int.Parse(ViewState["CodBeneficiario"].ToString());
+                objparam[5] = int.Parse(ViewState["CodBeneficiario"].ToString());//problema
                 objparam[6] = ViewState["Parentesco"].ToString(); 
                 objparam[7] = ViewState["FechaCita"].ToString();
                 objparam[8] = ViewState["DiaCalendar"].ToString();
@@ -630,9 +632,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[2] = 0;
                 objparam[3] = 0;
                 objparam[4] = 0;
-                objparam[5] = ViewState["FechaCita"].ToString();
-                objparam[6] = Session["MachineName"].ToString();
-                objparam[7] = " ";
+                objparam[5] =" ";
+                objparam[6] = ViewState["FechaCita"].ToString();
+                objparam[7] = Session["MachineName"].ToString();
                 objparam[8] = " ";
                 objparam[9] = " ";
                 objparam[10] = 0;
@@ -642,35 +644,39 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[13] = 0;
                 dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
 
-                txtTitCita.Visible = true;
-                txtCodCita.Visible = true;
-                lblCodigo.Text = codCitaPresta;
-                txtCiudad.Visible = true;
-                lblCiudad.Text = ViewState["Ciudad"].ToString();
-                txtFecha.Visible = true;
-                lblFecha.Text = ViewState["FechaCita"].ToString();///fecha cita
-                txtHora.Visible = true;
-                lblHora.Text = ViewState["HoraMed"].ToString();
-                txtPrestador.Visible = true;
-                lblPrestador.Text = ViewState["Sucursal"].ToString();
-                txtMedico.Visible = true;
-                lblMedico.Text = ViewState["Medico"].ToString();
-                txtEspe.Visible = true;
-                lblEspe.Text = ViewState["Especialidad"].ToString();
-                txtObservacion.Visible = true;
-                lblObser.Text = "";
-                txtCedula.Visible = true;
-                lblCedula.Text = ViewState["Cedula"].ToString();
-                txtTipo.Visible = true;
-                lblTipo.Text = ViewState["Titular"].ToString();
-                txtPaciente.Visible = true;
-                lblPaciente.Text = ViewState["Nombres"].ToString();
-                txtFechaNaci.Visible = true;
-                lblFechaNaci.Text = ViewState["FechaNaci"].ToString();
-                txtDireccion.Visible = true;
-                lblDireccion.Text = direcsucursal;
-                txtTelefono.Visible = true;
-                lblTelefono.Text = ViewState["Telefonos"].ToString();
+                if(dt.Tables[0].Rows[0][0].ToString() == "OK")
+                {
+                    txtTitCita.Visible = true;
+                    txtCodCita.Visible = true;
+                    lblCodigo.Text = codCitaPresta;
+                    txtCiudad.Visible = true;
+                    lblCiudad.Text = ViewState["Ciudad"].ToString();
+                    txtFecha.Visible = true;
+                    lblFecha.Text = ViewState["FechaCita"].ToString();///fecha cita
+                    txtHora.Visible = true;
+                    lblHora.Text = ViewState["HoraMed"].ToString();
+                    txtPrestador.Visible = true;
+                    lblPrestador.Text = ViewState["Sucursal"].ToString();
+                    txtMedico.Visible = true;
+                    lblMedico.Text = ViewState["Medico"].ToString();
+                    txtEspe.Visible = true;
+                    lblEspe.Text = ViewState["Especialidad"].ToString();
+                    txtObservacion.Visible = true;
+                    lblObser.Text = "";
+                    txtCedula.Visible = true;
+                    lblCedula.Text = ViewState["Cedula"].ToString();
+                    txtTipo.Visible = true;
+                    lblTipo.Text = ViewState["Titular"].ToString();
+                    txtPaciente.Visible = true;
+                    lblPaciente.Text = ViewState["Nombres"].ToString();
+                    txtFechaNaci.Visible = true;
+                    lblFechaNaci.Text = ViewState["FechaNaci"].ToString();
+                    txtDireccion.Visible = true;
+                    lblDireccion.Text = direcsucursal;
+                    txtTelefono.Visible = true;
+                    lblTelefono.Text = ViewState["Telefonos"].ToString();
+                }
+
             }
             else
             {
