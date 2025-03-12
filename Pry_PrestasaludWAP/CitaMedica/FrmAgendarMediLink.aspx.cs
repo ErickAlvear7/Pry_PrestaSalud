@@ -637,9 +637,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[7] = Session["MachineName"].ToString();
                 objparam[8] = " ";
                 objparam[9] = " ";
-                objparam[10] = 0;
-                objparam[10] = codCitaMedilink;
-                objparam[11] = codCitaPresta;
+                objparam[10] = codCitaPresta;
+                objparam[11] = codCitaMedilink;
                 objparam[12] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[13] = 0;
                 dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
