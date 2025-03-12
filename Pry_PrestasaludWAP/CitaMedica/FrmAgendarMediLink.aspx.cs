@@ -15,7 +15,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         #region Variables
         string accessToken = " ", fechaCalendar=" ", fechaCita=" ";
         string idtitular = " ", idbene="", idpro=" ", usuario=" ";
-        string _idtitumed = " ", _idbenemed=" ", direcsucursal=" ",codPrestador=" ", codMedicopres=" ";
+        string _idtitumed = " ", _idbenemed=" ", direcsucursal=" ",codPrestador=" ", codMedicopres=" ", codEspepres="";
         string userApikey = " ", passApikey = " ";
         string documento = " ", fechanacimiento = " ", parentesco = " ", tipodocumento = " ", nombresCompletos = " ", nombre1 = " ",nombre2 = " ",
                apellido1 = " ", apellido2 = " ", genero = " ", celular = " ", telcasa = " ", email = " ", direccion = " ", telefonos = " ";
@@ -605,23 +605,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 foreach (DataRow dr in dt.Tables[0].Rows)
                 {
                     codPrestador = dr[0].ToString();
-                    codMedicopres = dr[1].ToString();
+                    codEspepres = dr[1].ToString();
+                    codMedicopres = dr[2].ToString();
                 }
 
-                Array.Resize(ref objparam, 13);
+                Array.Resize(ref objparam, 14);
                 objparam[0] = 0;
                 objparam[1] = int.Parse(codPrestador); //CODIGO PRESTADOR
-                objparam[2] = int.Parse(codMedicopres);//CODIGO MEDICO
-                objparam[3] = ViewState["Tipo"].ToString();
-                objparam[4] = int.Parse(ViewState["CodTitular"].ToString());
-                objparam[5] = int.Parse(ViewState["CodBeneficiario"].ToString());//problema
-                objparam[6] = ViewState["Parentesco"].ToString(); 
-                objparam[7] = ViewState["FechaCita"].ToString();
-                objparam[8] = ViewState["DiaCalendar"].ToString();
-                objparam[9] = ViewState["HoraMed"].ToString();
-                objparam[10] = int.Parse(Session["usuCodigo"].ToString());
-                objparam[11] = Session["MachineName"].ToString();
-                objparam[12] = "MEDILINK";//OBSERVACION
+                objparam[2] = int.Parse(codEspepres); //CODIGO ESPECIALIDAD
+                objparam[3] = int.Parse(codMedicopres);//CODIGO MEDICO
+                objparam[4] = ViewState["Tipo"].ToString();
+                objparam[5] = int.Parse(ViewState["CodTitular"].ToString());
+                objparam[6] = int.Parse(ViewState["CodBeneficiario"].ToString());//problema
+                objparam[7] = ViewState["Parentesco"].ToString(); 
+                objparam[8] = ViewState["FechaCita"].ToString();
+                objparam[9] = ViewState["DiaCalendar"].ToString();
+                objparam[10] = ViewState["HoraMed"].ToString();
+                objparam[11] = int.Parse(Session["usuCodigo"].ToString());
+                objparam[12] = Session["MachineName"].ToString();
+                objparam[13] = "MEDILINK";//OBSERVACION
                 DataSet ds = new Conexion(2, "").FunCodigoCitaMedilink(objparam);
                 codCitaPresta = ds.Tables[0].Rows[0][0].ToString();
 
