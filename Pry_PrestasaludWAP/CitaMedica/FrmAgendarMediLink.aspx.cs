@@ -621,7 +621,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[9] = ViewState["HoraMed"].ToString();
                 objparam[10] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[11] = Session["MachineName"].ToString();
-                objparam[12] = "";//OBSERVACION
+                objparam[12] = "MEDILINK";//OBSERVACION
                 DataSet ds = new Conexion(2, "").FunCodigoCitaMedilink(objparam);
                 codCitaPresta = ds.Tables[0].Rows[0][0].ToString();
 
