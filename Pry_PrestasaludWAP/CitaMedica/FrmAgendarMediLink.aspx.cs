@@ -743,7 +743,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
             ViewState["FechaCalendar"] = DateTime.Now.ToString("yyyyMMdd");
-
+            ViewState["DiaCalendar"] = Calendar.SelectedDate.ToString("dddd");
             lstBoxMedicos.Items.Clear();
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
