@@ -166,7 +166,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         if (respRegisPacient != " ")
                         {
                             _idtitumed = respRegisPacient;
-                            
+                            ViewState["IdMedilink"] = _idtitumed;
+
                             Array.Resize(ref objparam, 14);
                             objparam[0] = 0;
                             objparam[1] = int.Parse(_idtitumed); 
@@ -272,6 +273,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         if (respRegisPacient != " ")
                         {
                             _idbenemed = respRegisPacient;
+                            ViewState["IdMedilink"] = _idbenemed;
 
                             Array.Resize(ref objparam, 14);
                             objparam[0] = 1;
