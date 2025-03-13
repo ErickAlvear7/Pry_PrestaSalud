@@ -453,7 +453,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Obtener disponibilidad
          private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechaActual)
          {
-            //fechaDispo = DateTime.ParseExact(fechaActual, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyyMMdd");
             respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechaActual);
 
             if (respGetDispo != "") lstBoxMedicos.Visible = true;
@@ -690,8 +689,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlciudad_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Calendar.SelectedDate = Convert.ToDateTime(DateTime.Now.ToString());
             ddlSucursal.Items.Clear();
             ddlEspecialidad.Items.Clear();
+            ListItem espe;
+            espe = new ListItem("--Seleccione Especialidad--", "0");
+            ddlEspecialidad.Items.Add(espe);
             Calendar.Visible = false;
             lblHorarios.Visible = false;
             lstBoxMedicos.Visible = false;
@@ -739,6 +742,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlespeci_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ViewState["FechaCalendar"] = DateTime.Now.ToString("yyyyMMdd");
+
             lstBoxMedicos.Items.Clear();
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
