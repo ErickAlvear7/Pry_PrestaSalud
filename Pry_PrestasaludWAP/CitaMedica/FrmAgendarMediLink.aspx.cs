@@ -47,10 +47,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 idtitular = Request["CodigoTitular"];
                 idbene = Request["CodigoBene"];
                 idpro = Request["CodigoPro"];
-                usuario = Session["usuLogin"].ToString();
-                ViewState["IdMedilink"] = " ";
-                ViewState["FechaCalendar"] = " ";
-                ViewState["FechaCita"] = " ";
+                usuario = Session["usuLogin"].ToString();            
                 ViewState["CodBeneficiario"] = idbene;
                 ViewState["CodTitular"] = idtitular;
 
@@ -302,7 +299,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
                         else
                         {
-                            new Funciones().funShowJSMessage("Fallo Registro Beneficiario", this);
+                            new Funciones().funShowJSMessage("Fallo Registro Beneficiario revise Cedula", this);
                         }
                     }          
                 }
