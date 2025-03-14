@@ -6,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.Web.Script.Serialization;
 using System.Web.UI.WebControls;
+using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 
 namespace Pry_PrestasaludWAP.CitaMedica
@@ -15,7 +16,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         #region Variables
         string accessToken = " ", fechaCalendar=" ", fechaCita=" ";
         string idtitular = " ", idbene="", idpro=" ", usuario=" ";
-        string _idtitumed = " ", _idbenemed=" ", direcsucursal=" ",codPrestador=" ", codMedicopres=" ", codEspepres="";
+        string _idtitumed = " ", _idbenemed=" ", direcsucursal=" ", codMedicopres="0", codEspepres="0";
         string userApikey = " ", passApikey = " ";
         string documento = " ", fechanacimiento = " ", parentesco = " ", tipodocumento = " ", nombresCompletos = " ", nombre1 = " ",nombre2 = " ",
                apellido1 = " ", apellido2 = " ", genero = " ", celular = " ", telcasa = " ", email = " ", direccion = " ", telefonos = " ";
@@ -23,7 +24,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                respCrearPacient = " ",respAdmision=" ",respCrearCita=" ";
         string _urlpro = "https://agendamiento.medilink.com.ec:8443/", _url = "https://testagendamiento.medilink.com.ec:443/";
         int _idresponVP = 0, codsucursal=0;
-        int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0;
+        int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0, codPrestador = 0;
         string ddlTxtSucursal = " ", ddlTxtCiudad= " ", ddlTxtEspeci=" ", lstCodHoraMed = " ", lstTxthoraMed = " ", diaCalendar=" ", codCitaPresta=" ", codCitaMedilink=" ";
      
         Object[] objparam = new Object[1];
@@ -91,7 +92,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 dtsucursal.Columns.Add("sucursalNombreComercial");
 
 
-                if (idtitular != " " && idbene == "0")
+                if (int.Parse(idtitular) > 0 && int.Parse(idbene) == 0)
                 {
                 
                     Array.Resize(ref objparam, 3);
@@ -133,7 +134,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     respVerifPacient = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
 
-                    if (respVerifPacient != " ")
+                    if (!respVerifPacient.IsEmpty())
                     {
                         _idresponVP = int.Parse(respVerifPacient.ToString());
                         FunGetCiudad();
@@ -198,7 +199,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
                     }
 
-                }else if(idtitular != " " && idbene != " ")//SI LA CEDUDA ES DEL BENEFICIARIO
+                }else if(int.Parse(idtitular) > 0 && int.Parse(idbene) > 0)//SI LA CEDUDA ES DEL BENEFICIARIO
                 {
                     Array.Resize(ref objparam, 3);
                     objparam[0] = 2;
@@ -240,7 +241,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     respVerifPacient = new MediLinkApi().GetVerificarPaciente(_urlpro, accessToken, documento, tipodocumento);
 
-                    if (respVerifPacient != " ")
+                    if (!respVerifPacient.IsEmpty())
                     {
                         _idresponVP = int.Parse(respVerifPacient.ToString());
                         FunGetCiudad();
@@ -577,7 +578,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var cita = new JavaScriptSerializer().Serialize(crearCita);
             respCrearCita = new MediLinkApi().PostCrearCita(_urlpro, Session["AccessToken"].ToString(), cita);
 
-            if (respCrearCita != "")
+            if (!respCrearCita.IsEmpty())
             {
                 dynamic datoscita = JObject.Parse(respCrearCita);
                 codCitaMedilink = datoscita.datos.codigoCita;
@@ -602,14 +603,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 foreach (DataRow dr in dt.Tables[0].Rows)
                 {
-                    codPrestador = dr[0].ToString();
+                    codPrestador = int.Parse(dr[0].ToString());
                     codEspepres = dr[1].ToString();
                     codMedicopres = dr[2].ToString();
                 }
 
+                if (codPrestador == 0) codPrestador = 3 ; 
+
                 Array.Resize(ref objparam, 14);
                 objparam[0] = 0;
-                objparam[1] = int.Parse(codPrestador); //CODIGO PRESTADOR
+                objparam[1] = codPrestador; //CODIGO PRESTADOR
                 objparam[2] = int.Parse(codEspepres); //CODIGO ESPECIALIDAD
                 objparam[3] = int.Parse(codMedicopres);//CODIGO MEDICO
                 objparam[4] = ViewState["Tipo"].ToString();
