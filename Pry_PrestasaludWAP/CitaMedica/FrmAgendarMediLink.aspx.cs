@@ -331,11 +331,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     string codigoCiudad = ciudades.codCiudad.ToString();
                     string ciudad = ciudades.nombreCiudad;
-                    
-                    i = new ListItem(ciudad, codigoCiudad);
 
-                    ddlciudad.Items.Add(i);
-               
+                    if(codigoCiudad == "1871" || codigoCiudad== "1180" || codigoCiudad == "1181")
+                    {
+                        i = new ListItem(ciudad, codigoCiudad);
+                        ddlciudad.Items.Add(i);
+                    }
+                              
                     foreach(var sucursales in ciudades.sucursales )
                     {
                         string _codsucursal = sucursales.codSucursal;
@@ -800,6 +802,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void Calendar_SelectionChanged(object sender, EventArgs e)
         {
+            btnCrearCita.Visible = false;
             lstBoxMedicos.Items.Clear();
             LstBoxHorario.Items.Clear();
             DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
