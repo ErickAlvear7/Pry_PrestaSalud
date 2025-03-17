@@ -350,6 +350,33 @@
                  </ContentTemplate>
              </asp:UpdatePanel>
          </div>
+         <div class="panel-body">
+              <asp:UpdatePanel ID="UpdatePanel1" runat="server" Visible="true">
+                   <ContentTemplate>
+                        <asp:Panel ID="Panel4" runat="server" GroupingText="" Height="280px" ScrollBars="Vertical">
+                             <table style="width: 100%">
+                                 <tr>
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 35%"></td>
+                                    <td style="width: 5%"></td>
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 40%"></td>
+                                </tr>
+                                 <tr>
+                                    <td style="text-align: left; width: 45%">
+                                        <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button"  TabIndex="45" OnClick="btnSalir_Click" Visible="False" />
+                                    </td>
+                                 </tr>
+
+                             </table>
+
+                        </asp:Panel>
+
+                   </ContentTemplate>
+
+              </asp:UpdatePanel>
+
+         </div>
     </form>
 </body>
 </html>

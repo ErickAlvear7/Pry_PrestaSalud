@@ -5,6 +5,7 @@ using System;
 using System.Data;
 using System.Globalization;
 using System.Web.Script.Serialization;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
@@ -22,6 +23,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                apellido1 = "", apellido2 = "", genero = "", celular = "", telcasa = "", email = "", direccion = "", telefonos = "";
         string respVerifPacient = "", respRegisPacient="",respGetCiudad="",respGetSucur="",respGetEspe="",respGetMedico="",respGetDispo="",
                respCrearPacient = "",respAdmision="",respCrearCita="";
+
+      
+
         string _urlpro = "https://agendamiento.medilink.com.ec:8443/", _url = "https://testagendamiento.medilink.com.ec:443/";
         int _idresponVP = 0, codsucursal=0;
         int codCiudad = 0, codEspe = 0, codSucursal = 0, codMedico = 0, codPrestador = 0, codEspepres = 0, codMedicopres=0;
@@ -51,6 +55,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 usuario = Session["usuLogin"].ToString();            
                 ViewState["CodBeneficiario"] = idbene;
                 ViewState["CodTitular"] = idtitular;
+                ViewState["CodProducto"] = idpro;
 
                 objparam[0] = 61;
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
@@ -684,6 +689,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblDireccion.Text = direcsucursal;
                     txtTelefono.Visible = true;
                     lblTelefono.Text = ViewState["Telefonos"].ToString();
+                    btnSalir.Visible = true;
                 }
 
             }
@@ -692,6 +698,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("No se Genero Cita", this);
             }
         }
+
+       
         #endregion
 
         #region Eventos
@@ -831,6 +839,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnAgendar_Click(object sender, EventArgs e)
         {
             FunAgendarCita(int.Parse(ViewState["IdMedilink"].ToString()), int.Parse(ViewState["CodCiudad"].ToString()), int.Parse(ViewState["CodMedico"].ToString()), int.Parse(ViewState["CodSucursal"].ToString()), int.Parse(ViewState["CodEspecialidad"].ToString()), int.Parse(ViewState["CodHoraMed"].ToString()));
+        }
+
+        protected void btnSalir_Click(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "pop", "javascript:window.opener.location='FrmAgendarCitaMedica?CodigoTitular=" + ViewState["CodTitular"].ToString() + "&CodigoProducto=" + ViewState["CodProducto"].ToString() + "';window.close();", true);
+            ScriptManager.RegisterStartupScript(this, GetType(), "pop", "javascript:window.close();", true);
+
         }
         #endregion
     }
