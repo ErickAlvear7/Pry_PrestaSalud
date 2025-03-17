@@ -689,7 +689,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblDireccion.Text = direcsucursal;
                     txtTelefono.Visible = true;
                     lblTelefono.Text = ViewState["Telefonos"].ToString();
-                    btnSalir.Visible = true;
+                    btnSalirMed.Visible = true;
                 }
 
             }
@@ -843,7 +843,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void btnSalir_Click(object sender, EventArgs e)
         {
-            ScriptManager.RegisterStartupScript(this, GetType(), "pop", "javascript:window.opener.location='FrmAgendarCitaMedica?CodigoTitular=" + ViewState["CodTitular"].ToString() + "&CodigoProducto=" + ViewState["CodProducto"].ToString() + "';window.close();", true);
+            
+            ScriptManager.RegisterStartupScript(this, GetType(), "pop", "javascript:window.opener.location='FrmAgendarCitaMedica?CodigoTitular=" + ViewState["CodTitular"].ToString() + "&CodigoProducto=" + ViewState["CodProducto"].ToString() + "&Regresar=0" + "';window.close();", true);
             ScriptManager.RegisterStartupScript(this, GetType(), "pop", "javascript:window.close();", true);
 
         }

@@ -364,7 +364,7 @@
                                 </tr>
                                  <tr>
                                     <td style="text-align: left; width: 45%">
-                                        <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button"  TabIndex="45" OnClick="btnSalir_Click" Visible="False" />
+                                        <asp:Button ID="btnSalirMed" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button"  TabIndex="45" OnClick="btnSalir_Click" Visible="False" />
                                     </td>
                                  </tr>
 
