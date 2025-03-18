@@ -1836,24 +1836,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
 
                     //CONSULTAR SI TITULAR YA TIENE GENERADOS LOS ID
-                    Array.Resize(ref objparam, 3);
-                    objparam[0] = int.Parse(ViewState["TituCodigo"].ToString());
-                    objparam[1] = "";
-                    objparam[2] = 183;
-                    link = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //Array.Resize(ref objparam, 3);
+                    //objparam[0] = int.Parse(ViewState["TituCodigo"].ToString());
+                    //objparam[1] = "";
+                    //objparam[2] = 183;
+                    //link = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                    if (link != null && link.Tables[0].Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in link.Tables[0].Rows)
-                        {
-                            _idpatient = dr[0].ToString();
-                            _idcont = dr[1].ToString();
-                            _idespe = dr[2].ToString();
-                            _idserv = dr[3].ToString();
-                        }
-                    }
-                    else
-                    {
+                    //if (link != null && link.Tables[0].Rows.Count > 0)
+                    //{
+                    //    foreach (DataRow dr in link.Tables[0].Rows)
+                    //    {
+                    //        _idpatient = dr[0].ToString();
+                    //        _idcont = dr[1].ToString();
+                    //        _idespe = dr[2].ToString();
+                    //        _idserv = dr[3].ToString();
+                    //    }
+                    //}
+                    
                         //GET ID CONTRACT
                         _idcont = new MethodApi().GetIdContract("https://api.eh.ehealthcenter.io/", _token);
                         //GET ID SERVICIOS
@@ -1875,7 +1874,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 nombre = dr[0].ToString();
                                 apellido = dr[1].ToString();
                                 genero = dr[2].ToString();
-                                fechanac = dr[3].ToString();
+                                fechanac = dr[3].ToString();//dd/MM/yyyy
                                 celular = dr[4].ToString();
                                 email = dr[5].ToString();
                             }
@@ -1905,15 +1904,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             genero = "m";
                         }
 
-                        DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
+                        //DateTime FechaNaci = DateTime.ParseExact(fechanac, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        //newFechaNaci = FechaNaci.ToString("yyyy-MM-dd");
 
                         var paciente = new Patient
                         {
                             name = nombre,
                             surnames = apellido,
                             email = email,
-                            birthdate = newFechaNaci,
+                            birthdate = fechanac,
                             gender = genero,
                             phone = celular,
                             contractId = _idcont
@@ -1942,7 +1941,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _idespe = dr[2].ToString();
                             _idserv = dr[3].ToString();
                         }
-                    }
+                    
 
                     //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
                     
@@ -1982,6 +1981,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             {
                                 if(_resultado.Minutes == 0)
                                 {
+                                    _encontro = 1;
+                                    break;
                                 }
 
                                 if(_resultado.Minutes ==  1 || _resultado.Minutes == 2 || _resultado.Minutes == 3 || _resultado.Minutes == 4 || _resultado.Minutes == 5)
