@@ -348,7 +348,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         string _codsucursal = sucursales.codSucursal;
                         string _nomsucursal = sucursales.sucursalNombreComercial;
 
-                        if(_codsucursal =="28" || _codsucursal == "1" || _codsucursal == "3" || _codsucursal == "5" || _codsucursal == "7")
+                        if(_codsucursal =="28" || _codsucursal == "1" || _codsucursal == "3" || _codsucursal == "5")
                         {
                             DataRow rowSucursal = dtsucursal.NewRow();
                             rowSucursal["codCiudad"] = codigoCiudad;
