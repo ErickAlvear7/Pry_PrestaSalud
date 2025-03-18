@@ -603,23 +603,63 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[8] = "";
                 objparam[9] = "";
                 objparam[10] = int.Parse(ViewState["CodSucursal"].ToString());
-                objparam[11] = int.Parse(ViewState["CodEspecialidad"].ToString());
-                objparam[12] = int.Parse(ViewState["CodMedico"].ToString());
+                objparam[11] = 0;
+                objparam[12] = 0;
                 objparam[13] = 0;
                 dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
 
                 if(dt.Tables[0].Rows.Count > 0)
                 {
-                    foreach (DataRow dr in dt.Tables[0].Rows)
-                    {
-                        codPrestador = int.Parse(dr[0].ToString());
-                        codEspepres = int.Parse(dr[1].ToString());
-                        codMedicopres = int.Parse(dr[2].ToString());
-                    }
+                    codPrestador = int.Parse(dt.Tables[0].Rows[0][0].ToString());
                 }
 
-                if (codPrestador == 0) codPrestador= int.Parse(ViewState["CodSucursal"].ToString());
-                if (codEspepres == 0) codEspepres= int.Parse(ViewState["CodEspecialidad"].ToString());
+                Array.Resize(ref objparam, 14);
+                objparam[0] = 4;
+                objparam[1] = 0;
+                objparam[2] = 0;
+                objparam[3] = 0;
+                objparam[4] = 0;
+                objparam[5] = "";
+                objparam[6] = "";
+                objparam[7] = "";
+                objparam[8] = "";
+                objparam[9] = "";
+                objparam[10] = int.Parse(ViewState["CodEspecialidad"].ToString());
+                objparam[11] = 0;
+                objparam[12] = 0;
+                objparam[13] = 0;
+                dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+
+                if (dt.Tables[0].Rows.Count > 0)
+                {
+                    codEspepres = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+                }
+
+                Array.Resize(ref objparam, 14);
+                objparam[0] = 5;
+                objparam[1] = 0;
+                objparam[2] = 0;
+                objparam[3] = 0;
+                objparam[4] = 0;
+                objparam[5] = "";
+                objparam[6] = "";
+                objparam[7] = "";
+                objparam[8] = "";
+                objparam[9] = "";
+                objparam[10] = int.Parse(ViewState["CodMedico"].ToString());
+                objparam[11] = 0;
+                objparam[12] = 0;
+                objparam[13] = 0;
+                dt = new Conexion(2, "").funConsultarSqls("sp_InsertMedilink", objparam);
+
+                if (dt.Tables[0].Rows.Count > 0)
+                {
+                    codMedicopres = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+                }
+
+
+                //if (codPrestador == 0) codPrestador= int.Parse(ViewState["CodSucursal"].ToString());
+                //if (codEspepres == 0) codEspepres= int.Parse(ViewState["CodEspecialidad"].ToString());
                 if (codMedicopres == 0) codMedicopres= int.Parse(ViewState["CodMedico"].ToString());
 
                 Array.Resize(ref objparam, 14);
