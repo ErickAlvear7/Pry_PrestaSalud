@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace Pry_PrestasaludWAP.Api
 {
@@ -15,14 +16,14 @@ namespace Pry_PrestasaludWAP.Api
             try
             {
                 HttpClient _client = new HttpClient();
-                {
-                    _client.BaseAddress = new Uri(url);
-                }
+                
+                _client.BaseAddress = new Uri(url);
+                _client.DefaultRequestHeaders.Add("Accept", "application/json");
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 HttpContent _content = new StringContent(_apikey, Encoding.UTF8, "application/json");
 
-                var _response = _client.PostAsync("login", _content).Result;
+                var _response = _client.PostAsync("apikey/login", _content).Result;
 
                 if (_response.IsSuccessStatusCode)
                 {
