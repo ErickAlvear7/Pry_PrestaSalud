@@ -1779,6 +1779,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string horaActuallink = now.ToString("HH:mm");
             string _fechadisponible = "", _horadisponible = "";
             string id_medico = "";
+            
 
             if (ViewState["TipoCliente"] == null)
             {
@@ -1890,10 +1891,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (email == "")
                     {
-                        //new Funciones().funShowJSMessage("Se requiere un email", this);
+                        new Funciones().funShowJSMessage("Se requiere un email", this);
                         //btnLink.Enabled = true;
-                        //return;
-                        email = "";
+                        return;
+                        
 
 
                     }
@@ -1927,15 +1928,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (!_idpatient.IsEmpty())
                     {
-                        Array.Resize(ref objlinkid, 8);
+                        Array.Resize(ref objlinkid, 7);
                         objlinkid[0] = 0;
                         objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                        objlinkid[2] = int.Parse(ViewState["BeneCodigo"].ToString());
-                        objlinkid[3] = int.Parse(Session["CodigoProducto"].ToString());
-                        objlinkid[4] = _idpatient;
-                        objlinkid[5] = _idcont;
-                        objlinkid[6] = _idespe;
-                        objlinkid[7] = _idserv;
+                        objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
+                        objlinkid[3] = _idpatient;
+                        objlinkid[4] = _idcont;
+                        objlinkid[5] = _idespe;
+                        objlinkid[6] = _idserv;
 
                         link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 
@@ -1949,7 +1949,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
 
                         //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
-
 
                         string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
@@ -2016,7 +2015,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                     }
                                 }
                             }
-
+                            lblHora.Visible = true;
                             lblHora.Text = _horadisponible;
                         }
 
