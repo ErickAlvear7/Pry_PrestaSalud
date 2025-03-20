@@ -50,14 +50,14 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetIdContract(string url, string auth)
         {
+            string idespe = "";
             try
             {
                 HttpClient _contract = new HttpClient();
-                {
-                    _contract.BaseAddress = new Uri(url);
-                    _contract.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-                }
-
+                
+                _contract.BaseAddress = new Uri(url);
+                _contract.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var resConId = _contract.GetAsync("contratos").Result;
@@ -66,8 +66,7 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     var responseId = resConId.Content.ReadAsStringAsync().Result;
                     dynamic idcont = JArray.Parse(responseId);
-                    string idespe = idcont[0].id;
-                    return idespe;
+                    idespe = idcont[0].id;
                 }
                 else
                 {
@@ -83,19 +82,19 @@ namespace Pry_PrestasaludWAP.Api
 
             }
 
-            return "";
+            return idespe;
         }
 
         public string GetServicios(string url, string idcont, string auth)
         {
+            string ideser = "";
             try
             {
                 HttpClient _servicio = new HttpClient();
-                {
-                    _servicio.BaseAddress = new Uri(url);
-                    _servicio.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-                }
-
+                
+                _servicio.BaseAddress = new Uri(url);
+                _servicio.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var resServId = _servicio.GetAsync("services/" + idcont).Result;
 
@@ -104,8 +103,7 @@ namespace Pry_PrestasaludWAP.Api
                     var serviceId = resServId.Content.ReadAsStringAsync().Result;
 
                     dynamic dataSer = JArray.Parse(serviceId);
-                    string ideser = dataSer[0].id;
-                    return ideser;
+                    ideser = dataSer[0].id;
                 }
                 else
                 {
@@ -120,19 +118,19 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetServicios", mensaje, 129);
             }
           
-            return "";
+            return ideser;
         }
 
         public string GetEspecialidad(string url, string auth, string idcont)
         {
+            string idespe = "";
             try
             {
                 HttpClient _espec = new HttpClient();
-                {
-                    _espec.BaseAddress = new Uri(url);
-                    _espec.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-                }
-
+                
+                _espec.BaseAddress = new Uri(url);
+                _espec.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+                
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var resEspeId = _espec.GetAsync("specialties/" + idcont).Result;
 
@@ -141,8 +139,7 @@ namespace Pry_PrestasaludWAP.Api
                     var espeId = resEspeId.Content.ReadAsStringAsync().Result;
 
                     dynamic dataEsp = JArray.Parse(espeId);
-                    string idespe = dataEsp[0].id;
-                    return idespe;
+                    idespe = dataEsp[0].id;
                 }
                 else
                 {
@@ -157,7 +154,7 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetEspecialidad", mensaje, 165);
             }
          
-            return "";
+            return idespe;
         }
 
         public string PostCreatePatient(string url, string dataPatient, string auth)
