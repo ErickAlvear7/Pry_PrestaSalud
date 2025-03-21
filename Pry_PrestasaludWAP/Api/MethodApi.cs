@@ -43,7 +43,6 @@ namespace Pry_PrestasaludWAP.Api
             }
 
             return "";
-
         }
 
         public string GetIdContract(string url, string auth)
@@ -71,13 +70,11 @@ namespace Pry_PrestasaludWAP.Api
                     MessageBox.Show(resConId.StatusCode.ToString());
                     return "";
                 }
-
             }
             catch (Exception ex)
             {
                 var mensaje = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetIdContract", mensaje, 88);
-
             }
 
             return idespe;
@@ -144,7 +141,6 @@ namespace Pry_PrestasaludWAP.Api
                     MessageBox.Show(resEspeId.StatusCode.ToString());
                     return "";
                 }
-
             }
             catch (Exception ex)
             {
@@ -179,9 +175,7 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     MessageBox.Show(_resPatient.StatusCode.ToString());
                     return "";
-
-                }
-               
+                }             
             }
             catch (Exception ex)
             {
@@ -217,10 +211,8 @@ namespace Pry_PrestasaludWAP.Api
                 }
                 else
                 {
-                    return "Horario";
-                    //new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", _resConsulta.StatusCode.ToString(), 222);
+                    return "Horario";                  
                 }             
-
             }
             catch (Exception ex)
             {
@@ -258,7 +250,6 @@ namespace Pry_PrestasaludWAP.Api
                 else
                 {
                     MessageBox.Show(resMedicos.StatusCode.ToString());
-                    //return "";
                 }
 
             }

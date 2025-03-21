@@ -1909,9 +1909,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _idserv = dr[3].ToString();
                         }
 
-
-                        //CONSULTAR API DISPONIBILIDAD DE LOS MEDICOS POR DIA
-
                         string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
@@ -1947,7 +1944,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 _datoshorarios.Rows.Add(rowHorarios);
                             }
                         }
-
 
                         _datoshorarios.DefaultView.Sort = "hour ASC";
                         _datoshorarios = _datoshorarios.DefaultView.ToTable();
