@@ -572,6 +572,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
+                        if (ddlPrestadora.SelectedValue.ToString() == "460")
+                        {
+                            ddlEspecialidad.SelectedValue = "2447";
+                            FunCascadaCombos(4);
+                        }
                         break;
                     case 4:
                         Array.Resize(ref objparam, 11);
@@ -590,6 +595,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
+                        if (ddlEspecialidad.SelectedValue.ToString() == "2447")
+                        {
+                            ddlMedico.SelectedValue = "2974";
+                            FunCascadaCombos(7);
+                        }
                         break;
                     case 5:
                         Array.Resize(ref objparam, 1);
