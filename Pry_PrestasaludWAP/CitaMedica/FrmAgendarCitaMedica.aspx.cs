@@ -2005,8 +2005,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         if (_datalink == "Horario")
                         {
-                            new Funciones().funShowJSMessage("No hay medicos disponibles, intente en 3 minutos..!!", this);
-                            return;
+                            //new Funciones().funShowJSMessage("No hay medicos disponibles, intente en 3 minutos..!!", this);
+                            //return;
+                            lblHora.Visible = true;
+                            txtHora.Visible = true;
+                            lblHora.Text = _horadisponible;
                         }
 
                         if (!_datalink.IsEmpty())
@@ -2028,6 +2031,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                             //txtUrl.Visible = true;
                             txtUrl.Text = url;
+                            txtHora.Visible = true;
                             lblHora.Visible = true;
                             lblHora.Text = _horadisponible;
 
