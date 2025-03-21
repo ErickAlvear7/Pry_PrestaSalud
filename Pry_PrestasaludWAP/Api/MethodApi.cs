@@ -4,8 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 namespace Pry_PrestasaludWAP.Api
 {
