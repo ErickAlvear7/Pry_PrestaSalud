@@ -1765,32 +1765,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             DataSet api = new DataSet();
             DataSet link = new DataSet();
-            string _idcont = "";
-            string _idserv = "";
-            string _idespe = "";
-            string _idpatient = "";
-            string dtApi = "";
-            string _datalink = "";
-            string nombre = "";
-            string apellido = "";
-            string genero = "";
-            string fechanac = "";
-            string newFechaNaci = "";
-            string celular = "";
-            string email = "";
-            string patientNombre = "";
-            string patientApelllido = "";
-            string patient = "";
-            string medicoNombre = "";
-            string medicoApellido = "";
-            string medico = "";
+            string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
+                    fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
+                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "";
+          
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
             string idproducto = Session["CodigoProducto"].ToString();
-            string fecha = "";
-            string motivo = "";
-            string url = "";
-            string grupo = "";
             motivo = ddlMotivoCita.SelectedItem.ToString();
             string fechaActuallink = DateTime.Now.ToString("yyyy-MM-dd");
             DateTime now = DateTime.Now;
@@ -1964,55 +1945,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 rowHorarios["hour"] = _horadisponible;
 
                                 _datoshorarios.Rows.Add(rowHorarios);
-
-                                /*DateTime fechalink = DateTime.ParseExact(fechaActuallink, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                DateTime fechadipon = DateTime.ParseExact(_fechadisponible, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
-                                TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
-                                TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
-
-                                TimeSpan _resultado = _horadispon.Subtract(_horalink);
-
-                                if (fechadipon == fechalink)
-                                {
-                                    if (_resultado.Minutes == 0)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                    if (_resultado.Minutes == 1)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                    else if (_resultado.Minutes == 2)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                    else if (_resultado.Minutes == 3)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                    else if (_resultado.Minutes == 4)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                    else if (_resultado.Minutes == 5)
-                                    {
-                                        _encontro = 1;
-                                        break;
-                                    }
-                                }
-                                */
                             }
-                            //lblHora.Visible = true;
-                            //lblHora.Text = _horadisponible;
                         }
 
-                        //_datoshorarios.Select("ORDER BY hour");
 
                         _datoshorarios.DefaultView.Sort = "hour ASC";
                         _datoshorarios = _datoshorarios.DefaultView.ToTable();
@@ -2040,39 +1975,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             {
                                 _encontro = 1;
                                 break;
-
-                                //if (_resultado.Minutes == 0)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                                //if (_resultado.Minutes == 1)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                                //else if (_resultado.Minutes == 2)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                                //else if (_resultado.Minutes == 3)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                                //else if (_resultado.Minutes == 4)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                                //else if (_resultado.Minutes == 5)
-                                //{
-                                //    _encontro = 1;
-                                //    break;
-                                //}
-                            }
-                          
+                            }                         
                         }
                     
                         //consultar nombre del grupo 
@@ -2115,9 +2018,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             patientNombre = urlLink.patient.nombre;
                             patientApelllido = urlLink.patient.apellidos;
                             patient = patientNombre + " " + patientApelllido;
-                            //medicoNombre = urlLink.doctor.nombre;
-                            //medicoApellido = urlLink.doctor.apellidos;
-                            //medico = medicoNombre + " " + medicoApellido;
+                        
                             string xfecha = fecha.Substring(0, 10);
                             string xhora = fecha.Substring(11, 5);
 
