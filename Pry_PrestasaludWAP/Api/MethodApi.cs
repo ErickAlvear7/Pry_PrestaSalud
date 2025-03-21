@@ -162,29 +162,28 @@ namespace Pry_PrestasaludWAP.Api
             try
             {
                 HttpClient _patient = new HttpClient();
+                
+                _patient.BaseAddress = new Uri(url);
+                _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                HttpContent _content = new StringContent(dataPatient, Encoding.UTF8, "application/json");
+                var _resPatient = _patient.PostAsync("patient", _content).Result;
+
+                if (_resPatient.IsSuccessStatusCode)
                 {
-                    _patient.BaseAddress = new Uri(url);
-                    _patient.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                    HttpContent _content = new StringContent(dataPatient, Encoding.UTF8, "application/json");
-                    var _resPatient = _patient.PostAsync("patient", _content).Result;
-
-                    if (_resPatient.IsSuccessStatusCode)
-                    {
-                        var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
-                        dynamic idpat = JObject.Parse(responseContent);
-                        return idpat.patient.id;
-                    }
-                    else
-                    {
-                        MessageBox.Show(_resPatient.StatusCode.ToString());
-                        return "";
-
-                    }
+                    var responseContent = _resPatient.Content.ReadAsStringAsync().Result;
+                    dynamic idpat = JObject.Parse(responseContent);
+                    return idpat.patient.id;
+                }
+                else
+                {
+                    MessageBox.Show(_resPatient.StatusCode.ToString());
+                    return "";
 
                 }
+               
             }
             catch (Exception ex)
             {
@@ -200,31 +199,29 @@ namespace Pry_PrestasaludWAP.Api
             try
             {
                 HttpClient _consulta = new HttpClient();
+                
+                _consulta.BaseAddress = new Uri(url);
+                _consulta.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var queryString = new StringBuilder();
+                queryString.Append("?notify=").Append(Uri.EscapeDataString("false"));
+                queryString.Append("&notifyDoctor=").Append(Uri.EscapeDataString("true"));
+
+                HttpContent _content = new StringContent(datacon, Encoding.UTF8, "application/json");
+                    var _resConsulta = _consulta.PostAsync("consulta", _content).Result;
+
+                if (_resConsulta.IsSuccessStatusCode)
                 {
-                    _consulta.BaseAddress = new Uri(url);
-                    _consulta.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
-
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                    var queryString = new StringBuilder();
-                    queryString.Append("?notify=").Append(Uri.EscapeDataString("false"));
-                    queryString.Append("&notifyDoctor=").Append(Uri.EscapeDataString("true"));
-
-                    HttpContent _content = new StringContent(datacon, Encoding.UTF8, "application/json");
-                        var _resConsulta = _consulta.PostAsync("consulta", _content).Result;
-
-                    if (_resConsulta.IsSuccessStatusCode)
-                    {
-                        var responseContent = _resConsulta.Content.ReadAsStringAsync().Result;
-                        return responseContent.ToString();
-                    }
-                    else
-                    {
-                        return "Horario";
-                        //new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", _resConsulta.StatusCode.ToString(), 222);
-                    }
-
+                    var responseContent = _resConsulta.Content.ReadAsStringAsync().Result;
+                    return responseContent.ToString();
                 }
+                else
+                {
+                    return "Horario";
+                    //new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", _resConsulta.StatusCode.ToString(), 222);
+                }             
 
             }
             catch (Exception ex)
@@ -265,7 +262,6 @@ namespace Pry_PrestasaludWAP.Api
                     MessageBox.Show(resMedicos.StatusCode.ToString());
                     //return "";
                 }
-
 
             }
             catch (Exception ex)
