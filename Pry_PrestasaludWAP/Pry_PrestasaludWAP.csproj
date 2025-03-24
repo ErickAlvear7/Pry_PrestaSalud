@@ -1670,6 +1670,7 @@
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Template\HtmlLinkTemplate.html" />
+    <Content Include="Template\HtmlTemplateMedilink.html" />
     <Content Include="Titulares\Frm_TitularAdminSet.aspx" />
     <Content Include="Usuarios\FrmChangePassword.aspx" />
     <Content Include="WFrm_Login.aspx" />

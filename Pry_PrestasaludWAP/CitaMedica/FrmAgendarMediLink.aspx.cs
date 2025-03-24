@@ -22,7 +22,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string documento = "", fechanacimiento = "", parentesco = "", tipodocumento = "", nombresCompletos = "", nombre1 = "",nombre2 = "",
                apellido1 = "", apellido2 = "", genero = "", celular = "", telcasa = "", email = "", direccion = "", telefonos = "";
         string respVerifPacient = "", respRegisPacient="",respGetCiudad="",respGetSucur="",respGetEspe="",respGetMedico="",respGetDispo="",
-               respCrearPacient = "",respAdmision="",respCrearCita="";
+               respCrearPacient = "",respAdmision="",respCrearCita="", nombreProducto="", medicamento="", fileTemplate="",nombreCliente="";
 
       
 
@@ -32,6 +32,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string ddlTxtSucursal = "", ddlTxtCiudad= "", ddlTxtEspeci="", lstCodHoraMed = "", lstTxthoraMed = "", diaCalendar="", codCitaPresta="", codCitaMedilink="";
      
         Object[] objparam = new Object[1];
+        Object[] objcitamedica = new Object[23];
         DataSet dt = new DataSet();
 
         DataTable datosMedico = new DataTable();
@@ -70,6 +71,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     username = userApikey,
                     password = passApikey
                 };
+
+
+                //consultar nombre del cliente y producto
+                Array.Resize(ref objparam, 3);
+                objparam[0] = int.Parse(idpro);
+                objparam[1] = "";
+                objparam[2] = 188;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                foreach (DataRow dr in dt.Tables[0].Rows)
+                {
+                    nombreProducto = dr[0].ToString();
+                    nombreCliente = dr[1].ToString();                
+                }
+
 
                 var data = new JavaScriptSerializer().Serialize(login);
                 accessToken = new MediLinkApi().PostAccesLogin(_urlpro, data);
@@ -730,6 +745,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     txtTelefono.Visible = true;
                     lblTelefono.Text = ViewState["Telefonos"].ToString();
                     btnSalirMed.Visible = true;
+
+
+                    //FunEnviarMailCitaMedilink(nombreCliente,nombreProducto,"SI");
                 }
 
             }
@@ -739,7 +757,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
-       
+        private void FunEnviarMailCitaMedilink(string cliente,string producto,string medicamento)
+        {
+            Array.Resize(ref objcitamedica, 10);
+            objcitamedica[0] = cliente;
+            objcitamedica[1] = producto;
+            objcitamedica[2] = medicamento;
+
+
+            fileTemplate = Server.MapPath("~/Template/HtmlTemplateMedilink.html");
+
+        }
+
+
         #endregion
 
         #region Eventos

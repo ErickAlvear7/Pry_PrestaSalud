@@ -1999,17 +1999,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
                         _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
-                        if (_datalink == "Horario")
-                        {
-                            //new Funciones().funShowJSMessage("No hay medicos disponibles, intente en 3 minutos..!!", this);
-                            //return;
-                            lblHora.Visible = true;
-                            txtHora.Visible = true;
-                            lblHora.Text = _horadisponible;
-                        }
-
                         if (!_datalink.IsEmpty())
                         {
+                            if (_datalink == "Horario")
+                            {
+                                //new Funciones().funShowJSMessage("No hay medicos disponibles, intente en 3 minutos..!!", this);
+                                //return;
+                                lblHora.Visible = true;
+                                txtHora.Visible = true;
+                                lblHora.Text = _horadisponible;
+                            }
+
                             dynamic urlLink = JObject.Parse(_datalink);
                             url = urlLink.url_llamada;
                             fecha = urlLink.fecha;
