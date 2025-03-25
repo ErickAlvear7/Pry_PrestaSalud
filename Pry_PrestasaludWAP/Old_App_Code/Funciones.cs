@@ -506,6 +506,24 @@ public class Funciones
         return mensaje;
     }
 
+    public string funEnviarMailMediLink(string subject, object[] objBody, string emailTemplate,
+            string host, int port, bool enableSSl, string usuario, string password,string mailsalterna)
+    {
+        string mensaje = "";
+        try
+        {
+            string body = ReplaceBodyMediLink(objBody, emailTemplate);
+            mensaje = SendHtmlEmailMediLink(subject, body, host, port, enableSSl, usuario, password,mailsalterna);
+
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.Message;
+            new Funciones().funCrearLogAuditoria(1, "Funciones.cs/funEnviarMailLink", ex.ToString(), 1);
+        }
+        return mensaje;
+    }
+
     private string ReplaceBody(object[] oBody,string eTemplate,string fechaCita,string fechaNaci)
     {
         string body = "";
@@ -559,8 +577,35 @@ public class Funciones
         body = body.Replace("{producto}", oBody[7].ToString());
         body = body.Replace("{Pie1}", oBody[8].ToString());
         body = body.Replace("{Pie2}", oBody[9].ToString());
-        //body = body.Replace("{Pie3}", oBody[7].ToString());
-        //body = body.Replace("{Pie4}", oBody[8].ToString());
+        return body;
+    }
+
+    private string ReplaceBodyMediLink(object[] oBody, string eTemplate)
+    {
+        string body = "";
+        using (StreamReader reader = new StreamReader(eTemplate))
+        {
+            body = reader.ReadToEnd();
+        }
+
+        body = body.Replace("{Cliente}", oBody[0].ToString());
+        body = body.Replace("{Producto}", oBody[1].ToString());
+        body = body.Replace("{Medicinas}", oBody[2].ToString());
+        body = body.Replace("{CodigoCita}", oBody[3].ToString());
+        body = body.Replace("{Ciudad}", oBody[4].ToString());
+        body = body.Replace("{FecCita}", oBody[5].ToString());
+        body = body.Replace("{Horacita}", oBody[6].ToString());
+        body = body.Replace("{Prestadora}", oBody[7].ToString());
+        body = body.Replace("{Direccion}", oBody[8].ToString());
+        body = body.Replace("{Medico}", oBody[9].ToString());
+        body = body.Replace("{Especialidad}", oBody[10].ToString());
+        body = body.Replace("{Cedula}", oBody[11].ToString());
+        body = body.Replace("{Tipo}", oBody[12].ToString());
+        body = body.Replace("{Paciente}", oBody[13].ToString());
+        body = body.Replace("{Telefonos}", oBody[14].ToString());
+        body = body.Replace("{TipoPago}", oBody[15].ToString());
+        body = body.Replace("{Pie1}", oBody[16].ToString());
+        body = body.Replace("{Pie2}", oBody[17].ToString());
         return body;
     }
 
@@ -717,6 +762,67 @@ public class Funciones
                 {
                     mailMessage.CC.Add(email);
                 }
+
+                if (!string.IsNullOrEmpty(mailsalterna))
+                {
+                    string[] docMails = mailsalterna.Split(',');
+                    foreach (string doMails in docMails)
+                    {
+                        //mailMessage.Bcc.Add(doMails); COPIA OCULTA
+                        mailMessage.CC.Add(doMails);
+                    }
+                }
+
+
+                //mailMessage.Attachments.Add(archivo);
+                System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+                NetworkCred.UserName = eusername;
+                NetworkCred.Password = epassword;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Credentials = NetworkCred;
+                smtp.Host = ehost;
+                smtp.Port = eport;
+                smtp.EnableSsl = eEnableSSL;
+                smtp.Send(mailMessage);
+                mensaje = "";
+            }
+            catch (Exception ex)
+            {
+                mensaje = ex.Message;
+                new Funciones().funCrearLogAuditoria(1, "Funciones.cs/SendHtmlEmailLink", ex.ToString(), 1);
+            }
+            return mensaje;
+        }
+    }
+
+    private string SendHtmlEmailMediLink(string subject, string body, string ehost, int eport, bool eEnableSSL,
+               string eusername, string epassword,string mailsalterna)
+    {
+        string mensaje = "";
+        using (MailMessage mailMessage = new MailMessage())
+        {
+            try
+            {
+                //Attachment archivo = new Attachment(pathAttach);
+                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                //LinkedResource theEmailImage = new LinkedResource(pathLogo);
+                //theEmailImage.ContentId = "myImageID";
+                //htmlView.LinkedResources.Add(theEmailImage);
+                mailMessage.AlternateViews.Add(htmlView);
+                mailMessage.From = new MailAddress(eusername);
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+
+                //if (!string.IsNullOrEmpty(mailTO))
+                //{
+                //    mailMessage.To.Add(new MailAddress(mailTO));
+                //}
+
+                //if (!string.IsNullOrEmpty(email))
+                //{
+                //    mailMessage.CC.Add(email);
+                //}
 
                 if (!string.IsNullOrEmpty(mailsalterna))
                 {

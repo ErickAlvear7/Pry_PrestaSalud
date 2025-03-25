@@ -22,7 +22,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string documento = "", fechanacimiento = "", parentesco = "", tipodocumento = "", nombresCompletos = "", nombre1 = "",nombre2 = "",
                apellido1 = "", apellido2 = "", genero = "", celular = "", telcasa = "", email = "", direccion = "", telefonos = "";
         string respVerifPacient = "", respRegisPacient="",respGetCiudad="",respGetSucur="",respGetEspe="",respGetMedico="",respGetDispo="",
-               respCrearPacient = "",respAdmision="",respCrearCita="", nombreProducto="", medicamento="", fileTemplate="",nombreCliente="";
+               respCrearPacient = "",respAdmision="",respCrearCita="", nombreProducto="", medicamento="", fileTemplate="",nombreCliente="", mailsA="", sendmails="", subject="", mensaje="";
 
       
 
@@ -33,7 +33,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
      
         Object[] objparam = new Object[1];
         Object[] objcitamedica = new Object[23];
+        Object[] objsendmails = new Object[3];
         DataSet dt = new DataSet();
+        DataSet dts = new DataSet();
+        DataSet dtusu = new DataSet();
 
         DataTable datosMedico = new DataTable();
         DataTable datosDisponibie = new DataTable();
@@ -110,6 +113,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 dtsucursal.Columns.Add("codCiudad");
                 dtsucursal.Columns.Add("codSucursal");
                 dtsucursal.Columns.Add("sucursalNombreComercial");
+
+                Array.Resize(ref objparam, 1);
+                objparam[0] = 13;
+                dts = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                if (dts != null && dts.Tables[0].Rows.Count > 0)
+                {
+                    ViewState["Host"] = dts.Tables[0].Rows[0][0].ToString().Trim().ToLower();
+                    ViewState["Port"] = dts.Tables[0].Rows[1][0].ToString().Trim().ToLower();
+                    ViewState["EnableSSl"] = dts.Tables[0].Rows[2][0].ToString().Trim().ToLower();
+                    ViewState["Usuario"] = dts.Tables[0].Rows[3][0].ToString().Trim().ToLower();
+                    ViewState["Password"] = dts.Tables[0].Rows[4][0].ToString().Trim();
+                }
 
 
                 if (int.Parse(idtitular) > 0 && int.Parse(idbene) == 0)
@@ -747,7 +762,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     btnSalirMed.Visible = true;
 
 
-                    //FunEnviarMailCitaMedilink(nombreCliente,nombreProducto,"SI");
+                    FunEnviarMailCitaMedilink(nombreCliente,nombreProducto,"SI");
                 }
 
             }
@@ -757,16 +772,77 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
+     
+
         private void FunEnviarMailCitaMedilink(string cliente,string producto,string medicamento)
         {
-            Array.Resize(ref objcitamedica, 10);
+
+            //Array.Resize(ref objparam, 3);
+            //objparam[0] = int.Parse(Session["usuCodigo"].ToString());
+            //objparam[1] = "";
+            //objparam[2] = 107;
+            //dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //mailsU = dtusu.Tables[0].Rows[0][0].ToString();
+            mailsA = FunMailsAlternaMediLink();
+
+            Array.Resize(ref objparam, 1);
+            objparam[0] = 59;
+            dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+
+            Array.Resize(ref objcitamedica, 18);
             objcitamedica[0] = cliente;
             objcitamedica[1] = producto;
             objcitamedica[2] = medicamento;
+            objcitamedica[3] = codCitaPresta;
+            objcitamedica[4] = ViewState["Ciudad"].ToString();
+            objcitamedica[5] = ViewState["FechaCita"].ToString();
+            objcitamedica[6] = ViewState["HoraMed"].ToString();
+            objcitamedica[7] = ViewState["Sucursal"].ToString();
+            objcitamedica[8] = direcsucursal;
+            objcitamedica[9] = ViewState["Medico"].ToString();
+            objcitamedica[10] = ViewState["Especialidad"].ToString();
+            objcitamedica[11] = ViewState["Cedula"].ToString();
+            objcitamedica[12] = ViewState["Titular"].ToString();
+            objcitamedica[13] = ViewState["Nombres"].ToString();
+            objcitamedica[14] = ViewState["Telefonos"].ToString();
+            objcitamedica[15] = "3 USD";
+
+            if (dt.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Tables[0].Rows)
+                {
+                    if (dr[0].ToString() == "PIE1") objcitamedica[16] = dr[1].ToString();
+                    if (dr[0].ToString() == "PIE2") objcitamedica[17] = dr[1].ToString();
+                }
+            }
 
 
             fileTemplate = Server.MapPath("~/Template/HtmlTemplateMedilink.html");
+            subject = "Medilink - " + "-" + producto;
+            subject = subject.Replace('\r', ' ').Replace('\n', ' ');
 
+            mensaje = new Funciones().funEnviarMailMediLink(subject, objcitamedica, fileTemplate,
+                    ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
+                    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), mailsA);
+
+        }
+
+        private string FunMailsAlternaMediLink()
+        {
+            sendmails = "";
+            int x = 0;
+            Array.Resize(ref objsendmails, 3);
+            objsendmails[0] = 0;
+            objsendmails[1] = "MAILS MEDILINK";
+            objsendmails[2] = 189;
+            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objsendmails);
+            foreach (DataRow dr in dt.Tables[0].Rows)
+            {
+                sendmails = sendmails + dr[0].ToString() + ",";
+            }
+            if (!string.IsNullOrEmpty(sendmails)) x = sendmails.LastIndexOf(",");
+            if (x > 0) sendmails = sendmails.Remove(x, 1);
+            return sendmails;
         }
 
 
