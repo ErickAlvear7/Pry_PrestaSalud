@@ -773,7 +773,6 @@ public class Funciones
                     }
                 }
 
-
                 //mailMessage.Attachments.Add(archivo);
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
                 NetworkCred.UserName = eusername;
@@ -813,19 +812,7 @@ public class Funciones
                 mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
-
-                //if (!string.IsNullOrEmpty(mailTO))
-                //{
-                //    mailMessage.To.Add(new MailAddress(mailTO));
-                //}
-
-                //if (!string.IsNullOrEmpty(email))
-                //{
-                //    mailMessage.CC.Add(email);
-                //}
-
-                
-
+       
                 if (!string.IsNullOrEmpty(mailsalterna))
                 {
                     string[] docMails = mailsalterna.Split(',');
@@ -835,7 +822,6 @@ public class Funciones
                         mailMessage.CC.Add(doMails);
                     }
                 }
-
 
                 //mailMessage.Attachments.Add(archivo);
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();

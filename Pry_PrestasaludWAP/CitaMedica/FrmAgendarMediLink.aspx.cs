@@ -91,7 +91,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["nombreProducto"] = nombreProducto;
                 ViewState["nombreCliente"] = nombreCliente;
 
-
                 var data = new JavaScriptSerializer().Serialize(login);
                 accessToken = new MediLinkApi().PostAccesLogin(_urlpro, data);
                 fechaCalendar = DateTime.Now.ToString("yyyyMMdd");
@@ -535,7 +534,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("Sin Turnos Disponibles", this);
                 return;
             }
-
          }
 
         private void FunLlenarListMedico() 
@@ -690,9 +688,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     codMedicopres = int.Parse(dt.Tables[0].Rows[0][0].ToString());
                 }
 
-
-                //if (codPrestador == 0) codPrestador= int.Parse(ViewState["CodSucursal"].ToString());
-                //if (codEspepres == 0) codEspepres= int.Parse(ViewState["CodEspecialidad"].ToString());
                 if (codMedicopres == 0) codMedicopres= int.Parse(ViewState["CodMedico"].ToString());
 
                 Array.Resize(ref objparam, 14);
@@ -764,18 +759,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     lblTelefono.Text = ViewState["Telefonos"].ToString();
                     btnSalirMed.Visible = true;
 
-
                     FunEnviarMailCitaMedilink(ViewState["nombreCliente"].ToString(), ViewState["nombreProducto"].ToString(), "SI");
                 }
-
             }
             else
             {
                 new Funciones().funShowJSMessage("No se Genero Cita", this);
             }
         }
-
-     
 
         private void FunEnviarMailCitaMedilink(string cliente,string producto,string medicamento)
         {
@@ -812,7 +803,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (dr[0].ToString() == "PIE2") objcitamedica[17] = dr[1].ToString();
                 }
             }
-
 
             fileTemplate = Server.MapPath("~/Template/HtmlTemplateMedilink.html");
             subject = "Medilink - " + "-" + producto;
