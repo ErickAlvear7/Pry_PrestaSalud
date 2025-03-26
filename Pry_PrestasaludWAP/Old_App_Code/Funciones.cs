@@ -824,6 +824,8 @@ public class Funciones
                 //    mailMessage.CC.Add(email);
                 //}
 
+                
+
                 if (!string.IsNullOrEmpty(mailsalterna))
                 {
                     string[] docMails = mailsalterna.Split(',');

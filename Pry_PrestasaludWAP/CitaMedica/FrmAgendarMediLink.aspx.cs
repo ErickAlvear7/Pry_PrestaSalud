@@ -88,6 +88,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     nombreCliente = dr[1].ToString();                
                 }
 
+                ViewState["nombreProducto"] = nombreProducto;
+                ViewState["nombreCliente"] = nombreCliente;
+
 
                 var data = new JavaScriptSerializer().Serialize(login);
                 accessToken = new MediLinkApi().PostAccesLogin(_urlpro, data);
@@ -762,7 +765,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     btnSalirMed.Visible = true;
 
 
-                    FunEnviarMailCitaMedilink(nombreCliente,nombreProducto,"SI");
+                    FunEnviarMailCitaMedilink(ViewState["nombreCliente"].ToString(), ViewState["nombreProducto"].ToString(), "SI");
                 }
 
             }
@@ -777,12 +780,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunEnviarMailCitaMedilink(string cliente,string producto,string medicamento)
         {
 
-            //Array.Resize(ref objparam, 3);
-            //objparam[0] = int.Parse(Session["usuCodigo"].ToString());
-            //objparam[1] = "";
-            //objparam[2] = 107;
-            //dtusu = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-            //mailsU = dtusu.Tables[0].Rows[0][0].ToString();
             mailsA = FunMailsAlternaMediLink();
 
             Array.Resize(ref objparam, 1);
