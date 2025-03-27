@@ -347,5 +347,36 @@ namespace Pry_PrestasaludWAP.Api
 
             return responseCita;
         }
+
+        public async void CancelarCita(string url,string codCita, string token)
+        {
+           
+            try
+            {
+
+                HttpClient _cancelar = new HttpClient();
+                _cancelar.BaseAddress = new Uri(url);
+                HttpContent _content = new StringContent(codCita, Encoding.UTF8, "application/json");
+                _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
+                _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var resCancel = await _cancelar.PutAsync("api/ObtenerEspecialidad/", _content);
+
+                if (resCancel.IsSuccessStatusCode)
+                {
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                var mensaje = ex.ToString();
+                new Funciones().funCrearLogAuditoria(1, "MediLinkApi.cs/PostCancelarCita", mensaje, 365);
+
+            }
+           
+        }
     }
 }

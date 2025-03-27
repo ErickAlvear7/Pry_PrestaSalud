@@ -1779,6 +1779,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string _fechadisponible = "", _horadisponible = "";
             string id_medico = "";
 
+
             if (ViewState["TipoCliente"] == null)
             {
                 new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
@@ -1808,7 +1809,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
                 return;
             }
-
+       
             try
             {
                 //CONSULTAR API-KEY BDD
@@ -2002,11 +2003,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             if (_datalink == "Horario")
                             {
-                                //new Funciones().funShowJSMessage("No hay medicos disponibles, intente en 3 minutos..!!", this);
-                                //return;
-                                lblHora.Visible = true;
-                                txtHora.Visible = true;
-                                lblHora.Text = _horadisponible;
+                                new Funciones().funShowJSMessage("Hora estimada de conexion " + _horadisponible + ", intente en 3 minutos..!!", this);
+                                return;
+                                //lblHora.Visible = true;
+                                //txtHora.Visible = true;
+                                //lblHora.Text = _horadisponible;
                             }
 
                             dynamic urlLink = JObject.Parse(_datalink);
@@ -2035,16 +2036,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
                             objparam[2] = int.Parse(ddlMedico.SelectedValue);
                             objparam[3] = int.Parse(ddlEspecialidad.SelectedValue);
-                            objparam[3] = ViewState["TipoCliente"].ToString();
-                            objparam[4] = int.Parse(ViewState["TituCodigo"].ToString());
-                            objparam[5] = 0;
-                            objparam[6] = "VI";
-                            objparam[7] = xfecha;
-                            objparam[8] = newDia;
-                            objparam[9] = xhora;
-                            objparam[10] = int.Parse(Session["usuCodigo"].ToString());
-                            objparam[11] = Session["MachineName"].ToString();
-                            objparam[12] = motivo;
+                            objparam[4] = ViewState["TipoCliente"].ToString();
+                            objparam[5] = int.Parse(ViewState["TituCodigo"].ToString());
+                            objparam[6] = 0;
+                            objparam[7] = "VI";
+                            objparam[8] = xfecha;
+                            objparam[9] = newDia;
+                            objparam[10] = xhora;
+                            objparam[11] = int.Parse(Session["usuCodigo"].ToString());
+                            objparam[12] = Session["MachineName"].ToString();
+                            objparam[13] = motivo;
                             DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
                             int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
                             if (codCita > 0)
