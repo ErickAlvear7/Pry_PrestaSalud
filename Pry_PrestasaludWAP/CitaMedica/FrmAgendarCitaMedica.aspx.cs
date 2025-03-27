@@ -1779,8 +1779,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string _fechadisponible = "", _horadisponible = "";
             string id_medico = "";
 
-
-
             if (ViewState["TipoCliente"] == null)
             {
                 new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
