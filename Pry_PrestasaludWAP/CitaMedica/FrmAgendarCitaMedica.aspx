@@ -646,7 +646,7 @@
                                     <tr>
                                         <td colspan="6">
                                             <asp:Panel ID="pnlHistorialCitas" runat="server" Height="250px" ScrollBars="Vertical" GroupingText="">
-                                                <asp:GridView ID="grdvHistorialCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="CitaCodigo,HodeCodigo,PrestaCodigo,Estado,Prestadora,Tipo,CodigoGenerado" ShowHeaderWhenEmpty="True" Width="100%" OnRowDataBound="grdvHistorialCitas_RowDataBound" TabIndex="26">
+                                                <asp:GridView ID="grdvHistorialCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="CitaCodigo,HodeCodigo,PrestaCodigo,Estado,Prestadora,Tipo,CodigoGenerado,CodigoEspcialidad" ShowHeaderWhenEmpty="True" Width="100%" OnRowDataBound="grdvHistorialCitas_RowDataBound" TabIndex="26">
                                                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                                     <Columns>
                                                         <asp:TemplateField HeaderText="Estado">

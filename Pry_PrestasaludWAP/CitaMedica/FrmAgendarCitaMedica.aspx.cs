@@ -2807,6 +2807,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         int codigoGenerado = int.Parse(grdvHistorialCitas.DataKeys[row.RowIndex].Values["CodigoGenerado"].ToString());
                         string prestadora = grdvHistorialCitas.DataKeys[row.RowIndex].Values["Prestadora"].ToString();
                         string tipo = grdvHistorialCitas.DataKeys[row.RowIndex].Values["Tipo"].ToString();
+                        int codigoEspeci = int.Parse(grdvHistorialCitas.DataKeys[row.RowIndex].Values["CodigoEspcialidad"].ToString());
                         string paciente = grdvHistorialCitas.Rows[row.RowIndex].Cells[1].Text;
                         string medico = grdvHistorialCitas.Rows[row.RowIndex].Cells[3].Text;
                         string especialidad = grdvHistorialCitas.Rows[row.RowIndex].Cells[4].Text;
@@ -2815,11 +2816,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         string horaCita = grdvHistorialCitas.Rows[row.RowIndex].Cells[7].Text;
                         objdatoscancel[1] = codigoCita;
                         objdatoscancel[11] = codigoGenerado;
+
                         dt = new Conexion(2, "").funConsultarSqls("sp_RegistraCitaAgendada", objdatoscancel);
                         if (dt.Tables[0].Rows[0][0].ToString() == "")
                         {
-                            mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
-                                tipo, paciente, codigoGenerado);
+                            if (codigoEspeci != 324)
+                            {
+                                mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
+                                    tipo, paciente, codigoGenerado);
+                            }
                         }
                     }
                 }
