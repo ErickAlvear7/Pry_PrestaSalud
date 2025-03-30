@@ -534,10 +534,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[8] = 0;
                         objparam[9] = 0;
                         objparam[10] = 0;
-                        ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
-                        ddlPrestadora.DataTextField = "Descripcion";
-                        ddlPrestadora.DataValueField = "Codigo";
-                        ddlPrestadora.DataBind();
+                        //ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
+                        //ddlPrestadora.DataTextField = "Descripcion";
+                        //ddlPrestadora.DataValueField = "Codigo";
+                        //ddlPrestadora.DataBind();
+                        DataSet dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
+                        ddlPrestadora.Items.Clear();
+
+                        ListItem pres;
+                                       
+                        foreach (DataRow item in dts.Tables[0].Rows)
+                        {
+                            pres = new ListItem(item[0].ToString(), item[1].ToString());
+                            ddlPrestadora.Items.Add(pres);
+                        }
+
+                        pres = new ListItem("PRESTADOR VIRTUAL", "460");
+                        ddlPrestadora.Items.Add(pres);
+
                         break;
                     case 2:
                         ddlCiudad.Items.Clear();
@@ -572,10 +586,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-                        if (ddlPrestadora.SelectedValue.ToString() == "460")
+                       
+                        if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
-                            ddlEspecialidad.SelectedValue = "2447";
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = 0;
+                            objparam[1] = "";
+                            objparam[2] = 190;
+                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlEspecialidad.DataTextField = "Descripcion";
+                            ddlEspecialidad.DataValueField = "Codigo";
+                            ddlEspecialidad.DataBind();
+
                             FunCascadaCombos(4);
+
                         }
                         break;
                     case 4:
@@ -595,10 +619,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
-                        if (ddlEspecialidad.SelectedValue.ToString() == "2447")
+                      
+                        if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
                         {
-                            ddlMedico.SelectedValue = "2974";
-                            FunCascadaCombos(7);
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = 0;
+                            objparam[1] = "";
+                            objparam[2] = 191;
+                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlMedico.DataTextField = "Descripcion";
+                            ddlMedico.DataValueField = "Codigo";
+                            ddlMedico.DataBind();
                         }
                         break;
                     case 5:
@@ -633,15 +664,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.DataValueField = "Codigo";
                         ddlTipoPago.DataBind();
                         ddlTipoPago.SelectedIndex = 2;
-
                         break;
 
-                        //case 9:
-
-
-                        //    break;
                 }
-
             }
             else
             {
@@ -722,10 +747,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-                        if (ddlPrestadora.SelectedValue.ToString() == "460")
+                      
+                        if(ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
-                            ddlEspecialidad.SelectedValue = "2447";
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = 0;
+                            objparam[1] = "";
+                            objparam[2] = 190;
+                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlEspecialidad.DataTextField = "Descripcion";
+                            ddlEspecialidad.DataValueField = "Codigo";
+                            ddlEspecialidad.DataBind();
+
                             FunCascadaCombos(4);
+
                         }
                         break;
                     case 4:
@@ -737,10 +772,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
-                        if (ddlEspecialidad.SelectedValue.ToString() == "2447")
+                     
+                        if(ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
                         {
-                            ddlMedico.SelectedValue = "2974";
-                            FunCascadaCombos(7);
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = 0;
+                            objparam[1] = "";
+                            objparam[2] = 191;
+                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlMedico.DataTextField = "Descripcion";
+                            ddlMedico.DataValueField = "Codigo";
+                            ddlMedico.DataBind();
                         }
 
                         break;
@@ -778,7 +820,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlMotivoCita.SelectedIndex = 7;*/
                             ddlMotivoCita.SelectedValue = "C";
 
-
                         }
                         break;
                     case 8:
@@ -804,8 +845,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlTipoPago.DataBind();
                             ddlTipoPago.SelectedIndex = 1;
                         }
-
-
 
                         break;
                 }
@@ -918,7 +957,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //ddlTipoPago.SelectedValue = "0";
             updCitaMedica.Visible = true;
 
-            if (ddlPrestadora.SelectedItem.ToString() == "VIDEO LLAMADA")
+            if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
             {
                 CalendarioCita.Visible = false;
                 pnlAgendamientos.Visible = false;
@@ -1584,7 +1623,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             txtObservacion.Visible = true;
             txtObservacionG.Visible = true;
 
-            if (prestador == "VIDEO LLAMADA")
+            if (prestador == "PRESTADOR VIRTUAL")
             {
                 string codPro = Session["CodigoProducto"].ToString();
                 bool activo = false;
