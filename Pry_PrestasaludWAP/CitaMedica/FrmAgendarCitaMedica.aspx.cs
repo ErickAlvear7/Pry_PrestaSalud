@@ -2030,7 +2030,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             //date = _fechadisponible,
                             //hour = _horadisponible,
                             timeZone = "America/Guayaquil",
-                            reason = "PRUEBA PRESTASALUD",
+                            reason = motivo,
                             idMedico = id_medico,
                             oneclick = true
                         };
@@ -2859,11 +2859,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         dt = new Conexion(2, "").funConsultarSqls("sp_RegistraCitaAgendada", objdatoscancel);
                         if (dt.Tables[0].Rows[0][0].ToString() == "")
                         {
-                            if (codigoEspeci != 324)
-                            {
-                                mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
-                                    tipo, paciente, codigoGenerado);
-                            }
+                                                      
+                            mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
+                                                          tipo, paciente, codigoGenerado);                        
                         }
                     }
                 }
