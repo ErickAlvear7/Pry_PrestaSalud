@@ -1493,7 +1493,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 mailsP = FunMailsEnviar(codigoPrestadora);
                 mailsA = FunMailsAlterna();
                 Array.Resize(ref objcitamedica, 16);
-                Thread.Sleep(800);
+                //Thread.Sleep(800);
                 objcitamedica[11] = "";
                 objcitamedica[12] = "";
                 objcitamedica[13] = "";
