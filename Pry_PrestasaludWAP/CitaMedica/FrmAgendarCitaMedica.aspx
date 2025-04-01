@@ -350,14 +350,21 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <h5>Prestadora/Clinica:</h5>
+                                                <h5>Sector:</h5>
                                             </td>
-                                            <td colspan="3">
-                                                <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="8">
+                                             <td>
+                                                <asp:DropDownList ID="ddlSector" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="8" OnSelectedIndexChanged="ddlSector_SelectedIndexChanged">
+                                                </asp:DropDownList>
+                                            </td>
+                                             <td>
+                                                <h5 style="text-align: center">Prestadora:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
                                             </td>
                                             <td style="text-align: center">
-                                                <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="9" />
+                                                <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="10" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -366,7 +373,7 @@
                                                 <h5>Especialidad:</h5>
                                             </td>
                                             <td colspan="3">
-                                                <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="10">
+                                                <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="11">
                                                 </asp:DropDownList>
                                             </td>
                                             <td></td>
@@ -377,7 +384,7 @@
                                                 <h5>Medico:</h5>
                                             </td>
                                             <td colspan="3">
-                                                <asp:DropDownList ID="ddlMedico" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlMedico_SelectedIndexChanged" TabIndex="11">
+                                                <asp:DropDownList ID="ddlMedico" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlMedico_SelectedIndexChanged" TabIndex="12">
                                                 </asp:DropDownList>
                                             </td>
                                             <td style="text-align: center">

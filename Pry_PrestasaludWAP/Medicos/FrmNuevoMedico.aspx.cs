@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
+public partial class Medicos_FrmNuevoMedico : Page
 {
     #region Variables
     DataSet dt = new DataSet();
@@ -39,6 +39,7 @@ public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
                 tbMedEspePresta.Columns.Add("preecodigo");
                 tbMedEspePresta.Columns.Add("Codigo");
                 tbMedEspePresta.Columns.Add("Estado");
+                tbMedEspePresta.Columns.Add("TipoMed");
                 ViewState["tblMesEspePresta"] = tbMedEspePresta;
 
                 tbDatosCita.Columns.Add("CodigoPrestadora");
@@ -291,9 +292,10 @@ public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
             objparam[14] = int.Parse(Session["usuCodigo"].ToString());
             objparam[15] = Session["MachineName"].ToString();
             objparam[16] = 0;
-            
+
             //funGrabarDatos();
             //Response.Redirect("FrmMedicoAdmin.aspx?MensajeRetornado='Guardado con Éxito'", true);
+            DataTable tbtemp = (DataTable)ViewState["tblMesEspePresta"];
 
             dt = new Conexion(2, "").FunInsertarMedicoEspePresta(objparam, (DataTable)ViewState["tblMesEspePresta"]);
             if (dt.Tables[0].Rows[0][0].ToString() == "Existe") lblerror.Text = "Ya existe médico con el mismo nombre y apellido, ingrese uno nuevo..!";
@@ -387,6 +389,7 @@ public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
             filagre["preecodigo"] = ddlEspecialidad.SelectedValue;
             filagre["Codigo"] = maxCodigo + 1;
             filagre["Estado"] = "Activo";
+            filagre["TipoMed"] = "OFFLINE";
             tblagre.Rows.Add(filagre);
             tblagre.DefaultView.Sort = "Prestadora";
             ViewState["tblMesEspePresta"] = tblagre;
@@ -504,11 +507,13 @@ public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
         result[0]["Tipo"] = chktipo.Checked ? "ONLINE" : "OFFLINE";
         tbMedEspePresta.AcceptChanges();*/
 
+        DataTable tbDatosEspe = (DataTable)ViewState["tblMesEspePresta"];
         tbDatosCita = (DataTable)ViewState["tblDatosCita"];
         int codigo1 = int.Parse(grdvDatos.DataKeys[intIndex].Values["Codigo"].ToString());
         //DataRow[] result1 = tbDatosCita.Select("Codigo").FirstOrDefault();
         //DataRow[] result = tbMedEspePresta.Select("Codigo=" + codigo);
         DataRow result1 = tbDatosCita.Select("Codigo=" + codigo1).FirstOrDefault();
+        DataRow result2 = tbDatosEspe.Select("Codigo=" + codigo1).FirstOrDefault();
 
         int codigo = int.Parse(result1[2].ToString());
         if(codigo == 0)
@@ -519,6 +524,12 @@ public partial class Medicos_FrmNuevoMedico : System.Web.UI.Page
         {
             result1[4] = chktipo.Checked ? "ONLINE" : "OFFLINE";
             tbDatosCita.AcceptChanges();
+
+            result2[6] = chktipo.Checked ? "ONLINE" : "OFFLINE";
+            tbDatosEspe.AcceptChanges();
+
+            ViewState["tblMesEspePresta"] = tbDatosEspe;
+
         }
 
         //result1[0]["TipoMed"] = chktipo.Checked ? "ONLINE" : "OFFLINE";

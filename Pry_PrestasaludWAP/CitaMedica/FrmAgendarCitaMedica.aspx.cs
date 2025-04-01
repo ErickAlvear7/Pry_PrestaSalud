@@ -44,6 +44,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DataTable tbNuevaCitaMedica = new DataTable();
         DataTable tbMailCitaMedica = new DataTable();
         ListItem presta = new ListItem();
+        ListItem sector = new ListItem();
         ListItem espe = new ListItem();
         ListItem medi = new ListItem();
         ListItem ciud = new ListItem();
@@ -442,6 +443,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+
         private void FunEliminarReservas()
         {
             try
@@ -482,6 +484,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 switch (opcion)
                 {
                     case 0:
+                        ddlSector.Items.Clear();
+                        sector.Text = "--Seleccione Sector--";
+                        sector.Value = "0";
+                        ddlSector.Items.Add(sector);
+
                         ddlPrestadora.Items.Clear();
                         presta.Text = "--Seleccione Prestadora--";
                         presta.Value = "0";
@@ -526,7 +533,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[0] = 34;
                         objparam[1] = "";
                         objparam[2] = "ONLINE";
-                        objparam[3] = "";
+                        objparam[3] = ddlSector.SelectedValue;
                         objparam[4] = "";
                         objparam[5] = "";
                         objparam[6] = ddlCiudad.SelectedValue;
@@ -534,10 +541,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[8] = 0;
                         objparam[9] = 0;
                         objparam[10] = 0;
-                        //ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
-                        //ddlPrestadora.DataTextField = "Descripcion";
-                        //ddlPrestadora.DataValueField = "Codigo";
-                        //ddlPrestadora.DataBind();
                         DataSet dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
                         ddlPrestadora.Items.Clear();
 
@@ -664,6 +667,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.DataValueField = "Codigo";
                         ddlTipoPago.DataBind();
                         ddlTipoPago.SelectedIndex = 2;
+                        break;
+                    case 9:
+                        Array.Resize(ref objparam, 1);
+                        objparam[0] = 62;
+                        ddlSector.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                        ddlSector.DataTextField = "Descripcion";
+                        ddlSector.DataValueField = "Codigo";
+                        ddlSector.DataBind();
+
                         break;
 
                 }
@@ -1582,6 +1594,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlCiudad_SelectedIndexChanged(object sender, EventArgs e)
         {
             FunCascadaCombos(1);
+            FunCascadaCombos(9);
+            FunLimpiarCampos();
+        }
+
+        protected void ddlSector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FunCascadaCombos(1);
             FunLimpiarCampos();
         }
 
@@ -1848,7 +1867,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
                 return;
             }
-       
+
+
             try
             {
                 //CONSULTAR API-KEY BDD
@@ -1866,13 +1886,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 //OBTENER TOKEN
                 string _apikey = JsonConvert.SerializeObject(apikey);
-                string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
+                string _token = new MethodApi().GetToken("https://api.eh.ehealthcenter.io/", _apikey);
 
                 if (_token != "")
                 {               
-                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);                 
-                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
-                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
+                    _idcont = new MethodApi().GetIdContract("https://api.eh.ehealthcenter.io/", _token);                 
+                    _idserv = new MethodApi().GetServicios("https://api.eh.ehealthcenter.io/", _idcont, _token);                  
+                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
  
                     if (ViewState["TipoCliente"].ToString() == "T")
                     {
@@ -1925,7 +1945,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     };
 
                     var data = new JavaScriptSerializer().Serialize(paciente);
-                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
+                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.ehealthcenter.io/", data, _token);
 
                     if (!_idpatient.IsEmpty())
                     {
@@ -1948,7 +1968,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _idserv = dr[3].ToString();
                         }
 
-                        string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
+                        string medicos = new MethodApi().GetMedicos("https://api.eh.ehealthcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
                         int _encontro = 0;
@@ -2036,7 +2056,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         };
 
                         var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
-                        _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
+                        _datalink = new MethodApi().Consultas("https://api.eh.ehealthcenter.io/", dataconsulta, _token);
 
                         if (!_datalink.IsEmpty())
                         {
