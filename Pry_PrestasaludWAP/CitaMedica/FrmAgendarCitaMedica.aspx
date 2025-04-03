@@ -311,7 +311,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" Visible="true" />
+                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" />
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -349,7 +349,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>
+<%--                                            <td>
                                                 <h5>Sector:</h5>
                                             </td>
                                              <td>
@@ -362,14 +362,14 @@
                                             <td>
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
-                                            </td>
-<%--                                             <td>
+                                            </td>--%>
+                                             <td>
                                                 <h5>Prestadora:</h5>
                                             </td>
                                             <td colspan="3">
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
-                                            </td>--%>
+                                            </td>
                                             <td style="text-align: center">
                                                 <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="10" />
                                             </td>

@@ -485,10 +485,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 switch (opcion)
                 {
                     case 0:
-                        ddlSector.Items.Clear();
-                        sector.Text = "--Seleccione Sector--";
-                        sector.Value = "0";
-                        ddlSector.Items.Add(sector);
+                        //ddlSector.Items.Clear();
+                        //sector.Text = "--Seleccione Sector--";
+                        //sector.Value = "0";
+                        //ddlSector.Items.Add(sector);
 
                         ddlPrestadora.Items.Clear();
                         presta.Text = "--Seleccione Prestadora--";
@@ -534,7 +534,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[0] = 34;
                         objparam[1] = "";
                         objparam[2] = "ONLINE";
-                        objparam[3] = ddlSector.SelectedValue;
+                        objparam[3] = ""; //ddlSector.SelectedValue;
                         objparam[4] = "";
                         objparam[5] = "";
                         objparam[6] = ddlCiudad.SelectedValue;
@@ -670,12 +670,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.SelectedIndex = 2;
                         break;
                     case 9:
-                        Array.Resize(ref objparam, 1);
-                        objparam[0] = 62;
-                        ddlSector.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                        ddlSector.DataTextField = "Descripcion";
-                        ddlSector.DataValueField = "Codigo";
-                        ddlSector.DataBind();
+                        //Array.Resize(ref objparam, 1);
+                        //objparam[0] = 62;
+                        //ddlSector.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                        //ddlSector.DataTextField = "Descripcion";
+                        //ddlSector.DataValueField = "Codigo";
+                        //ddlSector.DataBind();
 
                         break;
 
@@ -683,6 +683,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
+                Panel4.Visible = false;
                 switch (opcion)
                 {
                     case 0:
