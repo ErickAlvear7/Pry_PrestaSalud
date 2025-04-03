@@ -257,7 +257,7 @@
             <div class="panel-body">
                 <div id="acordionParametro">
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
-                    <asp:UpdatePanel ID="updCabecera" runat="server">
+                    <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
                             <div class="table-responsive">
                                 <asp:Panel ID="pnlListaDatos" runat="server" GroupingText="Datos Titulares - Beneficiarios" TabIndex="3">
@@ -349,17 +349,24 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>
+                                            <%--<td>
                                                 <h5>Sector:</h5>
                                             </td>
                                              <td>
                                                 <asp:DropDownList ID="ddlSector" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="8" OnSelectedIndexChanged="ddlSector_SelectedIndexChanged">
                                                 </asp:DropDownList>
-                                            </td>
-                                             <td>
+                                            </td>--%>
+                                          <%--   <td>
                                                 <h5 style="text-align: center">Prestadora:</h5>
                                             </td>
                                             <td>
+                                                <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
+                                                </asp:DropDownList>
+                                            </td>--%>
+                                             <td>
+                                                <h5>Prestadora:</h5>
+                                            </td>
+                                            <td colspan="3">
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
                                             </td>

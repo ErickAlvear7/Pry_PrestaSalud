@@ -44,7 +44,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         DataTable tbNuevaCitaMedica = new DataTable();
         DataTable tbMailCitaMedica = new DataTable();
         ListItem presta = new ListItem();
-        ListItem sector = new ListItem();
+        //ListItem sector = new ListItem();
         ListItem espe = new ListItem();
         ListItem medi = new ListItem();
         ListItem ciud = new ListItem();
@@ -69,6 +69,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         #region Load
         protected void Page_Load(object sender, EventArgs e)
+        
         {
             //pnlLink.Visible = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
@@ -484,10 +485,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 switch (opcion)
                 {
                     case 0:
-                        ddlSector.Items.Clear();
-                        sector.Text = "--Seleccione Sector--";
-                        sector.Value = "0";
-                        ddlSector.Items.Add(sector);
+                        //ddlSector.Items.Clear();
+                        //sector.Text = "--Seleccione Sector--";
+                        //sector.Value = "0";
+                        //ddlSector.Items.Add(sector);
 
                         ddlPrestadora.Items.Clear();
                         presta.Text = "--Seleccione Prestadora--";
@@ -533,7 +534,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[0] = 34;
                         objparam[1] = "";
                         objparam[2] = "ONLINE";
-                        objparam[3] = ddlSector.SelectedValue;
+                        objparam[3] = //ddlSector.SelectedValue;
                         objparam[4] = "";
                         objparam[5] = "";
                         objparam[6] = ddlCiudad.SelectedValue;
@@ -669,12 +670,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlTipoPago.SelectedIndex = 2;
                         break;
                     case 9:
-                        Array.Resize(ref objparam, 1);
-                        objparam[0] = 62;
-                        ddlSector.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                        ddlSector.DataTextField = "Descripcion";
-                        ddlSector.DataValueField = "Codigo";
-                        ddlSector.DataBind();
+                        //Array.Resize(ref objparam, 1);
+                        //objparam[0] = 62;
+                        //ddlSector.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                        //ddlSector.DataTextField = "Descripcion";
+                        //ddlSector.DataValueField = "Codigo";
+                        //ddlSector.DataBind();
 
                         break;
 
@@ -940,10 +941,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (dt.Tables[0].Rows.Count > 0) Session["SalirAgenda"] = "NO";
                     else Session["SalirAgenda"] = "SI";
                 }
+                else
+                {
+                    Session["SalirAgenda"] = "SI";
+                    grdvResumenCita.DataSource = dt;
+                    grdvResumenCita.DataBind();
+                }
             }
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
+                //GRABAR EN EL LOG DE AUDITORIA
             }
 
         }
@@ -1886,13 +1894,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 //OBTENER TOKEN
                 string _apikey = JsonConvert.SerializeObject(apikey);
-                string _token = new MethodApi().GetToken("https://api.eh.ehealthcenter.io/", _apikey);
+                string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
 
                 if (_token != "")
                 {               
-                    _idcont = new MethodApi().GetIdContract("https://api.eh.ehealthcenter.io/", _token);                 
-                    _idserv = new MethodApi().GetServicios("https://api.eh.ehealthcenter.io/", _idcont, _token);                  
-                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.ehealthcenter.io/", _token, _idcont);
+                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);                 
+                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
+                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
  
                     if (ViewState["TipoCliente"].ToString() == "T")
                     {
@@ -1945,7 +1953,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     };
 
                     var data = new JavaScriptSerializer().Serialize(paciente);
-                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.ehealthcenter.io/", data, _token);
+                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
 
                     if (!_idpatient.IsEmpty())
                     {
@@ -1968,7 +1976,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             _idserv = dr[3].ToString();
                         }
 
-                        string medicos = new MethodApi().GetMedicos("https://api.eh.ehealthcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
+                        string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
                         int _encontro = 0;
@@ -2056,7 +2064,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         };
 
                         var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
-                        _datalink = new MethodApi().Consultas("https://api.eh.ehealthcenter.io/", dataconsulta, _token);
+                        _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
                         if (!_datalink.IsEmpty())
                         {
@@ -2540,7 +2548,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[5] = diacita.ToUpper();
                 objparam[6] = grdvResumenCita.Rows[intIndex].Cells[8].Text;
                 objparam[7] = "";
-                objparam[8] = int.Parse(grdvResumenCita.DataKeys[intIndex].Values["HodeCodigo"].ToString()); ;
+                objparam[8] = int.Parse(grdvResumenCita.DataKeys[intIndex].Values["HodeCodigo"].ToString());
                 objparam[9] = "";
                 objparam[10] = 0;
                 objparam[11] = 0;
@@ -2551,17 +2559,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[16] = Session["MachineName"].ToString();
                 objparam[17] = "";
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
-                if (dt != null && dt.Tables[0].Rows.Count > 0)
+                string _respuesta = dt.Tables[0].Rows[0][0].ToString();
+                if (_respuesta == "OK")
                 {
-                    FunGetReservas();
+                    
                     FunAgendaHoras(0, preecodigo, medicodigo, fechacita, diacita);
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", "alert('Reserva Cancelada!..');", true);
-                    ViewState["Cliente"] = null;
+                    ViewState["Cliente"] = "0";
+                    //Session["SalirAgenda"] = "SI";
+                    FunGetReservas();
+                }
+                else 
+                {
+                    //AKI SERIA BUENO MANDAR A GRABAR EN UN LOG
+                    new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaEliminarREserva", "Eliminar Reserva", 2566);
                 }
             }
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
+                //AQUI MANDAR A GRABAR EN EL LOG
+                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaEliminarREserva", ex.ToString(), 1);
             }
         }
 
