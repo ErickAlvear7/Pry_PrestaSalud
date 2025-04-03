@@ -19,8 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>false</Use64BitIISExpress>
     <UseGlobalApplicationHostFile />
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -1801,6 +1800,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\external\jquery\jquery.js" />
+    <None Include="Properties\PublishProfiles\Expert_Prestasalud.pubxml" />
     <None Include="Properties\PublishProfiles\PrestaSalud.pubxml" />
     <None Include="Properties\PublishProfiles\PRESTASALUD_PRODUCCION.pubxml" />
     <None Include="Properties\PublishProfiles\PRY_GSBPO_TEST.pubxml" />
