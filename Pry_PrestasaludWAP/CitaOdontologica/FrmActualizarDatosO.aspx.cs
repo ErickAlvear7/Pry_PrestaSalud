@@ -597,6 +597,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 txtEdad.Text = fun.Edad(DateTime.ParseExact(txtFechaNacBen.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToString();
                 ddlProvinciaBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["ProvinciaBen"].ToString();
                 funCascadaCombos(2);
+                string codigciudad = grdvDatos.DataKeys[intIndex].Values["CiudadBen"].ToString();
                 ddlCiudadBen.SelectedValue = grdvDatos.DataKeys[intIndex].Values["CiudadBen"].ToString();
                 txtDireccionBen.Text = grdvDatos.DataKeys[intIndex].Values["DireccionBen"].ToString();
                 txtFonoCasaBen.Text = grdvDatos.DataKeys[intIndex].Values["FonoCasaBen"].ToString();

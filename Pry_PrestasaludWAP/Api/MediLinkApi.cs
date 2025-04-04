@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pry_PrestasaludWAP.Api
@@ -348,12 +349,14 @@ namespace Pry_PrestasaludWAP.Api
             return responseCita;
         }
 
-        public async void CancelarCita(string url,string codCita, string token)
+        public async Task CancelarCita(string codCita, string token)
         {
            
             try
             {
+                string url = "https://agendamiento.medilink.com.ec:8443/";
 
+                new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", url, 1);
                 HttpClient _cancelar = new HttpClient();
                 _cancelar.BaseAddress = new Uri(url);
                 HttpContent _content = new StringContent(codCita, Encoding.UTF8, "application/json");
@@ -361,11 +364,15 @@ namespace Pry_PrestasaludWAP.Api
                 _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-                var resCancel = await _cancelar.PutAsync("api/ObtenerEspecialidad/", _content);
+                new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", "ENVIANDO AL API", 1);
+
+                var resCancel = await _cancelar.PutAsync("api/CancelarCita/", _content);
+
+                new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", resCancel.ToString(), 365);
 
                 if (resCancel.IsSuccessStatusCode)
                 {
-
+                    
                 }
 
 

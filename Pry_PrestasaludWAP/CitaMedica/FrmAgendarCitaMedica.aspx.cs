@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
@@ -2903,6 +2904,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
                                                           tipo, paciente, codigoGenerado);                        
                         }
+
+                        
                     }
                 }
                 if (mensaje == "") Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado='Cita(s) Cancelada(s) con Éxito'", true);
@@ -3040,6 +3043,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
+            }
+        }
+
+        private async Task FunCancelMedilink(string codigo)
+        {
+            //await new MediLinkApi().CancelarCita(codigo, Session["AccessToken"].ToString());
+            string url = "https://agendamiento.medilink.com.ec:8443/";
+
+            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", url, 1);
+            HttpClient _cancelar = new HttpClient();
+            _cancelar.BaseAddress = new Uri(url);
+            HttpContent _content = new StringContent(codigo, Encoding.UTF8, "application/json");
+            _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
+            _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + Session["AccessToken"].ToString());
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", "ENVIANDO AL API", 1);
+
+            var resCancel = await _cancelar.PutAsync("api/CancelarCita/", _content);
+
+            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", resCancel.ToString(), 365);
+
+            if (resCancel.IsSuccessStatusCode)
+            {
+
             }
         }
         #endregion
