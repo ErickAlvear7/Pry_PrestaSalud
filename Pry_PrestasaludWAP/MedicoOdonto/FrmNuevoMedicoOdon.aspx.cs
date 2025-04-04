@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 namespace Pry_PrestasaludWAP.MedicoOdonto
 {
-    public partial class FrmNuevoMedicoOdon : System.Web.UI.Page
+    public partial class FrmNuevoMedicoOdon : Page
     {
         #region Variables
         DataSet dt = new DataSet();
@@ -32,6 +32,7 @@ namespace Pry_PrestasaludWAP.MedicoOdonto
                     tbMedEspePresta.Columns.Add("preecodigo");
                     tbMedEspePresta.Columns.Add("Codigo");
                     tbMedEspePresta.Columns.Add("Estado");
+                    tbMedEspePresta.Columns.Add("TipoMed");
                     ViewState["tblMesEspePresta"] = tbMedEspePresta;
                     funCargarCombo();
                     if (Request["Tipo"] == "N")
@@ -239,6 +240,7 @@ namespace Pry_PrestasaludWAP.MedicoOdonto
                 filagre["preecodigo"] = ddlPrestadora.SelectedValue;
                 filagre["Codigo"] = maxCodigo + 1;
                 filagre["Estado"] = "Activo";
+                filagre["TipoMed"] = "";
                 tblagre.Rows.Add(filagre);
                 tblagre.DefaultView.Sort = "Prestadora";
                 ViewState["tblMesEspePresta"] = tblagre;
@@ -311,6 +313,7 @@ namespace Pry_PrestasaludWAP.MedicoOdonto
             tbMedEspePresta.Columns.Add("preecodigo");
             tbMedEspePresta.Columns.Add("Codigo");
             tbMedEspePresta.Columns.Add("Estado");
+            tbMedEspePresta.Columns.Add("TipoMed");
             ViewState["tblMesEspePresta"] = tbMedEspePresta;
             grdvDatos.DataSource = null;
             grdvDatos.DataBind();
