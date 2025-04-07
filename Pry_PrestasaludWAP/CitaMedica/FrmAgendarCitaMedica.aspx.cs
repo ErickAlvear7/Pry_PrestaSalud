@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.WebPages;
+using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 using static Pry_PrestasaludWAP.Modelo.Models;
 
 namespace Pry_PrestasaludWAP.CitaMedica
@@ -2904,8 +2906,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
                                                           tipo, paciente, codigoGenerado);                        
                         }
-
                         
+                        //CANCELAR CITA EN MEDILINK
+                        Array.Resize(ref objparam, 3);
+                        objparam[0] = codigoCita;
+                        objparam[1] = "";
+                        objparam[2] = 192;
+                        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        if (dt != null && dt.Tables[0].Rows.Count > 0)
+                        {
+                            string codigo = dt.Tables[0].Rows[0][0].ToString();
+                            FunCancelMedilink(codigo);
+                        }
                     }
                 }
                 if (mensaje == "") Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado='Cita(s) Cancelada(s) con Éxito'", true);
@@ -3046,29 +3058,40 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
-        private async Task FunCancelMedilink(string codigo)
+        private void FunCancelMedilink(string codigo)
         {
-            //await new MediLinkApi().CancelarCita(codigo, Session["AccessToken"].ToString());
-            string url = "https://agendamiento.medilink.com.ec:8443/";
+            try
+            {                
+                string url = "https://agendamiento.medilink.com.ec:8443/";
+             
+                HttpClient _cancelar = new HttpClient();       
+                _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
+                _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + Session["AccessToken"].ToString());
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", url, 1);
-            HttpClient _cancelar = new HttpClient();
-            _cancelar.BaseAddress = new Uri(url);
-            HttpContent _content = new StringContent(codigo, Encoding.UTF8, "application/json");
-            _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
-            _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + Session["AccessToken"].ToString());
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var cancelarCita = new Cancelar
+                {
+                    idCita = codigo
+                };
 
-            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", "ENVIANDO AL API", 1);
+                var cancel = new JavaScriptSerializer().Serialize(cancelarCita);
+                var requestUrl = new Uri(url + "api/CancelarCita/" + codigo);
 
-            var resCancel = await _cancelar.PutAsync("api/CancelarCita/", _content);
+                using (HttpContent httpContent = new StringContent(cancel))
+                {
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    HttpResponseMessage response = _cancelar.PutAsync(requestUrl, httpContent).Result;
 
-            new Funciones().funCrearLogAuditoria(1, "RESPUESTA PUT", resCancel.ToString(), 365);
-
-            if (resCancel.IsSuccessStatusCode)
-            {
-
+                    if (response.IsSuccessStatusCode)
+                    {
+                       var responseContent = response.Content.ReadAsStringAsync().Result;                   
+                    }
+                }
             }
+            catch(Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+            }        
         }
         #endregion
     }

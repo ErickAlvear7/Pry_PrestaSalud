@@ -154,5 +154,11 @@ namespace Pry_PrestasaludWAP.Modelo
             public string sucursalNombreComercial { get; set; }
         }
 
+        //Cancelar Cita
+        public class Cancelar
+        {
+            public string idCita { get; set; }
+        }
+
     }
 }
