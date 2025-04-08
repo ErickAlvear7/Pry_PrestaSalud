@@ -2045,14 +2045,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 break;
                             }                         
                         }
-                    
+
                         //consultar nombre del grupo 
-                        //Array.Resize(ref objparam, 3);
-                        //objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
-                        //objparam[1] = "";
-                        //objparam[2] = 187;
-                        //dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //grupo = dt.Tables[0].Rows[0][0].ToString();
+                        Array.Resize(ref objparam, 3);
+                        objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                        objparam[1] = "";
+                        objparam[2] = 187;
+                        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        grupo = dt.Tables[0].Rows[0][0].ToString();
 
                         var consulta = new Consulta
                         {
@@ -2060,11 +2060,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             idContrato = _idcont,
                             idEspecialidad = _idespe,
                             idServicio = _idserv,
-                            //date = _fechadisponible,
-                            //hour = _horadisponible,
                             timeZone = "America/Guayaquil",
                             reason = motivo,
                             idMedico = id_medico,
+                            customId = grupo,
                             oneclick = true
                         };
 
