@@ -1763,7 +1763,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-            if (fechabloqueo == "03/03/2025" || fechabloqueo == "03/04/2025")
+            if (fechabloqueo == "04/18/2025" )
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
