@@ -1916,10 +1916,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
 
                 if (_token != "")
-                {               
+                {
                     //_idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
-                    _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
-                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
+
+                    ////var Result = JsonConvert.DeserializeObject<List<Contrato>>(_idcont);
+                    ////foreach (var _datos in Result)
+                    ////{
+                    ////    //string id = _datos.name;
+                    ////}
+                    //JArray jsonPreservar = JArray.Parse(_idcont);
+                    //foreach (JObject jsonOperaciones in jsonPreservar.Children<JObject>())
+                    //{
+                    //    foreach (JProperty jsonOPropiedades in jsonOperaciones.Properties())
+                    //    {
+                    //        string propiedad = jsonOPropiedades.Name;
+                    //    }
+                    //}
+
+
+
+                        _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
+                        _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
  
                     if (ViewState["TipoCliente"].ToString() == "T")
@@ -2062,12 +2079,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
 
                         //consultar nombre del grupo 
-                        Array.Resize(ref objparam, 3);
-                        objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
-                        objparam[1] = "";
-                        objparam[2] = 187;
-                        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        grupo = dt.Tables[0].Rows[0][0].ToString();
+                        //Array.Resize(ref objparam, 3);
+                        //objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                        //objparam[1] = "";
+                        //objparam[2] = 187;
+                        //dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        //grupo = dt.Tables[0].Rows[0][0].ToString();
 
                         var consulta = new Consulta
                         {
@@ -2078,7 +2095,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             timeZone = "America/Guayaquil",
                             reason = motivo,
                             idMedico = id_medico,
-                            customId = grupo,
                             oneclick = true
                         };
 

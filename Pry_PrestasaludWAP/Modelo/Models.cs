@@ -43,7 +43,7 @@ namespace Pry_PrestasaludWAP.Modelo
             public string timeZone { get; set; }
             public string reason { get; set; }
             public string idMedico { get; set; }
-            public string customId { get; set; }
+            //public string customId { get; set; }
             public bool oneclick { get; set; }
 
         }
@@ -60,6 +60,11 @@ namespace Pry_PrestasaludWAP.Modelo
         {
             public string date { get; set; }
             public string hour { get; set; }
+        }
+
+        public class Contrato
+        {
+            public List<Root> root { get; set; }
         }
 
         public class Root

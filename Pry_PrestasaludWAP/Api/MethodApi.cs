@@ -47,7 +47,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string GetIdContract(string url, string auth)
         {
-            string idespe = "";
+            string responseId = "";
             try
             {
                 HttpClient _contract = new HttpClient();
@@ -61,9 +61,9 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (resConId.IsSuccessStatusCode)
                 {
-                    var responseId = resConId.Content.ReadAsStringAsync().Result;
-                    dynamic idcont = JArray.Parse(responseId);
-                    idespe = idcont[0].id;
+                    responseId = resConId.Content.ReadAsStringAsync().Result;
+                    //dynamic idcont = JArray.Parse(responseId);
+                    //idespe = idcont[0].id;
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/GetIdContract", mensaje, 88);
             }
 
-            return idespe;
+            return responseId;
         }
 
         public string GetServicios(string url, string idcont, string auth)
