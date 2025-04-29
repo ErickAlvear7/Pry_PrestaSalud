@@ -1749,32 +1749,46 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = "Seleccione Médico para listar horarios..!";
                 return;
             }
-            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            if (dtmFechaCalendar < dtmFechaActual)
-            {
-                lblerror.Text = "La fecha de la cita no puede ser menor a la fecha actual";
-                tbDatosCita.Clear();
-                ViewState["tbDatosCita"] = tbDatosCita;
-                grdvDatosCitas.DataSource = tbDatosCita;
-                grdvDatosCitas.DataBind();
-                return;
-            }
 
-            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+            //string monthfechasistema = DateTime.Now.ToString("MM");
+            //string monthfechacalendar = CalendarioCita.SelectedDate.ToString("MM");
 
-            if (fechabloqueo == "04/18/2025" )
-            {
-                //lblerror.Text = "Fecha no dispible..!";
-                new Funciones().funShowJSMessage("Fecha no disponible", this);
-                tbDatosCita.Clear();
-                ViewState["tbDatosCita"] = tbDatosCita;
-                grdvDatosCitas.DataSource = tbDatosCita;
-                grdvDatosCitas.DataBind();
-                return;
-            }
+            //if (monthfechasistema == monthfechacalendar)
+            //{
 
-            FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
+                DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                if (dtmFechaCalendar < dtmFechaActual)
+                {
+                    lblerror.Text = "La fecha de la cita no puede ser menor a la fecha actual";
+                    tbDatosCita.Clear();
+                    ViewState["tbDatosCita"] = tbDatosCita;
+                    grdvDatosCitas.DataSource = tbDatosCita;
+                    grdvDatosCitas.DataBind();
+                    return;
+                }
+
+                string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+
+                if (fechabloqueo == "05/02/2025")
+                {
+                    //lblerror.Text = "Fecha no dispible..!";
+                    new Funciones().funShowJSMessage("Fecha no disponible", this);
+                    tbDatosCita.Clear();
+                    ViewState["tbDatosCita"] = tbDatosCita;
+                    grdvDatosCitas.DataSource = tbDatosCita;
+                    grdvDatosCitas.DataBind();
+                    return;
+                }
+
+                FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
+            //}
+            //else
+            //{
+            //    new Funciones().funShowJSMessage("No hay horarios generados", this);
+            //    grdvDatosCitas.DataSource = null;
+            //    grdvDatosCitas.DataBind();
+            //}
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1903,7 +1917,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (_token != "")
                 {               
-                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);                 
+                    //_idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
+                    _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
                     _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
  
@@ -1962,24 +1977,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (!_idpatient.IsEmpty())
                     {
-                        Array.Resize(ref objlinkid, 7);
-                        objlinkid[0] = 0;
-                        objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                        objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
-                        objlinkid[3] = _idpatient;
-                        objlinkid[4] = _idcont;
-                        objlinkid[5] = _idespe;
-                        objlinkid[6] = _idserv;
+                        //Array.Resize(ref objlinkid, 7);
+                        //objlinkid[0] = 0;
+                        //objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
+                        //objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
+                        //objlinkid[3] = _idpatient;
+                        //objlinkid[4] = _idcont;
+                        //objlinkid[5] = _idespe;
+                        //objlinkid[6] = _idserv;
 
-                        link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
+                        //link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 
-                        foreach (DataRow dr in link.Tables[0].Rows)
-                        {
-                            _idpatient = dr[0].ToString();
-                            _idcont = dr[1].ToString();
-                            _idespe = dr[2].ToString();
-                            _idserv = dr[3].ToString();
-                        }
+                        //foreach (DataRow dr in link.Tables[0].Rows)
+                        //{
+                        //    _idpatient = dr[0].ToString();
+                        //    _idcont = dr[1].ToString();
+                        //    _idespe = dr[2].ToString();
+                        //    _idserv = dr[3].ToString();
+                        //}
 
                         string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);

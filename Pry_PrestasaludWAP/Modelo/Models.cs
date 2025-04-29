@@ -62,5 +62,11 @@ namespace Pry_PrestasaludWAP.Modelo
             public string hour { get; set; }
         }
 
+        public class Root
+        {
+            public string id { get; set; }
+            public string nombre { get; set; }
+        }
+
     }
 }

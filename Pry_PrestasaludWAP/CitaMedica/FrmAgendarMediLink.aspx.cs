@@ -380,7 +380,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         string _codsucursal = sucursales.codSucursal;
                         string _nomsucursal = sucursales.sucursalNombreComercial;
 
-                        if(_codsucursal =="28" || _codsucursal == "1" || _codsucursal == "3" || _codsucursal == "5" || _codsucursal == "7")
+                        if(_codsucursal =="28" || _codsucursal == "1" || _codsucursal == "3" || _codsucursal == "5" /*|| _codsucursal == "7"*/)
                         {
                             DataRow rowSucursal = dtsucursal.NewRow();
                             rowSucursal["codCiudad"] = codigoCiudad;
@@ -953,6 +953,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 new Funciones().funShowJSMessage("Fecha seleccionada menor a la Actual!!", this);
                 Calendar.SelectedDate = DateTime.Now.AddDays(-8);
+                return;
+            }
+
+            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+            if (fechabloqueo == "05/02/2025")
+            {
+                
+                new Funciones().funShowJSMessage("Fecha no disponible", this);
                 return;
             }
 
