@@ -64,10 +64,10 @@ namespace Pry_PrestasaludWAP.Modelo
 
         public class Contrato
         {
-            public List<Root> root { get; set; }
+            public List<Contatox> datos { get; set; }
         }
 
-        public class Root
+        public class  Contatox
         {
             public string id { get; set; }
             public string nombre { get; set; }

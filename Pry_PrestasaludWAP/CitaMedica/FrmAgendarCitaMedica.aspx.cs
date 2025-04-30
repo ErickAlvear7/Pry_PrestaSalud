@@ -1165,8 +1165,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objcitamedica[23] = parametro1;
                     if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
                     {
-                        //thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
-                        //thrEnviarSMS.Start();
+                        thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
+                        thrEnviarSMS.Start();
                     }
 
                     //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
@@ -1852,7 +1852,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
                     fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
-                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "";
+                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "";
           
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
@@ -1899,10 +1899,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
             try
             {
                 //CONSULTAR API-KEY BDD
+                //Array.Resize(ref objparam, 3);
+                //objparam[0] = 0;
+                //objparam[1] = "";
+                //objparam[2] = 182;
+                //api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                //dtApi = api.Tables[0].Rows[0][0].ToString();
+
+                //CONSULTAR CODIGO CAMPAIGN 
+                Array.Resize(ref objparam, 3);
+                objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                objparam[1] = "";
+                objparam[2] = 195;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                campaing = dt.Tables[0].Rows[0][0].ToString();
+
+                if(campaing == "35" || campaing == "1")
+                {
+                    campaing = "35";
+                }
+
+                //CONSULTAR PARAMETRO TOKEN
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
-                objparam[1] = "";
-                objparam[2] = 182;
+                objparam[1] = campaing;
+                objparam[2] = 196;
                 api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 dtApi = api.Tables[0].Rows[0][0].ToString();
 
@@ -1917,26 +1938,29 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (_token != "")
                 {
-                    //_idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
+                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
 
-                    ////var Result = JsonConvert.DeserializeObject<List<Contrato>>(_idcont);
-                    ////foreach (var _datos in Result)
-                    ////{
-                    ////    //string id = _datos.name;
-                    ////}
-                    //JArray jsonPreservar = JArray.Parse(_idcont);
-                    //foreach (JObject jsonOperaciones in jsonPreservar.Children<JObject>())
-                    //{
-                    //    foreach (JProperty jsonOPropiedades in jsonOperaciones.Properties())
-                    //    {
-                    //        string propiedad = jsonOPropiedades.Name;
-                    //    }
-                    //}
+                    var Result = JsonConvert.DeserializeObject<Contatox[]>(_idcont);
 
 
+                    foreach (var _datos in Result)
+                    {
+                        string id = _datos.id;
+                        string name = _datos.nombre;
 
-                        _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
-                        _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
+                        if (name == "Seguros del Pichincha")
+                        {
+                            _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
+                            break;
+                        }
+                        
+                    }
+
+
+
+
+                    //_idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
+                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
  
                     if (ViewState["TipoCliente"].ToString() == "T")
