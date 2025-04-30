@@ -1657,48 +1657,59 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             if (prestador == "PRESTADOR VIRTUAL")
             {
-                string codPro = Session["CodigoProducto"].ToString();
-                bool activo = false;
-
-                //CONSULTAR A LA BDD LOS ID PARA LA VIDEO LLAMADA
-                Array.Resize(ref objparam, 1);
-                objparam[0] = 60;
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-
-                if (dt.Tables[0].Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dt.Tables[0].Rows)
-                    {
-
-                        if (dr[1].ToString() == codPro)
-                        {
-                            activo = true;
-                            break;
-                        }
-
-                    }
-
-                    if (activo)
-                    {
-                        pnlLink.Visible = true;
-                        ddlOpcion.Visible = false;
-                        ddlTipoPago.Visible = false;
-                        txtObservacion.Visible = false;
-                        updCitaMedica.Visible = false;
-                        txtObservacionG.Visible = false;
-                        pnlResumenCita.Visible = false;
-
-                    }
-                    else
-                    {
-
-                        ddlPrestadora.SelectedValue = "0";
-                        new Funciones().funShowJSMessage("SERVICIO NO ACTIVO PARA ESTE PRODUCTO", this);
-                        return;
-                    }
-
-                }
+                pnlLink.Visible = true;
+                ddlOpcion.Visible = false;
+                ddlTipoPago.Visible = false;
+                txtObservacion.Visible = false;
+                updCitaMedica.Visible = false;
+                txtObservacionG.Visible = false;
+                pnlResumenCita.Visible = false;
             }
+
+            //if (prestador == "PRESTADOR VIRTUAL")
+            //{
+            //    string codPro = Session["CodigoProducto"].ToString();
+            //    bool activo = false;
+
+            //    //CONSULTAR A LA BDD LOS ID PARA LA VIDEO LLAMADA
+            //    Array.Resize(ref objparam, 1);
+            //    objparam[0] = 60;
+            //    dt = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+
+            //    if (dt.Tables[0].Rows.Count > 0)
+            //    {
+            //        foreach (DataRow dr in dt.Tables[0].Rows)
+            //        {
+
+            //            if (dr[1].ToString() == codPro)
+            //            {
+            //                activo = true;
+            //                break;
+            //            }
+
+            //        }
+
+            //        if (activo)
+            //        {
+            //            pnlLink.Visible = true;
+            //            ddlOpcion.Visible = false;
+            //            ddlTipoPago.Visible = false;
+            //            txtObservacion.Visible = false;
+            //            updCitaMedica.Visible = false;
+            //            txtObservacionG.Visible = false;
+            //            pnlResumenCita.Visible = false;
+
+            //        }
+            //        else
+            //        {
+
+            //            ddlPrestadora.SelectedValue = "0";
+            //            new Funciones().funShowJSMessage("SERVICIO NO ACTIVO PARA ESTE PRODUCTO", this);
+            //            return;
+            //        }
+
+            //    }
+            //}
 
             FunCascadaCombos(3);
             FunLimpiarCampos();
@@ -1852,7 +1863,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
                     fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
-                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "";
+                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "",contratos="",contratoId="";
           
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
@@ -1938,28 +1949,37 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (_token != "")
                 {
-                    _idcont = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
 
-                    var Result = JsonConvert.DeserializeObject<Contatox[]>(_idcont);
+                    //consultar nombre del grupo
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                    objparam[1] = "";
+                    objparam[2] = 187;
+                    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    grupo = dt.Tables[0].Rows[0][0].ToString();
 
+
+                    contratos = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
+                    var Result = JsonConvert.DeserializeObject<Contatox[]>(contratos);
 
                     foreach (var _datos in Result)
-                    {
-                        string id = _datos.id;
+                    {                                        
                         string name = _datos.nombre;
-
-                        if (name == "Seguros del Pichincha")
+                        if (name == "Seguros del Pichincha") name = "VIDA Y SALUD PROTEGIDA";
+                        if (name == grupo)
                         {
-                            _idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
+                            //CONSULTAR ID CONTRATO ASOCIADO AL GRUPO
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = 0;
+                            objparam[1] = grupo;
+                            objparam[2] = 199;
+                            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            contratoId = dt.Tables[0].Rows[0][0].ToString();
                             break;
-                        }
-                        
+                        }                   
                     }
 
-
-
-
-                    //_idcont = "8f49fa6e-2979-4655-92f1-d13931a4b173";
+                    _idcont = contratoId;
                     _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
  
@@ -2101,14 +2121,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 break;
                             }                         
                         }
-
-                        //consultar nombre del grupo 
-                        //Array.Resize(ref objparam, 3);
-                        //objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
-                        //objparam[1] = "";
-                        //objparam[2] = 187;
-                        //dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //grupo = dt.Tables[0].Rows[0][0].ToString();
 
                         var consulta = new Consulta
                         {
