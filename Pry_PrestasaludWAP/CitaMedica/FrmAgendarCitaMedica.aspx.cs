@@ -1389,10 +1389,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     //_client.BaseAddress = new Uri("http://186.3.87.6/sms/client/api.php/sendMessage");
                     //_client.BaseAddress = new Uri("https://api.smsplus.net.ec/sms/client/api.php/sendMessage");
-                    _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage");
+                    _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/");
                 
                     _client.DefaultRequestHeaders.Add("ContentType", "application/json");
-                    _client.DefaultRequestHeaders.Add("Authorization", "Basic OTU4OTMzMjA1Om9NYkVhcFA5MGwzN21nalU=");
+                    //_client.DefaultRequestHeaders.Add("Authorization", "Basic OTU4OTMzMjA1Om9NYkVhcFA5MGwzN21nalU=");
+                    //_client.DefaultRequestHeaders.Add("Authorization", "Basic oMbEapP90l37mgjU");
+                    var byteArray = Encoding.ASCII.GetBytes("958933205:oMbEapP90l37mgjU");
+                    _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
                 }
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
