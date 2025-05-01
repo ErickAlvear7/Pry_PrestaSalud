@@ -1389,7 +1389,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     //_client.BaseAddress = new Uri("http://186.3.87.6/sms/client/api.php/sendMessage");
                     //_client.BaseAddress = new Uri("https://api.smsplus.net.ec/sms/client/api.php/sendMessage");
-                    _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/");
+                    _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
                 
                     _client.DefaultRequestHeaders.Add("ContentType", "application/json");
                     //_client.DefaultRequestHeaders.Add("Authorization", "Basic OTU4OTMzMjA1Om9NYkVhcFA5MGwzN21nalU=");
