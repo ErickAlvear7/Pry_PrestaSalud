@@ -2682,6 +2682,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 pnlResumenCita.Visible = true;
                 CalendarioCita.Visible = true;
                 grdvDatosCitas.Visible = true;
+                DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+
+                if (fechabloqueo == "05/02/2025")
+                {
+                    //lblerror.Text = "Fecha no dispible..!";
+                    new Funciones().funShowJSMessage("Fecha no disponible para agendar"+" " + fechabloqueo, this);
+                    tbDatosCita.Clear();
+                    ViewState["tbDatosCita"] = tbDatosCita;
+                    grdvDatosCitas.DataSource = tbDatosCita;
+                    grdvDatosCitas.DataBind();
+                    return;
+                }
             }
             else
             {

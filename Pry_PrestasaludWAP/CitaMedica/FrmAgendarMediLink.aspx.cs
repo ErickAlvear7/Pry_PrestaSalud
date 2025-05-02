@@ -908,6 +908,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             Calendar.Visible = true;
             lblHorarios.Visible = true;
             lstBoxMedicos.Visible = true;
+            DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            string fechabloqueo = DateTime.Now.ToString("MM/dd/yyyy");
+            if (fechabloqueo == "05/02/2025")
+            {
+
+                new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
+                return;
+            }
             FunDisponibilidades(codCiudad, codEspe, codsucursal, ViewState["FechaCalendar"].ToString());
         }
 
