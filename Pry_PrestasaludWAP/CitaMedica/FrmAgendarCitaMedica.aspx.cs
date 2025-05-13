@@ -72,7 +72,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         #region Load
         protected void Page_Load(object sender, EventArgs e)
-        
+
         {
             //pnlLink.Visible = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
@@ -140,6 +140,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Session["Regresar"] = Request["Regresar"];
                 Session["TipoCita"] = "CitaMedica";
                 ViewState["Intervalo"] = 0;
+
+                //DateTime _fechaactual = DateTime.Now;
+                //DateTime nuevaFecha = _fechaactual.AddDays(10);
+
+                //ViewState["FechaActual"] = DateTime.ParseExact(nuevaFecha.ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                ViewState["FechaActual"] = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+
                 //Session["codigocita"] = 0;
                 FunContadorCitas();
                 FunValidarEspe();
@@ -549,7 +556,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlPrestadora.Items.Clear();
 
                         ListItem pres;
-                                       
+
                         foreach (DataRow item in dts.Tables[0].Rows)
                         {
                             pres = new ListItem(item[0].ToString(), item[1].ToString());
@@ -593,7 +600,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-                       
+
                         if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
                             Array.Resize(ref objparam, 3);
@@ -626,7 +633,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
-                      
+
                         if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
                         {
                             Array.Resize(ref objparam, 3);
@@ -764,8 +771,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-                      
-                        if(ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+
+                        if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
@@ -789,8 +796,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
-                     
-                        if(ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
+
+                        if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
@@ -1390,7 +1397,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //_client.BaseAddress = new Uri("http://186.3.87.6/sms/client/api.php/sendMessage");
                     //_client.BaseAddress = new Uri("https://api.smsplus.net.ec/sms/client/api.php/sendMessage");
                     _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
-                
+
                     _client.DefaultRequestHeaders.Add("ContentType", "application/json");
                     //_client.DefaultRequestHeaders.Add("Authorization", "Basic OTU4OTMzMjA1Om9NYkVhcFA5MGwzN21nalU=");
                     //_client.DefaultRequestHeaders.Add("Authorization", "Basic oMbEapP90l37mgjU");
@@ -1773,32 +1780,44 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //if (monthfechasistema == monthfechacalendar)
             //{
 
-                DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                if (dtmFechaCalendar < dtmFechaActual)
-                {
-                    lblerror.Text = "La fecha de la cita no puede ser menor a la fecha actual";
-                    tbDatosCita.Clear();
-                    ViewState["tbDatosCita"] = tbDatosCita;
-                    grdvDatosCitas.DataSource = tbDatosCita;
-                    grdvDatosCitas.DataBind();
-                    return;
-                }
+            //DateTime _fechaactual = DateTime.ParseExact(ViewState["FechaActual"].ToString(), "MM/dd/yyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaActual = DateTime.ParseExact(DateTime.Now.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
-                string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+            TimeSpan _difdias = dtmFechaCalendar.Subtract(dtmFechaActual);
 
-                if (fechabloqueo == "05/02/2025")
-                {
-                    //lblerror.Text = "Fecha no dispible..!";
-                    new Funciones().funShowJSMessage("Fecha no disponible", this);
-                    tbDatosCita.Clear();
-                    ViewState["tbDatosCita"] = tbDatosCita;
-                    grdvDatosCitas.DataSource = tbDatosCita;
-                    grdvDatosCitas.DataBind();
-                    return;
-                }
+            int _dias = _difdias.Days;
 
-                FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
+            if(_dias > 10)
+            {
+                new Funciones().funShowJSMessage("Supero los 10 dias de agendamieno..!", this);
+                return;
+            }
+
+            if (dtmFechaCalendar < dtmFechaActual)
+            {
+                lblerror.Text = "La fecha de la cita no puede ser menor a la fecha actual";
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
+                return;
+            }
+
+            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+
+            if (fechabloqueo == "05/02/2025")
+            {
+                //lblerror.Text = "Fecha no dispible..!";
+                new Funciones().funShowJSMessage("Fecha no disponible", this);
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
+                return;
+            }
+
+            FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
             //}
             //else
             //{
@@ -1869,8 +1888,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
                     fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
-                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "",contratos="",contratoId="";
-          
+                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "", contratos = "", contratoId = "";
+
             string documento = ViewState["Indentificacion"].ToString();
             string producto = ViewState["Producto"].ToString();
             string idproducto = Session["CodigoProducto"].ToString();
@@ -1931,7 +1950,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 campaing = dt.Tables[0].Rows[0][0].ToString();
 
-                if(campaing == "35" || campaing == "1")
+                if (campaing == "35" || campaing == "1")
                 {
                     campaing = "35";
                 }
@@ -1969,7 +1988,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     var Result = JsonConvert.DeserializeObject<Contatox[]>(contratos);
 
                     foreach (var _datos in Result)
-                    {                                        
+                    {
                         string name = _datos.nombre;
                         if (name == "Seguros del Pichincha") name = "VIDA Y SALUD PROTEGIDA";
                         if (name == grupo)
@@ -1982,13 +2001,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                             contratoId = dt.Tables[0].Rows[0][0].ToString();
                             break;
-                        }                   
+                        }
                     }
 
                     _idcont = contratoId;
-                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);                  
+                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
                     _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
- 
+
                     if (ViewState["TipoCliente"].ToString() == "T")
                     {
                         Array.Resize(ref objlink, 3);
@@ -2125,7 +2144,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             {
                                 _encontro = 1;
                                 break;
-                            }                         
+                            }
                         }
 
                         var consulta = new Consulta
@@ -2161,7 +2180,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             patientNombre = urlLink.patient.nombre;
                             patientApelllido = urlLink.patient.apellidos;
                             patient = patientNombre + " " + patientApelllido;
-                        
+
                             string xfecha = fecha.Substring(0, 10);
                             string xhora = fecha.Substring(11, 5);
 
@@ -2639,14 +2658,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 string _respuesta = dt.Tables[0].Rows[0][0].ToString();
                 if (_respuesta == "OK")
                 {
-                    
+
                     FunAgendaHoras(0, preecodigo, medicodigo, fechacita, diacita);
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", "alert('Reserva Cancelada!..');", true);
                     //ViewState["Cliente"] = "0";
                     //Session["SalirAgenda"] = "SI";
                     FunGetReservas();
                 }
-                else 
+                else
                 {
                     //AKI SERIA BUENO MANDAR A GRABAR EN UN LOG
                     new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaEliminarREserva", "Eliminar Reserva", 2566);
@@ -2688,7 +2707,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (fechabloqueo == "05/02/2025")
                 {
                     //lblerror.Text = "Fecha no dispible..!";
-                    new Funciones().funShowJSMessage("Fecha no disponible para agendar"+" " + fechabloqueo, this);
+                    new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + fechabloqueo, this);
                     tbDatosCita.Clear();
                     ViewState["tbDatosCita"] = tbDatosCita;
                     grdvDatosCitas.DataSource = tbDatosCita;
@@ -2987,11 +3006,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         dt = new Conexion(2, "").funConsultarSqls("sp_RegistraCitaAgendada", objdatoscancel);
                         if (dt.Tables[0].Rows[0][0].ToString() == "")
                         {
-                                                      
+
                             mensaje = FunEnviarCancelCita(codigoCita, codigoPresta, ciudadCita, fechaCita, horaCita, prestadora, medico, especialidad,
-                                                          tipo, paciente, codigoGenerado);                        
+                                                          tipo, paciente, codigoGenerado);
                         }
-                        
+
                         //CANCELAR CITA EN MEDILINK
                         Array.Resize(ref objparam, 3);
                         objparam[0] = codigoCita;
@@ -3146,10 +3165,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private void FunCancelMedilink(string codigo)
         {
             try
-            {                
+            {
                 string url = "https://agendamiento.medilink.com.ec:8443/";
-             
-                HttpClient _cancelar = new HttpClient();       
+
+                HttpClient _cancelar = new HttpClient();
                 _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
                 _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + Session["AccessToken"].ToString());
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -3169,14 +3188,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (response.IsSuccessStatusCode)
                     {
-                       var responseContent = response.Content.ReadAsStringAsync().Result;                   
+                        var responseContent = response.Content.ReadAsStringAsync().Result;
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
-            }        
+            }
         }
         #endregion
     }
