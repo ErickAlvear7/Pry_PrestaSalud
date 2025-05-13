@@ -1790,7 +1790,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             if(_dias > 10)
             {
-                new Funciones().funShowJSMessage("Supero los 10 dias de agendamieno..!", this);
+                new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
                 return;
             }
 

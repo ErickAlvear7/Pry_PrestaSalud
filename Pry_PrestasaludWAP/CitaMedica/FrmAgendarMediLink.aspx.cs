@@ -964,6 +964,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 return;
             }
 
+            TimeSpan _difdias = dtmFechaCalendar.Subtract(dtmFechaActual);
+
+            int _dias = _difdias.Days;
+
+            if (_dias > 10)
+            {
+                new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
+                return;
+            }
+
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
             if (fechabloqueo == "05/02/2025")
             {
