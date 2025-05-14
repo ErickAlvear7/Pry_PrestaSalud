@@ -701,6 +701,7 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_usucodigo", objparam[11]);
                 cmd.Parameters.AddWithValue("@in_terminal", objparam[12]);
                 cmd.Parameters.AddWithValue("@in_observacion", objparam[13]);
+                cmd.Parameters.AddWithValue("@in_codigoproducto", objparam[14]);
                 Sqlcn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(ds);

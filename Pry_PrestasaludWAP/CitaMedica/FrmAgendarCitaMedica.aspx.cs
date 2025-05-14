@@ -2067,25 +2067,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (!_idpatient.IsEmpty())
                     {
-                        //Array.Resize(ref objlinkid, 7);
-                        //objlinkid[0] = 0;
-                        //objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                        //objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
-                        //objlinkid[3] = _idpatient;
-                        //objlinkid[4] = _idcont;
-                        //objlinkid[5] = _idespe;
-                        //objlinkid[6] = _idserv;
-
-                        //link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
-
-                        //foreach (DataRow dr in link.Tables[0].Rows)
-                        //{
-                        //    _idpatient = dr[0].ToString();
-                        //    _idcont = dr[1].ToString();
-                        //    _idespe = dr[2].ToString();
-                        //    _idserv = dr[3].ToString();
-                        //}
-
+                 
                         string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
@@ -2198,7 +2180,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             lblHora.Visible = true;
                             lblHora.Text = _horadisponible;
 
-                            Array.Resize(ref objparam, 14);
+                            Array.Resize(ref objlinkid, 8);
+                            objlinkid[0] = 0;
+                            objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
+                            objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
+                            objlinkid[3] = url.ToString();
+                            objlinkid[4] = xfecha;
+                            objlinkid[5] = newDia;
+                            objlinkid[6] = xhora;
+                            objlinkid[7] = _idpatient;
+
+                            link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
+
+                            Array.Resize(ref objparam, 15);
                             objparam[0] = 0;
                             objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
                             objparam[2] = int.Parse(ddlMedico.SelectedValue);
@@ -2206,13 +2200,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[4] = ViewState["TipoCliente"].ToString();
                             objparam[5] = int.Parse(ViewState["TituCodigo"].ToString());
                             objparam[6] = 0;
-                            objparam[7] = "VI";
+                            objparam[7] = "TE";
                             objparam[8] = xfecha;
                             objparam[9] = newDia;
                             objparam[10] = xhora;
                             objparam[11] = int.Parse(Session["usuCodigo"].ToString());
                             objparam[12] = Session["MachineName"].ToString();
-                            objparam[13] = motivo;
+                            objparam[13] = "PRUEBA PRESTASALUD";// motivo
+                             objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
                             DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
                             int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
                             if (codCita > 0)
@@ -2225,6 +2220,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 //{
                                 //    FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
                                 //}
+                            }
+                            else
+                            {
+                                new Funciones().funCrearLogAuditoria(1, "sp_AgendaMedicaLink", "NO PUDO GRABAR", 2210);
                             }
                         }
                     }
