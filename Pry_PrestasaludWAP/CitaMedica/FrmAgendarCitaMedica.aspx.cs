@@ -2180,15 +2180,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             lblHora.Visible = true;
                             lblHora.Text = _horadisponible;
 
-                            Array.Resize(ref objlinkid, 8);
+                            Array.Resize(ref objlinkid, 7);
                             objlinkid[0] = 0;
                             objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
                             objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
                             objlinkid[3] = url.ToString();
                             objlinkid[4] = xfecha;
-                            objlinkid[5] = newDia;
-                            objlinkid[6] = xhora;
-                            objlinkid[7] = _idpatient;
+                            objlinkid[5] = xhora;
+                            objlinkid[6] = _idpatient;
 
                             link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 
