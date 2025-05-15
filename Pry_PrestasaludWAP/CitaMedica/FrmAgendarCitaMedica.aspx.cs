@@ -2205,7 +2205,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[10] = xhora;
                             objparam[11] = int.Parse(Session["usuCodigo"].ToString());
                             objparam[12] = Session["MachineName"].ToString();
-                            objparam[13] = "PRUEBA PRESTASALUD";// motivo
+                            objparam[13] = motivo;
                              objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
                             DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
                             int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
