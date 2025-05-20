@@ -910,7 +910,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstBoxMedicos.Visible = true;
             DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
             string fechabloqueo = DateTime.Now.ToString("MM/dd/yyyy");
-            if (fechabloqueo == "05/02/2025")
+            if (fechabloqueo == "05/23/2025")
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
@@ -975,7 +975,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            if (fechabloqueo == "05/02/2025")
+            if (fechabloqueo == "05/23/2025")
             {
                 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);

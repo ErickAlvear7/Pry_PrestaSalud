@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pry_PrestasaludWAP.Api;
+using Pry_PrestasaludWAP.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,6 +21,7 @@ using System.Web.UI.WebControls;
 using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 using static Pry_PrestasaludWAP.Modelo.Models;
+using static Pry_PrestasaludWAP.Modelo.ModelSms;
 
 namespace Pry_PrestasaludWAP.CitaMedica
 {
@@ -1309,82 +1311,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             try
             {
-                //Array.Resize(ref objsendsms, 3);
-                //objconsulta[0] = int.Parse(ViewState["CodigoCamp"].ToString());
-                //objconsulta[1] = "";
-                //objconsulta[2] = 110;
-                //dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objconsulta);
-                //if (dt.Tables[0].Rows.Count > 0)
-                //{
-                //    textoSMS = dt.Tables[0].Rows[0][0].ToString();
-                //    Array.Resize(ref objsendsms, 20);
-                //    objsendsms[0] = 2;
-                //    objsendsms[1] = 0;
-                //    objsendsms[2] = 0;
-                //    objsendsms[3] = ViewState["Prestadora"].ToString();
-                //    objsendsms[4] = ViewState["Ciudad"].ToString();
-                //    objsendsms[5] = lblCelular.InnerText.Trim();
-                //    objsendsms[6] = ViewState["Medico"].ToString();
-                //    objsendsms[7] = ViewState["Especialidad"].ToString();
-                //    objsendsms[8] = ViewState["Paciente"].ToString();
-                //    objsendsms[9] = ViewState["CodigoCita"].ToString();
-                //    objsendsms[10] = ViewState["FechaCita"].ToString();
-                //    objsendsms[11] = ViewState["HoraCita"].ToString();
-                //    objsendsms[12] = 0;
-                //    objsendsms[13] = textoSMS.Trim();
-                //    objsendsms[14] = "";
-                //    objsendsms[15] = "";
-                //    objsendsms[16] = 0;
-                //    objsendsms[17] = 0;
-                //    objsendsms[18] = Session["usuCodigo"].ToString();
-                //    objsendsms[19] = Session["MachineName"].ToString();
-                //    dt = new Conexion(2, "").funConsultarSqls("sp_GenerarTextoSMS", objsendsms);
-                //    textoSMS = dt.Tables[0].Rows[0][0].ToString();
-                //}
-                //if (!string.IsNullOrEmpty(textoSMS))
-                //{
-                //    //Obtener las credenciales envio SMS
-                //    Array.Resize(ref objconsulta, 3);
-                //    objconsulta[0] = int.Parse(ViewState["CodigoCamp"].ToString());
-                //    objconsulta[1] = "";
-                //    objconsulta[2] = 113;
-                //    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objconsulta);
-                //    if (dt.Tables[0].Rows.Count > 0)
-                //    {
-                //        usuarioSMS = dt.Tables[0].Rows[0][1].ToString();
-                //        passSMS = dt.Tables[0].Rows[1][1].ToString();
-                //    }
-                //    if (usuarioSMS != "" && passSMS != "")
-                //    {
-                //        celular = lblCelular.InnerText.Trim();
-                //        if (celular.Length == 10) celular = celular.Substring(1, 9);
-                //        WReferenceSMS.WSMPLUS sendsms = new WReferenceSMS.WSMPLUS();
-                //        WReferenceSMS.RespuestaMPlus response = new WReferenceSMS.RespuestaMPlus();
-                //        trama = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
-                //        trama += "<sms-Request><celular>" + celular + "</celular><mensaje>";
-                //        trama += textoSMS;
-                //        trama += "</mensaje><id_mensaje>1</id_mensaje></sms-Request>";
-                //        response = sendsms.RegistrarMensajeMT(usuarioSMS, passSMS, trama);
-                //        System.Xml.XmlElement[] valor = response.Any;
-                //        foreach (XmlNode nod in valor)
-                //        {
-                //            codigo = nod.ChildNodes.Item(0).InnerText;
-                //            descripcion = nod.ChildNodes.Item(1).InnerText;
-                //        }
-                //        //Insertar EL RESULTADO DEL SMS ENVIADO
-                //        objsendsms[0] = 3;
-                //        objsendsms[13] = textoSMS.Trim();
-                //        objsendsms[14] = descripcion;
-                //        objsendsms[16] = int.Parse(codigo);
-                //        new Conexion(2, "").funConsultarSqls("sp_GenerarTextoSMS", objsendsms);
-                //    }
-                //    else
-                //    {
-                //        new Funciones().funCrearLogAuditoria(int.Parse(Session["usuCodigo"].ToString()), "FrmAgendarCitaMedica", 
-                //            "Usuario o Clave sin definir", 1);
-                //    }
-
-                //}
+          
                 _enviarsms += "{\"phoneNumber\":\"" + lblCelular.InnerText + "\",";
                 _enviarsms += "\"messageId\":" + 134056 + ",";
                 _enviarsms += "\"transactionId\":\"" + ViewState["CodigoCita"].ToString() + "\",";
@@ -1399,8 +1326,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
 
                     _client.DefaultRequestHeaders.Add("ContentType", "application/json");
-                    //_client.DefaultRequestHeaders.Add("Authorization", "Basic OTU4OTMzMjA1Om9NYkVhcFA5MGwzN21nalU=");
-                    //_client.DefaultRequestHeaders.Add("Authorization", "Basic oMbEapP90l37mgjU");
+
                     var byteArray = Encoding.ASCII.GetBytes("958933205:oMbEapP90l37mgjU");
                     _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
@@ -1414,6 +1340,38 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 HttpResponseMessage _respuesta = _response.Result;
                 var _responseJason = _respuesta.Content.ReadAsStreamAsync();
 
+                //var sendSMS = new SMS
+                //{
+                //    user = "",
+                //    pass = "",
+                //    mensajeid = 0,
+                //    campana = "envio uno a uno sms",
+                //    telefono = lblCelular.InnerText,
+                //    tipo = 1,
+                //    ruta = 0,
+                //    datos = ViewState["Paciente"].ToString() +"/" + newFechasMms + "," + ViewState["HoraCita"].ToString() +
+                //            "/" + ViewState["Ciudad"].ToString() + "," + ViewState["Medico"].ToString() + "," + ViewState["Prestadora"].ToString() + "/"
+                //};
+                //var data = new JavaScriptSerializer().Serialize(sendSMS);
+
+                //HttpClient _sms = new HttpClient();
+                //_sms.BaseAddress = new Uri("https://api.massend.com/api/");
+                //var byteArray = Encoding.ASCII.GetBytes("958933205:oMbEapP90l37mgjU");
+                //    _sms.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                //    _sms.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
+
+                //HttpContent _content = new StringContent(data, Encoding.UTF8, "application/json");
+                //var _ressms = _sms.PostAsync("sms", _content).Result;
+
+                //if (_ressms.IsSuccessStatusCode)
+                //{
+                //    string response = _ressms.Content.ReadAsStringAsync().Result;
+
+                //}
+                //else
+                //{
+                //    string response = _ressms.StatusCode.ToString();
+                //}
             }
             catch (Exception ex)
             {
@@ -1810,7 +1768,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-            if (fechabloqueo == "05/02/2025")
+            if (fechabloqueo == "05/23/2025")
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -2706,7 +2664,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-                if (fechabloqueo == "05/02/2025")
+                if (fechabloqueo == "05/23/2025")
                 {
                     //lblerror.Text = "Fecha no dispible..!";
                     new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + fechabloqueo, this);

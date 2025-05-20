@@ -19,7 +19,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <UseGlobalApplicationHostFile />
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -957,6 +958,7 @@
     </Compile>
     <Compile Include="Modelo\MediLinkModel.cs" />
     <Compile Include="Modelo\Models.cs" />
+    <Compile Include="Modelo\ModelSms.cs" />
     <Compile Include="Old_App_Code\BundleConfig.cs" />
     <Compile Include="Old_App_Code\Conexion.cs" />
     <Compile Include="Old_App_Code\DatosJson.cs" />
