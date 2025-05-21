@@ -56,7 +56,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         ImageButton btnEstado = new ImageButton();
         CheckBox chkCancelar = new CheckBox();
         TimeSpan horaActual, horaAgenda, intervalo, intervaloHoras;
-        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "",
+        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "", dtFecha="",
                 fileTemplate = "", subject = "", agenda = "", status = "", mensaje = "", fileLogo = "", mailsP = "",
                 mailsA = "", mailsD = "", sendmails = "", medicamentos = "", mailsU = "", codigo = "", descripcion = "",
                 textoSMS = "", trama = "", celular = "", usuarioSMS = "", passSMS = "", alerta = "", tipofecha = "", sql = "",
@@ -76,7 +76,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void Page_Load(object sender, EventArgs e)
 
         {
-            //pnlLink.Visible = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
             Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
 
@@ -192,6 +191,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
 
                 if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
+
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = "";
+                objparam[2] = 204;
+                DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                dtFecha = fecha.Tables[0].Rows[0][0].ToString();
+                ViewState["FechaBloqueo"] = dtFecha;
+
             }
         }
         #endregion
@@ -1768,7 +1776,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-            if (fechabloqueo == "05/23/2025")
+            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -2664,7 +2672,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-                if (fechabloqueo == "05/23/2025")
+                if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
                 {
                     //lblerror.Text = "Fecha no dispible..!";
                     new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + fechabloqueo, this);

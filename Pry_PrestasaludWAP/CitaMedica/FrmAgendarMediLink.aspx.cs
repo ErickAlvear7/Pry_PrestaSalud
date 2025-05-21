@@ -22,7 +22,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         string documento = "", fechanacimiento = "", parentesco = "", tipodocumento = "", nombresCompletos = "", nombre1 = "",nombre2 = "",
                apellido1 = "", apellido2 = "", genero = "", celular = "", telcasa = "", email = "", direccion = "", telefonos = "";
         string respVerifPacient = "", respRegisPacient="",respGetCiudad="",respGetSucur="",respGetEspe="",respGetMedico="",respGetDispo="",
-               respCrearPacient = "",respAdmision="",respCrearCita="", nombreProducto="", medicamento="", fileTemplate="",nombreCliente="", mailsA="", sendmails="", subject="", mensaje="";
+               respCrearPacient = "",respAdmision="",respCrearCita="", nombreProducto="", medicamento="", fileTemplate="",nombreCliente="", mailsA="", sendmails="", subject="", mensaje="", dtFecha="";
 
       
 
@@ -343,6 +343,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
                     }          
                 }
+
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = "";
+                objparam[2] = 204;
+                DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                dtFecha = fecha.Tables[0].Rows[0][0].ToString();
+                ViewState["FechaBloqueo"] = dtFecha;
             }
         }
         #endregion
@@ -910,7 +918,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstBoxMedicos.Visible = true;
             DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
             string fechabloqueo = DateTime.Now.ToString("MM/dd/yyyy");
-            if (fechabloqueo == "05/23/2025")
+            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
@@ -975,7 +983,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            if (fechabloqueo == "05/23/2025")
+            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
             {
                 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
