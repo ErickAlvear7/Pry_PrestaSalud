@@ -196,6 +196,7 @@ namespace Pry_PrestasaludWAP.Api
                 _consulta.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+              
 
                 var queryString = new StringBuilder();
                 queryString.Append("?notify=").Append(Uri.EscapeDataString("false"));
