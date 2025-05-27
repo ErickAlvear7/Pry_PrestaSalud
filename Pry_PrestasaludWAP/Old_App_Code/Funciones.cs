@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -713,15 +714,19 @@ public class Funciones
                         mailMessage.Bcc.Add(usMails);
                     }
                 }
+               
                 //mailMessage.Attachments.Add(archivo);
-                System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-                NetworkCred.UserName = eusername;
-                NetworkCred.Password = epassword;
+                //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+                //NetworkCred.UserName = eusername;
+                //NetworkCred.Password = epassword;
+                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
                 SmtpClient smtp = new SmtpClient();
-                smtp.Credentials = NetworkCred;
+                //smtp.Credentials = NetworkCred;
                 smtp.Host = ehost;
                 smtp.Port = eport;
                 smtp.EnableSsl = eEnableSSL;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(eusername, epassword);
                 smtp.Send(mailMessage);
                 mensaje = "";
             }
