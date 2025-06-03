@@ -550,32 +550,32 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
-                        Array.Resize(ref objparam, 11);
-                        objparam[0] = 34;
-                        objparam[1] = "";
-                        objparam[2] = "ONLINE";
-                        objparam[3] = ddlSector.SelectedValue;
-                        objparam[4] = "";
-                        objparam[5] = "";
-                        objparam[6] = ddlCiudad.SelectedValue;
-                        objparam[7] = 0;
-                        objparam[8] = 0;
-                        objparam[9] = 0;
-                        objparam[10] = 0;
-                        DataSet dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
-                        ddlPrestadora.Items.Clear();
 
-                        ListItem pres;
+                        ListItem sec;
+                        string ciudad = ddlCiudad.SelectedItem.Text;
 
-                        foreach (DataRow item in dts.Tables[0].Rows)
+                        if(ciudad == "RUMIÑAHUI")
                         {
-                            pres = new ListItem(item[0].ToString(), item[1].ToString());
-                            ddlPrestadora.Items.Add(pres);
+                            ddlSector.Items.Clear();
+                            sec = new ListItem("VALLE CHILLOS", "VC");
+                            ddlSector.Items.Add(sec);
+                            FunCascadaCombos(10);
+                        }else if(ciudad == "TUMBACO"){
+                            ddlSector.Items.Clear();
+                            sec = new ListItem("VALLE TUMBACO", "VT");
+                            ddlSector.Items.Add(sec);
+                            FunCascadaCombos(10);
+                        }else if(ciudad == "CUMBAYA")
+                        {
+                            ddlSector.Items.Clear();
+                            sec = new ListItem("VALLE CUMBAYA", "VU");
+                            ddlSector.Items.Add(sec);
+                            FunCascadaCombos(10);
                         }
-
-                        pres = new ListItem("PRESTADOR VIRTUAL", "460");
-                        ddlPrestadora.Items.Add(pres);
-
+                        else
+                        {
+                            FunCascadaCombos(9);
+                        }
                         break;
                     case 2:
                         ddlCiudad.Items.Clear();
@@ -623,7 +623,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlEspecialidad.DataBind();
 
                             FunCascadaCombos(4);
-
                         }
                         break;
                     case 4:
@@ -699,6 +698,50 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         break;
 
+                    case 10:
+
+                        ddlPrestadora.Items.Clear();
+                        //presta.Text = "--Seleccione Prestadora--";
+                        //presta.Value = "0";
+                        //ddlPrestadora.Items.Add(presta);
+
+                        ddlEspecialidad.Items.Clear();
+                        espe.Text = "--Seleccione Especialidad--";
+                        espe.Value = "0";
+                        ddlEspecialidad.Items.Add(espe);
+
+                        ddlMedico.Items.Clear();
+                        medi.Text = "--Seleccione Médico--";
+                        medi.Value = "0";
+                        ddlMedico.Items.Add(medi);
+
+                        ListItem pres;
+
+                        Array.Resize(ref objparam, 11);
+                        objparam[0] = 34;
+                        objparam[1] = "";
+                        objparam[2] = "ONLINE";
+                        objparam[3] = ddlSector.SelectedValue;
+                        objparam[4] = "";
+                        objparam[5] = "";
+                        objparam[6] = ddlCiudad.SelectedValue;
+                        objparam[7] = 0;
+                        objparam[8] = 0;
+                        objparam[9] = 0;
+                        objparam[10] = 0;
+                        DataSet dtsec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
+                        //ddlPrestadora.Items.Clear();
+
+                        foreach (DataRow item in dtsec.Tables[0].Rows)
+                        {
+                            pres = new ListItem(item[0].ToString(), item[1].ToString());
+                            ddlPrestadora.Items.Add(pres);
+                        }
+
+                        pres = new ListItem("PRESTADOR VIRTUAL", "460");
+                        ddlPrestadora.Items.Add(pres);
+
+                        break;
                 }
             }
             else
@@ -999,21 +1042,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //ddlTipoPago.SelectedValue = "0";
             updCitaMedica.Visible = true;
 
-            if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
-            {
-                CalendarioCita.Visible = false;
-                pnlAgendamientos.Visible = false;
-                updCitaMedica.Visible = false;
-                txtObservacionG.Visible = false;
-                grdvDatosCitas.DataSource = null;
-                grdvDatosCitas.DataBind();
-                ddlOpcion.SelectedValue = "0";
-                ddlTipoPago.SelectedValue = "0";
-                txtRegistro.Visible = false;
-                txtPago.Visible = false;
-                txtObsev.Visible = false;
-                txtObsvG.Visible = false;
-            }
+
         }
         private void FunLimpiarAgendamiento()
         {
@@ -1586,13 +1615,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void ddlCiudad_SelectedIndexChanged(object sender, EventArgs e)
         {
             FunCascadaCombos(1);
-            FunCascadaCombos(9);
+            //FunCascadaCombos(9);
             FunLimpiarCampos();
         }
 
         protected void ddlSector_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FunCascadaCombos(1);
+            FunCascadaCombos(10);
             FunLimpiarCampos();
         }
 
@@ -1644,6 +1673,22 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 txtObservacionG.Visible = false;
                 pnlResumenCita.Visible = false;
             }
+
+            //if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+            //{
+            //    CalendarioCita.Visible = false;
+            //    pnlAgendamientos.Visible = false;
+            //    updCitaMedica.Visible = false;
+            //    txtObservacionG.Visible = false;
+            //    grdvDatosCitas.DataSource = null;
+            //    grdvDatosCitas.DataBind();
+            //    ddlOpcion.SelectedValue = "0";
+            //    ddlTipoPago.SelectedValue = "0";
+            //    txtRegistro.Visible = false;
+            //    txtPago.Visible = false;
+            //    txtObsev.Visible = false;
+            //    txtObsvG.Visible = false;
+            //}
 
             //if (prestador == "PRESTADOR VIRTUAL")
             //{
