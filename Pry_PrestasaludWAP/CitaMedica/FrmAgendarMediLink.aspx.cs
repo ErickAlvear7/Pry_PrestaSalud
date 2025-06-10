@@ -698,7 +698,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if (codMedicopres == 0) codMedicopres= int.Parse(ViewState["CodMedico"].ToString());
 
-                Array.Resize(ref objparam, 14);
+                Array.Resize(ref objparam, 15);
                 objparam[0] = 0;
                 objparam[1] = codPrestador; //CODIGO PRESTADOR
                 objparam[2] = codEspepres; //CODIGO ESPECIALIDAD
@@ -712,7 +712,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[10] = ViewState["HoraMed"].ToString();
                 objparam[11] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[12] = Session["MachineName"].ToString();
-                objparam[13] = "AGENDAMIENTO MEDILINK";//OBSERVACION
+                objparam[13] = "AGENDAMIENTO VIA API MEDILINK";//OBSERVACION
+                objparam[14] = int.Parse(ViewState["CodProducto"].ToString());
                 DataSet ds = new Conexion(2, "").FunCodigoCitaMedilink(objparam);
                 codCitaPresta = ds.Tables[0].Rows[0][0].ToString();
 
