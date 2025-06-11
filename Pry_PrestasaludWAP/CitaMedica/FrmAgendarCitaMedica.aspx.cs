@@ -2135,6 +2135,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
                             TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
 
+                            //int minutos = _horadispon.Minutes;
+                           
+
                             TimeSpan _resultado = _horadispon.Subtract(_horalink);
 
                             if (fechadipon == fechalink)
@@ -2142,14 +2145,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 _encontro = 1;
                                 break;
                             }
+                            
                         }
-
+           
                         var consulta = new Consulta
                         {
                             idPatient = _idpatient,
                             idContrato = _idcont,
                             idEspecialidad = _idespe,
                             idServicio = _idserv,
+                            date = _fechadisponible,
+                            hour = _horadisponible,
                             timeZone = "America/Guayaquil",
                             reason = motivo,
                             idMedico = id_medico,
@@ -2189,7 +2195,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             txtUrl.Text = url;
                             txtHora.Visible = true;
                             lblHora.Visible = true;
-                            lblHora.Text = _horadisponible;
+                            lblHora.Text = "Informar al Paciente Url disponible a las" + " " + _horadisponible;
 
                             Array.Resize(ref objlinkid, 7);
                             objlinkid[0] = 0;
@@ -2201,6 +2207,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objlinkid[6] = _idpatient;
 
                             link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
+
+                            //MANDAR A GRABAR SI LA DIFERENCIA DE MINUTOS ES MAYOR A 5
+
 
                             Array.Resize(ref objparam, 15);
                             objparam[0] = 0;

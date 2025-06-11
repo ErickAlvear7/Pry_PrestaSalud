@@ -188,6 +188,7 @@ namespace Pry_PrestasaludWAP.Api
 
         public string Consultas(string url, string datacon, string auth)
         {
+            string responseContent = "";
             try
             {
                 HttpClient _consulta = new HttpClient();
@@ -207,12 +208,14 @@ namespace Pry_PrestasaludWAP.Api
 
                 if (_resConsulta.IsSuccessStatusCode)
                 {
-                    var responseContent = _resConsulta.Content.ReadAsStringAsync().Result;
-                    return responseContent.ToString();
+                    responseContent = _resConsulta.Content.ReadAsStringAsync().Result;
+                    //return responseContent.ToString();
                 }
                 else
                 {
-                    return "Horario";                  
+                    return "Horario";
+                    //return hora;
+
                 }             
             }
             catch (Exception ex)
@@ -221,7 +224,7 @@ namespace Pry_PrestasaludWAP.Api
                 new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", mensaje, 241);
             }
 
-            return "";
+            return responseContent;
         }
 
         public string GetMedicos(string url,string auth,string fecha,string idpaciente,string idservicio,string idespeci)
