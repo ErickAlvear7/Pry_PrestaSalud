@@ -56,7 +56,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         ImageButton btnEstado = new ImageButton();
         CheckBox chkCancelar = new CheckBox();
         TimeSpan horaActual, horaAgenda, intervalo, intervaloHoras;
-        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "", dtFecha="",
+        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "", dtFecha="", horaAc="",
                 fileTemplate = "", subject = "", agenda = "", status = "", mensaje = "", fileLogo = "", mailsP = "",
                 mailsA = "", mailsD = "", sendmails = "", medicamentos = "", mailsU = "", codigo = "", descripcion = "",
                 textoSMS = "", trama = "", celular = "", usuarioSMS = "", passSMS = "", alerta = "", tipofecha = "", sql = "",
@@ -2135,17 +2135,39 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
                             TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
 
-                            //int minutos = _horadispon.Minutes;
-                           
+                            horaAc = _horalink.ToString();
 
                             TimeSpan _resultado = _horadispon.Subtract(_horalink);
+                            int minutos = _resultado.Minutes;
+
+                            if (minutos > 12)
+                            {
+                                Array.Resize(ref objparam, 3);
+                                objparam[0] = 0;
+                                objparam[1] = ViewState["Indentificacion"].ToString();
+                                objparam[2] = 206;
+                                DataSet nom = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                                string cliente = nom.Tables[0].Rows[0][0].ToString();
+
+                                string body = "DATOS GENERADOS PARA PACIENTE DE TELEMEDICINA " + "<br/> ";
+                                       body += "------------------------------------------------------------------" + "<br/>";
+                                       body += "HORA DE GENERACION LINK:" + " " + horaAc + "<br/>";
+                                       body += "HORA DE CONEXION MEDICO:" + " " + _horadispon.ToString() + "<br/>";
+                                       body += "TIEMPO DE ESPERA:" + " " + minutos + " " + "minutos" + "<br/>";
+                                       body += "DOCUMENTO TITULAR:" + " " + ViewState["Indentificacion"].ToString() + "<br/>";
+                                       body += "NOMBRE TITULAR:" + " " + cliente + "<br/>";
+                                       body += "NOMBRE PRODUCTO:" + " " + ViewState["Producto"].ToString() + "<br/>";
+
+                                string correo = new Funciones().SendHtmlEmailLink("vroldan@prestasalud.com", "", body, ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()),
+                                    bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),
+                                    "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com,alperez@nau-care.com");
+                            }
 
                             if (fechadipon == fechalink)
                             {
                                 _encontro = 1;
                                 break;
-                            }
-                            
+                            }                  
                         }
            
                         var consulta = new Consulta
@@ -2169,11 +2191,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             if (_datalink == "Horario")
                             {
-                                new Funciones().funShowJSMessage("Hora estimada de conexion " + _horadisponible + ", intente en 3 minutos..!!", this);
+                                new Funciones().funShowJSMessage("Sin medicos disponibles, intente en 5 mimutos!! ", this);
                                 return;
-                                //lblHora.Visible = true;
-                                //txtHora.Visible = true;
-                                //lblHora.Text = _horadisponible;
                             }
 
                             dynamic urlLink = JObject.Parse(_datalink);
@@ -2195,21 +2214,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             txtUrl.Text = url;
                             txtHora.Visible = true;
                             lblHora.Visible = true;
-                            lblHora.Text = "Informar al Paciente Url disponible a las" + " " + _horadisponible;
+                            lblHora.Text = "Informar al Paciente: La Url esta disponible a las" + " " + _horadisponible;
 
-                            Array.Resize(ref objlinkid, 7);
+                            Array.Resize(ref objlinkid, 8);
                             objlinkid[0] = 0;
                             objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
                             objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
                             objlinkid[3] = url.ToString();
                             objlinkid[4] = xfecha;
-                            objlinkid[5] = xhora;
-                            objlinkid[6] = _idpatient;
+                            objlinkid[5] = horaAc;
+                            objlinkid[6] = xhora;
+                            objlinkid[7] = _idpatient;
 
                             link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
-
-                            //MANDAR A GRABAR SI LA DIFERENCIA DE MINUTOS ES MAYOR A 5
-
 
                             Array.Resize(ref objparam, 15);
                             objparam[0] = 0;
@@ -2225,8 +2242,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[10] = xhora;
                             objparam[11] = int.Parse(Session["usuCodigo"].ToString());
                             objparam[12] = Session["MachineName"].ToString();
-                            objparam[13] = motivo;
-                             objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
+                            objparam[13] = motivo; 
+                            objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
                             DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
                             int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
                             if (codCita > 0)

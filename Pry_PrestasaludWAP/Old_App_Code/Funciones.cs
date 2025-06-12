@@ -739,7 +739,7 @@ public class Funciones
         }
     }
 
-    private string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
+    public string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
     string eusername,string epassword,string email,string pathLogo, string mailsalterna)
     {
         string mensaje = "";
@@ -749,12 +749,12 @@ public class Funciones
             {
                 //Attachment archivo = new Attachment(pathAttach);
                 AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                LinkedResource theEmailImage = new LinkedResource(pathLogo);
-                theEmailImage.ContentId = "myImageID";
-                htmlView.LinkedResources.Add(theEmailImage);
+                //LinkedResource theEmailImage = new LinkedResource(pathLogo);
+                //.ContentId = "myImageID";
+                //htmlView.LinkedResources.Add(theEmailImage);
                 mailMessage.AlternateViews.Add(htmlView);
                 mailMessage.From = new MailAddress(eusername);
-                mailMessage.Subject = subject;
+                mailMessage.Subject = "GENERACION DE LINK CON MAS DE 12 MINUTOS DE ESPERA";
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
 

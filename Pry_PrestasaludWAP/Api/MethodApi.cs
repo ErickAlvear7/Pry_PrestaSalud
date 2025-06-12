@@ -209,19 +209,16 @@ namespace Pry_PrestasaludWAP.Api
                 if (_resConsulta.IsSuccessStatusCode)
                 {
                     responseContent = _resConsulta.Content.ReadAsStringAsync().Result;
-                    //return responseContent.ToString();
                 }
                 else
                 {
-                    return "Horario";
-                    //return hora;
-
+                    responseContent = "Horario";
                 }             
             }
             catch (Exception ex)
             {
                 var mensaje = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", mensaje, 241);
+                new Funciones().funCrearLogAuditoria(1, "MethodApi.cs/Consultas", mensaje, 221);
             }
 
             return responseContent;

@@ -218,7 +218,7 @@ public class Conexion
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Connection = Sqlcn;
-                cmd.CommandTimeout = 200;
+                cmd.CommandTimeout = 500; //este es el timeout
                 cmd.Parameters.AddWithValue("@in_tipo", objparam[0]);
                 cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
                 cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
