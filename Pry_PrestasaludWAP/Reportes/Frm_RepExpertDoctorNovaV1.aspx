@@ -295,16 +295,19 @@
                                         </asp:BoundField>
                                         <asp:BoundField DataField="UsuarioAgenda" HeaderText="Usuario_Agenda" />
                                         <asp:BoundField DataField="UsuarioCancela" HeaderText="Usuario_Cancela" />
-                                       <%-- <asp:BoundField DataField="FechaCancelacion" HeaderText="Fecha_Cancelación" />
-                                        <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
+                                       <asp:BoundField DataField="FechaCancelacion" HeaderText="Fecha_Cancelación" />
+                                       <%-- <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
                                         <asp:BoundField DataField="Costo" HeaderText="Costo" />
                                         <asp:BoundField DataField="IdBeneficiario" HeaderText="IdBeneficiario" />--%>
-                                        <asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
+                                        <%--<asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
                                             <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
+                                        </asp:BoundField>--%>
                                         <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
                                         <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
                                         <asp:BoundField DataField="TipoAgendamiento" HeaderText="Agendamiento" />
+                                        <asp:BoundField DataField="Procedimiento" HeaderText="Procedimiento" />
+                                        <asp:BoundField DataField="Pieza" HeaderText="Pieza" />
+                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />
                                 </asp:GridView>

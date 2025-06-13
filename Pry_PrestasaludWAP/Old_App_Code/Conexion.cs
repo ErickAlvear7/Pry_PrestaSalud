@@ -192,7 +192,7 @@ public class Conexion
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Connection = Sqlcn;
-                cmd.CommandTimeout = 120;
+                cmd.CommandTimeout = 500;
                 cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
                 cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
                 cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
