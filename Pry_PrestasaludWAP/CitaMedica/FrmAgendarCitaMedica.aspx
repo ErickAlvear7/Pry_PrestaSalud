@@ -25,17 +25,7 @@
     <script>
         $(function () {
             $("#acordionParametro").accordion();
-        });
-
-        function disableServerButton() {
-            var button = document.getElementById('<%= btnLink.ClientID %>');
-           if (button) {
-               button.disabled = true;
-               button.value = "Generando...";
-           }
-       
-       }
-
+  
     </script>
 
     <style type="text/css">
@@ -463,14 +453,14 @@
                                     <table style="width: 100%">
                                         <tr>
                                             <td style="width: 5%"></td>
-                                            <td style="width: 25%"></td>
+                                            <td style="width: 30%"></td>
                                             <td style="width: 55%"></td>
-                                            <td style="width: 15%"></td>
+                                            <td style="width: 10%"></td>
                                         </tr>
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" OnClientClick="disableServerButton();" />
+                                                <asp:Button ID="btnLink" runat="server" Text="TeleMedicina" Width="241px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled = true; this.value='Un Momento Generando LInk...';" UseSubmitBehavior="false" />
                                             <td>
                                                 <asp:TextBox ID="txtUrl" runat="server" CssClass="form-control" Height="58px" ReadOnly="true" TextMode="MultiLine" Visible="true" Width="470px"></asp:TextBox>
                                              <td>

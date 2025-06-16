@@ -1899,6 +1899,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnLink_Click(object sender, EventArgs e)
         {
 
+            
             DataSet api = new DataSet();
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
