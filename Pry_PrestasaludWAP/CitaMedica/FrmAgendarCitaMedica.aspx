@@ -26,6 +26,8 @@
         $(function () {
             $("#acordionParametro").accordion();
         });
+
+        
     </script>
 
     <style type="text/css">
@@ -457,7 +459,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" />
+                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" OnClientClick="this.disabled='true'; this.value='Generando....'"  />
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
