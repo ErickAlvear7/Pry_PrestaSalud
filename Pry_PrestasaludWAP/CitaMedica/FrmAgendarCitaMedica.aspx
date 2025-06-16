@@ -27,6 +27,13 @@
             $("#acordionParametro").accordion();
         });
 
+        function f_Desctivar() {
+            var btn = document.getElementById('<%= btnLink.ClientID %>');
+            btn.disabled = true;
+            btn.value = "Enviando...";
+
+        }
+
         
     </script>
 
@@ -459,7 +466,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" OnClientClick="this.disabled='true'; this.value='Generando....'"  />
+                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" OnClientClick="f_Desctivar()"  />
                                             </td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
@@ -784,5 +791,7 @@
             </div>
         </div>
     </form>
+
+
 </body>
 </html>
