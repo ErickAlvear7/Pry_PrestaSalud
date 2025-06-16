@@ -27,13 +27,14 @@
             $("#acordionParametro").accordion();
         });
 
-        function f_Desctivar() {
-            var btn = document.getElementById('<%= btnLink.ClientID %>');
-            btn.disabled = true;
-            btn.value = "Enviando...";
-
-        }
-
+        function disableServerButton() {
+            var button = document.getElementById('<%= btnLink.ClientID %>');
+           if (button) {
+               button.disabled = true;
+               button.value = "Generando...";
+           }
+       
+       }
 
     </script>
 
@@ -110,17 +111,6 @@
             </asp:UpdatePanel>
             <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
-                    <ProgressTemplate>
-                        <div class="overlay" />
-                        <div class="overlayContent">
-                            <h2>Enviando..</h2>
-                            <img src="../Images/load.gif" alt="Loading" border="1" />
-                        </div>
-                    </ProgressTemplate>
-                </asp:UpdateProgress>
-            </div>
-            <div class="panel-info">
-                <asp:UpdateProgress ID="UpdateProgresVideo" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updVideo">
                     <ProgressTemplate>
                         <div class="overlay" />
                         <div class="overlayContent">
@@ -479,48 +469,22 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td colspan="3">
-                                            <asp:UpdatePanel ID="updVideo" runat="server">
-                                                <ContentTemplate>
-                                                    <td>
-                                                        <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" />
-                                                    </td>
-                                                </ContentTemplate>
-                                            </asp:UpdatePanel>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-
-                                    </table>
-                                    <table style="width: 100%">
-                                        <tr>
-                                            <td style="width: 5%"></td>
-                                            <td style="width: 25%"></td>
-                                            <td style="width: 55%"></td>
-                                            <td style="width: 15%"></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
                                             <td>
-                                                <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
-                                                <asp:TextBox ID="txtUrl" runat="server" Width="398px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="true" Height="47px"></asp:TextBox>
-                                            </td>
+                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" OnClientClick="disableServerButton();" />
                                             <td>
-                                                <%-- <h5>enviar email</h5>--%>
-                                                <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
-                                            </td>
+                                                <asp:TextBox ID="txtUrl" runat="server" CssClass="form-control" Height="58px" ReadOnly="true" TextMode="MultiLine" Visible="true" Width="470px"></asp:TextBox>
+                                             <td>
+                                                 <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
+                                             </td>   
                                         </tr>
-
                                         <tr>
                                             <td></td>
                                             <td>
                                                 <h5 id="txtHora" runat="server" visible="false">Hora Disponible</h5>
                                             </td>
-                                            <td>
+                                             <td>
                                                 <asp:Label ID="lblHora" runat="server" Visible="false"></asp:Label>
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </table>
                                 </asp:Panel>

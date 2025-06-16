@@ -1903,389 +1903,389 @@ namespace Pry_PrestasaludWAP.CitaMedica
             return;
 
 
-            DataSet api = new DataSet();
-            DataSet link = new DataSet();
-            string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
-                    fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
-                    medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "", contratos = "", contratoId = "";
+            //DataSet api = new DataSet();
+            //DataSet link = new DataSet();
+            //string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
+            //        fechanac = "", celular = "", email = "", patientNombre = "", patientApelllido = "", patient = "", medicoNombre = "",
+            //        medicoApellido = "", medico = "", fecha = "", motivo = "", url = "", grupo = "", campaing = "", contratos = "", contratoId = "";
 
-            string documento = ViewState["Indentificacion"].ToString();
-            string producto = ViewState["Producto"].ToString();
-            string idproducto = Session["CodigoProducto"].ToString();
-            motivo = ddlMotivoCita.SelectedItem.ToString();
-            string fechaActuallink = DateTime.Now.ToString("yyyy-MM-dd");
-            DateTime now = DateTime.Now;
-            string horaActuallink = now.ToString("HH:mm");
-            string _fechadisponible = "", _horadisponible = "";
-            string id_medico = "";
-
-
-            if (ViewState["TipoCliente"] == null)
-            {
-                new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
-                return;
-            }
-
-            if (ddlEspecialidad.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Seleccione Especialidad..!!", this);
-                return;
-            }
-
-            if (ddlMedico.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Seleccione Medico..!!", this);
-                return;
-            }
-
-            if (ddlMotivoCita.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Seleccione Motivo de la Consulta..!!", this);
-                return;
-            }
-
-            if (ViewState["TipoCliente"].ToString() == "B")
-            {
-                new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
-                return;
-            }
+            //string documento = ViewState["Indentificacion"].ToString();
+            //string producto = ViewState["Producto"].ToString();
+            //string idproducto = Session["CodigoProducto"].ToString();
+            //motivo = ddlMotivoCita.SelectedItem.ToString();
+            //string fechaActuallink = DateTime.Now.ToString("yyyy-MM-dd");
+            //DateTime now = DateTime.Now;
+            //string horaActuallink = now.ToString("HH:mm");
+            //string _fechadisponible = "", _horadisponible = "";
+            //string id_medico = "";
 
 
-            try
-            {
-                //CONSULTAR API-KEY BDD
-                //Array.Resize(ref objparam, 3);
-                //objparam[0] = 0;
-                //objparam[1] = "";
-                //objparam[2] = 182;
-                //api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //dtApi = api.Tables[0].Rows[0][0].ToString();
+            //if (ViewState["TipoCliente"] == null)
+            //{
+            //    new Funciones().funShowJSMessage("Seleccione TITULAR..!!", this);
+            //    return;
+            //}
 
-                //CONSULTAR CODIGO CAMPAIGN 
-                Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
-                objparam[1] = "";
-                objparam[2] = 195;
-                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                campaing = dt.Tables[0].Rows[0][0].ToString();
+            //if (ddlEspecialidad.SelectedValue == "0")
+            //{
+            //    new Funciones().funShowJSMessage("Seleccione Especialidad..!!", this);
+            //    return;
+            //}
 
-                if (campaing == "35" || campaing == "1")
-                {
-                    campaing = "35";
-                }
+            //if (ddlMedico.SelectedValue == "0")
+            //{
+            //    new Funciones().funShowJSMessage("Seleccione Medico..!!", this);
+            //    return;
+            //}
 
-                //CONSULTAR PARAMETRO TOKEN
-                Array.Resize(ref objparam, 3);
-                objparam[0] = 0;
-                objparam[1] = campaing;
-                objparam[2] = 196;
-                api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                dtApi = api.Tables[0].Rows[0][0].ToString();
+            //if (ddlMotivoCita.SelectedValue == "0")
+            //{
+            //    new Funciones().funShowJSMessage("Seleccione Motivo de la Consulta..!!", this);
+            //    return;
+            //}
 
-                ApiKey apikey = new ApiKey
-                {
-                    api_key = dtApi
-                };
-
-                //OBTENER TOKEN
-                string _apikey = JsonConvert.SerializeObject(apikey);
-                string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
-
-                if (_token != "")
-                {
-
-                    //consultar nombre del grupo
-                    Array.Resize(ref objparam, 3);
-                    objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
-                    objparam[1] = "";
-                    objparam[2] = 187;
-                    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    grupo = dt.Tables[0].Rows[0][0].ToString();
+            //if (ViewState["TipoCliente"].ToString() == "B")
+            //{
+            //    new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
+            //    return;
+            //}
 
 
-                    contratos = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
-                    var Result = JsonConvert.DeserializeObject<Contatox[]>(contratos);
+            //try
+            //{
+            //    //CONSULTAR API-KEY BDD
+            //    //Array.Resize(ref objparam, 3);
+            //    //objparam[0] = 0;
+            //    //objparam[1] = "";
+            //    //objparam[2] = 182;
+            //    //api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //    //dtApi = api.Tables[0].Rows[0][0].ToString();
 
-                    foreach (var _datos in Result)
-                    {
-                        string name = _datos.nombre;
-                        if (name == "Seguros del Pichincha") name = "VIDA Y SALUD PROTEGIDA";
-                        if (name == grupo)
-                        {
-                            //CONSULTAR ID CONTRATO ASOCIADO AL GRUPO
-                            Array.Resize(ref objparam, 3);
-                            objparam[0] = 0;
-                            objparam[1] = grupo;
-                            objparam[2] = 199;
-                            dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                            contratoId = dt.Tables[0].Rows[0][0].ToString();
-                            break;
-                        }
-                    }
+            //    //CONSULTAR CODIGO CAMPAIGN 
+            //    Array.Resize(ref objparam, 3);
+            //    objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+            //    objparam[1] = "";
+            //    objparam[2] = 195;
+            //    dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //    campaing = dt.Tables[0].Rows[0][0].ToString();
 
-                    _idcont = contratoId;
-                    _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
-                    _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
+            //    if (campaing == "35" || campaing == "1")
+            //    {
+            //        campaing = "35";
+            //    }
 
-                    if (ViewState["TipoCliente"].ToString() == "T")
-                    {
-                        Array.Resize(ref objlink, 3);
-                        objlink[0] = 0;
-                        objlink[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                        objlink[2] = 0;
-                        dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+            //    //CONSULTAR PARAMETRO TOKEN
+            //    Array.Resize(ref objparam, 3);
+            //    objparam[0] = 0;
+            //    objparam[1] = campaing;
+            //    objparam[2] = 196;
+            //    api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //    dtApi = api.Tables[0].Rows[0][0].ToString();
 
-                        foreach (DataRow dr in dt.Tables[0].Rows)
-                        {
-                            nombre = dr[0].ToString();
-                            apellido = dr[1].ToString();
-                            genero = dr[2].ToString();
-                            fechanac = dr[3].ToString();//dd/MM/yyyy
-                            celular = dr[4].ToString();
-                            email = dr[5].ToString();
-                        }
-                    }
-                    else if (ViewState["TipoCliente"].ToString() == "B")
-                    {
-                        new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
-                        return;
-                    }
+            //    ApiKey apikey = new ApiKey
+            //    {
+            //        api_key = dtApi
+            //    };
 
-                    if (email == "")
-                    {
-                        new Funciones().funShowJSMessage("Se requiere un email", this);
-                        return;
-                    }
+            //    //OBTENER TOKEN
+            //    string _apikey = JsonConvert.SerializeObject(apikey);
+            //    string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
 
-                    if (genero == "M")
-                    {
-                        genero = "h";
-                    }
-                    else
-                    {
-                        genero = "m";
-                    }
+            //    if (_token != "")
+            //    {
 
-                    var paciente = new Patient
-                    {
-                        name = nombre,
-                        surnames = apellido,
-                        email = email,
-                        birthdate = fechanac,
-                        gender = genero,
-                        phone = celular,
-                        contractId = _idcont
-                    };
+            //        //consultar nombre del grupo
+            //        Array.Resize(ref objparam, 3);
+            //        objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+            //        objparam[1] = "";
+            //        objparam[2] = 187;
+            //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //        grupo = dt.Tables[0].Rows[0][0].ToString();
 
-                    var data = new JavaScriptSerializer().Serialize(paciente);
-                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
 
-                    if (!_idpatient.IsEmpty())
-                    {
+            //        contratos = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
+            //        var Result = JsonConvert.DeserializeObject<Contatox[]>(contratos);
+
+            //        foreach (var _datos in Result)
+            //        {
+            //            string name = _datos.nombre;
+            //            if (name == "Seguros del Pichincha") name = "VIDA Y SALUD PROTEGIDA";
+            //            if (name == grupo)
+            //            {
+            //                //CONSULTAR ID CONTRATO ASOCIADO AL GRUPO
+            //                Array.Resize(ref objparam, 3);
+            //                objparam[0] = 0;
+            //                objparam[1] = grupo;
+            //                objparam[2] = 199;
+            //                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //                contratoId = dt.Tables[0].Rows[0][0].ToString();
+            //                break;
+            //            }
+            //        }
+
+            //        _idcont = contratoId;
+            //        _idserv = new MethodApi().GetServicios("https://api.eh.medicalcenter.io/", _idcont, _token);
+            //        _idespe = new MethodApi().GetEspecialidad("https://api.eh.medicalcenter.io/", _token, _idcont);
+
+            //        if (ViewState["TipoCliente"].ToString() == "T")
+            //        {
+            //            Array.Resize(ref objlink, 3);
+            //            objlink[0] = 0;
+            //            objlink[1] = int.Parse(ViewState["TituCodigo"].ToString());
+            //            objlink[2] = 0;
+            //            dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularBene", objlink);
+
+            //            foreach (DataRow dr in dt.Tables[0].Rows)
+            //            {
+            //                nombre = dr[0].ToString();
+            //                apellido = dr[1].ToString();
+            //                genero = dr[2].ToString();
+            //                fechanac = dr[3].ToString();//dd/MM/yyyy
+            //                celular = dr[4].ToString();
+            //                email = dr[5].ToString();
+            //            }
+            //        }
+            //        else if (ViewState["TipoCliente"].ToString() == "B")
+            //        {
+            //            new Funciones().funShowJSMessage("Servicio disponible solo TITULARES..!!", this);
+            //            return;
+            //        }
+
+            //        if (email == "")
+            //        {
+            //            new Funciones().funShowJSMessage("Se requiere un email", this);
+            //            return;
+            //        }
+
+            //        if (genero == "M")
+            //        {
+            //            genero = "h";
+            //        }
+            //        else
+            //        {
+            //            genero = "m";
+            //        }
+
+            //        var paciente = new Patient
+            //        {
+            //            name = nombre,
+            //            surnames = apellido,
+            //            email = email,
+            //            birthdate = fechanac,
+            //            gender = genero,
+            //            phone = celular,
+            //            contractId = _idcont
+            //        };
+
+            //        var data = new JavaScriptSerializer().Serialize(paciente);
+            //        _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
+
+            //        if (!_idpatient.IsEmpty())
+            //        {
                  
-                        string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
-                        var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
+            //            string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
+            //            var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
-                        int _encontro = 0;
+            //            int _encontro = 0;
 
-                        _datoshorarios = (DataTable)ViewState["HorariosMedico"];
-                        _datoshorarios.Clear();
+            //            _datoshorarios = (DataTable)ViewState["HorariosMedico"];
+            //            _datoshorarios.Clear();
 
-                        foreach (var _datosmedico in Resultjson)
-                        {
-                            if (_encontro == 1)
-                            {
-                                break;
-                            }
+            //            foreach (var _datosmedico in Resultjson)
+            //            {
+            //                if (_encontro == 1)
+            //                {
+            //                    break;
+            //                }
 
-                            id_medico = _datosmedico.id_medico;
-                            medicoNombre = _datosmedico.nombre;
-                            medicoApellido = _datosmedico.apellidos;
-                            medico = medicoNombre + " " + medicoApellido;
+            //                id_medico = _datosmedico.id_medico;
+            //                medicoNombre = _datosmedico.nombre;
+            //                medicoApellido = _datosmedico.apellidos;
+            //                medico = medicoNombre + " " + medicoApellido;
 
-                            foreach (var _horarios in _datosmedico.rangos)
-                            {
-                                _fechadisponible = _horarios.date;
-                                _horadisponible = _horarios.hour;
+            //                foreach (var _horarios in _datosmedico.rangos)
+            //                {
+            //                    _fechadisponible = _horarios.date;
+            //                    _horadisponible = _horarios.hour;
 
-                                DataRow rowHorarios = _datoshorarios.NewRow();
-                                rowHorarios["idmedico"] = id_medico;
-                                rowHorarios["nombres"] = medicoNombre;
-                                rowHorarios["apellidos"] = medicoApellido;
-                                rowHorarios["date"] = _fechadisponible;
-                                rowHorarios["hour"] = _horadisponible;
+            //                    DataRow rowHorarios = _datoshorarios.NewRow();
+            //                    rowHorarios["idmedico"] = id_medico;
+            //                    rowHorarios["nombres"] = medicoNombre;
+            //                    rowHorarios["apellidos"] = medicoApellido;
+            //                    rowHorarios["date"] = _fechadisponible;
+            //                    rowHorarios["hour"] = _horadisponible;
 
-                                _datoshorarios.Rows.Add(rowHorarios);
-                            }
-                        }
+            //                    _datoshorarios.Rows.Add(rowHorarios);
+            //                }
+            //            }
 
-                        _datoshorarios.DefaultView.Sort = "hour ASC";
-                        _datoshorarios = _datoshorarios.DefaultView.ToTable();
+            //            _datoshorarios.DefaultView.Sort = "hour ASC";
+            //            _datoshorarios = _datoshorarios.DefaultView.ToTable();
 
-                        foreach (DataRow dritem in _datoshorarios.Rows)
-                        {
+            //            foreach (DataRow dritem in _datoshorarios.Rows)
+            //            {
 
-                            id_medico = dritem["idmedico"].ToString();
-                            medicoNombre = dritem["nombres"].ToString();
-                            medicoApellido = dritem["apellidos"].ToString();
-                            medico = medicoNombre + " " + medicoApellido;
+            //                id_medico = dritem["idmedico"].ToString();
+            //                medicoNombre = dritem["nombres"].ToString();
+            //                medicoApellido = dritem["apellidos"].ToString();
+            //                medico = medicoNombre + " " + medicoApellido;
 
-                            _fechadisponible = dritem["date"].ToString();
-                            _horadisponible = dritem["hour"].ToString();
+            //                _fechadisponible = dritem["date"].ToString();
+            //                _horadisponible = dritem["hour"].ToString();
 
-                            DateTime fechalink = DateTime.ParseExact(fechaActuallink, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            DateTime fechadipon = DateTime.ParseExact(_fechadisponible, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            //                DateTime fechalink = DateTime.ParseExact(fechaActuallink, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            //                DateTime fechadipon = DateTime.ParseExact(_fechadisponible, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                            TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
-                            TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
+            //                TimeSpan _horalink = TimeSpan.Parse(horaActuallink);
+            //                TimeSpan _horadispon = TimeSpan.Parse(_horadisponible);
 
-                            horaAc = _horalink.ToString();
+            //                horaAc = _horalink.ToString();
 
-                            TimeSpan _resultado = _horadispon.Subtract(_horalink);
-                            int minutos = _resultado.Minutes;
+            //                TimeSpan _resultado = _horadispon.Subtract(_horalink);
+            //                int minutos = _resultado.Minutes;
 
-                            if (minutos > 12)
-                            {
-                                Array.Resize(ref objparam, 3);
-                                objparam[0] = 0;
-                                objparam[1] = ViewState["Indentificacion"].ToString();
-                                objparam[2] = 206;
-                                DataSet nom = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                                string cliente = nom.Tables[0].Rows[0][0].ToString();
+            //                if (minutos > 12)
+            //                {
+            //                    Array.Resize(ref objparam, 3);
+            //                    objparam[0] = 0;
+            //                    objparam[1] = ViewState["Indentificacion"].ToString();
+            //                    objparam[2] = 206;
+            //                    DataSet nom = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            //                    string cliente = nom.Tables[0].Rows[0][0].ToString();
 
-                                string body = "DATOS GENERADOS PARA PACIENTE DE TELEMEDICINA " + "<br/> ";
-                                       body += "------------------------------------------------------------------" + "<br/>";
-                                       body += "HORA DE GENERACION LINK:" + " " + horaAc + "<br/>";
-                                       body += "HORA DE CONEXION MEDICO:" + " " + _horadispon.ToString() + "<br/>";
-                                       body += "TIEMPO DE ESPERA:" + " " + minutos + " " + "minutos" + "<br/>";
-                                       body += "DOCUMENTO TITULAR:" + " " + ViewState["Indentificacion"].ToString() + "<br/>";
-                                       body += "NOMBRE TITULAR:" + " " + cliente + "<br/>";
-                                       body += "NOMBRE PRODUCTO:" + " " + ViewState["Producto"].ToString() + "<br/>";
+            //                    string body = "DATOS GENERADOS PARA PACIENTE DE TELEMEDICINA " + "<br/> ";
+            //                           body += "------------------------------------------------------------------" + "<br/>";
+            //                           body += "HORA DE GENERACION LINK:" + " " + horaAc + "<br/>";
+            //                           body += "HORA DE CONEXION MEDICO:" + " " + _horadispon.ToString() + "<br/>";
+            //                           body += "TIEMPO DE ESPERA:" + " " + minutos + " " + "minutos" + "<br/>";
+            //                           body += "DOCUMENTO TITULAR:" + " " + ViewState["Indentificacion"].ToString() + "<br/>";
+            //                           body += "NOMBRE TITULAR:" + " " + cliente + "<br/>";
+            //                           body += "NOMBRE PRODUCTO:" + " " + ViewState["Producto"].ToString() + "<br/>";
 
-                                string correo = new Funciones().SendHtmlEmailLink("vroldan@prestasalud.com", "", body, ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()),
-                                    bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),
-                                    "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com,alperez@nau-care.com");
-                            }
+            //                    string correo = new Funciones().SendHtmlEmailLink("vroldan@prestasalud.com", "", body, ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()),
+            //                        bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),
+            //                        "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com,alperez@nau-care.com");
+            //                }
 
-                            if (fechadipon == fechalink)
-                            {
-                                _encontro = 1;
-                                break;
-                            }                  
-                        }
+            //                if (fechadipon == fechalink)
+            //                {
+            //                    _encontro = 1;
+            //                    break;
+            //                }                  
+            //            }
            
-                        var consulta = new Consulta
-                        {
-                            idPatient = _idpatient,
-                            idContrato = _idcont,
-                            idEspecialidad = _idespe,
-                            idServicio = _idserv,
-                            date = _fechadisponible,
-                            hour = _horadisponible,
-                            timeZone = "America/Guayaquil",
-                            reason = motivo,
-                            idMedico = id_medico,
-                            oneclick = true
-                        };
+            //            var consulta = new Consulta
+            //            {
+            //                idPatient = _idpatient,
+            //                idContrato = _idcont,
+            //                idEspecialidad = _idespe,
+            //                idServicio = _idserv,
+            //                date = _fechadisponible,
+            //                hour = _horadisponible,
+            //                timeZone = "America/Guayaquil",
+            //                reason = motivo,
+            //                idMedico = id_medico,
+            //                oneclick = true
+            //            };
 
-                        var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
-                        _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
+            //            var dataconsulta = new JavaScriptSerializer().Serialize(consulta);
+            //            _datalink = new MethodApi().Consultas("https://api.eh.medicalcenter.io/", dataconsulta, _token);
 
-                        if (!_datalink.IsEmpty())
-                        {
-                            if (_datalink == "Horario")
-                            {
-                                new Funciones().funShowJSMessage("Sin medicos disponibles, intente en 5 mimutos!! ", this);
-                                return;
-                            }
+            //            if (!_datalink.IsEmpty())
+            //            {
+            //                if (_datalink == "Horario")
+            //                {
+            //                    new Funciones().funShowJSMessage("Sin medicos disponibles, intente en 5 mimutos!! ", this);
+            //                    return;
+            //                }
 
-                            dynamic urlLink = JObject.Parse(_datalink);
-                            url = urlLink.url_llamada;
-                            fecha = urlLink.fecha;
-                            motivo = urlLink.motivo;
-                            patientNombre = urlLink.patient.nombre;
-                            patientApelllido = urlLink.patient.apellidos;
-                            patient = patientNombre + " " + patientApelllido;
+            //                dynamic urlLink = JObject.Parse(_datalink);
+            //                url = urlLink.url_llamada;
+            //                fecha = urlLink.fecha;
+            //                motivo = urlLink.motivo;
+            //                patientNombre = urlLink.patient.nombre;
+            //                patientApelllido = urlLink.patient.apellidos;
+            //                patient = patientNombre + " " + patientApelllido;
 
-                            string xfecha = fecha.Substring(0, 10);
-                            string xhora = fecha.Substring(11, 5);
+            //                string xfecha = fecha.Substring(0, 10);
+            //                string xhora = fecha.Substring(11, 5);
 
-                            //selecciona dia de la fecha
-                            DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            string newDia = dia.DayOfWeek.ToString();
+            //                //selecciona dia de la fecha
+            //                DateTime dia = DateTime.ParseExact(xfecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            //                string newDia = dia.DayOfWeek.ToString();
 
-                            //txtUrl.Visible = true;
-                            txtUrl.Text = url;
-                            txtHora.Visible = true;
-                            lblHora.Visible = true;
-                            lblHora.Text = "Informar al Paciente: La Url esta disponible a las" + " " + _horadisponible;
+            //                //txtUrl.Visible = true;
+            //                txtUrl.Text = url;
+            //                txtHora.Visible = true;
+            //                lblHora.Visible = true;
+            //                lblHora.Text = "Informar al Paciente: La Url esta disponible a las" + " " + _horadisponible;
 
-                            Array.Resize(ref objlinkid, 8);
-                            objlinkid[0] = 0;
-                            objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
-                            objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
-                            objlinkid[3] = url.ToString();
-                            objlinkid[4] = xfecha;
-                            objlinkid[5] = horaAc;
-                            objlinkid[6] = xhora;
-                            objlinkid[7] = _idpatient;
+            //                Array.Resize(ref objlinkid, 8);
+            //                objlinkid[0] = 0;
+            //                objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
+            //                objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
+            //                objlinkid[3] = url.ToString();
+            //                objlinkid[4] = xfecha;
+            //                objlinkid[5] = horaAc;
+            //                objlinkid[6] = xhora;
+            //                objlinkid[7] = _idpatient;
 
-                            link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
+            //                link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 
-                            Array.Resize(ref objparam, 15);
-                            objparam[0] = 0;
-                            objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
-                            objparam[2] = int.Parse(ddlMedico.SelectedValue);
-                            objparam[3] = int.Parse(ddlEspecialidad.SelectedValue);
-                            objparam[4] = ViewState["TipoCliente"].ToString();
-                            objparam[5] = int.Parse(ViewState["TituCodigo"].ToString());
-                            objparam[6] = 0;
-                            objparam[7] = "TE";
-                            objparam[8] = xfecha;
-                            objparam[9] = newDia;
-                            objparam[10] = xhora;
-                            objparam[11] = int.Parse(Session["usuCodigo"].ToString());
-                            objparam[12] = Session["MachineName"].ToString();
-                            objparam[13] = motivo; 
-                            objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
-                            DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
-                            int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
-                            if (codCita > 0)
-                            {
-                                Session["SalirAgenda"] = "SI";
-                                //Session["codigocita"] = codCita;
-                                Session["codigocita"] = 0;
-                                //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
-                                //if (chkEmail.Checked)
-                                //{
-                                //    FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
-                                //}
-                            }
-                            else
-                            {
-                                new Funciones().funCrearLogAuditoria(1, "sp_AgendaMedicaLink", "NO PUDO GRABAR", 2210);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        new Funciones().funShowJSMessage("No pudo obtener idpatiend", this);
-                        new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No pudo obtener idpatiend", 2112);
-                    }
-                }
-                else
-                {
-                    new Funciones().funShowJSMessage("No se pudo generar Link", this);
-                    new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No se genero el token", 1716);
-                    return;
-                }
+            //                Array.Resize(ref objparam, 15);
+            //                objparam[0] = 0;
+            //                objparam[1] = int.Parse(ddlPrestadora.SelectedValue);
+            //                objparam[2] = int.Parse(ddlMedico.SelectedValue);
+            //                objparam[3] = int.Parse(ddlEspecialidad.SelectedValue);
+            //                objparam[4] = ViewState["TipoCliente"].ToString();
+            //                objparam[5] = int.Parse(ViewState["TituCodigo"].ToString());
+            //                objparam[6] = 0;
+            //                objparam[7] = "TE";
+            //                objparam[8] = xfecha;
+            //                objparam[9] = newDia;
+            //                objparam[10] = xhora;
+            //                objparam[11] = int.Parse(Session["usuCodigo"].ToString());
+            //                objparam[12] = Session["MachineName"].ToString();
+            //                objparam[13] = motivo; 
+            //                objparam[14] = int.Parse(Session["CodigoProducto"].ToString());
+            //                DataSet ds = new Conexion(2, "").FunCodigoCitalINK(objparam);
+            //                int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+            //                if (codCita > 0)
+            //                {
+            //                    Session["SalirAgenda"] = "SI";
+            //                    //Session["codigocita"] = codCita;
+            //                    Session["codigocita"] = 0;
+            //                    //REGISTRO DE AGENDAMIENTO Y ENVIO DE MAIL SI EL CHECK ES TRUE
+            //                    //if (chkEmail.Checked)
+            //                    //{
+            //                    //    FunEnviarMailCitalink(codCita, xfecha, xhora, medico, url, motivo, patient, email, documento, producto);
+            //                    //}
+            //                }
+            //                else
+            //                {
+            //                    new Funciones().funCrearLogAuditoria(1, "sp_AgendaMedicaLink", "NO PUDO GRABAR", 2210);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            new Funciones().funShowJSMessage("No pudo obtener idpatiend", this);
+            //            new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No pudo obtener idpatiend", 2112);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        new Funciones().funShowJSMessage("No se pudo generar Link", this);
+            //        new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No se genero el token", 1716);
+            //        return;
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                mensaje = ex.Message;
-                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/btnLink error catch", mensaje, 1);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    mensaje = ex.Message;
+            //    new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/btnLink error catch", mensaje, 1);
+            //}
 
         }
         protected void imgSelecc_Click(object sender, ImageClickEventArgs e)
