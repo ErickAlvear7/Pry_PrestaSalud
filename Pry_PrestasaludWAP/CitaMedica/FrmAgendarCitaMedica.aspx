@@ -34,7 +34,7 @@
 
         }
 
-        
+
     </script>
 
     <style type="text/css">
@@ -88,6 +88,9 @@
             width: 30%;
             height: 35px;
         }
+        .auto-style4 {
+            height: 61px;
+        }
     </style>
 
 </head>
@@ -107,6 +110,17 @@
             </asp:UpdatePanel>
             <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
+                    <ProgressTemplate>
+                        <div class="overlay" />
+                        <div class="overlayContent">
+                            <h2>Enviando..</h2>
+                            <img src="../Images/load.gif" alt="Loading" border="1" />
+                        </div>
+                    </ProgressTemplate>
+                </asp:UpdateProgress>
+            </div>
+            <div class="panel-info">
+                <asp:UpdateProgress ID="UpdateProgresVideo" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updVideo">
                     <ProgressTemplate>
                         <div class="overlay" />
                         <div class="overlayContent">
@@ -196,11 +210,11 @@
             </div>
             <div class="panel-body">
                 <div id="acordion">
-                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CONTADOR DE CITAS</h3>
-                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                         <ContentTemplate>
-                             <div class="table-responsive">
-                                 <table style="width: 100%">
+                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CONTADOR DE CITAS</h3>
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
                                     <tr>
                                         <td style="width: 5%"></td>
                                         <td style="width: 30%"></td>
@@ -208,23 +222,23 @@
                                         <td style="width: 30%"></td>
                                         <td style="width: 5%"></td>
                                     </tr>
-                                     <tr>
-                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" OnRowDataBound="grdvContadorCitas_RowDataBound" ShowFooter="True">
-			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-			                                <Columns>
+                                    <tr>
+                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" OnRowDataBound="grdvContadorCitas_RowDataBound" ShowFooter="True">
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                            <Columns>
                                                 <asp:BoundField DataField="Tipo" HeaderText="TIPO CLIENTE"></asp:BoundField>
-				                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL" HeaderStyle-BackColor="#d2f0eb" />
-				                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" HeaderStyle-BackColor="#e7f0f2" />
-				                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" HeaderStyle-BackColor="#e5eaf6" />
-			                                </Columns>
-			                                <RowStyle Font-Size="X-Small" />
-			                                <HeaderStyle Font-Size="Small" />
-		                                </asp:GridView>
-                                     </tr>
-                                 </table>
-                             </div>
-                         </ContentTemplate>
-                     </asp:UpdatePanel>
+                                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL" HeaderStyle-BackColor="#d2f0eb" />
+                                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" HeaderStyle-BackColor="#e7f0f2" />
+                                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" HeaderStyle-BackColor="#e5eaf6" />
+                                            </Columns>
+                                            <RowStyle Font-Size="X-Small" />
+                                            <HeaderStyle Font-Size="Small" />
+                                        </asp:GridView>
+                                    </tr>
+                                </table>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
             </div>
             <div class="panel-body">
@@ -234,29 +248,29 @@
                         <ContentTemplate>
                             <div class="table-responsive">
                                 <table style="width: 100%">
-                                <tr>
-                                    <td class="auto-style2"></td>
-                                    <td class="auto-style2"></td>
-                                </tr>
-                                 <tr>
-                                     <td>
-                                        <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive"  ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" ShowFooter="True" OnRowDataBound="grdvSumaLaboratorio_RowDataBound">
-			                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-			                                <Columns>
-                                                <%--<asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>--%>
+                                    <tr>
+                                        <td class="auto-style2"></td>
+                                        <td class="auto-style2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" ShowFooter="True" OnRowDataBound="grdvSumaLaboratorio_RowDataBound">
+                                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                <Columns>
+                                                    <%--<asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>--%>
 
-                                                <asp:BoundField DataField="" HeaderText="Cupo Asignado" HeaderStyle-BackColor="#d2f0eb">
-				                                <HeaderStyle BackColor="#D2F0EB" />
-                                                </asp:BoundField>
-				                                <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6" DataFormatString="{0:C}"> 
-			                                    <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="right" />
-                                                </asp:BoundField>
-			                                </Columns>
-			                                <RowStyle Font-Size="Small" />
-			                                <HeaderStyle Font-Size="Small" />
-		                                </asp:GridView>
-                                      </td>
-                                  </tr>
+                                                    <asp:BoundField DataField="" HeaderText="Cupo Asignado" HeaderStyle-BackColor="#d2f0eb">
+                                                        <HeaderStyle BackColor="#D2F0EB" />
+                                                    </asp:BoundField>
+                                                    <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6" DataFormatString="{0:C}">
+                                                        <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="right" />
+                                                    </asp:BoundField>
+                                                </Columns>
+                                                <RowStyle Font-Size="Small" />
+                                                <HeaderStyle Font-Size="Small" />
+                                            </asp:GridView>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </ContentTemplate>
@@ -315,7 +329,7 @@
                                             <tr>
                                                 <td style="width: 20%"></td>
                                                 <td style="width: 75%"></td>
-                                                <td style="width: 5%"></td>  
+                                                <td style="width: 5%"></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
@@ -328,7 +342,7 @@
                                     </div>
                                 </asp:Panel>
                                 <asp:Panel ID="pnlOpcionesCita" runat="server" GroupingText="Opciones Cita" TabIndex="5">
-                               
+
                                     <table style="width: 100%">
                                         <tr>
                                             <td style="width: 5%"></td>
@@ -361,7 +375,7 @@
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>
-                                             <td>
+                                            <td>
                                                 <asp:DropDownList ID="ddlSector" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="8" OnSelectedIndexChanged="ddlSector_SelectedIndexChanged">
                                                 </asp:DropDownList>
                                             </td>
@@ -457,7 +471,7 @@
                                 </asp:Panel>
                                 <asp:Panel ID="pnlLink" runat="server" GroupingText="Link Url LLamada" TabIndex="5" Visible="False">
                                     <table style="width: 100%">
-                                          <tr>
+                                        <tr>
                                             <td style="width: 5%"></td>
                                             <td style="width: 25%"></td>
                                             <td style="width: 55%"></td>
@@ -465,19 +479,40 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td>
-                                                <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button"  TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" OnClientClick="f_Desctivar()"  />
+                                            <td colspan="3">
+                                            <asp:UpdatePanel ID="updVideo" runat="server">
+                                                <ContentTemplate>
+                                                    <td>
+                                                        <asp:Button ID="btnLink" runat="server" Text="Video Llamada" Width="192px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" UseSubmitBehavior="false" />
+                                                    </td>
+                                                </ContentTemplate>
+                                            </asp:UpdatePanel>
                                             </td>
+                                            <td></td>
+                                        </tr>
+
+                                    </table>
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 25%"></td>
+                                            <td style="width: 55%"></td>
+                                            <td style="width: 15%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
                                             <td>
                                                 <%--<asp:Label runat="server" ID="lblUrl" Text="copiar url"  />--%>
-                                               <asp:TextBox ID="txtUrl" runat="server" Width="398px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="true" Height="47px"></asp:TextBox>
+                                                <asp:TextBox ID="txtUrl" runat="server" Width="398px" TextMode="MultiLine" CssClass="form-control" ReadOnly="true" Visible="true" Height="47px"></asp:TextBox>
                                             </td>
                                             <td>
-                                               <%-- <h5>enviar email</h5>--%>
+                                                <%-- <h5>enviar email</h5>--%>
                                                 <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
                                             </td>
                                         </tr>
-                                         <tr>
+
+                                        <tr>
                                             <td></td>
                                             <td>
                                                 <h5 id="txtHora" runat="server" visible="false">Hora Disponible</h5>
