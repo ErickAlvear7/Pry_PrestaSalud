@@ -2330,6 +2330,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         new Funciones().funShowJSMessage("Lamentamos.. Excede el intervalo de tiempo permitido..!", this);
                         return;
                     }
+
+                    TimeSpan _resul = horaAgenda.Subtract(horaActual);
+                    int horas = _resul.Hours;
+                    if (horas < 3)
+                    {
+
+                        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                        return;
+                    }
+
                 }
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
