@@ -2331,9 +2331,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         return;
                     }
 
-                    TimeSpan _resul = horaAgenda.Subtract(horaActual);
-                    int horas = _resul.Hours;
-                    if (horas < 3)
+                    TimeSpan _difHora = horaAgenda.Subtract(horaActual);
+                    int val = 3;
+                    TimeSpan _parametro = TimeSpan.FromHours(val);
+
+                    //int horas = _resul.Hours;
+
+                    if (_difHora < _parametro)
                     {
                         new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
                         return;
