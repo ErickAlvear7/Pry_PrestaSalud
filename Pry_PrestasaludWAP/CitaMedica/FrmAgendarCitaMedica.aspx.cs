@@ -1627,6 +1627,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void ddlPrestadora_SelectedIndexChanged(object sender, EventArgs e)
         {
+            FunLimpiarCampos();
             string prestador = ddlPrestadora.SelectedItem.ToString();
             int codprestador = ddlPrestadora.SelectedIndex;
             int codproducto = int.Parse(Session["CodigoProducto"].ToString());
@@ -1672,6 +1673,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 updCitaMedica.Visible = false;
                 txtObservacionG.Visible = false;
                 pnlResumenCita.Visible = false;
+                txtPago.Visible = false;
+                txtRegistro.Visible = false;
+                txtObsev.Visible = false;
+                txtObservacionG.Visible = false;
+                txtObsvG.Visible = false;
             }
 
             //if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
@@ -1736,7 +1742,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             FunCascadaCombos(3);
-            FunLimpiarCampos();
+            
         }
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
