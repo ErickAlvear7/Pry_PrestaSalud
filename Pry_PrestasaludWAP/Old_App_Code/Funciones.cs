@@ -324,6 +324,16 @@ public class Funciones
         dt = new Conexion(2, "").funConsultarSqls("sp_Logs", objparam);
     }
 
+    public void LogAuditoriaTele(int usu_codigo, string frm, string evento, int linea)
+    {
+        Array.Resize(ref objparam, 4);
+        objparam[0] = usu_codigo;
+        objparam[1] = frm;
+        objparam[2] = evento;
+        objparam[3] = linea;
+        dt = new Conexion(2, "").funConsultarSqls("sp_LogTelemedicina", objparam);
+    }
+
     public void funCargarComboHoraMinutos(DropDownList ddlCombo, string tipo)
     {
         switch (tipo)

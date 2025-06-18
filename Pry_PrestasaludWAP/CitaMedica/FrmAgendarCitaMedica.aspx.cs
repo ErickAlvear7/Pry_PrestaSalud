@@ -2255,28 +2255,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             }
                             else
                             {
-                                new Funciones().funCrearLogAuditoria(1, "sp_AgendaMedicaLink", "NO PUDO GRABAR", 2210);
+                                new Funciones().LogAuditoriaTele(1, "FrmAgendarCitaMedica.cs/btnLink_Click", "NO PUDO GENERAR CODIGO DE CITA MEICA", 2258);
                             }
                         }
                     }
                     else
                     {
-                        new Funciones().funShowJSMessage("No pudo obtener idpatiend", this);
-                        new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No pudo obtener idpatiend", 2112);
+                        new Funciones().LogAuditoriaTele(1, "FrmAgendarCitaMedica.cs/btnLink_Click", "No pudo obtener idpatiend", 2264);
                     }
                 }
                 else
                 {
-                    new Funciones().funShowJSMessage("No se pudo generar Link", this);
-                    new Funciones().funCrearLogAuditoria(1, "btnLink_Click", "No se genero el token", 1716);
-                    return;
+                    new Funciones().LogAuditoriaTele(1, "FrmAgendarCitaMedica.cs/btnLink_Click", "No se pudo generar Link", 2269);
                 }
 
             }
             catch (Exception ex)
             {
-                mensaje = ex.Message;
-                new Funciones().funCrearLogAuditoria(1, "frmAgendarCitaMedica.cs/btnLink error catch", mensaje, 1);
+                new Funciones().LogAuditoriaTele(1, "FrmAgendarCitaMedica.cs/btnLink_Click", ex.ToString(), 2275);
             }
 
         }
