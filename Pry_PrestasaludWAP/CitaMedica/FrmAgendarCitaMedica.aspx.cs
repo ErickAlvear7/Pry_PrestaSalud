@@ -1904,8 +1904,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void btnLink_Click(object sender, EventArgs e)
         {
-
-            
+         
             DataSet api = new DataSet();
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
@@ -1921,7 +1920,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string horaActuallink = now.ToString("HH:mm");
             string _fechadisponible = "", _horadisponible = "";
             string id_medico = "";
-
 
             if (ViewState["TipoCliente"] == null)
             {
@@ -1953,18 +1951,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 return;
             }
 
-
             try
             {
-                //CONSULTAR API-KEY BDD
-                //Array.Resize(ref objparam, 3);
-                //objparam[0] = 0;
-                //objparam[1] = "";
-                //objparam[2] = 182;
-                //api = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //dtApi = api.Tables[0].Rows[0][0].ToString();
 
-                //CONSULTAR CODIGO CAMPAIGN 
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
                 objparam[1] = "";
@@ -1994,7 +1983,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 string _apikey = JsonConvert.SerializeObject(apikey);
                 string _token = new MethodApi().GetToken("https://api.eh.medicalcenter.io/", _apikey);
 
-                if (_token != "")
+                if (!_token.IsEmpty())
                 {
 
                     //consultar nombre del grupo
@@ -2004,7 +1993,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[2] = 187;
                     dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     grupo = dt.Tables[0].Rows[0][0].ToString();
-
 
                     contratos = new MethodApi().GetIdContract("https://api.eh.medicalcenter.io/", _token);
                     var Result = JsonConvert.DeserializeObject<Contatox[]>(contratos);
@@ -2043,7 +2031,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             nombre = dr[0].ToString();
                             apellido = dr[1].ToString();
                             genero = dr[2].ToString();
-                            fechanac = dr[3].ToString();//dd/MM/yyyy
+                            fechanac = dr[3].ToString();
                             celular = dr[4].ToString();
                             email = dr[5].ToString();
                         }
@@ -2222,6 +2210,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             txtHora.Visible = true;
                             lblHora.Visible = true;
                             lblHora.Text = "Informar al Paciente: La Url esta disponible a las" + " " + _horadisponible;
+                            btnLink.Text = "Copie la URL";
 
                             Array.Resize(ref objlinkid, 8);
                             objlinkid[0] = 0;

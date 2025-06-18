@@ -11,6 +11,7 @@ namespace Pry_PrestasaludWAP.Api
     {
         public string GetToken(string url, string _apikey)
         {
+            string tokens = "";
             try
             {
                 HttpClient _client = new HttpClient();
@@ -27,7 +28,7 @@ namespace Pry_PrestasaludWAP.Api
                 {
                     var responseContent = _response.Content.ReadAsStringAsync().Result;
                     dynamic token = JObject.Parse(responseContent);
-                    return token.token;
+                    tokens = token.token;
                 }
                 else
                 {
@@ -42,7 +43,7 @@ namespace Pry_PrestasaludWAP.Api
 
             }
 
-            return "";
+            return tokens;
         }
 
         public string GetIdContract(string url, string auth)
