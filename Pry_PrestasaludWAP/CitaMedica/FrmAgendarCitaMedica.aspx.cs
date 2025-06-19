@@ -1805,15 +1805,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             int _dias = _difdias.Days;
 
-            //if(_dias > 10)
-            //{
-            //    new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
-            //    tbDatosCita.Clear();
-            //    ViewState["tbDatosCita"] = tbDatosCita;
-            //    grdvDatosCitas.DataSource = tbDatosCita;
-            //    grdvDatosCitas.DataBind();
-            //    return;
-            //}
+            if (_dias > 10)
+            {
+                new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
+                return;
+            }
 
             if (dtmFechaCalendar < dtmFechaActual)
             {
