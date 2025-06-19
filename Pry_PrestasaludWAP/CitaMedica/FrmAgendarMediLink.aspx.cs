@@ -956,6 +956,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["CodHoraMed"] = lstCodHoraMed;
             ViewState["HoraMed"] = lstTxthoraMed;
             btnCrearCita.Visible = true;
+            string newhora = lstTxthoraMed.Substring(0, 5);
+            TimeSpan horaAgenda = TimeSpan.ParseExact(newhora, @"hh\:mm",
+            CultureInfo.InvariantCulture);
+            string horaSistema = DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + "00";
+            TimeSpan horaActual = TimeSpan.Parse(horaSistema);
+            TimeSpan _difHora = horaAgenda.Subtract(horaActual);
+            int val = 3;
+            TimeSpan _parametro = TimeSpan.FromHours(val);
+            if (_difHora < _parametro)
+            {
+                new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                return;
+            }
+
+
         }
 
         protected void Calendar_SelectionChanged(object sender, EventArgs e)
