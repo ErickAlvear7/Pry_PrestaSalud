@@ -907,7 +907,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             LstBoxHorario.Visible = false;
             LstBoxHorario.Items.Clear();
             btnCrearCita.Visible = false;
-            Calendar.SelectedDate = DateTime.Now.AddDays(-8);
+            //Calendar.SelectedDate = DateTime.Now.AddDays(-8);
             codEspe = int.Parse(ddlEspecialidad.SelectedValue.ToString());
             ddlTxtEspeci = ddlEspecialidad.SelectedItem.ToString();
             codCiudad = int.Parse(ddlciudad.SelectedValue.ToString());
@@ -921,7 +921,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fechabloqueo = DateTime.Now.ToString("MM/dd/yyyy");
             if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
             {
-
                 new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
                 return;
             }
@@ -954,8 +953,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstCodHoraMed = LstBoxHorario.SelectedItem.Value;
             lstTxthoraMed = LstBoxHorario.SelectedItem.ToString();
             ViewState["CodHoraMed"] = lstCodHoraMed;
-            ViewState["HoraMed"] = lstTxthoraMed;
-            btnCrearCita.Visible = true;
+            ViewState["HoraMed"] = lstTxthoraMed;         
             string newhora = lstTxthoraMed.Substring(0, 5);
             TimeSpan horaAgenda = TimeSpan.ParseExact(newhora, @"hh\:mm",
             CultureInfo.InvariantCulture);
@@ -964,13 +962,21 @@ namespace Pry_PrestasaludWAP.CitaMedica
             TimeSpan _difHora = horaAgenda.Subtract(horaActual);
             int val = 3;
             TimeSpan _parametro = TimeSpan.FromHours(val);
-            if (_difHora < _parametro)
+
+            string fechaActual = DateTime.Now.ToString("MM/dd/yyyy");
+            string Calendario = Calendar.SelectedDate.ToString("MM/dd/yyyy");
+
+            if (fechaActual == Calendario)
             {
-                new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                return;
+                if (_difHora < _parametro)
+                {
+                    new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                    btnCrearCita.Visible = false;
+                    return;
+                }
             }
 
-
+            btnCrearCita.Visible = true;
         }
 
         protected void Calendar_SelectionChanged(object sender, EventArgs e)
