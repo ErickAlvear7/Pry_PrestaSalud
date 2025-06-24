@@ -326,10 +326,12 @@ public partial class Medicos_FrmNuevoTurnoMedico : System.Web.UI.Page
             if (ViewState["tblTurnoMedico"] != null)
             {
                 DataTable tblbuscar = (DataTable)ViewState["tblTurnoMedico"];
-                DataRow result = tblbuscar.Select("Dia='" + ddlDia.SelectedItem.ToString() + "' and Horario='" + ddlHorario.SelectedItem.ToString() + "' and CodigoHora='" + ddlIntervalo.SelectedValue.ToString() + "'").FirstOrDefault();
-                tblbuscar.DefaultView.Sort = "Codigo";
+                DataRow result = tblbuscar.Select("Dia='" + ddlDia.SelectedItem.ToString() + "' and Horario='" + ddlHorario.SelectedItem.ToString() + "' and CodigoHora='" + ddlIntervalo.SelectedValue.ToString() + "'" ).FirstOrDefault();
+                tblbuscar.DefaultView.Sort = "Codigo ASC";
+                DataTable dtnew = tblbuscar.DefaultView.ToTable();
                 if (result != null) lexiste = true;
-                foreach (DataRow dr in tblbuscar.Rows)
+                
+                foreach (DataRow dr in dtnew.Rows)
                 {
                     maxCodigo = int.Parse(dr[0].ToString());
                 }
