@@ -2322,10 +2322,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     //int horas = _resul.Hours;
 
-                    if (_difHora < _parametro)
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = 0;
+                    objparam[1] = ViewState["Indentificacion"].ToString();
+                    objparam[2] = 207;
+                    DataSet valor = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    string bloqueo = valor.Tables[0].Rows[0][0].ToString();
+
+                    if (bloqueo == "ACTIVO")
                     {
-                        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                        return;
+                        if (_difHora < _parametro)
+                        {
+                            new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                            return;
+                        }
                     }
 
                 }

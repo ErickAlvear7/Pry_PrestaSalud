@@ -598,10 +598,17 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objdatostitu[0] = dr[13].ToString() == "T" ? 2 : 3;
                     objdatostitu[1] = dr[14].ToString();
                     objdatostitu[2] = dr[15].ToString();
+                  
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = int.Parse(ddlPrestadora.SelectedValue);
+                    objparam[1] = "";
+                    objparam[2] = 208;
+                    DataSet dir = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    string direcPres = dir.Tables[0].Rows[0][0].ToString();
+                    objcitamedica[14] = direcPres; 
                     objdatostitu[3] = 0;
                     dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
                     objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
-                    objcitamedica[14] = dt.Tables[0].Rows[0][2].ToString();
                     objcitamedica[15] = dt.Tables[0].Rows[0][3].ToString();
                     string newFechaNaci = objcitamedica[13].ToString();
                     objcitamedica[20] = medicamentos;
