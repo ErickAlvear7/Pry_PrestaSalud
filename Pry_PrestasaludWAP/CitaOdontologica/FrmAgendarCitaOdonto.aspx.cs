@@ -23,6 +23,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
         Object[] objdatosmotivo = new Object[3];
         Object[] objdatoscancel = new Object[11];
         Object[] objsendmails = new Object[3];
+        Object[] objparamdirec = new Object[3];
         DataTable tbDatosCita = new DataTable();
         DataTable tbCitaMedica = new DataTable();
         DataTable tbNuevaCitaMedica = new DataTable();
@@ -556,7 +557,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 objparam[17] = "";
                 objcitamedica[0] = ViewState["Campaing"].ToString();
                 objcitamedica[1] = ViewState["Producto"].ToString();
-                foreach (DataRow dr in tblCitaMedica.Rows)
+                foreach (DataRow dr in tblCitaMedica.Rows) //aqui esta en el bucle, es decir va a recorrer los 3 mails o los 3 agendamientos
                 {
                     mailsP = FunMailsEnviar(int.Parse(dr[9].ToString()));
                     if (string.IsNullOrEmpty(mailsP))
@@ -579,9 +580,9 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objparam[7] = "";
                     objparam[8] = int.Parse(dr[12].ToString());
                     objparam[9] = dr[13].ToString(); ;
-                    objparam[10] = int.Parse(dr[14].ToString()); ;
-                    objparam[11] = int.Parse(dr[15].ToString()); ;
-                    objparam[12] = dr[16].ToString(); ;
+                    objparam[10] = int.Parse(dr[14].ToString()); 
+                    objparam[11] = int.Parse(dr[15].ToString()); 
+                    objparam[12] = dr[16].ToString();
                     codigocita = new Conexion(2, "").FunGetCodigoCita(objparam);
                     medicamentos = FunGetMedicamento(int.Parse(ViewState["CodigoGrupo"].ToString()));
                     objcitamedica[2] = codigocita;
@@ -599,11 +600,11 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objdatostitu[1] = dr[14].ToString();
                     objdatostitu[2] = dr[15].ToString();
                   
-                    Array.Resize(ref objparam, 3);
-                    objparam[0] = int.Parse(ddlPrestadora.SelectedValue);
-                    objparam[1] = "";
-                    objparam[2] = 208;
-                    DataSet dir = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    Array.Resize(ref objparamdirec, 3); 
+                    objparamdirec[0] = int.Parse(ddlPrestadora.SelectedValue);
+                    objparamdirec[1] = "";
+                    objparamdirec[2] = 208;
+                    DataSet dir = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirec);
                     string direcPres = dir.Tables[0].Rows[0][0].ToString();
                     objcitamedica[14] = direcPres; 
                     objdatostitu[3] = 0;
@@ -618,11 +619,11 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     nameFile = filePath + "CitaOdontologica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
                     msjEmail = nameFile;
 
-                    /*if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
-                    {
-                        thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
-                        thrEnviarSMS.Start();
-                    }*/
+                    //if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
+                    //{
+                    //    thrEnviarSMS = new Thread(new ThreadStart(FunEnviarSMS));
+                    //    thrEnviarSMS.Start();
+                    //}
 
                     //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
                     returnFile = "";
