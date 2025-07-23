@@ -191,6 +191,8 @@ namespace Pry_PrestasaludWAP.Reportes
             //thrEnviarSP = new Thread(new ThreadStart(FunGenerarReporte));
             //thrEnviarSP.Start();
 
+            //APARENTEMENTE SE VAN AL MISMO SP CON LOS MISMOS PARAMETROS
+            //ESTE LLENA EL GRIDVIEW
             ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
 
             if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null )
@@ -208,6 +210,7 @@ namespace Pry_PrestasaludWAP.Reportes
         }
         protected void FunGenerarReporte()
         {
+            //ESTE CONSULTA PARA ALMACENAR LOS DATOS PARA EXPORTAR
             Array.Resize(ref objparam, 5);
             if (ddlCliente.SelectedValue == "0") objparam[0] = 2;
             if (ddlCliente.SelectedValue != "0") objparam[0] = 3;

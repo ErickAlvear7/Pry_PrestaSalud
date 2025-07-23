@@ -55,8 +55,8 @@
                                         <Columns>
                                             <asp:BoundField DataField="Producto" HeaderText="Producto" />
                                             <asp:BoundField DataField="Presentacion" HeaderText="Presentacion" />
-                                            <asp:BoundField DataField="Especificacion" HeaderText="Especificacion" />
-                                            <asp:BoundField DataField="Medicamento" HeaderText="Medicamento" />
+                                            <%--<asp:BoundField DataField="Especificacion" HeaderText="Especificacion" />--%>
+                                           <%-- <asp:BoundField DataField="Medicamento" HeaderText="Medicamento" />--%>
                                             <asp:BoundField DataField="Clase" HeaderText="Clase" />
                                             <asp:BoundField DataField="Subclase" HeaderText="Subclase" />
                                         </Columns>
