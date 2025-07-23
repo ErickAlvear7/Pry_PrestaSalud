@@ -1026,8 +1026,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
             else
             {
-                string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-                if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+                string fechabloqueogua = dtmFechaCalendar.ToString("MM/dd/yyyy");
+                if (fechabloqueogua == ViewState["FechaBloqueo"].ToString())
                 {
 
                     new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -1035,7 +1035,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
             }
 
+            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+            {
 
+                new Funciones().funShowJSMessage("Fecha no disponible", this);
+                return;
+            }
 
             fechaCalendar = dtmFechaCalendar.ToString("yyyyMMdd");
             fechaCita = dtmFechaCita.ToString("yyyy-MM-dd");
