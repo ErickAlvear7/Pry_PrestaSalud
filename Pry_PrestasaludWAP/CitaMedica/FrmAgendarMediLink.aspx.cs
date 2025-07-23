@@ -919,6 +919,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
             lstBoxMedicos.Visible = true;
             DateTime dtmFechaCalendar = DateTime.ParseExact(Calendar.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
             string fechabloqueo = DateTime.Now.ToString("MM/dd/yyyy");
+
+            if(ddlciudad.SelectedValue == "1180")
+            {
+                string bloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+                if (bloqueo == "07/25/2025")
+                {
+                    new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + bloqueo, this);
+                    return;
+                }
+            }
+
             if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
             {
                 new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
@@ -1004,13 +1015,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 return;
             }
 
-            string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+            if (ddlciudad.SelectedValue == "1180")
             {
-                
-                new Funciones().funShowJSMessage("Fecha no disponible", this);
-                return;
+                string bloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+                if (bloqueo == "07/25/2025")
+                {
+                    new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + bloqueo, this);
+                    return;
+                }
             }
+            else
+            {
+                string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+                if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+                {
+
+                    new Funciones().funShowJSMessage("Fecha no disponible", this);
+                    return;
+                }
+            }
+
+
 
             fechaCalendar = dtmFechaCalendar.ToString("yyyyMMdd");
             fechaCita = dtmFechaCita.ToString("yyyy-MM-dd");
