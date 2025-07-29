@@ -1784,6 +1784,23 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void CalendarioCita_SelectionChanged(object sender, EventArgs e)
         {
+            DateTime selectedDate = CalendarioCita.SelectedDate;
+            int selectedMonth = selectedDate.Month;
+            string nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(selectedMonth);
+
+            DateTime fechaActual = DateTime.Now;
+            int mesActual = fechaActual.Month;
+
+            if(mesActual < selectedMonth)
+            {
+                new Funciones().funShowJSMessage("La agenda para el mes de" +" "+ nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
+                tbDatosCita.Clear();
+                ViewState["tbDatosCita"] = tbDatosCita;
+                grdvDatosCitas.DataSource = tbDatosCita;
+                grdvDatosCitas.DataBind();
+                return;
+            }
+
             lblerror.Text = "";
             if (ddlMedico.SelectedValue == "0")
             {
@@ -1837,6 +1854,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 grdvDatosCitas.DataBind();
                 return;
             }
+            
 
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
           
