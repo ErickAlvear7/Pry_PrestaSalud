@@ -1839,13 +1839,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
-            //}
-            //else
-            //{
-            //    new Funciones().funShowJSMessage("No hay horarios generados", this);
-            //    grdvDatosCitas.DataSource = null;
-            //    grdvDatosCitas.DataBind();
-            //}
+          
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
