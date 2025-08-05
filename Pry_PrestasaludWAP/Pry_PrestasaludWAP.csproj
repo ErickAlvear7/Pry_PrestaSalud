@@ -1812,6 +1812,7 @@
     <Content Include="Reports\dtsFacturaOdonto.xsc">
       <DependentUpon>dtsFacturaOdonto.xsd</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\PublicPRESTASALUD.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -107,14 +107,31 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     _dias = int.Parse(dt.Tables[0].Rows[0][0].ToString());
                 }
 
+                //programar para meses con 31 + 1
+
+                DateTime fechaActual = DateTime.Now;
+                int mesActual = fechaActual.Month;
+
+                if (mesActual == 2) _dias = 28;
+
+                if (mesActual == 1 || mesActual == 3 || mesActual == 5 || mesActual == 7 || mesActual == 8 || mesActual == 10 || mesActual == 12)
+                {
+                    _dias = _dias + 1;
+                }
+
+
                 DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                //string dateString = "22/08/2025";
+                //string format = "dd/MM/yyyy";
+                //DateTime dateTime = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
 
                 TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
                 int _idasx = difFechas.Days;
 
-                if(_idasx > _dias)
+                if(_idasx == _dias)
                 {
                     Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                         strCodProducto + "&Regresar=0");
@@ -139,6 +156,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if(strCodProducto == "225" || strCodProducto == "226" || strCodProducto == "227")
                 {
+                    DateTime fechaActual = DateTime.Now;
+                    int mesActual = fechaActual.Month;
+
+                    if (mesActual == 2) _dias = 28;
+
+                    if (mesActual == 1 || mesActual == 3 || mesActual == 5 || mesActual == 7 || mesActual == 8 || mesActual == 10 || mesActual == 12)
+                    {
+                        _dias = _dias + 1;
+                    }
+
                     DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
@@ -146,14 +173,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     int _idasx = difFechas.Days;
 
-                    if (_idasx > _dias)
+                    if (_idasx == _dias)
                     {
                         Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                             strCodProducto + "&Regresar=0");
                     }
                     else
                     {
-                        int _diffdias = _dias - _idasx;
+                            int _diffdias = _dias - _idasx;
 
                         _fechaatual = _fechaatual.AddDays(_diffdias);
                         string _fecha = DateTime.ParseExact(_fechaatual.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
