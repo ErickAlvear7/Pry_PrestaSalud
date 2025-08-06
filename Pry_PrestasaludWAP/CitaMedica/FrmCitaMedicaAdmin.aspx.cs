@@ -86,6 +86,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var strCodProducto = grdvDatos.DataKeys[intIndex].Values["CodigoProducto"].ToString();
             var strFechaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaCobertura"].ToString();
 
+            string dateString = strFechaCobertura;
+            string format = "dd/MM/yyyy";
+            DateTime Cobertura = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
+
             if (Session["Perfil"].ToString() == "NOVA")
             {
                 Array.Resize(ref objparam, 11);
@@ -109,23 +113,40 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 //programar para meses con 31 + 1
 
-                DateTime fechaActual = DateTime.Now;
-                int mesActual = fechaActual.Month;
+                int mesCobertura = Cobertura.Month;
 
-                if (mesActual == 2) _dias = 28;
 
-                if (mesActual == 1 || mesActual == 3 || mesActual == 5 || mesActual == 7 || mesActual == 8 || mesActual == 10 || mesActual == 12)
+                switch (mesCobertura)
                 {
-                    _dias = _dias + 1;
+                    case 1:
+                        _dias = _dias + 1;
+                        break;
+                    case 2:
+                        _dias = 28;
+                        break;
+                    case 3:
+                        _dias = _dias + 1;
+                        break;
+                    case 5:
+                        _dias = _dias + 1;
+                        break;
+                    case 7:
+                        _dias = _dias + 1;
+                        break;
+                    case 8:
+                        _dias = _dias + 1;
+                        break;
+                    case 10:
+                        _dias = _dias + 1;
+                        break;
+                    case 12:
+                        _dias = _dias + 1;
+                        break;
                 }
 
 
                 DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-                //string dateString = "22/08/2025";
-                //string format = "dd/MM/yyyy";
-                //DateTime dateTime = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
 
                 TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
@@ -156,15 +177,35 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if(strCodProducto == "225" || strCodProducto == "226" || strCodProducto == "227")
                 {
-                    DateTime fechaActual = DateTime.Now;
-                    int mesActual = fechaActual.Month;
-
-                    if (mesActual == 2) _dias = 28;
-
-                    if (mesActual == 1 || mesActual == 3 || mesActual == 5 || mesActual == 7 || mesActual == 8 || mesActual == 10 || mesActual == 12)
+                    int mesCobertura = Cobertura.Month;
+                    switch (mesCobertura)
                     {
-                        _dias = _dias + 1;
+                        case 1:
+                            _dias = _dias + 1;
+                            break;
+                        case 2:
+                            _dias = 28;
+                            break;
+                        case 3:
+                            _dias = _dias + 1;
+                            break;
+                        case 5:
+                            _dias = _dias + 1;
+                            break;
+                        case 7:
+                            _dias = _dias + 1;
+                            break;
+                        case 8:
+                            _dias = _dias + 1;
+                            break;
+                        case 10:
+                            _dias = _dias + 1;
+                            break;
+                        case 12:
+                            _dias = _dias + 1;
+                            break;
                     }
+
 
                     DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);

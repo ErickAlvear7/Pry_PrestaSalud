@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\ExpertWeb\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{46D4FC40-2BF1-4777-B862-E8F96C46F74B}|Pry_PrestasaludWAP\\Pry_PrestasaludWAP.csproj|D:\\ExpertWeb\\pry_prestasaludwap\\medicos\\frmnuevomedico.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46D4FC40-2BF1-4777-B862-E8F96C46F74B}|Pry_PrestasaludWAP\\Pry_PrestasaludWAP.csproj|solutionrelative:pry_prestasaludwap\\medicos\\frmnuevomedico.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46D4FC40-2BF1-4777-B862-E8F96C46F74B}|Pry_PrestasaludWAP\\Pry_PrestasaludWAP.csproj|D:\\ExpertWeb\\pry_prestasaludwap\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{46D4FC40-2BF1-4777-B862-E8F96C46F74B}|Pry_PrestasaludWAP\\Pry_PrestasaludWAP.csproj|solutionrelative:pry_prestasaludwap\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 100,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmNuevoMedico.aspx.cs",
+              "DocumentMoniker": "D:\\ExpertWeb\\Pry_PrestasaludWAP\\Medicos\\FrmNuevoMedico.aspx.cs",
+              "RelativeDocumentMoniker": "Pry_PrestasaludWAP\\Medicos\\FrmNuevoMedico.aspx.cs",
+              "ToolTip": "D:\\ExpertWeb\\Pry_PrestasaludWAP\\Medicos\\FrmNuevoMedico.aspx.cs",
+              "RelativeToolTip": "Pry_PrestasaludWAP\\Medicos\\FrmNuevoMedico.aspx.cs",
+              "ViewState": "AgIAAG0BAAAAAAAAAAAuwH0BAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-03T02:49:48.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Web.config",
+              "DocumentMoniker": "D:\\ExpertWeb\\Pry_PrestasaludWAP\\Web.config",
+              "RelativeDocumentMoniker": "Pry_PrestasaludWAP\\Web.config",
+              "ToolTip": "D:\\ExpertWeb\\Pry_PrestasaludWAP\\Web.config",
+              "RelativeToolTip": "Pry_PrestasaludWAP\\Web.config",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAACrAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-04-03T01:49:48.334Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
