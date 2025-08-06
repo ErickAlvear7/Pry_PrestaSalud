@@ -152,7 +152,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 int _idasx = difFechas.Days;
 
-                if(_idasx == _dias)
+                if(_idasx >= _dias)
                 {
                     Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                         strCodProducto + "&Regresar=0");
@@ -214,7 +214,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     int _idasx = difFechas.Days;
 
-                    if (_idasx == _dias)
+                    if (_idasx >= _dias)
                     {
                         Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                             strCodProducto + "&Regresar=0");
