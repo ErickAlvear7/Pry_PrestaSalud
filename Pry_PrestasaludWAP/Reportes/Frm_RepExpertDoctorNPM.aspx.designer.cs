@@ -11,7 +11,7 @@ namespace Pry_PrestasaludWAP.Reportes
 {
 
 
-    public partial class Frm_RepExpertDoctorNovaV1
+    public partial class Frm_RepExpertDoctorNPM
     {
 
         /// <summary>
@@ -58,6 +58,15 @@ namespace Pry_PrestasaludWAP.Reportes
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblerror;
+
+        /// <summary>
+        /// Control updProgress.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress updProgress;
 
         /// <summary>
         /// Control updCabecera.

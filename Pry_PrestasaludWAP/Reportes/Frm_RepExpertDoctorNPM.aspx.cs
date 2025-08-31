@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace Pry_PrestasaludWAP.Reportes
 {
-    public partial class Frm_RepExpertDoctorNovaV1 : Page
+    public partial class Frm_RepExpertDoctorNPM : System.Web.UI.Page
     {
+
         #region Variables
         Object[] objparam = new Object[1];
         DataSet ds = new DataSet();
@@ -18,7 +21,6 @@ namespace Pry_PrestasaludWAP.Reportes
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                 Response.Redirect("~/Reload.html");
             ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
@@ -41,19 +43,20 @@ namespace Pry_PrestasaludWAP.Reportes
 
             }
             else grdvDatos.DataSource = ViewState["grdvDatos"];
-
         }
-        #endregion  
+
+        #endregion
 
         #region Procedimientos y Funciones
+
         private void FunCascadaCombos(int opcion)
         {
             switch (opcion)
             {
-               
+
                 case 1:
                     Array.Resize(ref objparam, 1);
-                    objparam[0] = 63;
+                    objparam[0] = 57;
                     ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
                     ddlClienteNova.DataTextField = "Descripcion";
                     ddlClienteNova.DataValueField = "Codigo";
@@ -62,9 +65,9 @@ namespace Pry_PrestasaludWAP.Reportes
                     break;
             }
         }
+
         #endregion
 
-        #region Botones y Eventos
         protected void btnProcesar_Click(object sender, EventArgs e)
         {
             if (!new Funciones().IsDate(txtFechaInicio.Text))
@@ -91,7 +94,7 @@ namespace Pry_PrestasaludWAP.Reportes
 
             TimeSpan tiempo = fechaInicio.Subtract(fecha);
             int dia = tiempo.Days;
-            if(dia < 0)
+            if (dia < 0)
             {
                 new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
                 return;
@@ -105,20 +108,14 @@ namespace Pry_PrestasaludWAP.Reportes
                 return;
             }
 
-            //if (fechaInicio <= fecha)
-            //{
-            //    new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
-            //    return;
-            //}
-
             Array.Resize(ref objparam, 4);
             //System.Threading.Thread.Sleep(500);
             objparam[0] = 0;
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
             objparam[3] = ddlClienteNova.SelectedValue;
-            //ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
-            ds = new Conexion(2, "").FunConsultarSQLNOVA(objparam);
+
+            ds = new Conexion(2, "").FunConsultarSQLNOVANPM(objparam);
 
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -194,5 +191,4 @@ namespace Pry_PrestasaludWAP.Reportes
 
         }
     }
-    #endregion
 }

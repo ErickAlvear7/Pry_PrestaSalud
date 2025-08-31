@@ -156,6 +156,25 @@
                     objparam[2] = 100;
                     dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 }
+
+                //dtsFactura = new Conexion(2, "").FuConsultarSOLOFacturasNew(objparam);
+                //if (dtsFactura.Tables[0].Rows.Count > 0)
+                //{
+                //    rptFacturacion.Visible = true;
+                //    FunGenerarReporte(dtsCabecera.Tables[0], dtsFactura.Tables[0]);
+                //}
+                //else
+                //{
+                //    rptFacturacion.Visible = false;
+                //    new Funciones().funShowJSMessage("No existe registros en ese período..!", this);
+                //    objparam[0] = int.Parse(ViewState["CodigoMedico"].ToString());
+                //    Array.Resize(ref objparam, 3);
+                //    objparam[1] = "";
+                //    objparam[2] = 100;
+                //    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                //}
+
+
             }
             catch (Exception ex)
             {

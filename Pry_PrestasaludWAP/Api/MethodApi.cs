@@ -261,5 +261,50 @@ namespace Pry_PrestasaludWAP.Api
             return responseHorarios;
         }
 
+        public string GetPatiens(string url,string email,string auth)
+        {
+            string idpatient = "";
+            try
+            {
+
+                HttpClient _id = new HttpClient();
+                _id.BaseAddress = new Uri(url);
+                _id.DefaultRequestHeaders.Add("Authorization", "Bearer " + auth);
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var queryString = new StringBuilder();
+                queryString.Append("?email=").Append(Uri.EscapeDataString(email));
+
+                var Idpat = _id.GetAsync("patients"+ queryString).Result;
+
+                if (Idpat.IsSuccessStatusCode)
+                {
+                    var ide = Idpat.Content.ReadAsStringAsync().Result;
+                    
+
+                    if (ide.Trim() == "[]")
+                    {
+                        idpatient = "";
+                    }
+                    else
+                    {
+                        dynamic dataSer = JArray.Parse(ide);
+                        idpatient = dataSer[0].id;
+                        new Funciones().LogAuditoriaTele(1, "MethodApi.cs/GetPatiens", "idpatient cliente registrado: " + idpatient, 100);
+                    }
+
+                    
+                }
+
+                return idpatient;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

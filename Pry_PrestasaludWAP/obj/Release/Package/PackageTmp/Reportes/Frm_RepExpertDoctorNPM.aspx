@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_RepExpertDoctorNovaV1.aspx.cs" Inherits="Pry_PrestasaludWAP.Reportes.Frm_RepExpertDoctorNovaV1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Frm_RepExpertDoctorNPM.aspx.cs" Inherits="Pry_PrestasaludWAP.Reportes.Frm_RepExpertDoctorNPM" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
@@ -104,7 +104,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-       <%--     <div class="panel-info">
+            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCabecera">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -114,7 +114,7 @@
                         </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
-            </div>--%>
+            </div>
             <div class="panel-body">
                 <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
@@ -171,26 +171,6 @@
                                 <td style="width: 15%"></td>
                                 <td style="width: 35%"></td>
                             </tr>
-                       <%--     <tr>
-                                <td>
-                                    <h5>Tipo Agenda:</h5>
-                                </td>
-                                <td>
-                                    <asp:DropDownList ID="ddlTipoAgenda" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="4">
-                                    </asp:DropDownList>
-                                </td>
-                                <td>
-                                    <h5>Tipo Cliente:</h5>
-                                </td>
-                                <td>
-                                    <asp:DropDownList ID="ddlTipoCliente" runat="server" CssClass="form-control" Width="100%" TabIndex="5">
-                                        <asp:ListItem Value="0">--Todos--</asp:ListItem>
-                                        <asp:ListItem Value="T">TITULAR</asp:ListItem>
-                                        <asp:ListItem Value="B">BENEFICIARIO</asp:ListItem>
-                                    </asp:DropDownList>
-                                </td>
-                                <td></td>
-                            </tr>--%>
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -243,71 +223,62 @@
                                     ShowHeaderWhenEmpty="True" EmptyDataText="No existen datos para mostrar" AllowPaging="True" PageSize="50" OnPageIndexChanging="grdvDatos_PageIndexChanging" TabIndex="7">
                                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                     <Columns>
-                                        <asp:BoundField DataField="FechaRegistro" HeaderText="Fecha_Registro" />
-                                        <asp:BoundField DataField="FechaCita" HeaderText="Fecha_Cita" />
-                                        <asp:BoundField DataField="HoraCita" HeaderText="Hora_Cita" />
-                                        <asp:BoundField DataField="CodigoCita" HeaderText="Codigo" />
-                                        <asp:BoundField DataField="Cliente" HeaderText="Cliente">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Correo" HeaderText="Correo" />
+                                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                        <asp:BoundField DataField="Celular" HeaderText="Telefono" />
                                         <asp:BoundField DataField="Producto" HeaderText="Producto">
                                             <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
-                                        <asp:BoundField DataField="Cedula" HeaderText="Identificación"></asp:BoundField>
-                                        <asp:BoundField DataField="Telefono_Casa" HeaderText="Fono_Casa"></asp:BoundField>
-                                        <asp:BoundField DataField="Telefono_Oficina" HeaderText="Fono_Oficina" />
-                                        <asp:BoundField DataField="Celular" HeaderText="Celular" />
+                                        <asp:BoundField DataField="FechaCita" HeaderText="Fecha_Cita">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Campo1" HeaderText="Campo1" />
+                                        <asp:BoundField DataField="Campo2" HeaderText="Campo2"></asp:BoundField>
+                                        <asp:BoundField DataField="Campo3" HeaderText="Campo3"></asp:BoundField>
+                                        <asp:BoundField DataField="Campo4" HeaderText="Campo4" />
+                                        <asp:BoundField DataField="Idioma" HeaderText="Idioma" />
+                                        <asp:BoundField DataField="Productoq" HeaderText="Producto">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Cliente1" HeaderText="Cliente1">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Cliente2" HeaderText="Cliente2" />
+                                        <asp:BoundField DataField="Atencion" HeaderText="Tipo">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Momento" HeaderText="Momento">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Tipoc" HeaderText="Documento" >
+                                        <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="Cedula" HeaderText="Cedula">
+                                        <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
                                         <asp:BoundField DataField="Paciente" HeaderText="Paciente">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="Titular" HeaderText="Titular">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="Parentesco" HeaderText="Parentesco" />
-                                        <asp:BoundField DataField="Genero" HeaderText="Genero" />
-                                        <asp:BoundField DataField="TipoAgenda" HeaderText="Agenda">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="MotivoAgenda" HeaderText="Motivo">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="RegistroCIE10" HeaderText="RegistroCIE10" >
                                         <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="Observacion" HeaderText="Observacion">
-                                        <ItemStyle Wrap="False" />
+                                        <asp:BoundField DataField="Campo5" HeaderText="Campo5">
+                                            <ItemStyle Wrap="False" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="PlanProdcuto" HeaderText="PlanProdcuto">
+                                            <ItemStyle Wrap="False" />
                                         </asp:BoundField>
                                         <asp:BoundField DataField="Provincia" HeaderText="Provincia">
-                                        <ItemStyle Wrap="False" />
+                                            <ItemStyle Wrap="False" />
                                         </asp:BoundField>
                                         <asp:BoundField DataField="Ciudad" HeaderText="Ciudad">
                                             <ItemStyle Wrap="False" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="Prestadora" HeaderText="Prestadora">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="Especialidad" HeaderText="Especialidad">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="Medico" HeaderText="Medico">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>
-                                        <asp:BoundField DataField="UsuarioAgenda" HeaderText="Usuario_Agenda" />
-                                        <asp:BoundField DataField="UsuarioCancela" HeaderText="Usuario_Cancela" />
-                                       <asp:BoundField DataField="FechaCancelacion" HeaderText="Fecha_Cancelación" />
-                                       <%-- <asp:BoundField DataField="Pvp" HeaderText="Pvp" />
-                                        <asp:BoundField DataField="Costo" HeaderText="Costo" />
-                                        <asp:BoundField DataField="IdBeneficiario" HeaderText="IdBeneficiario" />--%>
-                                        <%--<asp:BoundField DataField="ObservaG" HeaderText="ObservaG">
-                                            <ItemStyle Wrap="False" />
-                                        </asp:BoundField>--%>
-                                        <%--<asp:BoundField DataField="ProvinciaNaci" HeaderText="ProvinciaNacimiento" />--%>
-                                        <asp:BoundField DataField="FechaNacimiento" HeaderText="FechaNacimiento" />
-                                        <asp:BoundField DataField="TipoAgendamiento" HeaderText="Agendamiento" />
-                                        <asp:BoundField DataField="Procedimiento" HeaderText="Procedimiento" />
-                                        <asp:BoundField DataField="Pieza" HeaderText="Pieza" />
-                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripcion" />
+                                        <asp:BoundField DataField="Campo6" HeaderText="Campo6" />
+                                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                                        <asp:BoundField DataField="Celular" HeaderText="Celular" />
+                                        <asp:BoundField DataField="Prestadora" HeaderText="Prestadora" />
+                                        <asp:BoundField DataField="Medico" HeaderText="Medico" />
+                                        <asp:BoundField DataField="Tipocita" HeaderText="Tipocita" />
                                     </Columns>
                                     <RowStyle Font-Size="XX-Small" />
                                 </asp:GridView>

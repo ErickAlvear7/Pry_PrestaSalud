@@ -1791,9 +1791,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DateTime fechaActual = DateTime.Now;
             int mesActual = fechaActual.Month;
 
-            if(mesActual < selectedMonth)
+            if (mesActual < selectedMonth)
             {
-                new Funciones().funShowJSMessage("La agenda para el mes de" +" "+ nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
+                new Funciones().funShowJSMessage("La agenda para el mes de" + " " + nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
                 tbDatosCita.Clear();
                 ViewState["tbDatosCita"] = tbDatosCita;
                 grdvDatosCitas.DataSource = tbDatosCita;
@@ -1932,6 +1932,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string horaActuallink = now.ToString("HH:mm");
             string _fechadisponible = "", _horadisponible = "";
             string id_medico = "";
+            string idfinal = "";
 
             if (ViewState["TipoCliente"] == null)
             {
@@ -2069,24 +2070,36 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         genero = "m";
                     }
 
-                    var paciente = new Patient
+                    //CONSULTAR SI EL PACIENTE ESTA YA EN CONTRATO
+                    _idpatient = new MethodApi().GetPatiens("https://api.eh.medicalcenter.io/", email, _token);
+
+                    if(!_idpatient.IsEmpty())
                     {
-                        name = nombre,
-                        surnames = apellido,
-                        email = email,
-                        birthdate = fechanac,
-                        gender = genero,
-                        phone = celular,
-                        contractId = _idcont
-                    };
+                        idfinal = _idpatient;
+                    }
+                    else
+                    {
+                        var paciente = new Patient
+                        {
+                            name = nombre,
+                            surnames = apellido,
+                            email = email,
+                            birthdate = fechanac,
+                            gender = genero,
+                            phone = celular,
+                            contractId = _idcont
+                        };
 
-                    var data = new JavaScriptSerializer().Serialize(paciente);
-                    _idpatient = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
+                        var data = new JavaScriptSerializer().Serialize(paciente);
+                        idfinal = new MethodApi().PostCreatePatient("https://api.eh.medicalcenter.io/", data, _token);
 
-                    if (!_idpatient.IsEmpty())
+                    }
+
+                   
+                    if (!idfinal.IsEmpty())
                     {
 
-                        string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, _idpatient, _idserv, _idespe);
+                        string medicos = new MethodApi().GetMedicos("https://api.eh.medicalcenter.io/", _token, fechaActuallink, idfinal, _idserv, _idespe);
                         var Resultjson = JsonConvert.DeserializeObject<List<MedicoHorarios>>(medicos);
 
                         int _encontro = 0;

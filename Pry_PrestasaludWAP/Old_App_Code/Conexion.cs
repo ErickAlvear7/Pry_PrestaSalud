@@ -184,6 +184,38 @@ public class Conexion
             return ds = null;
         }
     }
+
+    public DataSet FuConsultarSOLOFacturasNew(object[] objparam)
+    {
+        try
+        {
+            using (SqlCommand cmd = new SqlCommand("sp_ReporteFacturacionMedico"))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = Sqlcn;
+                cmd.CommandTimeout = 190;
+                cmd.Parameters.AddWithValue("@in_horacod", int.Parse(objparam[0].ToString()));
+                cmd.Parameters.AddWithValue("@in_nombre", objparam[1].ToString());
+                cmd.Parameters.AddWithValue("@in_descripcion", objparam[2].ToString());
+                cmd.Parameters.AddWithValue("@in_intervalo", objparam[3].ToString());
+                cmd.Parameters.AddWithValue("@in_horadesde", TimeSpan.ParseExact(objparam[4].ToString(), @"hh\:mm", CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@in_horahasta", TimeSpan.ParseExact(objparam[5].ToString(), @"hh\:mm", CultureInfo.InvariantCulture));
+                cmd.Parameters.AddWithValue("@in_estado", objparam[6]);
+                cmd.Parameters.AddWithValue("@in_usucodigo", objparam[7]);
+                cmd.Parameters.AddWithValue("@in_terminal", objparam[8]);
+                cmd.Parameters.AddWithValue("@EmptyHorario", dt);
+                Sqlcn.Open();
+                //cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+        }
+        catch (Exception ex)
+        {
+            return ds = null;
+        }
+    }
     public DataSet FunConsultarSQLNOVA(object[] objparam)
     {
         try
@@ -209,6 +241,34 @@ public class Conexion
             return ds = null;
         }
     }
+
+    //NEW NOVA NPM
+    public DataSet FunConsultarSQLNOVANPM(object[] objparam)
+    {
+        try
+        {
+            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNpm"))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = Sqlcn;
+                cmd.CommandTimeout = 500;
+                cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
+                cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
+                cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
+                cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3].ToString());
+                Sqlcn.Open();
+                //cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+        }
+        catch (Exception ex)
+        {
+            return ds = null;
+        }
+    }
+
 
     public DataSet FunReportesDoctorV1(object[] objparam)
     {
