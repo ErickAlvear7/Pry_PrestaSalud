@@ -2192,7 +2192,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         var consulta = new Consulta
                         {
-                            idPatient = _idpatient,
+                            idPatient = idfinal,
                             idContrato = _idcont,
                             idEspecialidad = _idespe,
                             idServicio = _idserv,
@@ -2245,7 +2245,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objlinkid[4] = xfecha;
                             objlinkid[5] = horaAc;
                             objlinkid[6] = xhora;
-                            objlinkid[7] = _idpatient;
+                            objlinkid[7] = idfinal;
 
                             link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 

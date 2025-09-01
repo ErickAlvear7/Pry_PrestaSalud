@@ -122,7 +122,6 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.Razor.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Deployment.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Razor.xml
-C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.AssemblyReference.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.CoreCompileInputs.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.CopyComplete
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.dll
