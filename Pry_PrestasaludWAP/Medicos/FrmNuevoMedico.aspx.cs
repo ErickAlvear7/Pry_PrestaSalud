@@ -181,8 +181,11 @@ public partial class Medicos_FrmNuevoMedico : Page
     {
         DataTable tbldatos = (DataTable)ViewState["tblDatosCita"];
 
-        foreach (DataRow dr in tbldatos.Rows)
+        DataRow[] filas = tbldatos.Select("CodigoEspecialidad = 0");
+
+        foreach (DataRow dr in filas) //AKI TE ESTA RECORRIENDO TODA LA TABLA, HAY QUE HACERLE RECORRER SOLO LOS NUEVOS
         {
+          
             codprestadora = int.Parse(dr["CodigoPrestadora"].ToString());
             xcodespe = int.Parse(dr["CodigoEspecialidad"].ToString());
             xcodmedico = int.Parse(dr["CodigoMedico"].ToString());
@@ -273,7 +276,7 @@ public partial class Medicos_FrmNuevoMedico : Page
                 new Funciones().funShowJSMessage("Ingrese Apellido del Médico..!", this);
                 return;
             }
-            System.Threading.Thread.Sleep(100);
+            //System.Threading.Thread.Sleep(100);
             Array.Resize(ref objparam, 17);
             objparam[0] = int.Parse(ViewState["codigomedico"].ToString());
             objparam[1] = txtNombres.Text.ToUpper();
@@ -514,6 +517,9 @@ public partial class Medicos_FrmNuevoMedico : Page
         //DataRow[] result = tbMedEspePresta.Select("Codigo=" + codigo);
         DataRow result1 = tbDatosCita.Select("Codigo=" + codigo1).FirstOrDefault();
         DataRow result2 = tbDatosEspe.Select("Codigo=" + codigo1).FirstOrDefault();
+
+        //AKI DEBERIAMOS PONER QUE SE ACTUALICE DIRECTO A LA BASE DE DATOS PARA NO ESTAR MANDANDO A GRABAR TODO LO QUE YA ESTA GRABADO
+        //ESO VA A MEJORAR EL RENDIMIENTO DE LA ACTUALIZACION
 
         int codigo = int.Parse(result1[2].ToString());
         if(codigo == 0)

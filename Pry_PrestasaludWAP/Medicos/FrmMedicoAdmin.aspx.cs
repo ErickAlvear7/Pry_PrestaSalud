@@ -39,9 +39,9 @@ public partial class Medicos_FrmMedicoAdmin : System.Web.UI.Page
     #region Funciones y Procedimiento
     protected void funCargaMantenimiento()
     {
-        Array.Resize(ref objparam, 1);
-        objparam[0] = 0;
-        dt = new Conexion(2, "").funConsultarSqls("sp_CargarMedicoAdmin", objparam);
+        //Array.Resize(ref objparam, 1);
+        //objparam[0] = 0;
+        dt = new Conexion(2, "").CargarMedicoAdmin(0);
         if (dt.Tables[0].Rows.Count > 0)
         {
             grdvDatos.DataSource = dt;

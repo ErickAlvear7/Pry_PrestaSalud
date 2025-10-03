@@ -53,7 +53,7 @@ namespace Pry_PrestasaludWAP.Reportes
                
                 case 1:
                     Array.Resize(ref objparam, 1);
-                    objparam[0] = 63;
+                    objparam[0] = 63;  //57 presta
                     ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
                     ddlClienteNova.DataTextField = "Descripcion";
                     ddlClienteNova.DataValueField = "Codigo";

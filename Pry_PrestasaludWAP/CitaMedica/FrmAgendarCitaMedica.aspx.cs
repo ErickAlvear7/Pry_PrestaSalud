@@ -197,8 +197,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = "";
                 objparam[2] = 204;
                 DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                dtFecha = fecha.Tables[0].Rows[0][0].ToString();
-                ViewState["FechaBloqueo"] = dtFecha;
+
+                if (fecha != null && fecha.Tables[0].Rows.Count > 0)
+                {
+                    ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
+                    ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
+                }
+
+                //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
+                //ViewState["FechaBloqueo"] = dtFecha;
 
             }
         }
@@ -1843,8 +1850,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+            
 
-            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -2013,8 +2021,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     foreach (var _datos in Result)
                     {
                         string name = _datos.nombre;
-                        if (name == "Seguros del Pichincha") name = "VIDA Y SALUD PROTEGIDA";
-                        if (name == grupo)
+                        string nameM = name.ToUpper();
+                        if (nameM == "SEGUROS DEL PICHINCHA") nameM = "VIDA Y SALUD PROTEGIDA";
+                        if (nameM == grupo)
                         {
                             //CONSULTAR ID CONTRATO ASOCIADO AL GRUPO
                             Array.Resize(ref objparam, 3);
@@ -2177,10 +2186,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 body += "DOCUMENTO TITULAR:" + " " + ViewState["Indentificacion"].ToString() + "<br/>";
                                 body += "NOMBRE TITULAR:" + " " + cliente + "<br/>";
                                 body += "NOMBRE PRODUCTO:" + " " + ViewState["Producto"].ToString() + "<br/>";
+                                body += "EMAIL TITULAR:" + " " + email + "<br/>";
 
                                 string correo = new Funciones().SendHtmlEmailLink("vroldan@prestasalud.com", "", body, ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()),
                                     bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(),
-                                    "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com,alperez@nau-care.com");
+                                    "", "", "ealvear@prestasalud.com,everhealth@prestasalud.com,alperez@nau-care.com");
                             }
 
                             if (fechadipon == fechalink)
@@ -2237,7 +2247,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             lblHora.Text = "Informar al Paciente: La Url esta disponible a las" + " " + _horadisponible;
                             btnLink.Text = "Copie la URL";
 
-                            Array.Resize(ref objlinkid, 8);
+                            Array.Resize(ref objlinkid, 9);
                             objlinkid[0] = 0;
                             objlinkid[1] = int.Parse(ViewState["TituCodigo"].ToString());
                             objlinkid[2] = int.Parse(Session["CodigoProducto"].ToString());
@@ -2246,6 +2256,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objlinkid[5] = horaAc;
                             objlinkid[6] = xhora;
                             objlinkid[7] = idfinal;
+                            objlinkid[8] = email;
 
                             link = new Conexion(2, "").funConsultarSqls("sp_GrabarIdLink", objlinkid);
 
@@ -2783,7 +2794,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-                if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+                if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
                 {
                     //lblerror.Text = "Fecha no dispible..!";
                     new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + fechabloqueo, this);

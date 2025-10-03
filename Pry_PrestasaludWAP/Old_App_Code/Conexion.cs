@@ -106,6 +106,29 @@ public class Conexion
         }
     }
 
+    public DataSet CargarMedicoAdmin(int _tipo)
+    {
+        try
+        {
+            using (SqlCommand command = new SqlCommand("sp_CargarMedicoAdmin", Sqlcn))
+            {
+                Sqlcn.Open();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 1900;
+                command.Parameters.Clear();
+                command.Parameters.AddWithValue("@tipo", _tipo);
+                SqlDataAdapter sqlda = new SqlDataAdapter(command);
+                sqlda.Fill(dsDataMenu);
+            }
+            Sqlcn.Close();
+            return dsDataMenu;
+        }
+        catch (Exception ex)
+        {
+            return dsDataMenu = null;
+        }
+    }
+
     public DataSet funConsultarSqls(String strSP, object[] objparam)
     {
         try
@@ -595,6 +618,7 @@ public class Conexion
             using (SqlCommand cmd = new SqlCommand("sp_NuevoMedico"))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 190;
                 cmd.Connection = Sqlcn;
                 cmd.Parameters.AddWithValue("@in_medicod", int.Parse(objparam[0].ToString()));
                 cmd.Parameters.AddWithValue("@in_medinombre", objparam[1].ToString());

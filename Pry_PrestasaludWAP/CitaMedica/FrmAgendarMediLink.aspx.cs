@@ -349,8 +349,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = "";
                 objparam[2] = 204;
                 DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                dtFecha = fecha.Tables[0].Rows[0][0].ToString();
-                ViewState["FechaBloqueo"] = dtFecha;
+
+                if (fecha != null && fecha.Tables[0].Rows.Count > 0)
+                {
+                    ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
+                    ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
+                }
+
+
+                //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
+                //ViewState["FechaBloqueo"] = dtFecha;
             }
         }
         #endregion
@@ -930,9 +938,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //    }
             //}
 
-            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
             {
-                new Funciones().funShowJSMessage("Fecha no disponible para agendar" +" " + fechabloqueo, this);
+                new Funciones().funShowJSMessage("Fecha no disponible" +" " + fechabloqueo, this);
                 return;
             }
             FunDisponibilidades(codCiudad, codEspe, codsucursal, ViewState["FechaCalendar"].ToString());
@@ -1036,7 +1044,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            if (fechabloqueo == ViewState["FechaBloqueo"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
