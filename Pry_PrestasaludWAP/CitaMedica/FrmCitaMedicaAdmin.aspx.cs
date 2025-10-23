@@ -68,6 +68,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 grdvDatos.DataSource = dt;
                 grdvDatos.DataBind();
                 ViewState["grdvDatos"] = dt;
+
+                //APLICAR LOG
             }
             catch (Exception ex)
             {
@@ -112,6 +114,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
 
                 //programar para meses con 31 + 1
+                //poner log
 
                 int mesCobertura = Cobertura.Month;
 
