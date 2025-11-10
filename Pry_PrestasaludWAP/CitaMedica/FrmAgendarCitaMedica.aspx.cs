@@ -202,6 +202,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
                     ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
+                    ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
+                    ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
                 }
 
                 //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
@@ -561,7 +563,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ListItem sec;
                         string ciudad = ddlCiudad.SelectedItem.Text;
 
-                        if(ciudad == "RUMIÑAHUI")
+                        string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                        logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/FunCascadaCombos", $"Ciudad Seleccionada: {ciudad}");
+
+                        if (ciudad == "RUMIÑAHUI")
                         {
                             ddlSector.Items.Clear();
                             sec = new ListItem("VALLE CHILLOS", "VC");
@@ -1235,8 +1240,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (mensaje == "")
                 {
                     //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
+                    if (Session["Perfil"].ToString() == "NOVA")
+                    {
+                        string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                        logHelper.RegistrarAccion(usuario, "Citas", "FrmAgendarCitaMedica.aspx.cs/Enviando Mail cita", $"HoraCita: {ViewState["HoraCita"] + " " + "CodigoCita: " + ViewState["CodigoCita"] + " " + "Prestador:" + ViewState["Prestadora"] + " " + "Medico:" + ViewState["Medico"] + " " + "Especialidad:" + ViewState["Especialidad"] }");
+                    }
 
-                    if (Session["Regresar"].ToString() == "0")
+                        if (Session["Regresar"].ToString() == "0")
                         Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
                     else
                         Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
@@ -1248,6 +1258,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     else
                         Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
                 }
+
+                
             }
             catch (Exception ex)
             {
@@ -1852,7 +1864,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
             
 
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -2365,14 +2377,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DataSet valor = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     string bloqueo = valor.Tables[0].Rows[0][0].ToString();
 
-                    if (bloqueo == "ACTIVO")
-                    {
-                        if (_difHora < _parametro)
-                        {
-                            new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                            return;
-                        }
-                    }
+                    //if (bloqueo == "ACTIVO")
+                    //{
+                    //    if (_difHora < _parametro)
+                    //    {
+                    //        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                    //        return;
+                    //    }
+                    //}
 
                 }
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");

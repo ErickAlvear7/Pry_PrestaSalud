@@ -354,6 +354,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
                     ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
+                    ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
+                    ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
                 }
 
 
@@ -682,6 +684,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     codEspepres = int.Parse(dt.Tables[0].Rows[0][0].ToString());
                 }
 
+                //CONSULTA HOMOLOGACION DE MEDICO
                 Array.Resize(ref objparam, 14);
                 objparam[0] = 5;
                 objparam[1] = 0;
@@ -938,7 +941,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //    }
             //}
 
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
             {
                 new Funciones().funShowJSMessage("Fecha no disponible" +" " + fechabloqueo, this);
                 return;
@@ -1044,7 +1047,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);

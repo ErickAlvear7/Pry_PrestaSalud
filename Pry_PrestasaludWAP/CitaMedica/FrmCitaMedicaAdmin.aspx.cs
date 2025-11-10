@@ -70,10 +70,19 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["grdvDatos"] = dt;
 
                 //APLICAR LOG
+                string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                string perfil = Session["Perfil"]?.ToString();
+               
+                if(perfil == "NOVA")
+                {
+                    logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/Busca cedula", $"Criterio: {txtCriterio.Text}");
+                }
+                
             }
             catch (Exception ex)
             {
                 lbltitulo.Text = ex.ToString();
+               
             }
 
         }
@@ -112,6 +121,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 {
                     _dias = int.Parse(dt.Tables[0].Rows[0][0].ToString());
                 }
+
+                string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/Selecciona Titular", $"CodigoTitular: {strCodigo}");
 
                 //programar para meses con 31 + 1
                 //poner log

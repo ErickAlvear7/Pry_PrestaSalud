@@ -130,3 +130,4 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Release\Pry_PrestasaludW
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Release\Pry_PrestasaludWAP.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Release\Pry_PrestasaludWAP.pdb
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Release\Pry_PrestasaludWAP.XmlSerializers.dll
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Release\Pry_PrestasaludWAP.csproj.AssemblyReference.cache

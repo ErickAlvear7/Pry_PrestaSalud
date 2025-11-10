@@ -25,6 +25,7 @@
     <script>
         $(function () {
             $("#acordionParametro").accordion();
+        });
   
     </script>
 

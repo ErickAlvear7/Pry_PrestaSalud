@@ -710,6 +710,7 @@
     <Compile Include="Horarios\FrmTurnoAdmin.aspx.designer.cs">
       <DependentUpon>FrmTurnoAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="logHelper.cs" />
     <Compile Include="Mantenedor\FrmDetalle.aspx.cs">
       <DependentUpon>FrmDetalle.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
