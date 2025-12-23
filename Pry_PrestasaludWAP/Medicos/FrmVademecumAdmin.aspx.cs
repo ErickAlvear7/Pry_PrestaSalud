@@ -37,7 +37,7 @@ namespace Pry_PrestasaludWAP.Medicos
         protected void FunCargaMantenimiento()
         {
             Array.Resize(ref objparam, 11);
-            objparam[0] = 10;
+            objparam[0] = 10; //aqui poner otro tipo uno nuevo
             objparam[1] = "";
             objparam[2] = "";
             objparam[3] = "";

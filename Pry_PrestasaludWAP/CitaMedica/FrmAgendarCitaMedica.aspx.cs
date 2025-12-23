@@ -204,6 +204,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
                     ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
                     ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
+                    ViewState["fecha5"] = fecha.Tables[0].Rows[4][0].ToString().Trim();
+                    ViewState["fecha6"] = fecha.Tables[0].Rows[5][0].ToString().Trim();
+                    ViewState["fecha7"] = fecha.Tables[0].Rows[6][0].ToString().Trim();
+                    ViewState["fecha8"] = fecha.Tables[0].Rows[7][0].ToString().Trim();
+                    ViewState["fecha9"] = fecha.Tables[0].Rows[8][0].ToString().Trim();
+                    ViewState["fecha10"] = fecha.Tables[0].Rows[9][0].ToString().Trim();
                 }
 
                 //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
@@ -562,7 +568,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         ListItem sec;
                         string ciudad = ddlCiudad.SelectedItem.Text;
-
+     
                         string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
                         logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/FunCascadaCombos", $"Ciudad Seleccionada: {ciudad}");
 
@@ -1862,9 +1868,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
-            
+            string ciud = ddlCiudad.SelectedItem.Text;
+            string pres = ddlPrestadora.SelectedItem.Text;
 
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
+            //if (pres == "CENTRO MEDICO VIDA - CENDIAVIA NORTE" || pres == "CENTRO MEDICO VIDA - CENDIAVIA CARAPUNGO" || pres == "CENTRO MEDICO VIDA - CENDIAVIA SUR")
+            //{
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() ||
+                fechabloqueo == ViewState["fecha4"].ToString() || fechabloqueo == ViewState["fecha5"].ToString() || fechabloqueo == ViewState["fecha6"].ToString() ||
+                fechabloqueo == ViewState["fecha7"].ToString() || fechabloqueo == ViewState["fecha8"].ToString() || fechabloqueo == ViewState["fecha9"].ToString() || fechabloqueo == ViewState["fecha10"].ToString())
             {
                 //lblerror.Text = "Fecha no dispible..!";
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -1874,7 +1885,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 grdvDatosCitas.DataBind();
                 return;
             }
-            
+            //}
 
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
           
@@ -2377,14 +2388,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DataSet valor = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     string bloqueo = valor.Tables[0].Rows[0][0].ToString();
 
-                    //if (bloqueo == "ACTIVO")
-                    //{
-                    //    if (_difHora < _parametro)
-                    //    {
-                    //        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                    //        return;
-                    //    }
-                    //}
+                    if (bloqueo == "ACTIVO")
+                    {
+                        if (_difHora < _parametro)
+                        {
+                            new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                            return;
+                        }
+                    }
 
                 }
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
@@ -2806,7 +2817,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime dtmFechaCalendar = DateTime.ParseExact(CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
 
-                if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString())
+                string ciud = ddlCiudad.SelectedItem.Text;
+
+                //if (ciud == "QUITO")
+                //{
+                if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() ||
+                    fechabloqueo == ViewState["fecha4"].ToString() || fechabloqueo == ViewState["fecha5"].ToString() || fechabloqueo == ViewState["fecha6"].ToString() ||
+                    fechabloqueo == ViewState["fecha7"].ToString() || fechabloqueo == ViewState["fecha8"].ToString() || fechabloqueo == ViewState["fecha9"].ToString() || fechabloqueo == ViewState["fecha10"].ToString())
                 {
                     //lblerror.Text = "Fecha no dispible..!";
                     new Funciones().funShowJSMessage("Fecha no disponible para agendar" + " " + fechabloqueo, this);
@@ -2816,6 +2833,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     grdvDatosCitas.DataBind();
                     return;
                 }
+                //}
+
             }
             else
             {

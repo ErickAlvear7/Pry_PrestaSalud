@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\HP\Documents\DESARROLLOS\COPILADOS</_PublishTargetUrl>
-    <History>True|2025-10-30T14:20:12.8003863Z;True|2025-10-30T09:14:16.7757392-05:00;True|2025-10-29T09:55:02.8616937-05:00;True|2025-10-27T15:40:33.7844344-05:00;True|2025-10-21T09:42:11.2274872-05:00;True|2025-10-03T12:11:17.1810544-05:00;True|2025-10-03T12:04:34.6375030-05:00;True|2025-09-29T09:29:34.9210222-05:00;True|2025-09-22T16:50:42.0997841-05:00;True|2025-09-18T16:49:32.3821629-05:00;True|2025-09-18T16:26:53.5931792-05:00;True|2025-09-17T11:46:55.4669129-05:00;True|2025-09-11T10:58:33.1457268-05:00;True|2025-09-01T17:15:25.3297162-05:00;True|2025-09-01T16:57:43.7166090-05:00;True|2025-09-01T16:43:46.0700593-05:00;True|2025-08-30T10:51:06.2456585-05:00;True|2025-08-27T10:39:30.1768060-05:00;True|2025-08-26T12:32:12.1011288-05:00;True|2025-08-06T12:21:30.7512234-05:00;True|2025-08-06T09:49:58.7585939-05:00;True|2025-04-14T19:18:02.9077810-05:00;True|2025-04-02T22:38:52.6796190-05:00;True|2025-04-02T22:14:15.0155315-05:00;True|2025-02-02T22:13:24.2256164-05:00;True|2025-01-22T22:21:53.9305578-05:00;True|2025-01-22T22:18:53.5398094-05:00;True|2025-01-22T22:09:52.8070768-05:00;True|2025-01-22T22:02:43.6873717-05:00;True|2025-01-22T21:51:45.3019318-05:00;True|2025-01-22T21:46:09.9369903-05:00;True|2025-01-22T21:34:16.3810954-05:00;False|2025-01-22T21:32:17.3276710-05:00;</History>
+    <History>True|2025-12-19T18:37:40.5992377Z;True|2025-12-18T11:13:57.6300248-05:00;True|2025-12-17T15:27:06.5230595-05:00;True|2025-12-04T16:19:42.7344377-05:00;True|2025-12-02T10:53:13.8979026-05:00;True|2025-12-02T10:41:17.0151693-05:00;True|2025-11-28T11:15:35.3456315-05:00;True|2025-11-28T10:37:46.9667804-05:00;True|2025-11-28T10:14:44.9920965-05:00;True|2025-11-28T09:34:29.5836447-05:00;True|2025-11-27T17:26:44.6142648-05:00;True|2025-11-27T17:19:04.4657936-05:00;True|2025-11-26T13:46:54.1383502-05:00;True|2025-11-19T10:20:47.0925195-05:00;True|2025-10-30T09:20:12.8003863-05:00;True|2025-10-30T09:14:16.7757392-05:00;True|2025-10-29T09:55:02.8616937-05:00;True|2025-10-27T15:40:33.7844344-05:00;True|2025-10-21T09:42:11.2274872-05:00;True|2025-10-03T12:11:17.1810544-05:00;True|2025-10-03T12:04:34.6375030-05:00;True|2025-09-29T09:29:34.9210222-05:00;True|2025-09-22T16:50:42.0997841-05:00;True|2025-09-18T16:49:32.3821629-05:00;True|2025-09-18T16:26:53.5931792-05:00;True|2025-09-17T11:46:55.4669129-05:00;True|2025-09-11T10:58:33.1457268-05:00;True|2025-09-01T17:15:25.3297162-05:00;True|2025-09-01T16:57:43.7166090-05:00;True|2025-09-01T16:43:46.0700593-05:00;True|2025-08-30T10:51:06.2456585-05:00;True|2025-08-27T10:39:30.1768060-05:00;True|2025-08-26T12:32:12.1011288-05:00;True|2025-08-06T12:21:30.7512234-05:00;True|2025-08-06T09:49:58.7585939-05:00;True|2025-04-14T19:18:02.9077810-05:00;True|2025-04-02T22:38:52.6796190-05:00;True|2025-04-02T22:14:15.0155315-05:00;True|2025-02-02T22:13:24.2256164-05:00;True|2025-01-22T22:21:53.9305578-05:00;True|2025-01-22T22:18:53.5398094-05:00;True|2025-01-22T22:09:52.8070768-05:00;True|2025-01-22T22:02:43.6873717-05:00;True|2025-01-22T21:51:45.3019318-05:00;True|2025-01-22T21:46:09.9369903-05:00;True|2025-01-22T21:34:16.3810954-05:00;False|2025-01-22T21:32:17.3276710-05:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -130,13 +130,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>12/26/2024 10:56:53</publishTime>
     </File>
     <File Include="bin/Pry_PrestasaludWAP.dll">
-      <publishTime>10/30/2025 09:19:57</publishTime>
+      <publishTime>12/19/2025 13:37:23</publishTime>
     </File>
     <File Include="bin/Pry_PrestasaludWAP.pdb">
-      <publishTime>10/30/2025 09:19:57</publishTime>
+      <publishTime>12/19/2025 13:37:23</publishTime>
     </File>
     <File Include="bin/Pry_PrestasaludWAP.XmlSerializers.dll">
-      <publishTime>10/30/2025 09:20:00</publishTime>
+      <publishTime>12/19/2025 13:37:27</publishTime>
     </File>
     <File Include="bin/SIFunBasicas.dll">
       <publishTime>12/26/2024 10:56:53</publishTime>
@@ -406,7 +406,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/23/2025 13:25:17</publishTime>
     </File>
     <File Include="CitaMedica/FrmAgendarMediLink.aspx">
-      <publishTime>03/17/2025 18:34:42</publishTime>
+      <publishTime>11/28/2025 11:04:43</publishTime>
     </File>
     <File Include="CitaMedica/FrmCitaMedicaAdmin.aspx">
       <publishTime>03/17/2025 18:34:47</publishTime>
@@ -868,7 +868,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>12/26/2024 10:56:48</publishTime>
     </File>
     <File Include="Medicos/FrmAtencionCitaMedica.aspx">
-      <publishTime>12/26/2024 10:56:48</publishTime>
+      <publishTime>11/19/2025 17:52:20</publishTime>
     </File>
     <File Include="Medicos/FrmDetalleGestionesRealizadas.aspx">
       <publishTime>12/26/2024 10:56:48</publishTime>
@@ -1810,7 +1810,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>12/26/2024 10:56:52</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/30/2025 09:20:11</publishTime>
+      <publishTime>12/19/2025 13:37:38</publishTime>
     </File>
     <File Include="WFrm_Login.aspx">
       <publishTime>12/26/2024 10:56:52</publishTime>

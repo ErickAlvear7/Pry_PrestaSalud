@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Medicos {
-    
-    
-    public partial class FrmAtencionCitaMedica {
-        
+namespace Pry_PrestasaludWAP.Medicos
+{
+
+
+    public partial class FrmAtencionCitaMedica
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control lbltitulo.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbltitulo;
-        
+
         /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// Control updError.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updError;
-        
+
         /// <summary>
         /// Control lblerror.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblerror;
-        
+
         /// <summary>
         /// Control updProgress.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress updProgress;
-        
+
         /// <summary>
         /// Control updCabecera.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updCabecera;
-        
+
         /// <summary>
         /// Control grdvDatosTitular.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdvDatosTitular;
-        
+
         /// <summary>
         /// Control updBody.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updBody;
-        
+
         /// <summary>
         /// Control grdvDatosCita.
         /// </summary>
@@ -101,7 +103,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdvDatosCita;
-        
+
         /// <summary>
         /// Control updDetalle.
         /// </summary>
@@ -110,16 +112,16 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updDetalle;
-        
+
         /// <summary>
-        /// Control ImgVademecum.
+        /// Control btnVademecum.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton ImgVademecum;
-        
+        protected global::System.Web.UI.WebControls.Button btnVademecum;
+
         /// <summary>
         /// Control txtBuscar.
         /// </summary>
@@ -128,7 +130,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtBuscar;
-        
+
         /// <summary>
         /// Control imgBuscar.
         /// </summary>
@@ -137,7 +139,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgBuscar;
-        
+
         /// <summary>
         /// Control lstCIE10.
         /// </summary>
@@ -146,7 +148,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox lstCIE10;
-        
+
         /// <summary>
         /// Control txtEditor.
         /// </summary>
@@ -155,7 +157,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.HTMLEditor.Editor txtEditor;
-        
+
         /// <summary>
         /// Control updHistorialCitas.
         /// </summary>
@@ -164,7 +166,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updHistorialCitas;
-        
+
         /// <summary>
         /// Control Panel1.
         /// </summary>
@@ -173,7 +175,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-        
+
         /// <summary>
         /// Control grdvDatos.
         /// </summary>
@@ -182,7 +184,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdvDatos;
-        
+
         /// <summary>
         /// Control btnGrabar.
         /// </summary>
@@ -191,7 +193,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGrabar;
-        
+
         /// <summary>
         /// Control btnSalir.
         /// </summary>

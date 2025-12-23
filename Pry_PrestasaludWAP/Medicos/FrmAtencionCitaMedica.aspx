@@ -150,7 +150,8 @@
                                     <h5>VADEMECUM ---></h5>
                                 </td>
                                 <td>
-                                    <asp:ImageButton ID="ImgVademecum" runat="server" Height="25px" ImageUrl="~/Images/Vademecum.png" OnClick="ImgVademecum_Click" />
+                                    <%--<asp:ImageButton ID="ImgVademecum" runat="server" Height="25px" ImageUrl="~/Images/excel.jpg" OnClick="ImgVademecum_Click" />--%>
+                                    <asp:Button ID="btnVademecum" runat="server" BackColor="#3366CC" ForeColor="White" OnClick="btnVademecum_Click" Text="Vademecum" />
                                 </td>
                                 <td></td>
                             </tr>

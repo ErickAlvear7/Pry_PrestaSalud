@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Pry_PrestasaludWAP.Api;
 using System;
+using System.Threading;
 using System.Data;
 using System.Globalization;
 using System.Web.Script.Serialization;
@@ -9,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
+using System.IO;
 
 namespace Pry_PrestasaludWAP.CitaMedica
 {
@@ -50,6 +52,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
 
             if (!IsPostBack)
             {
@@ -349,7 +353,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 objparam[1] = "";
                 objparam[2] = 204;
                 DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
+                //AQUI DEBES PONER EN UN FOREACH OSERA RECORRER ESE DATASET
+                //ESE EL EL PROBLEMA
                 if (fecha != null && fecha.Tables[0].Rows.Count > 0)
                 {
                     ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
@@ -387,7 +392,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     string codigoCiudad = ciudades.codCiudad.ToString();
                     string ciudad = ciudades.nombreCiudad;
 
-                    if(codigoCiudad == "1871" || codigoCiudad== "1180" || codigoCiudad == "1181")
+                    ViewState["ciudad"] = codigoCiudad;
+
+                    if (codigoCiudad == "1871" || codigoCiudad== "1180" || codigoCiudad == "1181")
                     {
                         i = new ListItem(ciudad, codigoCiudad);
                         ddlciudad.Items.Add(i);
@@ -467,7 +474,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if(codigoEspecialidad == "11" || codigoEspecialidad == "22" || codigoEspecialidad == "22" || codigoEspecialidad == "42"
                         || codigoEspecialidad == "44" || codigoEspecialidad == "16" || codigoEspecialidad == "44" || codigoEspecialidad == "16"
-                           || codigoEspecialidad == "23" || codigoEspecialidad == "32" || codigoEspecialidad == "28" || codigoEspecialidad == "20")
+                           || codigoEspecialidad == "23" || codigoEspecialidad == "32" || codigoEspecialidad == "28" || codigoEspecialidad == "20" || codigoEspecialidad == "38")
                     {
                         e = new ListItem(espeNombre, codigoEspecialidad);
                         ddlEspecialidad.Items.Add(e);
@@ -941,11 +948,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //    }
             //}
 
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
+            string fechabloqueo1 = dtmFechaCalendar.ToString("MM/dd/yyyy");
+           
+
+            if (fechabloqueo1 == ViewState["fecha1"].ToString() || fechabloqueo1 == ViewState["fecha2"].ToString() || fechabloqueo1 == ViewState["fecha3"].ToString() || fechabloqueo1 == ViewState["fecha4"].ToString())
             {
-                new Funciones().funShowJSMessage("Fecha no disponible" +" " + fechabloqueo, this);
+
+                new Funciones().funShowJSMessage("Fecha no disponible", this);
                 return;
             }
+
+            
+
             FunDisponibilidades(codCiudad, codEspe, codsucursal, ViewState["FechaCalendar"].ToString());
         }
 
@@ -1047,12 +1061,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
+           
+
             if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
                 return;
             }
+
+            
 
             fechaCalendar = dtmFechaCalendar.ToString("yyyyMMdd");
             fechaCita = dtmFechaCita.ToString("yyyy-MM-dd");

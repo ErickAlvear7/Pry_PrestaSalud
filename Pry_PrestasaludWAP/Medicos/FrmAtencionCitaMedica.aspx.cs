@@ -188,10 +188,15 @@
                 lblerror.Text = ex.ToString();
             }
         }
-        protected void ImgVademecum_Click(object sender, ImageClickEventArgs e)
+        //protected void ImgVademecum_Click(object sender, ImageClickEventArgs e)
+        //{
+        //    ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmVademecumAdmin.aspx" + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=450px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
+        //}
+        #endregion
+
+        protected void btnVademecum_Click(object sender, EventArgs e) // AQUI ESTA EL EVENTO DEL BOTON ACABO DE CREARLE
         {
             ScriptManager.RegisterStartupScript(this.updCabecera, GetType(), "Mostrar Datos", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmVademecumAdmin.aspx" + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=900px, height=450px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
         }
-        #endregion
     }
 }
