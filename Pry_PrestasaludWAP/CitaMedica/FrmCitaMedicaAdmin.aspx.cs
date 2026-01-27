@@ -60,24 +60,54 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             try
             {
+                //Array.Resize(ref objparam, 3);
+                //objparam[0] = 0;
+                //objparam[1] = txtCriterio.Text.Trim().ToUpper();
+                //objparam[2] = 0;
+                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarCitaAdmin", objparam);
+                //grdvDatos.DataSource = dt;
+                //grdvDatos.DataBind();
+                //ViewState["grdvDatos"] = dt;
+
+                ////APLICAR LOG
+                //string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                //string perfil = Session["Perfil"]?.ToString();
+
+                //if(perfil == "NOVA")
+                //{
+                //    logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/Busca cedula", $"Criterio: {txtCriterio.Text}");
+                //}
+                
+
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
                 objparam[1] = txtCriterio.Text.Trim().ToUpper();
                 objparam[2] = 0;
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarCitaAdmin", objparam);
+
+                // Ejecuta el SP
+                DataSet ds = new Conexion(2, "").funConsultarSqls("sp_CargarCitaAdmin", objparam);
+                DataTable dt = ds.Tables[0];
+
+                // PERFIL
+                string usuario = Session["usuLogin"] != null ? Session["usuLogin"].ToString() : "Anonimo";
+                string perfil = Session["Perfil"] != null ? Session["Perfil"].ToString() : "";
+
+                // FILTRO SOLO PARA NOVA
+                if (perfil.ToUpper() == "NOVA")
+                {
+                    DataView dv = dt.DefaultView;
+
+                    // Si CodigoProducto es INT
+                    dv.RowFilter = "CodigoProducto IN (225,226,227)";
+
+                    dt = dv.ToTable();
+                }
+
+                // BIND GRID
                 grdvDatos.DataSource = dt;
                 grdvDatos.DataBind();
                 ViewState["grdvDatos"] = dt;
 
-                //APLICAR LOG
-                string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
-                string perfil = Session["Perfil"]?.ToString();
-               
-                if(perfil == "NOVA")
-                {
-                    logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/Busca cedula", $"Criterio: {txtCriterio.Text}");
-                }
-                
             }
             catch (Exception ex)
             {
@@ -96,6 +126,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var strCodigo = grdvDatos.DataKeys[intIndex].Values["Codigo"].ToString();
             var strCodProducto = grdvDatos.DataKeys[intIndex].Values["CodigoProducto"].ToString();
             var strFechaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaCobertura"].ToString();
+            var strFechaFinCobertura = grdvDatos.DataKeys[intIndex].Values["FechaFinCobertura"].ToString();
 
             string dateString = strFechaCobertura;
             string format = "dd/MM/yyyy";
@@ -159,9 +190,27 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         break;
                 }
 
-
                 DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                DateTime fechaFinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
+
+                DateTime fechaActual = DateTime.Now.Date;
+
+                if (fechaFinCobertura < fechaActual)
+                {
+                    string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + fechaFinCobertura.ToString("dd/MM/yyyy");
+
+                    ScriptManager.RegisterStartupScript(
+                        this,                         // o this.Page
+                        this.GetType(),
+                        "msgCobertura",
+                        "alert('" + mensaje.Replace("'", "\\'") + "');",
+                        true
+                    );
+
+                    return; 
+                }
 
                 TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
@@ -224,6 +273,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime _fechafincobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
@@ -245,16 +295,38 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         _mensaje += "  Puede Agendar a partir del :  " + _fecha;
 
                         new Funciones().funShowJSMessage(_mensaje, this);
+                        DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
+
+                        DateTime Actual = DateTime.Now.Date;
+
+                        if (FinCobertura < Actual)
+                        {
+                            string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
+
+                            ScriptManager.RegisterStartupScript(
+                                this,                         // o this.Page
+                                this.GetType(),
+                                "msgCobertura",
+                                "alert('" + mensaje.Replace("'", "\\'") + "');",
+                                true
+                            );
+
+                            return;
+                        }
 
                     }
                 }
                 else
-                {
+                { 
                     Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
-                        strCodProducto + "&Regresar=0");
-
+                       strCodProducto + "&Regresar=0");
                 }
+
+                Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                      strCodProducto + "&Regresar=0");
+
             }
+         
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {

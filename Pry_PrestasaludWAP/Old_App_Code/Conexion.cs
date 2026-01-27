@@ -241,28 +241,39 @@ public class Conexion
     }
     public DataSet FunConsultarSQLNOVA(object[] objparam)
     {
+
         try
         {
-            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNova"))
+            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNova", Sqlcn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Connection = Sqlcn;
                 cmd.CommandTimeout = 500;
-                cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
-                cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
-                cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
-                cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3].ToString());
-                Sqlcn.Open();
-                //cmd.ExecuteNonQuery();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(ds);
-                return ds;
+
+                cmd.Parameters.Add("@in_tipo", SqlDbType.Int).Value = Convert.ToInt32(objparam[0]);
+                cmd.Parameters.Add("@in_fechadesde", SqlDbType.VarChar, 10).Value = objparam[1].ToString();
+                cmd.Parameters.Add("@in_fechahasta", SqlDbType.VarChar, 10).Value = objparam[2].ToString();
+                cmd.Parameters.Add("@in_codigocamp", SqlDbType.VarChar, 50).Value = objparam[3].ToString();
+
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    ds.Clear();
+                    da.SelectCommand.CommandTimeout = 500; // por si acaso
+                    Sqlcn.Open();
+                    da.Fill(ds);
+                }
             }
         }
         catch (Exception ex)
         {
-            return ds = null;
+            ds = null;
         }
+        finally
+        {
+            if (Sqlcn.State != ConnectionState.Closed)
+                Sqlcn.Close();
+        }
+
+        return ds;
     }
 
     //NEW NOVA NPM

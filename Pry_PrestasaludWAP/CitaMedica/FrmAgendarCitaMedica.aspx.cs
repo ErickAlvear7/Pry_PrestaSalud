@@ -1816,15 +1816,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DateTime fechaActual = DateTime.Now;
             int mesActual = fechaActual.Month;
 
-            if (mesActual < selectedMonth)
-            {
-                new Funciones().funShowJSMessage("La agenda para el mes de" + " " + nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
-                tbDatosCita.Clear();
-                ViewState["tbDatosCita"] = tbDatosCita;
-                grdvDatosCitas.DataSource = tbDatosCita;
-                grdvDatosCitas.DataBind();
-                return;
-            }
+            //if (mesActual < selectedMonth)
+            //{
+            //    new Funciones().funShowJSMessage("La agenda para el mes de" + " " + nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
+            //    tbDatosCita.Clear();
+            //    ViewState["tbDatosCita"] = tbDatosCita;
+            //    grdvDatosCitas.DataSource = tbDatosCita;
+            //    grdvDatosCitas.DataBind();
+            //    return;
+            //}
 
             lblerror.Text = "";
             if (ddlMedico.SelectedValue == "0")
@@ -1847,15 +1847,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             int _dias = _difdias.Days;
 
-            if (_dias > 10)
-            {
-                new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
-                tbDatosCita.Clear();
-                ViewState["tbDatosCita"] = tbDatosCita;
-                grdvDatosCitas.DataSource = tbDatosCita;
-                grdvDatosCitas.DataBind();
-                return;
-            }
+            //if (_dias > 10)
+            //{
+            //    new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
+            //    tbDatosCita.Clear();
+            //    ViewState["tbDatosCita"] = tbDatosCita;
+            //    grdvDatosCitas.DataSource = tbDatosCita;
+            //    grdvDatosCitas.DataBind();
+            //    return;
+            //}
 
             if (dtmFechaCalendar < dtmFechaActual)
             {
@@ -2388,14 +2388,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DataSet valor = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     string bloqueo = valor.Tables[0].Rows[0][0].ToString();
 
-                    if (bloqueo == "ACTIVO")
-                    {
-                        if (_difHora < _parametro)
-                        {
-                            new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                            return;
-                        }
-                    }
+                    //if (bloqueo == "ACTIVO")
+                    //{
+                    //    if (_difHora < _parametro)
+                    //    {
+                    //        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+                    //        return;
+                    //    }
+                    //}
 
                 }
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");

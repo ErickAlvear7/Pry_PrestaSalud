@@ -1002,15 +1002,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fechaActual = DateTime.Now.ToString("MM/dd/yyyy");
             string Calendario = Calendar.SelectedDate.ToString("MM/dd/yyyy");
 
-            if (fechaActual == Calendario)
-            {
-                if (_difHora < _parametro)
-                {
-                    new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
-                    btnCrearCita.Visible = false;
-                    return;
-                }
-            }
+            //if (fechaActual == Calendario)
+            //{
+            //    if (_difHora < _parametro)
+            //    {
+            //        new Funciones().funShowJSMessage("El Agendamiento debe ser realizado con al menos 3 horas de Antelacion..!!", this);
+            //        btnCrearCita.Visible = false;
+            //        return;
+            //    }
+            //}
 
             btnCrearCita.Visible = true;
         }

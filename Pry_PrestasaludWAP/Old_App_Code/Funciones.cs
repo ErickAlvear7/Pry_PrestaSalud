@@ -732,10 +732,10 @@ public class Funciones
                 //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
                 SmtpClient smtp = new SmtpClient();
                 //smtp.Credentials = NetworkCred;
-                smtp.Host = ehost;
+                smtp.Host = ehost; 
                 smtp.Port = eport;
                 smtp.EnableSsl = eEnableSSL;
-                smtp.UseDefaultCredentials = false;
+                //smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(eusername, epassword);
                 smtp.Send(mailMessage);
                 mensaje = "";

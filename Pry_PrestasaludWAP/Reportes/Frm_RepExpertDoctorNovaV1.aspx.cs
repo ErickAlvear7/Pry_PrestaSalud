@@ -11,7 +11,7 @@ namespace Pry_PrestasaludWAP.Reportes
     public partial class Frm_RepExpertDoctorNovaV1 : Page
     {
         #region Variables
-        Object[] objparam = new Object[1];
+        Object[] objparam = new Object[3];
         DataSet ds = new DataSet();
         #endregion
 
@@ -40,7 +40,7 @@ namespace Pry_PrestasaludWAP.Reportes
                 FunCascadaCombos(1);
 
             }
-            else grdvDatos.DataSource = ViewState["grdvDatos"];
+            else grdvDatos.DataSource = Session["grdvDatos"];
 
         }
         #endregion  
@@ -48,13 +48,23 @@ namespace Pry_PrestasaludWAP.Reportes
         #region Procedimientos y Funciones
         private void FunCascadaCombos(int opcion)
         {
+            int codigo = int.Parse(Session["usuCodigo"].ToString());
             switch (opcion)
             {
                
                 case 1:
-                    Array.Resize(ref objparam, 1);
-                    objparam[0] = 57;  //63 nova
-                    ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                    Array.Resize(ref objparam, 3);
+                    //objparam[0] = 57;  //63 nova
+                    objparam[0] = codigo;
+                    objparam[1] = "";
+                    objparam[2] = 211;
+                    //ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                    //ddlClienteNova.DataTextField = "Descripcion";
+                    //ddlClienteNova.DataValueField = "Codigo";
+                    //ddlClienteNova.DataBind();
+                    //ddlClienteNova.SelectedIndex = 0;
+
+                    ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     ddlClienteNova.DataTextField = "Descripcion";
                     ddlClienteNova.DataValueField = "Codigo";
                     ddlClienteNova.DataBind();
@@ -112,23 +122,20 @@ namespace Pry_PrestasaludWAP.Reportes
             //}
 
             Array.Resize(ref objparam, 4);
-            //System.Threading.Thread.Sleep(500);
             objparam[0] = 0;
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
             objparam[3] = ddlClienteNova.SelectedValue;
-            //ds = new Conexion(2, "").funConsultarSqls("sp_ReportesExpertDoctorNova", objparam);
             ds = new Conexion(2, "").FunConsultarSQLNOVA(objparam);
 
             if (ds.Tables[0].Rows.Count > 0)
             {
-                DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
-                grdvDatos.DataSource = dtresul;
+              
+                grdvDatos.DataSource = ds;
                 grdvDatos.DataBind();
             }
 
-            ViewState["grdvDatos"] = ds.Tables[0];
-            //ViewState["grdvDatos"] = grdvDatos.DataSource;
+            Session["grdvDatos"] = ds.Tables[0];
             totalreg.InnerHtml = "Total Registro: " + ds.Tables[0].Rows.Count.ToString();
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -173,7 +180,7 @@ namespace Pry_PrestasaludWAP.Reportes
             {
                 HtmlTextWriter hw = new HtmlTextWriter(sw);
                 grdvDatos.AllowPaging = false;
-                grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
+                grdvDatos.DataSource = (DataTable)Session["grdvDatos"];
                 grdvDatos.DataBind();
                 //grdvDatos.HeaderRow.BackColor = Color.White;
                 foreach (GridViewRow row in grdvDatos.Rows)
