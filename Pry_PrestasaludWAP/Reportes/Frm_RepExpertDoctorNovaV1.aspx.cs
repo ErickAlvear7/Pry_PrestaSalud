@@ -54,15 +54,9 @@ namespace Pry_PrestasaludWAP.Reportes
                
                 case 1:
                     Array.Resize(ref objparam, 3);
-                    //objparam[0] = 57;  //63 nova
                     objparam[0] = codigo;
                     objparam[1] = "";
                     objparam[2] = 211;
-                    //ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                    //ddlClienteNova.DataTextField = "Descripcion";
-                    //ddlClienteNova.DataValueField = "Codigo";
-                    //ddlClienteNova.DataBind();
-                    //ddlClienteNova.SelectedIndex = 0;
 
                     ddlClienteNova.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                     ddlClienteNova.DataTextField = "Descripcion";
@@ -115,11 +109,6 @@ namespace Pry_PrestasaludWAP.Reportes
                 return;
             }
 
-            //if (fechaInicio <= fecha)
-            //{
-            //    new Funciones().funShowJSMessage("No existen gestiones a partir de esta fecha", this);
-            //    return;
-            //}
 
             Array.Resize(ref objparam, 4);
             objparam[0] = 0;
