@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Medicos {
-    
-    
-    public partial class RptReporteFacturacion {
-        
+namespace Pry_PrestasaludWAP.Medicos
+{
+
+
+    public partial class RptReporteFacturacion
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control lbltitulo.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbltitulo;
-        
+
         /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// Control updError.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updError;
-        
+
         /// <summary>
         /// Control lblerror.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblerror;
-        
+
         /// <summary>
         /// Control updProgress.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress updProgress;
-        
+
         /// <summary>
         /// Control ddlTipoReporte.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoReporte;
-        
+
         /// <summary>
         /// Control txtFechaDesde.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaDesde;
-        
+
         /// <summary>
         /// Control txtFechaHasta.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFechaHasta;
-        
+
         /// <summary>
         /// Control UpdOpciones.
         /// </summary>
@@ -101,7 +103,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdOpciones;
-        
+
         /// <summary>
         /// Control btnProcesar.
         /// </summary>
@@ -110,7 +112,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnProcesar;
-        
+
         /// <summary>
         /// Control pnlFacturacion.
         /// </summary>
@@ -119,7 +121,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlFacturacion;
-        
+
         /// <summary>
         /// Control rptFacturacion.
         /// </summary>
@@ -128,7 +130,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::Microsoft.Reporting.WebForms.ReportViewer rptFacturacion;
-        
+
         /// <summary>
         /// Control updBotones.
         /// </summary>
@@ -137,7 +139,7 @@ namespace Pry_PrestasaludWAP.Medicos {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updBotones;
-        
+
         /// <summary>
         /// Control btnSalir.
         /// </summary>

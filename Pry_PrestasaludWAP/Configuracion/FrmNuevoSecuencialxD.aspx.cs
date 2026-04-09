@@ -92,6 +92,7 @@ namespace Pry_PrestasaludWAP.Configuracion
                     lblerror.Text = "Seleccione Medicamento (S/N)..!";
                     return;
                 }
+
                 Array.Resize(ref objparam, 11);
                 objparam[0] = 0;
                 objparam[1] = int.Parse(ViewState["Codigo"].ToString());

@@ -2,6 +2,8 @@
 {
     using System;
     using System.Data;
+    using System.Globalization;
+    using System.Linq;
     using System.Web.UI;
     using System.Web.UI.WebControls;
 
@@ -13,6 +15,7 @@
         DataTable tbCIE10 = new DataTable();
         Object[] objparam = new Object[1];
         string codigo = "";
+        decimal copago = 0;
         #endregion
 
         #region Load
@@ -32,8 +35,11 @@
                 ViewState["CodigoCita"] = Request["CodigoCita"];
                 ViewState["CodigoTitu"] = Request["CodigoTitu"];
                 ViewState["CodigoBene"] = Request["CodigoBene"];
+            
+
                 funCargaMantenimiento();
-            }            
+            }
+
         }
         #endregion
 

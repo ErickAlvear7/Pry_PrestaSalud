@@ -78,6 +78,15 @@ namespace Pry_PrestasaludWAP.Reportes
         protected global::System.Web.UI.WebControls.DropDownList ddlClienteNova;
 
         /// <summary>
+        /// Control ddlTipoFecha.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoFecha;
+
+        /// <summary>
         /// Control txtFechaInicio.
         /// </summary>
         /// <remarks>

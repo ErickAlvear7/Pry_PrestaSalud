@@ -110,11 +110,12 @@ namespace Pry_PrestasaludWAP.Reportes
             }
 
 
-            Array.Resize(ref objparam, 4);
+            Array.Resize(ref objparam, 5);
             objparam[0] = 0;
             objparam[1] = txtFechaInicio.Text;
             objparam[2] = txtFechaFinal.Text;
             objparam[3] = ddlClienteNova.SelectedValue;
+            objparam[4] = ddlTipoFecha.SelectedValue; //R o C
             ds = new Conexion(2, "").FunConsultarSQLNOVA(objparam);
 
             if (ds.Tables[0].Rows.Count > 0)

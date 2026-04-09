@@ -47,6 +47,7 @@
                                             <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
                                             <asp:BoundField DataField="FechaCita" HeaderText="Fecha_Cita" />
                                             <asp:BoundField DataField="HoraCita" HeaderText="Hora_Cita" />
+                                            <asp:BoundField DataField="Copago" HeaderText="Copago" />
                                             <asp:TemplateField HeaderText="Estado">
                                                 <ItemTemplate>
                                                     <asp:Image ID="imgEstado" runat="server" Height="20px" ImageUrl="~/Botones/medico.png" />

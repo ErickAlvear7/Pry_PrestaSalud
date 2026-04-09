@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
@@ -562,7 +563,8 @@ public class Funciones
         body = body.Replace("{FecNaci}", fechaNaci);
         body = body.Replace("{Telefonos}", oBody[15].ToString());
         body = body.Replace("{Usuario}", oBody[21].ToString());
-        body = body.Replace("{TipoPago}", oBody[23].ToString());
+        body = body.Replace("{TipoPago}", oBody[23].ToString());   //aki has agregado la nueva columna para traer copago, lo mismo debe ser para pvp
+       /* body = body.Replace("{pvp}", oBody[24].ToString());*/ //aki hay que ver en quee objeto llega ese valor y ponerle ahi
         body = body.Replace("{Pie1}", oBody[16].ToString());
         body = body.Replace("{Pie2}", oBody[17].ToString());
         body = body.Replace("{Pie3}", oBody[18].ToString());
@@ -674,77 +676,152 @@ public class Funciones
         return body;
     }
 
-    private string SendHtmlEmail(string mailTO, string subject, string body, string ehost, int eport, bool eEnableSSL, 
-        string eusername, string epassword, string pathAttach, string pathLogo, string mailAlter, string mailDoc, string mailUsu)
+    //private string SendHtmlEmail(string mailTO, string subject, string body, string ehost, int eport, bool eEnableSSL, 
+    //    string eusername, string epassword, string pathAttach, string pathLogo, string mailAlter, string mailDoc, string mailUsu)
+    //{
+    //    string mensaje = "";
+    //    using (MailMessage mailMessage = new MailMessage())
+    //    {
+    //        try
+    //        {
+    //            //Attachment archivo = new Attachment(pathAttach);
+    //            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+    //            LinkedResource theEmailImage = new LinkedResource(pathLogo);
+    //            theEmailImage.ContentId = "myImageID";
+    //            htmlView.LinkedResources.Add(theEmailImage);
+    //            mailMessage.AlternateViews.Add(htmlView);
+    //            mailMessage.From = new MailAddress(eusername);
+    //            mailMessage.Subject = subject;
+    //            mailMessage.Body = body;
+    //            mailMessage.IsBodyHtml = true;
+    //            if (!string.IsNullOrEmpty(mailTO))
+    //            {
+    //                string[] manyMails = mailTO.Split(',');
+    //                foreach (string toMails in manyMails)
+    //                {
+    //                    mailMessage.To.Add(new MailAddress(toMails));
+    //                }
+    //            }
+    //            if (!string.IsNullOrEmpty(mailAlter))
+    //            {
+    //                string[] alterMails = mailAlter.Split(',');
+    //                foreach (string alMalis in alterMails)
+    //                {
+    //                    mailMessage.CC.Add(alMalis);
+    //                }
+    //            }
+    //            if (!string.IsNullOrEmpty(mailDoc))
+    //            {
+    //                string[] docMails = mailDoc.Split(',');
+    //                foreach (string doMails in docMails)
+    //                {
+    //                    mailMessage.Bcc.Add(doMails);
+    //                }
+    //            }
+    //            if(!string.IsNullOrEmpty(mailUsu))
+    //            {
+    //                string[] usuMails = mailUsu.Split(',');
+    //                foreach (string usMails in usuMails)
+    //                {
+    //                    mailMessage.Bcc.Add(usMails);
+    //                }
+    //            }
+
+    //            //mailMessage.Attachments.Add(archivo);
+    //            //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+    //            //NetworkCred.UserName = eusername;
+    //            //NetworkCred.Password = epassword;
+    //            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
+    //            SmtpClient smtp = new SmtpClient();
+    //            //smtp.Credentials = NetworkCred;
+    //            smtp.Host = ehost; 
+    //            smtp.Port = eport;
+    //            smtp.EnableSsl = eEnableSSL;
+    //            //smtp.UseDefaultCredentials = false;
+    //            smtp.Credentials = new NetworkCredential(eusername, epassword);
+    //            smtp.Send(mailMessage);
+    //            mensaje = "";
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            mensaje = ex.Message;
+    //            funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
+    //        }
+    //        return mensaje;
+    //    }
+    //}
+    private string SendHtmlEmail(string mailTO, string subject, string body,
+    string ehost, int eport, bool eEnableSSL,
+    string eusername, string epassword,
+    string pathAttach, string pathLogo,
+    string mailAlter, string mailDoc, string mailUsu)
     {
         string mensaje = "";
-        using (MailMessage mailMessage = new MailMessage())
+
+        try
         {
-            try
+            // Fuerza TLS (muy importante en .NET 4.5)
+            System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
+            using (MailMessage mailMessage = new MailMessage())
             {
-                //Attachment archivo = new Attachment(pathAttach);
-                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                LinkedResource theEmailImage = new LinkedResource(pathLogo);
-                theEmailImage.ContentId = "myImageID";
-                htmlView.LinkedResources.Add(theEmailImage);
-                mailMessage.AlternateViews.Add(htmlView);
                 mailMessage.From = new MailAddress(eusername);
                 mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
+
+                // Imagen embebida (siempre que exista el archivo)
+                if (!string.IsNullOrWhiteSpace(pathLogo) && System.IO.File.Exists(pathLogo))
+                {
+                    AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                    LinkedResource img = new LinkedResource(pathLogo);
+                    img.ContentId = "myImageID";
+                    htmlView.LinkedResources.Add(img);
+                    mailMessage.AlternateViews.Add(htmlView);
+                }
+
+                // To
                 if (!string.IsNullOrEmpty(mailTO))
-                {
-                    string[] manyMails = mailTO.Split(',');
-                    foreach (string toMails in manyMails)
-                    {
-                        mailMessage.To.Add(new MailAddress(toMails));
-                    }
-                }
+                    foreach (var m in mailTO.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                        mailMessage.To.Add(new MailAddress(m));
+
+                // CC
                 if (!string.IsNullOrEmpty(mailAlter))
-                {
-                    string[] alterMails = mailAlter.Split(',');
-                    foreach (string alMalis in alterMails)
-                    {
-                        mailMessage.CC.Add(alMalis);
-                    }
-                }
+                    foreach (var m in mailAlter.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                        mailMessage.CC.Add(new MailAddress(m));
+
+                // BCC
                 if (!string.IsNullOrEmpty(mailDoc))
+                    foreach (var m in mailDoc.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                        mailMessage.Bcc.Add(new MailAddress(m));
+
+                if (!string.IsNullOrEmpty(mailUsu))
+                    foreach (var m in mailUsu.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                        mailMessage.Bcc.Add(new MailAddress(m));
+
+                // Adjuntos (si lo vas a usar)
+                // if (!string.IsNullOrWhiteSpace(pathAttach) && File.Exists(pathAttach))
+                //     mailMessage.Attachments.Add(new Attachment(pathAttach));
+
+                using (SmtpClient smtp = new SmtpClient(ehost, eport))
                 {
-                    string[] docMails = mailDoc.Split(',');
-                    foreach (string doMails in docMails)
-                    {
-                        mailMessage.Bcc.Add(doMails);
-                    }
+                    smtp.EnableSsl = eEnableSSL;
+                    smtp.UseDefaultCredentials = false; // evita SSPI con credenciales Windows
+                    smtp.Credentials = new NetworkCredential(eusername, epassword);
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Timeout = 30000;
+
+                    smtp.Send(mailMessage);
                 }
-                if(!string.IsNullOrEmpty(mailUsu))
-                {
-                    string[] usuMails = mailUsu.Split(',');
-                    foreach (string usMails in usuMails)
-                    {
-                        mailMessage.Bcc.Add(usMails);
-                    }
-                }
-               
-                //mailMessage.Attachments.Add(archivo);
-                //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-                //NetworkCred.UserName = eusername;
-                //NetworkCred.Password = epassword;
-                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
-                SmtpClient smtp = new SmtpClient();
-                //smtp.Credentials = NetworkCred;
-                smtp.Host = ehost; 
-                smtp.Port = eport;
-                smtp.EnableSsl = eEnableSSL;
-                //smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential(eusername, epassword);
-                smtp.Send(mailMessage);
-                mensaje = "";
             }
-            catch (Exception ex)
-            {
-                mensaje = ex.Message;
-                funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
-            }
+
+            return "";
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.ToString(); // para ver InnerException real
+            funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
             return mensaje;
         }
     }

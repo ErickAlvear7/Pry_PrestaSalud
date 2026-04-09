@@ -25,8 +25,125 @@
     <script>
         $(function () {
             $("#acordionParametro").accordion();
+
         });
+
+        function showModal(panelId) {
+            var ov = document.getElementById('overlayModal');
+            var pnl = document.getElementById(panelId);
+
+            if (ov) ov.style.setProperty('display', 'block', 'important');
+            if (pnl) pnl.style.setProperty('display', 'block', 'important');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(panelId) {
+            var ov = document.getElementById('overlayModal');
+            var pnl = document.getElementById(panelId);
+
+            if (ov) ov.style.setProperty('display', 'none', 'important');
+            if (pnl) pnl.style.setProperty('display', 'none', 'important');
+
+            document.body.style.overflow = '';
+        }
+        function makeDraggable(panelId, headerId) {
+
+            var modal = document.getElementById(panelId);
+            var header = document.getElementById(headerId);
+
+            if (!modal || !header) return;
+
+            var offsetX = 0, offsetY = 0;
+            var isDown = false;
+
+            header.onmousedown = function (e) {
+                isDown = true;
+                offsetX = e.clientX - modal.offsetLeft;
+                offsetY = e.clientY - modal.offsetTop;
+
+                document.onmousemove = function (e) {
+                    if (!isDown) return;
+
+                    modal.style.left = (e.clientX - offsetX) + "px";
+                    modal.style.top = (e.clientY - offsetY) + "px";
+                    modal.style.transform = "none"; 
+                };
+
+                document.onmouseup = function () {
+                    isDown = false;
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+            };
+        }
+        function calcTotalEsp() {
+            var grid = document.getElementById('<%= gvEspecialidades.ClientID %>');
+            if (!grid) return;
+
+            var total = 0;
+
+            for (var r = 1; r < grid.rows.length; r++) {
+                var row = grid.rows[r];
+
+                var chk = row.cells[0].querySelector('input[type="checkbox"]');
+                if (chk && chk.checked) {
+                   
+                    var txt = row.cells[2].innerText || row.cells[2].textContent;
+                    txt = (txt || "").trim().replace(',', '.'); 
+
+                    var val = parseFloat(txt);
+                    if (!isNaN(val)) total += val;
+                }
+            }
+
+            total = Math.round(total * 100) / 100;
+
+            document.getElementById('lblTotalEsp').innerText = total.toFixed(2);
+
+                var hf = document.getElementById('<%= hfTotalEsp.ClientID %>');
+                if (hf) hf.value = total.toFixed(2);
+        }
   
+    </script>
+        <style>
+          .overlayModal{
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.55);
+            z-index:2147483646; 
+          }
+
+          .modalCustom{
+            display:none;
+            position:fixed;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            width:70%;
+            max-width:900px;
+            background:#fff;
+            border-radius:6px;
+            box-shadow:0 10px 30px rgba(0,0,0,.35);
+            z-index:2147483647; 
+          }
+
+          .modalHeader{ padding:12px; font-weight:bold; border-bottom:1px solid #ddd; background:#f4f4f4; }
+          .modalBody{ padding:12px; max-height:60vh; overflow:auto; }
+          .modalFooter{ padding:10px; border-top:1px solid #ddd; text-align:right; background:#f9f9f9; }
+    </style>
+    <script type="text/javascript">
+        function confirmarCopago() {
+            var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
+            var copago = ddl.options[ddl.selectedIndex].text;
+
+            if (copago !== "") {
+                return confirm("¿Desea continuar con el copago seleccionado?\n\nCopago: " + copago);
+            }
+
+            return true; 
+        }
     </script>
 
     <style type="text/css">
@@ -352,7 +469,7 @@
                                             <td></td>
                                         </tr>
                                         <tr>
-                                            <td></td>
+                                       <%--     <td></td>
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>
@@ -366,14 +483,15 @@
                                             <td>
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
-                                            </td>
-                                            <%-- <td>
+                                            </td>--%>
+                                            <td></td>
+                                             <td>
                                                 <h5>Prestadora:</h5>
                                             </td>
                                             <td colspan="3">
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
-                                            </td>--%>
+                                            </td>
                                             <td style="text-align: center">
                                                 <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="10" />
                                             </td>
@@ -386,6 +504,17 @@
                                             <td colspan="3">
                                                 <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="11">
                                                 </asp:DropDownList>
+                                           <%--     <br />
+                                                    <asp:TextBox ID="txtEspecialidades"
+                                                    runat="server"
+                                                    CssClass="form-control"
+                                                    ReadOnly="true"
+                                                    placeholder="Especialidades seleccionadas">
+                                                </asp:TextBox>
+
+                                                <!-- NUEVO: Guarda los códigos seleccionados -->
+                                                <asp:HiddenField ID="hfEspecialidades"
+                                                    runat="server" />--%>
                                             </td>
                                             <td></td>
                                         </tr>
@@ -617,7 +746,7 @@
                                         <table style="width: 100%">
                                             <tr>
                                                 <td style="text-align: center">
-                                                    <asp:ImageButton ID="imgAgendar" runat="server" Height="25px" ImageUrl="~/Botones/agendarmail.png" OnClick="imgAgendar_Click" TabIndex="24" />
+                                                    <asp:ImageButton ID="imgAgendar" runat="server" Height="25px" ImageUrl="~/Botones/agendarmail.png" OnClick="imgAgendar_Click" OnClientClick="return confirmarCopago();" TabIndex="24" />
                                                 </td>
                                                 <td style="text-align: center; margin-left: 40px;">
                                                     <asp:ImageButton ID="imgCancelar" runat="server" Height="25px" ImageUrl="~/Botones/cancelar.jpg" OnClick="imgCancelar_Click" TabIndex="25" />
@@ -780,6 +909,65 @@
                 </asp:UpdatePanel>
             </div>
         </div>
+        <asp:UpdatePanel ID="updModalEsp" runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <div id="overlayModal" class="overlayModal" style="display:none;"
+                     onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
+                </div>
+                <asp:Panel ID="pnlModalEspecialidades" runat="server"
+                    CssClass="modalCustom"
+                    Style="display:none;">
+
+                    <div class="modalHeader" id="modalHeaderEsp" style="cursor:move;">
+                        Seleccione Especialidades
+                    </div>
+
+                    <div class="modalBody">
+                        <div style="margin-bottom:10px; font-weight:bold;">
+                            Total seleccionado: <span id="lblTotalEsp">0.00</span>
+                        </div>
+
+                        <asp:HiddenField ID="hfTotalEsp" runat="server" Value="0.00" />
+                        <asp:GridView ID="gvEspecialidades" runat="server"
+                            AutoGenerateColumns="false"
+                            DataKeyNames="PVP,Espe"
+                            GridLines="None"
+                            Width="100%">
+
+                            <Columns>
+
+                                <asp:TemplateField>
+                                    <ItemTemplate>
+                                        <asp:CheckBox ID="chkSeleccionar" runat="server" onclick="calcTotalEsp();" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                                <asp:BoundField DataField="PVP" HeaderText="PVP" />
+
+                            </Columns>
+
+                        </asp:GridView>
+
+                    </div>
+
+                    <div class="modalFooter">
+
+                        <asp:Button ID="btnAgregarEspecialidades"
+                            runat="server"
+                            Text="Agregar Seleccionadas"
+                            CssClass="btnModal btnPrimary"
+                            OnClick="btnAgregarEspecialidades_Click" />
+
+                        <button type="button"
+                            class="btnModal btnClose"
+                            onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
+                            Cerrar
+                        </button>
+                    </div>
+                </asp:Panel>
+             </ContentTemplate>
+          </asp:UpdatePanel>
     </form>
 
 

@@ -361,6 +361,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
                     ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
                     ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
+                    ViewState["fecha5"] = fecha.Tables[0].Rows[4][0].ToString().Trim();
+                    ViewState["fecha6"] = fecha.Tables[0].Rows[5][0].ToString().Trim();
+                    ViewState["fecha7"] = fecha.Tables[0].Rows[6][0].ToString().Trim();
+                    ViewState["fecha8"] = fecha.Tables[0].Rows[7][0].ToString().Trim();
+                    ViewState["fecha9"] = fecha.Tables[0].Rows[8][0].ToString().Trim();
+                    ViewState["fecha10"] = fecha.Tables[0].Rows[9][0].ToString().Trim();
                 }
 
 
@@ -951,7 +957,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fechabloqueo1 = dtmFechaCalendar.ToString("MM/dd/yyyy");
            
 
-            if (fechabloqueo1 == ViewState["fecha1"].ToString() || fechabloqueo1 == ViewState["fecha2"].ToString() || fechabloqueo1 == ViewState["fecha3"].ToString() || fechabloqueo1 == ViewState["fecha4"].ToString())
+            if (fechabloqueo1 == ViewState["fecha1"].ToString() || fechabloqueo1 == ViewState["fecha2"].ToString() || fechabloqueo1 == ViewState["fecha3"].ToString() ||
+                fechabloqueo1 == ViewState["fecha4"].ToString() || fechabloqueo1 == ViewState["fecha5"].ToString() || fechabloqueo1 == ViewState["fecha6"].ToString() ||
+                fechabloqueo1 == ViewState["fecha7"].ToString() || fechabloqueo1 == ViewState["fecha8"].ToString() || fechabloqueo1 == ViewState["fecha9"].ToString() || fechabloqueo1 == ViewState["fecha10"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);
@@ -1063,7 +1071,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string fechabloqueo = dtmFechaCalendar.ToString("MM/dd/yyyy");
            
 
-            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() || fechabloqueo == ViewState["fecha4"].ToString())
+            if (fechabloqueo == ViewState["fecha1"].ToString() || fechabloqueo == ViewState["fecha2"].ToString() || fechabloqueo == ViewState["fecha3"].ToString() ||
+                fechabloqueo == ViewState["fecha4"].ToString() || fechabloqueo == ViewState["fecha5"].ToString() || fechabloqueo == ViewState["fecha6"].ToString() ||
+                fechabloqueo == ViewState["fecha7"].ToString() || fechabloqueo == ViewState["fecha8"].ToString() || fechabloqueo == ViewState["fecha9"].ToString() || fechabloqueo == ViewState["fecha10"].ToString())
             {
 
                 new Funciones().funShowJSMessage("Fecha no disponible", this);

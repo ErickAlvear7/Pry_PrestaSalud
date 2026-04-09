@@ -188,7 +188,19 @@
 
         protected void Tmrdat_Tick(object sender, EventArgs e)
         {
-            FunCargaMantenimiento();
+
+            try
+            {
+                FunCargaMantenimiento();
+            }
+            catch (Exception ex)
+            {
+
+                string path = Server.MapPath("~/logs/error_timer.txt");
+                System.IO.File.AppendAllText(path,
+                    DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + ex.ToString() + Environment.NewLine);
+            }
+           
         } 
         #endregion
     }

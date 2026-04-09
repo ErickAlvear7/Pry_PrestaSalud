@@ -239,9 +239,44 @@ public class Conexion
             return ds = null;
         }
     }
+    //public DataSet FunConsultarSQLNOVA(object[] objparam)
+    //{
+
+    //    try
+    //    {
+    //        using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNova", Sqlcn))
+    //        {
+    //            cmd.CommandType = CommandType.StoredProcedure;
+    //            cmd.CommandTimeout = 500;
+
+    //            cmd.Parameters.Add("@in_tipo", SqlDbType.Int).Value = Convert.ToInt32(objparam[0]);
+    //            cmd.Parameters.Add("@in_fechadesde", SqlDbType.VarChar, 10).Value = objparam[1].ToString();
+    //            cmd.Parameters.Add("@in_fechahasta", SqlDbType.VarChar, 10).Value = objparam[2].ToString();
+    //            cmd.Parameters.Add("@in_codigocamp", SqlDbType.VarChar, 50).Value = objparam[3].ToString();
+
+    //            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+    //            {
+    //                ds.Clear();
+    //                da.SelectCommand.CommandTimeout = 500; // por si acaso
+    //                Sqlcn.Open();
+    //                da.Fill(ds);
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ds = null;
+    //    }
+    //    finally
+    //    {
+    //        if (Sqlcn.State != ConnectionState.Closed)
+    //            Sqlcn.Close();
+    //    }
+
+    //    return ds;
+    //}
     public DataSet FunConsultarSQLNOVA(object[] objparam)
     {
-
         try
         {
             using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctorNova", Sqlcn))
@@ -252,18 +287,24 @@ public class Conexion
                 cmd.Parameters.Add("@in_tipo", SqlDbType.Int).Value = Convert.ToInt32(objparam[0]);
                 cmd.Parameters.Add("@in_fechadesde", SqlDbType.VarChar, 10).Value = objparam[1].ToString();
                 cmd.Parameters.Add("@in_fechahasta", SqlDbType.VarChar, 10).Value = objparam[2].ToString();
-                cmd.Parameters.Add("@in_codigocamp", SqlDbType.VarChar, 50).Value = objparam[3].ToString();
+
+                // CORRECTO: en tu SP es INT
+                cmd.Parameters.Add("@in_codigocamp", SqlDbType.Int).Value = Convert.ToInt32(objparam[3]);
+
+                // NUEVO: tipo de fecha ("R" o "C")
+                cmd.Parameters.Add("@in_tipofecha", SqlDbType.Char, 1).Value = objparam[4].ToString();
 
                 using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
                     ds.Clear();
-                    da.SelectCommand.CommandTimeout = 500; // por si acaso
-                    Sqlcn.Open();
+                    da.SelectCommand.CommandTimeout = 500;
+
+                    // Recomendado: no abrir manualmente, el adapter lo maneja
                     da.Fill(ds);
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ds = null;
         }
@@ -758,6 +799,7 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_observacion", objparam[4]);
                 cmd.Parameters.AddWithValue("@in_fuente", objparam[5]);
                 cmd.Parameters.AddWithValue("@in_tipopago", objparam[6]);
+                cmd.Parameters.AddWithValue("@in_Copago", objparam[7]);
                 cmd.Parameters.AddWithValue("@EmptyCitaMedica", dt);
                 Sqlcn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

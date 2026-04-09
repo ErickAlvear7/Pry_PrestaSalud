@@ -134,7 +134,7 @@
                                 </td>
                                 <td></td>
                             </tr>
-                            <tr>
+                        <%--    <tr>
                                 <td></td>
                                 <td><h5>Fecha Registro:</h5></td>
                                 <td>
@@ -144,6 +144,32 @@
                                 <td>
                                     <asp:TextBox ID="txtFechaFinal" runat="server"
                                         CssClass="form-control" Width="100%" TabIndex="3" />
+                                </td>
+                                <td></td>
+                            </tr>--%>
+                            <tr>
+                                <td></td>
+                                <td><h5>Filtrar por:</h5></td>
+                                <td colspan="2">
+                                    <asp:DropDownList ID="ddlTipoFecha" runat="server"
+                                        CssClass="form-control" Width="100%" TabIndex="2">
+                                        <asp:ListItem Text="Fecha Registro" Value="R" Selected="True" />
+                                        <asp:ListItem Text="Fecha Cita" Value="C" />
+                                    </asp:DropDownList>
+                                </td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td><h5>Rango de fechas:</h5></td>
+                                <td>
+                                    <asp:TextBox ID="txtFechaInicio" runat="server"
+                                        CssClass="form-control" Width="100%" TabIndex="3" />
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtFechaFinal" runat="server"
+                                        CssClass="form-control" Width="100%" TabIndex="4" />
                                 </td>
                                 <td></td>
                             </tr>

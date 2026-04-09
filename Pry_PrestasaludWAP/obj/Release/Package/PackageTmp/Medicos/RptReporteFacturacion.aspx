@@ -196,11 +196,12 @@
                                 <td></td>
                                 <td>
                                     <asp:Panel ID="pnlFacturacion" runat="server" Height="310px" ScrollBars="Vertical">
-                                        <rsweb:ReportViewer ID="rptFacturacion" runat="server" Font-Names="Verdana" Font-Size="8pt"
-                                            WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="912px" AsyncRendering="false" SizeToReportContent="true">
+                                       
+                                        <rsweb:ReportViewer ID="rptFacturacion" runat="server" AsyncRendering="False" Font-Names="Verdana" Font-Size="8pt" Height="302px" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="765px">
                                             <LocalReport ReportPath="Reports\RptFacturaPrestaMedico.rdlc">
                                             </LocalReport>
                                         </rsweb:ReportViewer>
+                                       
                                     </asp:Panel>
                                 </td>
                                 <td></td>

@@ -127,6 +127,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var strCodProducto = grdvDatos.DataKeys[intIndex].Values["CodigoProducto"].ToString();
             var strFechaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaCobertura"].ToString();
             var strFechaFinCobertura = grdvDatos.DataKeys[intIndex].Values["FechaFinCobertura"].ToString();
+            //var strFechaActuaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaActuaCobertura"].ToString();
 
             string dateString = strFechaCobertura;
             string format = "dd/MM/yyyy";
@@ -156,11 +157,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
                 logHelper.RegistrarAccion(usuario, "Citas", "FrmCitaMedicaAdmin.aspx.cs/Selecciona Titular", $"CodigoTitular: {strCodigo}");
 
-                //programar para meses con 31 + 1
-                //poner log
-
                 int mesCobertura = Cobertura.Month;
-
 
                 switch (mesCobertura)
                 {
@@ -234,7 +231,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     new Funciones().funShowJSMessage(_mensaje, this);
                    
                 }
-
             }
             else
             {
@@ -270,10 +266,50 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             break;
                     }
 
-
                     DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechafincobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                    DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
+
+                    DateTime Actual = DateTime.Now.Date;
+
+                    //Cambio
+                    //if (strFechaActuaCobertura != "")
+                    //{
+                    //    DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    //    DateTime nuevaFecha = _fechactualicobertura.AddDays(365);
+
+                    //    if (nuevaFecha < Actual)
+                    //    {
+                    //        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + nuevaFecha.ToString("dd/MM/yyyy");
+
+                    //        ScriptManager.RegisterStartupScript(
+                    //            this,                         // o this.Page
+                    //            this.GetType(),
+                    //            "msgCobertura",
+                    //            "alert('" + mensaje.Replace("'", "\\'") + "');",
+                    //            true
+                    //        );
+
+                    //        return;
+                    //    }
+                    //}
+
+                    if (FinCobertura < Actual)
+                    {
+                        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
+
+                        ScriptManager.RegisterStartupScript(
+                            this,                         // o this.Page
+                            this.GetType(),
+                            "msgCobertura",
+                            "alert('" + mensaje.Replace("'", "\\'") + "');",
+                            true
+                        );
+
+                        return;
+                    }
 
                     TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
@@ -286,7 +322,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else
                     {
-                            int _diffdias = _dias - _idasx;
+                         int _diffdias = _dias - _idasx;
 
                         _fechaatual = _fechaatual.AddDays(_diffdias);
                         string _fecha = DateTime.ParseExact(_fechaatual.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
@@ -295,25 +331,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         _mensaje += "  Puede Agendar a partir del :  " + _fecha;
 
                         new Funciones().funShowJSMessage(_mensaje, this);
-                        DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
-
-                        DateTime Actual = DateTime.Now.Date;
-
-                        if (FinCobertura < Actual)
-                        {
-                            string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
-
-                            ScriptManager.RegisterStartupScript(
-                                this,                         // o this.Page
-                                this.GetType(),
-                                "msgCobertura",
-                                "alert('" + mensaje.Replace("'", "\\'") + "');",
-                                true
-                            );
-
-                            return;
-                        }
-
                     }
                 }
                 else
