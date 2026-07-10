@@ -134,7 +134,8 @@
           .modalFooter{ padding:10px; border-top:1px solid #ddd; text-align:right; background:#f9f9f9; }
     </style>
     <script type="text/javascript">
-        function confirmarCopago() {
+
+       function confirmarCopago() {
             var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
             var copago = ddl.options[ddl.selectedIndex].text;
 
@@ -144,6 +145,52 @@
 
             return true; 
         }
+        <%--function confirmarCopago() {
+            var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
+
+            if (ddl == null) {
+                return true;
+            }
+
+            var copago = ddl.options[ddl.selectedIndex].text;
+
+            if (copago !== "") {
+                return confirm("¿Desea continuar con el copago seleccionado?\n\nCopago: " + copago);
+            }
+
+            return true;
+        }
+
+        function validarObservacionG() {
+            var txt = document.getElementById('<%= txtObservacionG.ClientID %>');
+
+            if (txt == null) {
+                return true;
+            }
+
+            var observacion = txt.value.replace(/\s/g, '');
+
+            if (observacion === "") {
+                return confirm("Debe ingresar en observación póliza y certificado");
+               
+            }
+
+            return true;
+        }
+
+        function validarAntesAgendar() {
+
+            if (!confirmarCopago()) {
+                return false;
+            }
+
+            if (!validarObservacionG()) {
+                return false;
+            }
+
+            return true;
+        }--%>
+
     </script>
 
     <style type="text/css">
@@ -469,7 +516,7 @@
                                             <td></td>
                                         </tr>
                                         <tr>
-                                            <td></td>
+                                          <%--  <td></td>
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>
@@ -483,8 +530,8 @@
                                             <td>
                                                 <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
                                                 </asp:DropDownList>
-                                            </td>
-                                       <%--     <td></td>
+                                            </td>--%>
+                                            <td></td>
                                              <td>
                                                 <h5>Prestadora:</h5>
                                             </td>
@@ -494,7 +541,7 @@
                                             </td>
                                             <td style="text-align: center">
                                                 <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="10" />
-                                            </td>--%>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td></td>
@@ -693,6 +740,42 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <asp:Panel ID="Panel5" runat="server" GroupingText="" Visible="false">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="width: 10%;"></td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="poliza" visible="true">Poliza:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtPoliza" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="certificado" visible="true">Certificado:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtCertificado" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 30%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="ramo" visible="true">Ramo:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtRamo" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td>
+                                                <h5 runat="server" id="H1" visible="true">Sucursal:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtSucursal" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
                                 <asp:Panel ID="pnlResumenCita" runat="server" GroupingText="Resumen Cita" Visible="False" TabIndex="22">
                                     <table style="width: 100%">
                                         <tr>
@@ -743,6 +826,7 @@
                                 </asp:Panel>
                                 <asp:UpdatePanel ID="updCitaMedica" runat="server">
                                     <ContentTemplate>
+                                       <%-- <asp:HiddenField ID="hfCampCodigo" runat="server" Value="0" />--%>
                                         <table style="width: 100%">
                                             <tr>
                                                 <td style="text-align: center">
@@ -928,9 +1012,10 @@
                         </div>
 
                         <asp:HiddenField ID="hfTotalEsp" runat="server" Value="0.00" />
+                        <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
                         <asp:GridView ID="gvEspecialidades" runat="server"
                             AutoGenerateColumns="false"
-                            DataKeyNames="PVP,Espe"
+                            DataKeyNames="PVP,Red"
                             GridLines="None"
                             Width="100%">
 
@@ -944,6 +1029,7 @@
 
                                 <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
                                 <asp:BoundField DataField="PVP" HeaderText="PVP" />
+                                <asp:BoundField DataField="Red" HeaderText="Red" Visible="false" />
 
                             </Columns>
 

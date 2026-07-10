@@ -232,7 +232,7 @@ namespace Pry_PrestasaludWAP.Api
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var queryString = new StringBuilder();
-                queryString.Append("?fecha=").Append(Uri.EscapeDataString("2025-02-14"));
+                queryString.Append("?fecha=").Append(Uri.EscapeDataString(fecha));
                 queryString.Append("&id_paciente=").Append(Uri.EscapeDataString(idpaciente));
                 queryString.Append("&id_servicio=").Append(Uri.EscapeDataString(idservicio));
                 queryString.Append("&id_especialidad=").Append(Uri.EscapeDataString(idespeci));

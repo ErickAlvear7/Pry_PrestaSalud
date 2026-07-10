@@ -28,6 +28,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
     {
         #region Variables
         DataSet dt = new DataSet();
+        DataSet camp = new DataSet();
         DataSet dts = new DataSet();
         DataSet dtusu = new DataSet();
         DataSet dtemail = new DataSet();
@@ -82,165 +83,217 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void Page_Load(object sender, EventArgs e)
 
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
-            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
-
-            if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
-                Response.Redirect("~/Reload.html");
-            Page.Form.Attributes.Add("enctype", "multipart/form-data");
-            if (!IsPostBack)
+            try
             {
-                pnlLink.Visible = false;
-                CalendarioCita.SelectedDate = DateTime.Today;
-                tbDatosCita.Columns.Add("Hora");
-                tbDatosCita.Columns.Add("Accion");
-                tbDatosCita.Columns.Add("Cliente");
-                tbDatosCita.Columns.Add("Tipo");
-                tbDatosCita.Columns.Add("Usuario");
-                tbDatosCita.Columns.Add("Parentesco");
-                tbDatosCita.Columns.Add("HodeCodigo");
-                tbDatosCita.Columns.Add("TumeCodigo");
-                ViewState["tbDatosCita"] = tbDatosCita;
-                grdvDatosCitas.DataSource = tbDatosCita;
-                grdvDatosCitas.DataBind();
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("es-EC");
+                Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator = ".";
 
-                tbCitaMedica.Columns.Add("Cliente");
-                tbCitaMedica.Columns.Add("Ciudad");
-                tbCitaMedica.Columns.Add("Prestadora");
-                tbCitaMedica.Columns.Add("Medico");
-                tbCitaMedica.Columns.Add("Especialidad");
-                tbCitaMedica.Columns.Add("FechaCita");
-                tbCitaMedica.Columns.Add("DiaCita");
-                tbCitaMedica.Columns.Add("Hora");
-                tbCitaMedica.Columns.Add("Detalle");
-                tbCitaMedica.Columns.Add("PreeCodigo");
-                tbCitaMedica.Columns.Add("MediCodigo");
-                tbCitaMedica.Columns.Add("HodeCodigo");
-                tbCitaMedica.Columns.Add("TipoCliente");
-                tbCitaMedica.Columns.Add("TituCodigo");
-                tbCitaMedica.Columns.Add("BeneCodigo");
-                tbCitaMedica.Columns.Add("CodParentesco");
-                tbCitaMedica.Columns.Add("EstatusCita");
-                tbCitaMedica.Columns.Add("Longitud");
-                tbCitaMedica.Columns.Add("Latitud");
-                tbCitaMedica.Columns.Add("CodigoPrestadora");
-                tbCitaMedica.Columns.Add("Observacion");
-                ViewState["tbCitaMedica"] = tbCitaMedica;
-                ViewState["Mgeneral"] = 0;
-                ViewState["Especialidad"] = 0;
-                ViewState["TotalLab"] = 0;
-                ViewState["TotalRestante"] = 0;
+                if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
+                    Response.Redirect("~/Reload.html");
+                Page.Form.Attributes.Add("enctype", "multipart/form-data");
 
-                dtbHorarios.Columns.Add("idmedico");
-                dtbHorarios.Columns.Add("nombres");
-                dtbHorarios.Columns.Add("apellidos");
-                dtbHorarios.Columns.Add("date");
-                dtbHorarios.Columns.Add("hour");
-                ViewState["HorariosMedico"] = dtbHorarios;
-
-
-                lbltitulo.Text = "Agendar Cita";
-                //Session["CodigoTitular"] = Request["CodigoTitular"];
-                //Session["CodigoProducto"] = Request["CodigoProducto"];
-                Session["CodigoTitular"] = Request["CodigoTitular"];
                 Session["CodigoProducto"] = Request["CodigoProducto"];
-                Session["Regresar"] = Request["Regresar"];
-                Session["TipoCita"] = "CitaMedica";
-                ViewState["Intervalo"] = 0;
 
-                //CAMBIO 1
-                Array.Resize(ref objparam, 4);
-                objparam[0] = 6;
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
-                objparam[2] = 0;
-                objparam[3] = int.Parse(Session["CodigoProducto"].ToString());
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularEdit", objparam);
+                if (Session["CodigoProducto"] != null && Session["CodigoProducto"].ToString() != "")
+                {
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
+                    objparam[1] = "";
+                    objparam[2] = 218;
 
-                if(dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
-                {
-                    FunValidarEspeAc();
-                    FunContadorCitasAc();
-                }
-                else
-                {
-                    FunContadorCitas();
-                    FunValidarEspe();
-                }
+                    camp = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                //DateTime _fechaactual = DateTime.Now;
-                //DateTime nuevaFecha = _fechaactual.AddDays(10);
+                    if (camp != null
+                        && camp.Tables.Count > 0
+                        && camp.Tables[0].Rows.Count > 0
+                        && camp.Tables[0].Columns.Count > 0)
+                    {
+                        string resultado = camp.Tables[0].Rows[0][0].ToString().Trim();
 
-                //ViewState["FechaActual"] = DateTime.ParseExact(nuevaFecha.ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                ViewState["FechaActual"] = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
-
-                //Session["codigocita"] = 0;
-                
-                FunCargaMantenimiento();
-                FunHistorialCitas();
-                FunEliminarReservas();
-                FunGetReservas();
-                FunCascadaCombos(2);
-                FunCascadaCombos(0);
-                FunCascadaCombos(1);
-                FunCascadaCombos(3);
-                FunCascadaCombos(4);
-                FunCascadaCombos(5);
-                FunCascadaCombos(6);
-                FunCascadaCombos(7);
-                FunCascadaCombos(8);
-                pnlDatosPersonales.Height = 120;
-                pnlInfAdicional.Height = 120;
-                if (ViewState["Host"] == null || ViewState["Port"] == null || ViewState["EnableSSl"] == null || ViewState["Usuario"] == null || ViewState["Password"] == null)
-                {
-                    lblerror.Text = "No ha Definido Parámetros para enviar Mails...";
-                    ddlOpcion.Enabled = false;
-                    imgAgendar.Enabled = false;
-                }
-                if (ViewState["Ruta"] == null || ViewState["Logo"] == null)
-                {
-                    lblerror.Text = "No ha Definido Ruta/Logo para enviar Mails...";
-                    ddlOpcion.Enabled = false;
-                    imgAgendar.Enabled = false;
-                }
-                if (ViewState["Secuencial"] == null)
-                {
-                    lblerror.Text = "No ha Definido Secuencial para el Producto...";
-                    ddlOpcion.Enabled = false;
-                    imgAgendar.Enabled = false;
+                        if (resultado == "1")
+                        {
+                            ViewState["CampCodigo"] = "1";
+                        }
+                    }
                 }
 
-                if (Session["Regresar"] != null)
+                if (!IsPostBack)
                 {
-                    if (Session["Regresar"].ToString() == "1") TrFileUpload.Visible = true;
+                    pnlLink.Visible = false;
+                    Panel5.Visible = false;
+                    CalendarioCita.SelectedDate = DateTime.Today;
+                    tbDatosCita.Columns.Add("Hora");
+                    tbDatosCita.Columns.Add("Accion");
+                    tbDatosCita.Columns.Add("Cliente");
+                    tbDatosCita.Columns.Add("Tipo");
+                    tbDatosCita.Columns.Add("Usuario");
+                    tbDatosCita.Columns.Add("Parentesco");
+                    tbDatosCita.Columns.Add("HodeCodigo");
+                    tbDatosCita.Columns.Add("TumeCodigo");
+                    ViewState["tbDatosCita"] = tbDatosCita;
+                    grdvDatosCitas.DataSource = tbDatosCita;
+                    grdvDatosCitas.DataBind();
+
+                    tbCitaMedica.Columns.Add("Cliente");
+                    tbCitaMedica.Columns.Add("Ciudad");
+                    tbCitaMedica.Columns.Add("Prestadora");
+                    tbCitaMedica.Columns.Add("Medico");
+                    tbCitaMedica.Columns.Add("Especialidad");
+                    tbCitaMedica.Columns.Add("FechaCita");
+                    tbCitaMedica.Columns.Add("DiaCita");
+                    tbCitaMedica.Columns.Add("Hora");
+                    tbCitaMedica.Columns.Add("Detalle");
+                    tbCitaMedica.Columns.Add("PreeCodigo");
+                    tbCitaMedica.Columns.Add("MediCodigo");
+                    tbCitaMedica.Columns.Add("HodeCodigo");
+                    tbCitaMedica.Columns.Add("TipoCliente");
+                    tbCitaMedica.Columns.Add("TituCodigo");
+                    tbCitaMedica.Columns.Add("BeneCodigo");
+                    tbCitaMedica.Columns.Add("CodParentesco");
+                    tbCitaMedica.Columns.Add("EstatusCita");
+                    tbCitaMedica.Columns.Add("Longitud");
+                    tbCitaMedica.Columns.Add("Latitud");
+                    tbCitaMedica.Columns.Add("CodigoPrestadora");
+                    tbCitaMedica.Columns.Add("Observacion");
+                    ViewState["tbCitaMedica"] = tbCitaMedica;
+                    ViewState["Mgeneral"] = 0;
+                    ViewState["Especialidad"] = 0;
+                    ViewState["TotalLab"] = 0;
+                    ViewState["TotalRestante"] = 0;
+
+                    dtbHorarios.Columns.Add("idmedico");
+                    dtbHorarios.Columns.Add("nombres");
+                    dtbHorarios.Columns.Add("apellidos");
+                    dtbHorarios.Columns.Add("date");
+                    dtbHorarios.Columns.Add("hour");
+                    ViewState["HorariosMedico"] = dtbHorarios;
+
+
+                    lbltitulo.Text = "Agendar Cita";
+                    //Session["CodigoTitular"] = Request["CodigoTitular"];
+                    //Session["CodigoProducto"] = Request["CodigoProducto"];
+                    Session["CodigoTitular"] = Request["CodigoTitular"];
+                    Session["CodigoProducto"] = Request["CodigoProducto"];
+                    Session["Regresar"] = Request["Regresar"];
+                    Session["TipoCita"] = "CitaMedica";
+                    ViewState["Intervalo"] = 0;
+
+                    //CAMBIO 1
+                    Array.Resize(ref objparam, 4);
+                    objparam[0] = 6;
+                    objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
+                    objparam[2] = 0;
+                    objparam[3] = int.Parse(Session["CodigoProducto"].ToString());
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularEdit", objparam);
+
+                    bool tieneFechaActiva = false;
+
+                    if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0 && dt.Tables[0].Columns.Count > 0)
+                    {
+                        object valor = dt.Tables[0].Rows[0][0];
+
+                        if (valor != null && valor != DBNull.Value && !string.IsNullOrWhiteSpace(valor.ToString()))
+                        {
+                            tieneFechaActiva = true;
+                        }
+                    }
+
+                    if (tieneFechaActiva)
+                    {
+                        FunContadorCitasAc();
+                        FunValidarEspeAc();
+                    }
+                    else
+                    {
+                        FunContadorCitas();
+                        FunValidarEspe();
+                    }
+
+
+                    //DateTime _fechaactual = DateTime.Now;
+                    //DateTime nuevaFecha = _fechaactual.AddDays(10);
+
+                    //ViewState["FechaActual"] = DateTime.ParseExact(nuevaFecha.ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    ViewState["FechaActual"] = DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+
+                    //Session["codigocita"] = 0;
+
+                    FunCargaMantenimiento();
+                    FunHistorialCitas();
+                    FunEliminarReservas();
+                    FunGetReservas();
+                    FunCascadaCombos(2);
+                    FunCascadaCombos(0);
+                    FunCascadaCombos(1);
+                    FunCascadaCombos(3);
+                    FunCascadaCombos(4);
+                    FunCascadaCombos(5);
+                    FunCascadaCombos(6);
+                    FunCascadaCombos(7);
+                    FunCascadaCombos(8);
+                    pnlDatosPersonales.Height = 120;
+                    pnlInfAdicional.Height = 120;
+                    if (ViewState["Host"] == null || ViewState["Port"] == null || ViewState["EnableSSl"] == null || ViewState["Usuario"] == null || ViewState["Password"] == null)
+                    {
+                        lblerror.Text = "No ha Definido Parámetros para enviar Mails...";
+                        ddlOpcion.Enabled = false;
+                        imgAgendar.Enabled = false;
+                    }
+                    if (ViewState["Ruta"] == null || ViewState["Logo"] == null)
+                    {
+                        lblerror.Text = "No ha Definido Ruta/Logo para enviar Mails...";
+                        ddlOpcion.Enabled = false;
+                        imgAgendar.Enabled = false;
+                    }
+                    if (ViewState["Secuencial"] == null)
+                    {
+                        lblerror.Text = "No ha Definido Secuencial para el Producto...";
+                        ddlOpcion.Enabled = false;
+                        imgAgendar.Enabled = false;
+                    }
+
+                    if (Session["Regresar"] != null)
+                    {
+                        if (Session["Regresar"].ToString() == "1") TrFileUpload.Visible = true;
+                    }
+
+                    if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
+
+                    Array.Resize(ref objparam, 3);
+                    objparam[0] = 0;
+                    objparam[1] = "";
+                    objparam[2] = 204;
+                    DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                    if (fecha != null && fecha.Tables[0].Rows.Count > 0)
+                    {
+                        ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
+                        ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
+                        ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
+                        ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
+                        ViewState["fecha5"] = fecha.Tables[0].Rows[4][0].ToString().Trim();
+                        ViewState["fecha6"] = fecha.Tables[0].Rows[5][0].ToString().Trim();
+                        ViewState["fecha7"] = fecha.Tables[0].Rows[6][0].ToString().Trim();
+                        ViewState["fecha8"] = fecha.Tables[0].Rows[7][0].ToString().Trim();
+                        ViewState["fecha9"] = fecha.Tables[0].Rows[8][0].ToString().Trim();
+                        ViewState["fecha10"] = fecha.Tables[0].Rows[9][0].ToString().Trim();
+                    }
+
+                    //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
+                    //ViewState["FechaBloqueo"] = dtFecha;
+
                 }
-
-                if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
-
-                Array.Resize(ref objparam, 3);
-                objparam[0] = 0;
-                objparam[1] = "";
-                objparam[2] = 204;
-                DataSet fecha = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-                if (fecha != null && fecha.Tables[0].Rows.Count > 0)
-                {
-                    ViewState["fecha1"] = fecha.Tables[0].Rows[0][0].ToString().Trim();
-                    ViewState["fecha2"] = fecha.Tables[0].Rows[1][0].ToString().Trim();
-                    ViewState["fecha3"] = fecha.Tables[0].Rows[2][0].ToString().Trim();
-                    ViewState["fecha4"] = fecha.Tables[0].Rows[3][0].ToString().Trim();
-                    ViewState["fecha5"] = fecha.Tables[0].Rows[4][0].ToString().Trim();
-                    ViewState["fecha6"] = fecha.Tables[0].Rows[5][0].ToString().Trim();
-                    ViewState["fecha7"] = fecha.Tables[0].Rows[6][0].ToString().Trim();
-                    ViewState["fecha8"] = fecha.Tables[0].Rows[7][0].ToString().Trim();
-                    ViewState["fecha9"] = fecha.Tables[0].Rows[8][0].ToString().Trim();
-                    ViewState["fecha10"] = fecha.Tables[0].Rows[9][0].ToString().Trim();
-                }
-
-                //dtFecha = fecha.Tables[0].Rows[0][0].ToString();
-                //ViewState["FechaBloqueo"] = dtFecha;
 
             }
+            catch (Exception ex)
+            {
+
+                lblerror.Text = ex.ToString();
+            }
+        
+
         }
+    
         #endregion
 
         #region Funciones y Procedimientos
@@ -362,6 +415,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //    grdvDatosAdicionales.DataSource = dt.Tables[0];
                 //    grdvDatosAdicionales.DataBind();
                 //}
+
+                //Cambio PRESTASALUD
+                if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
+                {
+                    Panel5.Visible = true;
+                }
             }
             catch (Exception ex)
             {
@@ -444,60 +503,119 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
+        //private void FunContadorCitasAc()
+        //{
+        //    try
+        //    {
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = 0;
+        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
+        //        objparam[2] = 216;
+        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+        //        ViewState["Mgeneral"] = dt.Tables[0].Rows[0][1].ToString();
+        //        ViewState["Especialidad"] = dt.Tables[0].Rows[0][2].ToString();
+
+        //        if (dt != null && dt.Tables[0].Rows.Count > 0)
+        //        {
+        //            grdvContadorCitas.DataSource = dt;
+        //            grdvContadorCitas.DataBind();
+        //        }
+
+        //        //SUMA LABORATORIOS
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = 0;
+        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
+        //        objparam[2] = 217;
+        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //        labh3.Visible = false;
+
+        //        string total = dt.Tables[0].Rows[0][0].ToString();
+
+        //        if (total != "0")
+        //        {
+
+        //            labh3.Visible = true;
+        //            grdvSumaLaboratorio.DataSource = dt;
+        //            grdvSumaLaboratorio.DataBind();
+
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblerror.Text = ex.ToString();
+        //        new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
+        //    }
+
+        //}
+
         private void FunContadorCitasAc()
         {
             try
             {
+                if (Session["CodigoTitular"] == null)
+                    return;
+
+                int codigoTitular = int.Parse(Session["CodigoTitular"].ToString());
+
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
+                objparam[1] = codigoTitular;
                 objparam[2] = 216;
+
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                ViewState["Mgeneral"] = dt.Tables[0].Rows[0][1].ToString();
-                ViewState["Especialidad"] = dt.Tables[0].Rows[0][2].ToString();
-
-                if (dt != null && dt.Tables[0].Rows.Count > 0)
+              
+                if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
                 {
+                    var row = dt.Tables[0].Rows[0];
+
+                    ViewState["Mgeneral"] = row[1] != DBNull.Value ? row[1].ToString() : "0";
+                    ViewState["Especialidad"] = row[2] != DBNull.Value ? row[2].ToString() : "0";
+
                     grdvContadorCitas.DataSource = dt;
                     grdvContadorCitas.DataBind();
                 }
-
-                Array.Resize(ref objparam, 3);
-                objparam[0] = 0;
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
-                objparam[2] = 176;
-                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                labh3.Visible = false;
-
-                string total = dt.Tables[0].Rows[0][0].ToString();
-
-                if (total != "")
+                else
                 {
-
-                    labh3.Visible = true;
-                    grdvSumaLaboratorio.DataSource = dt;
-                    grdvSumaLaboratorio.DataBind();
-
+                    // 🔥 EVITA NULLS
+                    ViewState["Mgeneral"] = "0";
+                    ViewState["Especialidad"] = "0";
                 }
 
-                //if (dt != null && dt.Tables[0].Rows.Count > 0)
-                //{
+                // =============================
+                // LABORATORIO
+                // =============================
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 0;
+                objparam[1] = codigoTitular;
+                objparam[2] = 217;
 
-                //    labh3.Visible = true;
-                //    grdvSumaLaboratorio.DataSource = dt;
-                //    grdvSumaLaboratorio.DataBind();
-                //}
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
+                labh3.Visible = false;
+
+                if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
+                {
+                    string total = dt.Tables[0].Rows[0][0] != DBNull.Value
+                        ? dt.Tables[0].Rows[0][0].ToString()
+                        : "0";
+
+                    if (total != "0")
+                    {
+                        labh3.Visible = true;
+                        grdvSumaLaboratorio.DataSource = dt;
+                        grdvSumaLaboratorio.DataBind();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
                 new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
             }
-
         }
-
         private void FunValidarEspe()
         {
             try
@@ -542,36 +660,103 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
         //CAMBIO 1
+        //private void FunValidarEspeAc()
+        //{
+        //    try
+        //    {
+
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = 1; //Medicina General 
+        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+        //        objparam[2] = 215;
+        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+        //        int cmg = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+        //        if (cmg == 4)
+        //        {
+        //            new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
+
+        //        }
+
+        //        ViewState["ContMG"] = cmg;
+
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = 2; //Especialidades
+        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+        //        objparam[2] = 215;
+        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+        //        int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+        //        if (cesp == 4)
+        //        {
+        //            new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
+        //        }
+
+        //        ViewState["ContESP"] = cesp;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblerror.Text = ex.ToString();
+        //        new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspe", ex.ToString(), 1);
+        //    }
+
+        //}
         private void FunValidarEspeAc()
         {
             try
             {
+                if (Session["CodigoTitular"] == null)
+                    return;
 
+                int codigoTitular = int.Parse(Session["CodigoTitular"].ToString());
+
+                // Medicina General
                 Array.Resize(ref objparam, 3);
-                objparam[0] = 1; //Medicina General 
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[0] = 1;
+                objparam[1] = codigoTitular;
                 objparam[2] = 215;
+
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                int cmg = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+                int cmg = 0;
+
+                if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
+                {
+                    object valor = dt.Tables[0].Rows[0][0];
+
+                    if (valor != DBNull.Value && !string.IsNullOrWhiteSpace(valor.ToString()))
+                        cmg = int.Parse(valor.ToString());
+                }
 
                 if (cmg == 4)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-
                 }
 
                 ViewState["ContMG"] = cmg;
 
+
+                // Especialidades
                 Array.Resize(ref objparam, 3);
-                objparam[0] = 2; //Especialidades
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[0] = 2;
+                objparam[1] = codigoTitular;
                 objparam[2] = 215;
+
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+                int cesp = 0;
 
-                if (cesp == 3)
+                if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
+                {
+                    object valor = dt.Tables[0].Rows[0][0];
+
+                    if (valor != DBNull.Value && !string.IsNullOrWhiteSpace(valor.ToString()))
+                        cesp = int.Parse(valor.ToString());
+                }
+
+                if (cesp == 4)
                 {
                     new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
                 }
@@ -581,9 +766,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
             catch (Exception ex)
             {
                 lblerror.Text = ex.ToString();
-                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspe", ex.ToString(), 1);
+                new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspeAc", ex.ToString(), 1);
             }
-
         }
 
         //BOTON PARA AGENDAR MEDILINK
@@ -964,22 +1148,34 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[1] = "";
                         objparam[2] = 8;
                         //cambio
-                        //if (ddlPrestadora.SelectedValue == "466" || ddlPrestadora.SelectedValue == "368" || ddlPrestadora.SelectedValue == "444" || ddlPrestadora.SelectedValue == "581")
-                        //{
-                        //    ddlMedico.Items.Clear();
-                        //    medi.Text = "--Seleccione Médico--";
-                        //    medi.Value = "0";
-                        //    ddlMedico.Items.Add(medi);
-                        //    Array.Resize(ref objparam, 3);
-                        //    objparam[0] = ddlPrestadora.SelectedValue;
-                        //    objparam[1] = "";
-                        //    objparam[2] = 214;
-                        //    ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //    ddlEspecialidad.DataTextField = "Descripcion";
-                        //    ddlEspecialidad.DataValueField = "Codigo";
-                        //    ddlEspecialidad.DataBind();
-                        //    ddlTipoPago.SelectedIndex = 1;
-                        //}
+                        if (ddlPrestadora.SelectedValue == "466" || ddlPrestadora.SelectedValue == "368"
+                            || ddlPrestadora.SelectedValue == "444" || ddlPrestadora.SelectedValue == "581"
+                            || ddlPrestadora.SelectedValue == "56" || ddlPrestadora.SelectedValue == "404"
+                            || ddlPrestadora.SelectedValue == "336" || ddlPrestadora.SelectedValue == "356"
+                            || ddlPrestadora.SelectedValue == "533" || ddlPrestadora.SelectedValue == "461"
+                            || ddlPrestadora.SelectedValue == "357" || ddlPrestadora.SelectedValue == "467"
+                            || ddlPrestadora.SelectedValue == "375" || ddlPrestadora.SelectedValue == "550"
+                            || ddlPrestadora.SelectedValue == "342" || ddlPrestadora.SelectedValue == "425"
+                            || ddlPrestadora.SelectedValue == "529" || ddlPrestadora.SelectedValue == "414"
+                            || ddlPrestadora.SelectedValue == "239" || ddlPrestadora.SelectedValue == "540"
+                            || ddlPrestadora.SelectedValue == "535" || ddlPrestadora.SelectedValue == "523"
+                            || ddlPrestadora.SelectedValue == "514" || ddlPrestadora.SelectedValue == "79"
+                            || ddlPrestadora.SelectedValue == "551")
+                        {
+                            ddlMedico.Items.Clear();
+                            medi.Text = "--Seleccione Médico--";
+                            medi.Value = "0";
+                            ddlMedico.Items.Add(medi);
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = ddlPrestadora.SelectedValue;
+                            objparam[1] = "";
+                            objparam[2] = 214;
+                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlEspecialidad.DataTextField = "Descripcion";
+                            ddlEspecialidad.DataValueField = "Codigo";
+                            ddlEspecialidad.DataBind();
+                            ddlTipoPago.SelectedIndex = 1;
+                        }
 
                         ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlEspecialidad.DataTextField = "Descripcion";
@@ -999,7 +1195,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                             FunCascadaCombos(4);
                         }
-                    
+
                         break;
                     case 4:
                         Array.Resize(ref objparam, 3);
@@ -1007,30 +1203,42 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[1] = "";
                         objparam[2] = 31;
                         //cambio
-                        //if (ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261")
-                        //{
-                        //    Array.Resize(ref objparam, 3);
-                        //    objparam[0] = ddlPrestadora.SelectedValue;
-                        //    objparam[1] = "";
-                        //    objparam[2] = 213;
+                        if (ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3253"
+                            || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261"
+                            || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3327"
+                            || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3365"
+                            || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
+                            || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
+                            || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
+                            || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
+                            || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
+                            || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
+                            || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
+                            || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
+                            || ddlEspecialidad.SelectedValue == "3388")
+                        {
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = ddlPrestadora.SelectedValue;
+                            objparam[1] = "";
+                            objparam[2] = 213;
 
-                        //    var dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            var dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                        //    gvEspecialidades.DataSource = dt;
-                        //    gvEspecialidades.DataBind();
+                            gvEspecialidades.DataSource = dt;
+                            gvEspecialidades.DataBind();
 
-                        //    updModalEsp.Update();
-                        //    AbrirModalEspecialidades();
+                            updModalEsp.Update();
+                            AbrirModalEspecialidades();
 
-                        //    Array.Resize(ref objparam, 3);
-                        //    objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
-                        //    objparam[1] = "";
-                        //    objparam[2] = 31;
-                        //    ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //    ddlMedico.DataTextField = "Descripcion";
-                        //    ddlMedico.DataValueField = "Codigo";
-                        //    ddlMedico.DataBind();
-                        //}
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
+                            objparam[1] = "";
+                            objparam[2] = 31;
+                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                            ddlMedico.DataTextField = "Descripcion";
+                            ddlMedico.DataValueField = "Codigo";
+                            ddlMedico.DataBind();
+                        }
 
                         ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlMedico.DataTextField = "Descripcion";
@@ -1286,7 +1494,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 mailsU = dtusu.Tables[0].Rows[0][0].ToString();
                 //Thread.Sleep(300);
 
-                Array.Resize(ref objcitamedica, 24); //cambio 25
+                Array.Resize(ref objcitamedica, 25); //cambio 24
 
                 objcitamedica[16] = "";
                 objcitamedica[17] = "";
@@ -1307,6 +1515,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 //filePath = Server.MapPath("~" + "\\CitasAgendadas\\");
                 fileTemplate = Server.MapPath("~/Template/HtmlTemplate.html"); //este es el template que usa
+                
+                //cambio laboratorio
+
+                int codproducto = int.Parse(Session["CodigoProducto"].ToString());
+  
                 fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
                 subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
@@ -1395,7 +1608,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objcitamedica[22] = dr[20].ToString();
                     objcitamedica[23] = parametro1;
                     //cambio
-                    //objcitamedica[24] = dr[18].ToString();
+                    objcitamedica[24] = dr[18].ToString();
 
                     if (!string.IsNullOrEmpty(lblCelular.InnerText.Trim()))
                     {
@@ -1406,9 +1619,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
                     //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
 
-                    mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                    //Cambia laboratorio
+                    if (codproducto == 225 || codproducto == 226 || codproducto == 227)
+                    {
+                        fileTemplate = Server.MapPath("~/Template/HtmlTemplatel.html");
+                        mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                         ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
                         ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                    }
+                    else
+                    {
+                        mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                        ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
+                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                    }
+
+
+                    //mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                    //    ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
+                    //    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
 
                 }
 
@@ -1554,8 +1783,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 HttpClient _client = new HttpClient();
                 {
                     //_client.BaseAddress = new Uri("http://186.3.87.6/sms/client/api.php/sendMessage");
-                    //_client.BaseAddress = new Uri("https://api.smsplus.net.ec/sms/client/api.php/sendMessage");
-                    _client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
+                    _client.BaseAddress = new Uri("http://186.3.87.7/sms/client/api.php/sendMessage");
+                    //_client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
 
                     _client.DefaultRequestHeaders.Add("ContentType", "application/json");
 
@@ -2096,7 +2325,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 if (ViewState["ContMG"].ToString() == "4")
                 {
-                    new Funciones().funShowJSMessage("no permitido", this);
+                    new Funciones().funShowJSMessage("medicina general", this);
                     ddlEspecialidad.SelectedIndex = 0;
                     return;
                 }
@@ -2124,6 +2353,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             DateTime fechaActual = DateTime.Now;
             int mesActual = fechaActual.Month;
 
+            //CAMBIO PRESTASALUD
             //if (mesActual < selectedMonth)
             //{
             //    new Funciones().funShowJSMessage("La agenda para el mes de" + " " + nombreMes.ToUpper() + " " + "no se ha configurado!!", this);
@@ -2155,6 +2385,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             int _dias = _difdias.Days;
 
+            //CAMBIO PRESTASALUD
             //if (_dias > 10)
             //{
             //    new Funciones().funShowJSMessage("No se puede agendar con tantos dias de Anticipacion..!!", this);
@@ -2963,14 +3194,28 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["CodigoPrestadora"] = ddlPrestadora.SelectedValue;
-                    if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261")
+                    if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" 
+                        || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261" 
+                        || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3365" 
+                        || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3327"
+                        || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
+                        || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
+                        || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
+                        || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
+                        || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
+                        || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
+                        || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
+                        || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
+                        || ddlEspecialidad.SelectedValue == "3388")
                     {
                         filagre["Observacion"] = ViewState["descripcion"].ToString();
                         filagre["Latitud"] = ViewState["sumaLab"].ToString();
+                        filagre["Longitud"] = ViewState["sumaRed"].ToString();
                     }
                     else
                     {
                         filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
+                        
                     }
 
                     tblagre.Rows.Add(filagre);
@@ -3173,6 +3418,16 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             try
             {
+                if (ViewState["CampCodigo"] != null
+                    && ViewState["CampCodigo"].ToString().Trim() == "1"
+                    && txtPoliza.Text.ToString().Trim() == "" && txtCertificado.Text.ToString().Trim() == ""
+                    && txtRamo.Text.ToString().Trim() == "")
+                {
+                    new Funciones().funShowJSMessage("Debe ingresar en observación póliza,certificado,Ramo", this);
+                    FunLimpiarAgendamiento();
+                    return;
+                }
+
                 tbCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                 if (tbCitaMedica.Rows.Count > 0)
                 {
@@ -3247,7 +3502,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[17] = 0;
                         objparam[18] = 0;
                         objparam[19] = "";
-                        objparam[20] = txtObservacionG.Text.Trim().ToUpper();
+                        objparam[20] = txtObservacionG.Text.Trim().ToUpper(); 
                         objparam[21] = bytes;
                         objparam[22] = filename1;
                         objparam[23] = type1;
@@ -3272,7 +3527,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[42] = Session["MachineName"].ToString();
                         dtsexa = new Conexion(2, "").FunInsertSolictudExamen(objparam);
                     }
-                
+
 
                     string[] columnas = new[] { "PreeCodigo", "MediCodigo","CodigoPrestadora", "TipoCliente", "TituCodigo", "BeneCodigo", "CodParentesco",
                         "EstatusCita","FechaCita","DiaCita","Hora","HodeCodigo","Detalle","Longitud","Latitud","Observacion"};
@@ -3282,10 +3537,20 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     tbNuevaCitaMedica = view.ToTable(true, columnas);
                     Array.Resize(ref objparam, 8);
                     objparam[0] = 0;
-                    objparam[1] = int.Parse(Session["CodigoProducto"].ToString()); 
+                    objparam[1] = int.Parse(Session["CodigoProducto"].ToString());
                     objparam[2] = int.Parse(Session["usuCodigo"].ToString());
                     objparam[3] = Session["MachineName"].ToString();
-                    objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                    if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
+                    {
+
+                       objparam[4] = txtPoliza.Text.Trim().ToUpper() + "-" + txtCertificado.Text.Trim().ToUpper() + "-" +
+                                   txtRamo.Text.Trim().ToUpper() + "-" + txtSucursal.Text.Trim().ToUpper();
+                    }
+                    else
+                    {
+                       objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                    }
+                    
                     objparam[5] = "";
                     objparam[6] = ddlTipoPago.SelectedValue;
                     objparam[7] = ddlTipoPago.SelectedItem.Text;
@@ -3297,12 +3562,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         Session["SalirAgenda"] = "SI";
                         Session["codigocita"] = codCita;
 
-                 
-                         FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString()); //AKI SE ENVIA EL EMAIL
+
+                        FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString()); //AKI SE ENVIA EL EMAIL
                     }
                 }
 
-             
+
                 else FunShowJSMessage("Seleccione Datos para Agendar la Cita");
             }
 
@@ -3622,7 +3887,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 string url = "https://agendamiento.medilink.com.ec:8443/";
 
                 HttpClient _cancelar = new HttpClient();
-                _cancelar.DefaultRequestHeaders.Add("Accept", "*/*");
+                _cancelar.DefaultRequestHeaders.Add("Accept", "*");
                 _cancelar.DefaultRequestHeaders.Add("Authorization", "Bearer " + Session["AccessToken"].ToString());
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -3674,10 +3939,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnAgregarEspecialidades_Click(object sender, EventArgs e)
         {
 
+  
             decimal sumaCodigos = 0m;
-            List<string> descripciones = new List<string>();
+            decimal sumaRed = 0m;
 
-            List<int> espeIds = new List<int>();
+            List<string> descripciones = new List<string>();
             bool check = false;
 
             for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
@@ -3688,24 +3954,42 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (chk != null && chk.Checked)
                 {
                     check = true;
+
                     string descripcion = Server.HtmlDecode(row.Cells[1].Text).Trim();
                     descripciones.Add(descripcion);
 
-                    string codigoTxt = Server.HtmlDecode(row.Cells[2].Text).Trim();
-
-                    decimal codigoVal;
-                    if (!decimal.TryParse(codigoTxt, NumberStyles.Any, CultureInfo.InvariantCulture, out codigoVal))
-                        decimal.TryParse(codigoTxt, NumberStyles.Any, new CultureInfo("es-EC"), out codigoVal);
-
-                    sumaCodigos += codigoVal;
-
-                    if (gvEspecialidades.DataKeys[i].Values["Espe"] != null)
+                    // PVP desde DataKeys
+                    decimal pvpVal = 0m;
+                    if (gvEspecialidades.DataKeys[i].Values["PVP"] != null)
                     {
-                        int espe = Convert.ToInt32(gvEspecialidades.DataKeys[i].Values["Espe"]);
-                        espeIds.Add(espe);
+                        string pvpTxt = gvEspecialidades.DataKeys[i].Values["PVP"].ToString();
+
+                        if (!decimal.TryParse(pvpTxt, NumberStyles.Any, CultureInfo.InvariantCulture, out pvpVal))
+                        {
+                            decimal.TryParse(pvpTxt, NumberStyles.Any, new CultureInfo("es-EC"), out pvpVal);
+                        }
                     }
+
+                    sumaCodigos += pvpVal;
+
+                    // Red desde DataKeys
+                    decimal redVal = 0m;
+                    if (gvEspecialidades.DataKeys[i].Values["Red"] != null)
+                    {
+                        string redTxt = gvEspecialidades.DataKeys[i].Values["Red"].ToString();
+
+                        if (!decimal.TryParse(redTxt, NumberStyles.Any, CultureInfo.InvariantCulture, out redVal))
+                        {
+                            decimal.TryParse(redTxt, NumberStyles.Any, new CultureInfo("es-EC"), out redVal);
+                        }
+                    }
+
+                    sumaRed += redVal;
                 }
             }
+
+
+            hfTotalEsp.Value = sumaCodigos.ToString("0.00", CultureInfo.InvariantCulture);
 
             if (!check)
             {
@@ -3722,12 +4006,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
             }
 
-            // Texto final para guardar
             ViewState["descripcion"] = string.Join(", ", descripciones.Distinct());
             ViewState["sumaLab"] = Math.Round(sumaCodigos, 2);
-            espeCsv = string.Join(",", espeIds.Distinct());
+            ViewState["sumaRed"] = Math.Round(sumaRed, 2);
 
-
+          
             CerrarModalEspecialidades();
         }
 

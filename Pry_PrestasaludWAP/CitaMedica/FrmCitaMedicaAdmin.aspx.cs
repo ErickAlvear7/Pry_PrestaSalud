@@ -127,12 +127,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
             var strCodProducto = grdvDatos.DataKeys[intIndex].Values["CodigoProducto"].ToString();
             var strFechaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaCobertura"].ToString();
             var strFechaFinCobertura = grdvDatos.DataKeys[intIndex].Values["FechaFinCobertura"].ToString();
-            //var strFechaActuaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaActuaCobertura"].ToString();
+            var strFechaActuaCobertura = grdvDatos.DataKeys[intIndex].Values["FechaActuaCobertura"].ToString();
 
             string dateString = strFechaCobertura;
             string format = "dd/MM/yyyy";
             DateTime Cobertura = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
-
+            
+           
             if (Session["Perfil"].ToString() == "NOVA")
             {
                 Array.Resize(ref objparam, 11);
@@ -190,23 +191,70 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 DateTime _fechaatual = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                DateTime fechaFinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
+                DateTime fechaFinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                 DateTime fechaActual = DateTime.Now.Date;
 
-                if (fechaFinCobertura < fechaActual)
+                //cambio
+                DateTime _fechafincobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                if (strFechaActuaCobertura != "")
                 {
-                    string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + fechaFinCobertura.ToString("dd/MM/yyyy");
+                    DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime nuevaFecha = _fechactualicobertura;
+                    DateTime Actual = DateTime.Now.Date;
 
-                    ScriptManager.RegisterStartupScript(
-                        this,                         // o this.Page
-                        this.GetType(),
-                        "msgCobertura",
-                        "alert('" + mensaje.Replace("'", "\\'") + "');",
-                        true
-                    );
+                    if (nuevaFecha < Actual)
+                    {
+                        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + nuevaFecha.ToString("dd/MM/yyyy");
 
-                    return; 
+                        ScriptManager.RegisterStartupScript(
+                            this,                         // o this.Page
+                            this.GetType(),
+                            "msgCobertura",
+                            "alert('" + mensaje.Replace("'", "\\'") + "');",
+                            true
+                        );
+
+                        return;
+                    }
+                    TimeSpan difFechasac = _fechaatual.Subtract(_fechactualicobertura);
+
+                    int _idasxac = difFechasac.Days;
+
+                    if (_idasxac >= _dias)
+                    {
+                        Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                            strCodProducto + "&Regresar=0");
+                    }
+                    else
+                    {
+                        int _diffdias = _dias - _idasxac;
+
+                        _fechaatual = _fechaatual.AddDays(_diffdias);
+                        string _fecha = DateTime.ParseExact(_fechaatual.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+
+                        string _mensaje = "Usted aun no puede agendar, su fecha fecha de Cobertura inicia el: " + strFechaCobertura;
+                        _mensaje += "  Puede Agendar a partir del :  " + _fecha;
+
+                        new Funciones().funShowJSMessage(_mensaje, this);
+                    }
+                }
+                else
+                {
+                    if (fechaFinCobertura < fechaActual)
+                    {
+                        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + fechaFinCobertura.ToString("dd/MM/yyyy");
+
+                        ScriptManager.RegisterStartupScript(
+                            this,                         // o this.Page
+                            this.GetType(),
+                            "msgCobertura",
+                            "alert('" + mensaje.Replace("'", "\\'") + "');",
+                            true
+                        );
+
+                        return;
+                    }
                 }
 
                 TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
@@ -237,6 +285,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 if(strCodProducto == "225" || strCodProducto == "226" || strCodProducto == "227")
                 {
+                    
+
                     int mesCobertura = Cobertura.Month;
                     switch (mesCobertura)
                     {
@@ -270,46 +320,98 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechafincobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                    DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(90).Date;
+                    DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     DateTime Actual = DateTime.Now.Date;
 
                     //Cambio
-                    //if (strFechaActuaCobertura != "")
-                    //{
-                    //    DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    //    DateTime nuevaFecha = _fechactualicobertura.AddDays(365);
-
-                    //    if (nuevaFecha < Actual)
-                    //    {
-                    //        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + nuevaFecha.ToString("dd/MM/yyyy");
-
-                    //        ScriptManager.RegisterStartupScript(
-                    //            this,                         // o this.Page
-                    //            this.GetType(),
-                    //            "msgCobertura",
-                    //            "alert('" + mensaje.Replace("'", "\\'") + "');",
-                    //            true
-                    //        );
-
-                    //        return;
-                    //    }
-                    //}
-
-                    if (FinCobertura < Actual)
+                    if (strFechaActuaCobertura != "")
                     {
-                        string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
+                        DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime nuevaFecha = _fechactualicobertura;
 
-                        ScriptManager.RegisterStartupScript(
-                            this,                         // o this.Page
-                            this.GetType(),
-                            "msgCobertura",
-                            "alert('" + mensaje.Replace("'", "\\'") + "');",
-                            true
-                        );
+                        if (nuevaFecha < Actual)
+                        {
+                            string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + nuevaFecha.ToString("dd/MM/yyyy");
 
-                        return;
+                            ScriptManager.RegisterStartupScript(
+                                this,                         // o this.Page
+                                this.GetType(),
+                                "msgCobertura",
+                                "alert('" + mensaje.Replace("'", "\\'") + "');",
+                                true
+                            );
+
+                            return;
+                        }
+                        TimeSpan difFechasac = _fechaatual.Subtract(_fechactualicobertura);
+
+                        int _idasxac = difFechasac.Days;
+
+                        if (_idasxac >= _dias)
+                        {
+                            Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                                strCodProducto + "&Regresar=0");
+                        }
+                        else
+                        {
+                            int _diffdias = _dias - _idasxac;
+
+                            _fechaatual = _fechaatual.AddDays(_diffdias);
+                            string _fecha = DateTime.ParseExact(_fechaatual.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+
+                            string _mensaje = "Usted aun no puede agendar, su fecha fecha de Cobertura inicia el: " + strFechaCobertura;
+                            _mensaje += "  Puede Agendar a partir del :  " + _fecha;
+
+                            new Funciones().funShowJSMessage(_mensaje, this);
+                        }
+
+                        Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
+                        strCodProducto + "&Regresar=0");
+
+
                     }
+
+                    //cambio prestasalud
+                    if (Session["usuCodigo"] != null && int.Parse(Session["usuCodigo"].ToString()) == 1 || int.Parse(Session["usuCodigo"].ToString()) == 3)
+                    {
+                        // tu lógica aquí
+                    }
+                    else
+                    {
+                        //Cambio para prestasalud
+                        if (FinCobertura < Actual)
+                        {
+                            string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
+
+                            ScriptManager.RegisterStartupScript(
+                                this,                         // o this.Page
+                                this.GetType(),
+                                "msgCobertura",
+                                "alert('" + mensaje.Replace("'", "\\'") + "');",
+                                true
+                            );
+
+                            return;
+                        }
+
+                    }
+
+                    //Cambio para prestasalud
+                    //if (FinCobertura < Actual)
+                    //{
+                    //    string mensaje = "Titular no puede agendar, su fecha de cobertura terminó el: " + FinCobertura.ToString("dd/MM/yyyy");
+
+                    //    ScriptManager.RegisterStartupScript(
+                    //        this,                         // o this.Page
+                    //        this.GetType(),
+                    //        "msgCobertura",
+                    //        "alert('" + mensaje.Replace("'", "\\'") + "');",
+                    //        true
+                    //    );
+
+                    //    return;
+                    //}
 
                     TimeSpan difFechas = _fechaatual.Subtract(_fechacobertura);
 
@@ -342,6 +444,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                       strCodProducto + "&Regresar=0");
 
+                
             }
          
         }

@@ -238,6 +238,10 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 //    grdvDatosAdicionales.DataSource = dt.Tables[0];
                 //    grdvDatosAdicionales.DataBind();
                 //}
+                if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
+                {
+                    Panel5.Visible = true;
+                }
             }
             catch (Exception ex)
             {
@@ -525,7 +529,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 
                 //System.Threading.Thread.Sleep(300);
 
-                Array.Resize(ref objcitamedica, 24);
+                Array.Resize(ref objcitamedica, 25); //cambio 24
                 objcitamedica[16] = "";
                 objcitamedica[17] = "";
                 objcitamedica[18] = "";
@@ -616,6 +620,8 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objcitamedica[21] = Session["usuLogin"].ToString();
                     objcitamedica[22] = dr[20].ToString();
                     objcitamedica[23] = "";
+                    //cambio
+                    objcitamedica[24] = "";
                     nameFile = filePath + "CitaOdontologica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
                     msjEmail = nameFile;
 
@@ -1198,6 +1204,7 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                 objparam[15] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[16] = Session["MachineName"].ToString();
                 objparam[17] = txtObservacion.Text.Trim().ToUpper();
+                 
                 dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
                 tbDatosCita = (DataTable)ViewState["tbDatosCita"];
                 if (dt != null && dt.Tables[0].Rows.Count > 0)
@@ -1369,6 +1376,14 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
         {
             try
             {
+                if (ViewState["Campaing"] != null
+                  && ViewState["Campaing"].ToString().Trim() == "SEGUROS PICHINCHA"
+                  && txtPoliza.Text.ToString().Trim() == "" && txtCertificado.Text.ToString().Trim() == ""
+                  && txtRamo.Text.ToString().Trim() == "")
+                {
+                    new Funciones().funShowJSMessage("Debe ingresar en observación póliza,certificado,Ramo", this);
+                    return;
+                }
                 tbCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                 if (tbCitaMedica.Rows.Count > 0)
                 {
@@ -1383,7 +1398,16 @@ namespace Pry_PrestasaludWAP.CitaOdontologica
                     objparam[1] = int.Parse(Session["CodigoProducto"].ToString());
                     objparam[2] = int.Parse(Session["usuCodigo"].ToString());
                     objparam[3] = Session["MachineName"].ToString();
-                    objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                    if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
+                    {
+                        objparam[4] = txtPoliza.Text.Trim().ToUpper() + "-" + txtCertificado.Text.Trim().ToUpper() + "-" +
+                                         txtRamo.Text.Trim().ToUpper() + "-" + txtSucursal.Text.Trim().ToUpper();
+                    }
+                    else
+                    {
+                        objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                    }
+                    
                     mensaje = new Conexion(2, "").FunAgendaCitaOdonto(objparam, tbNuevaCitaMedica);
                     if (mensaje == "")
                     {

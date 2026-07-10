@@ -564,7 +564,7 @@ public class Funciones
         body = body.Replace("{Telefonos}", oBody[15].ToString());
         body = body.Replace("{Usuario}", oBody[21].ToString());
         body = body.Replace("{TipoPago}", oBody[23].ToString());   //aki has agregado la nueva columna para traer copago, lo mismo debe ser para pvp
-       /* body = body.Replace("{pvp}", oBody[24].ToString());*/ //aki hay que ver en quee objeto llega ese valor y ponerle ahi
+        body = body.Replace("{pvp}", oBody[24].ToString()); //aki hay que ver en quee objeto llega ese valor y ponerle ahi
         body = body.Replace("{Pie1}", oBody[16].ToString());
         body = body.Replace("{Pie2}", oBody[17].ToString());
         body = body.Replace("{Pie3}", oBody[18].ToString());

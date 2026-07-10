@@ -98,7 +98,7 @@
                                     <asp:Panel ID="pnlDatos" runat="server" Height="450px" ScrollBars="Vertical">
                                         <asp:GridView ID="grdvDatos" runat="server" Width="100%" AutoGenerateColumns="False"
                                             CssClass="table table-condensed table-bordered table-hover table-responsive"
-                                            ShowHeaderWhenEmpty="True" DataKeyNames="Codigo,CodigoProducto,FechaCobertura,FechaFinCobertura" TabIndex="3" OnRowDataBound="grdvDatos_RowDataBound">
+                                            ShowHeaderWhenEmpty="True" DataKeyNames="Codigo,CodigoProducto,FechaCobertura,FechaFinCobertura,FechaActuaCobertura" TabIndex="3" OnRowDataBound="grdvDatos_RowDataBound">
                                             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                             <Columns>
                                                 <asp:BoundField DataField="NumeroDocumento" HeaderText="Identificación" />

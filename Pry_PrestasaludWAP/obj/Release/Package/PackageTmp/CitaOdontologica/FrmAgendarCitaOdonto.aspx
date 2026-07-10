@@ -381,6 +381,43 @@
                                         <td></td>
                                     </tr>
                                 </table>
+                                <%--cambio--%>
+                                 <asp:Panel ID="Panel5" runat="server" GroupingText="" Visible="false">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="width: 10%;"></td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="poliza" visible="true">Poliza:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtPoliza" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="certificado" visible="true">Certificado:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtCertificado" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 30%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="ramo" visible="true">Ramo:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtRamo" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td>
+                                                <h5 runat="server" id="H1" visible="true">Sucursal:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtSucursal" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
                                 <asp:Panel ID="pnlResumenCita" runat="server" GroupingText="Resumen Cita" Visible="False">
                                     <table style="width: 100%">
                                         <tr>
