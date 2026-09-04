@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -245,6 +246,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlOpcion.Enabled = false;
                         imgAgendar.Enabled = false;
                     }
+                    //codigo modificado para examenes
                     if (ViewState["Secuencial"] == null)
                     {
                         lblerror.Text = "No ha Definido Secuencial para el Producto...";
@@ -291,7 +293,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 lblerror.Text = ex.ToString();
             }
         
-
         }
     
         #endregion
@@ -1160,7 +1161,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             || ddlPrestadora.SelectedValue == "239" || ddlPrestadora.SelectedValue == "540"
                             || ddlPrestadora.SelectedValue == "535" || ddlPrestadora.SelectedValue == "523"
                             || ddlPrestadora.SelectedValue == "514" || ddlPrestadora.SelectedValue == "79"
-                            || ddlPrestadora.SelectedValue == "551")
+                            || ddlPrestadora.SelectedValue == "551" || ddlPrestadora.SelectedValue == "12"
+                            || ddlPrestadora.SelectedValue == "547" || ddlPrestadora.SelectedValue == "600")
                         {
                             ddlMedico.Items.Clear();
                             medi.Text = "--Seleccione Médico--";
@@ -1215,7 +1217,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
                             || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
                             || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                            || ddlEspecialidad.SelectedValue == "3388")
+                            || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
+                            || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = ddlPrestadora.SelectedValue;
@@ -3206,7 +3209,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
                         || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
                         || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                        || ddlEspecialidad.SelectedValue == "3388")
+                        || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
+                        || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
                     {
                         filagre["Observacion"] = ViewState["descripcion"].ToString();
                         filagre["Latitud"] = ViewState["sumaLab"].ToString();
@@ -3939,7 +3943,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
         protected void btnAgregarEspecialidades_Click(object sender, EventArgs e)
         {
 
-  
             decimal sumaCodigos = 0m;
             decimal sumaRed = 0m;
 
@@ -4010,7 +4013,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
             ViewState["sumaLab"] = Math.Round(sumaCodigos, 2);
             ViewState["sumaRed"] = Math.Round(sumaRed, 2);
 
-          
+            string seleccionados = ViewState["descripcion"].ToString();
+            string seleccionadosJs = HttpUtility.JavaScriptStringEncode(seleccionados);
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                this.GetType(),
+                "mostrarSeleccionados",
+                "alert('Seleccionados:\\n\\n" + seleccionadosJs + "');",
+                true
+            );
+
+
             CerrarModalEspecialidades();
         }
 

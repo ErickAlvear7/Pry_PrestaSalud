@@ -44,7 +44,7 @@ namespace Pry_PrestasaludWAP.Examenes
             objparam[0] = int.Parse(Session["usuCodigo"].ToString());
             objparam[1] = "";
             objparam[2] = 142;
-            dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+            dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);//comentado sp traer solo solicitados
             GrdvDatos.DataSource = dts;
             GrdvDatos.DataBind();
             if (GrdvDatos.Rows.Count > 0)
@@ -70,6 +70,9 @@ namespace Pry_PrestasaludWAP.Examenes
                             break;
                         case "SRV":
                             e.Row.Cells[4].BackColor = System.Drawing.Color.Coral;
+                            break;
+                        case "SGA":
+                            e.Row.Cells[4].BackColor = System.Drawing.Color.Aqua; // CODIGO AUMENTADO
                             break;
                     }
                 }

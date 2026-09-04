@@ -227,6 +227,7 @@ namespace Pry_PrestasaludWAP.Examenes
         #endregion
 
         #region Botones y Eventos
+        //llena el input Prestadora
         protected void TrvPrestadoras_SelectedNodeChanged(object sender, EventArgs e)
         {
             TreeView arbolPres = (TreeView)(sender);

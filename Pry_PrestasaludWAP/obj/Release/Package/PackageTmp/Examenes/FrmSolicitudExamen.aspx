@@ -58,6 +58,71 @@
             width: 80px;
             height: 80px;
         }
+        .zona-examenes {
+            margin-top: 15px;
+        }
+
+        .tabla-examen {
+            width: 100% !important;
+
+            table-layout: fixed;
+        }
+
+
+        .tabla-examen th,
+        .tabla-examen td {
+            vertical-align: middle !important;
+
+            white-space: normal !important;
+
+            word-wrap: break-word;
+
+            overflow-wrap: break-word;
+        }
+
+
+        .tabla-examen-scroll {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        .paginador-examen {
+            padding: 8px;
+        }
+
+
+        .paginador-examen table {
+            margin: auto;
+        }
+
+
+        .paginador-examen td {
+            padding: 3px;
+        }
+
+
+        .paginador-examen a,
+        .paginador-examen span {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            margin: 2px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 4px;
+
+            text-decoration: none;
+        }
+
+        .paginador-examen span {
+            font-weight: bold;
+
+            background-color: #eee;
+        }
     </style>
     <script type="text/javascript">
         function pageLoad(sender, arg) {
@@ -169,7 +234,7 @@
                 return false;
             }
         }--%>
-</script>
+    </script>
 
 </head>
 <body>
@@ -187,7 +252,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-<%--            <div class="panel-info">
+            <%--            <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="UpdOpciones">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -202,19 +267,19 @@
                 <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">DATOS TITULAR</h3>
                 <asp:UpdatePanel ID="UpdCabecera" runat="server">
                     <ContentTemplate>
-                        <table style="width: 100%">
+                        <table style="width: 100%; table-layout: fixed;">
                             <tr>
                                 <td style="width: 5%"></td>
                                 <td style="width: 15%"></td>
                                 <td style="width: 29%"></td>
                                 <td style="width: 2%"></td>
                                 <td style="width: 15%;"></td>
-                                <td style="width: 29%"></td>
+                                <td style="width: 27%"></td>
                                 <td style="width: 5%"></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>
+                                <%--   <td>
                                     <h5>Producto:</h5>
                                 </td>
                                 <td colspan="2">
@@ -224,6 +289,21 @@
                                 <td><h5>Monto Solicitado:</h5></td>
                                 <td>
                                     <asp:TextBox ID="TxtMonto" runat="server" CssClass="form-control alinearDerecha" MaxLength="6" TabIndex="2" Width="100%">0.00</asp:TextBox>
+                                </td>--%>
+                                <td>
+                                    <h5>Campaing:</h5>
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="DdlCampaign" runat="server" AutoPostBack="True" CssClass="form-control" TabIndex="1" Width="100%" OnSelectedIndexChanged="DdlCampaign_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <h5>Producto:</h5>
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="DdlProducto" runat="server" AutoPostBack="True" CssClass="form-control" TabIndex="1" Width="100%">
+                                    </asp:DropDownList>
                                 </td>
                             </tr>
                             <tr>
@@ -393,11 +473,10 @@
                                 </td>
                                 <td></td>
                             </tr>
-                            <tr>
+                            <tr style="display: none;">
                                 <td></td>
                                 <td>
                                     <h5>Fecha Solicitud:</h5>
-
                                 </td>
                                 <td>
                                     <asp:TextBox ID="TxtFechaSolicitud" runat="server" CssClass="form-control" TabIndex="19" Width="100%"></asp:TextBox>
@@ -411,6 +490,23 @@
                                 </td>
                                 <td></td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <h5>Monto Anterior:</h5>
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="TxtMonto" runat="server" CssClass="form-control alinearDerecha" MaxLength="6" TabIndex="2" Width="100%" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">0.00</asp:TextBox>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <h5>Monto Total:</h5>
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="TxtMontoAc" runat="server" CssClass="form-control alinearDerecha" MaxLength="6" TabIndex="2" Width="100%" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">0.00</asp:TextBox>
+                                </td>
+                                <td></td>
+                            </tr>
                         </table>
                     </ContentTemplate>
                     <Triggers>
@@ -418,7 +514,7 @@
                     </Triggers>
                 </asp:UpdatePanel>
                 <h3 runat="server" id="LblTituloExa" visible="false" class="label label-primary" style="font-size: 14px; display: block; text-align: left">SOLICITUD EXAMENES</h3>
-                <table style="width: 100%">
+                <%-- <table style="width: 100%">
                     <tr runat="server" id="TrExamenes" visible="false">
                         <td>
                             <asp:Panel ID="PnlExamenes" runat="server" Height="380px" GroupingText="Examenes">
@@ -503,7 +599,88 @@
                             </asp:Panel>
                         </td>
                     </tr>
-                </table>
+                </table>--%>
+                <%--EXAMENES--%>
+                <div class="row zona-examenes" id="panel" runat="server">
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>Exámenes disponibles</strong>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <asp:TextBox ID="TxtBuscarExamen" runat="server" CssClass="form-control" placeholder="Buscar examen..."></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <asp:Button ID="BtnBuscarExamen" runat="server" Text="Buscar" CssClass="btn btn-primary" OnClick="BtnBuscarExamen_Click" />
+                                        <asp:Button ID="BtnLimpiarExamen" runat="server" Text="Limpiar" CssClass="btn btn-default" OnClick="BtnLimpiarExamen_Click" />
+                                    </div>
+                                </div>
+                                <br />
+                                <!-- GRID -->
+                                <div class="tabla-examen-scroll">
+                                    <asp:GridView ID="GrdvExamenesDisponibles" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover tabla-examen"
+                                        DataKeyNames="EXPR_CODIGO" AllowPaging="True" PageSize="8"
+                                        OnPageIndexChanging="GrdvExamenesDisponibles_PageIndexChanging"
+                                        OnRowCommand="GrdvExamenesDisponibles_RowCommand"
+                                        ShowHeaderWhenEmpty="True">
+                                        <Columns>
+                                            <asp:BoundField DataField="EXAMEN" HeaderText="Examen">
+                                                <HeaderStyle Width="88%" />
+                                                <ItemStyle Width="88%" />
+                                            </asp:BoundField>
+                                            <asp:TemplateField HeaderText="">
+                                                <HeaderStyle Width="12%" />
+                                                <ItemStyle Width="12%" HorizontalAlign="Center" />
+
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="BtnAgregarExamen" runat="server" Text="+" CssClass="btn btn-primary btn-sm" CommandName="Agregar" ToolTip="Agregar examen"></asp:LinkButton>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                        </Columns>
+                                        <PagerSettings Mode="NumericFirstLast" FirstPageText="«" LastPageText="»" PageButtonCount="5" />
+                                        <PagerStyle HorizontalAlign="Center" CssClass="paginador-examen" />
+                                        <EmptyDataTemplate>
+                                            <div class="alert alert-info">No se encontraron exámenes.</div>
+                                        </EmptyDataTemplate>
+                                    </asp:GridView>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <strong>Exámenes seleccionados</strong>
+                                <asp:Label ID="LblCantidadExamenes" runat="server" CssClass="pull-right" Text="0 examen(es)"></asp:Label>
+                            </div>
+                            <div class="panel-body">
+                                <asp:GridView ID="GrdvExamenesSeleccionados" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover tabla-examen"
+                                    DataKeyNames="EXPR_CODIGO"
+                                    OnRowCommand="GrdvExamenesSeleccionados_RowCommand"
+                                    ShowHeaderWhenEmpty="True">
+                                    <Columns>
+                                        <asp:BoundField DataField="EXAMEN" HeaderText="Examen">
+                                            <HeaderStyle Width="88%" />
+                                            <ItemStyle Width="88%" />
+                                        </asp:BoundField>
+                                        <asp:TemplateField HeaderText="">
+                                            <HeaderStyle Width="12%" />
+                                            <ItemStyle Width="12%" HorizontalAlign="Center" />
+                                            <ItemTemplate>
+                                                <asp:LinkButton ID="BtnQuitarExamen" runat="server" Text="X" CssClass="btn btn-danger btn-sm" CommandName="Quitar" ToolTip="Quitar examen"></asp:LinkButton>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                    <EmptyDataTemplate>
+                                        <div class="alert alert-info">No se han seleccionado exámene</div>
+                                    </EmptyDataTemplate>
+                                </asp:GridView>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <script src="../Scripts/jquery.min.js" type="text/javascript"></script>
                 <script src="../Scripts/chosen.jquery.js" type="text/javascript"></script>
                 <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({ allow_single_deselect: true }); </script>
@@ -569,12 +746,12 @@
         function Close() {
             window.top.location.reload();
         }
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequestHandler);
-        function endRequestHandler() {
-            $(".chzn-select").chosen({ width: "95%" });
-            $(".chzn-container").css({ "width": "95%" });
-            $(".chzn-drop").css({ "width": "95%" });
-        }
+        /*Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequestHandler);*/
+        //function endRequestHandler() {
+        //    $(".chzn-select").chosen({ width: "95%" });
+        //    $(".chzn-container").css({ "width": "95%" });
+        //    $(".chzn-drop").css({ "width": "95%" });
+        //}
     </script>
 </body>
 </html>

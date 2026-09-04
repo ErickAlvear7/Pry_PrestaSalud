@@ -45,7 +45,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[1] = "";
-                objparam[2] = 145;
+                objparam[2] = 145;//cambio aki camp codigo 24
                 dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 if(dts.Tables[0].Rows.Count>0)
                 codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());

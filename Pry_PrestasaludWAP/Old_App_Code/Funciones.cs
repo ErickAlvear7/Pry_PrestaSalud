@@ -827,7 +827,7 @@ public class Funciones
     }
 
     public string SendHtmlEmailLink(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
-    string eusername,string epassword,string email,string pathLogo, string mailsalterna)
+                  string eusername,string epassword,string email,string pathLogo, string mailsalterna)
     {
         string mensaje = "";
         using (MailMessage mailMessage = new MailMessage())
@@ -886,6 +886,61 @@ public class Funciones
         }
     }
 
+    //email para alerta de examenes
+    public string SendHtmlEmailExamen(string mailTO, string subject, string body, string ehost, int eport, bool eEnableSSL,
+              string eusername, string epassword, string email, string pathLogo, string mailsalterna)
+    {
+        string mensaje = "";
+        using (MailMessage mailMessage = new MailMessage())
+        {
+            try
+            {
+                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+                mailMessage.AlternateViews.Add(htmlView);
+                mailMessage.From = new MailAddress(eusername);
+                mailMessage.Subject = "SOLICITUD EXAMEN";
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+
+                if (!string.IsNullOrEmpty(mailTO))
+                {
+                    mailMessage.To.Add(new MailAddress(mailTO));
+                }
+
+                if (!string.IsNullOrEmpty(email))
+                {
+                    mailMessage.CC.Add(email);
+                }
+
+                if (!string.IsNullOrEmpty(mailsalterna))
+                {
+                    string[] docMails = mailsalterna.Split(',');
+                    foreach (string doMails in docMails)
+                    {
+                       
+                        mailMessage.CC.Add(doMails);
+                    }
+                }
+
+                NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+                NetworkCred.UserName = eusername;
+                NetworkCred.Password = epassword;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Credentials = NetworkCred;
+                smtp.Host = ehost;
+                smtp.Port = eport;
+                smtp.EnableSsl = eEnableSSL;
+                smtp.Send(mailMessage);
+                mensaje = "";
+            }
+            catch (Exception ex)
+            {
+                mensaje = ex.Message;
+                new Funciones().funCrearLogAuditoria(1, "Funciones.cs/SendHtmlEmailLink", ex.ToString(), 1);
+            }
+            return mensaje;
+        }
+    }
     private string SendHtmlEmailMediLink(string subject, string body, string ehost, int eport, bool eEnableSSL,
                string eusername, string epassword,string mailsalterna)
     {

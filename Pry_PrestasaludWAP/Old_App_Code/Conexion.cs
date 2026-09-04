@@ -1310,7 +1310,20 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_email", objparam[16]);
                 cmd.Parameters.AddWithValue("@in_exgccodigo", objparam[17]);
                 cmd.Parameters.AddWithValue("@in_codigousuario", objparam[18]);
-                cmd.Parameters.AddWithValue("@in_fechasolcita", objparam[19]);
+                DateTime ahora = DateTime.Now;
+
+                DateTime dtmfechasolicita = new DateTime(
+                    ahora.Year,
+                    ahora.Month,
+                    ahora.Day,
+                    ahora.Hour,
+                    ahora.Minute,
+                    0
+                );
+
+                objparam[19] = dtmfechasolicita;
+                cmd.Parameters.Add("@in_fechasolcita", SqlDbType.DateTime).Value = objparam[19];
+                //cmd.Parameters.AddWithValue("@in_fechasolcita", objparam[19]);
                 cmd.Parameters.AddWithValue("@in_observacion", objparam[20]);
                 cmd.Parameters.AddWithValue("@in_docautoizacion", objparam[21]);
                 cmd.Parameters.AddWithValue("@in_namedoc", objparam[22]);
@@ -1322,8 +1335,10 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_adicional", objparam[28]);
                 cmd.Parameters.AddWithValue("@in_exsocodigo", objparam[29]);
                 cmd.Parameters.AddWithValue("@in_estado", objparam[30]);
-                cmd.Parameters.AddWithValue("@in_auxv1", objparam[31]);
-                cmd.Parameters.AddWithValue("@in_auxv2", objparam[32]);
+                //cmd.Parameters.AddWithValue("@in_auxv1", objparam[31]);
+                //cmd.Parameters.AddWithValue("@in_auxv2", objparam[32]);
+                cmd.Parameters.Add("@in_auxv1", SqlDbType.VarChar, 50).Value = objparam[31];
+                cmd.Parameters.Add("@in_auxv2", SqlDbType.VarChar, 50).Value = objparam[32];
                 cmd.Parameters.AddWithValue("@in_auxv3", objparam[33]);
                 cmd.Parameters.AddWithValue("@in_auxv4", objparam[34]);
                 cmd.Parameters.AddWithValue("@in_auxv5", objparam[35]);

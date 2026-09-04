@@ -80,25 +80,60 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        private void FunDownloadDocument(int codigo)
+        private void FunDownloadDocument(int codigo, int tipoConsulta)
         {
             try
             {
                 Array.Resize(ref objparam, 3);
                 objparam[0] = codigo;
                 objparam[1] = "";
-                objparam[2] = 161;
-                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                type = dts.Tables[0].Rows[0]["Tipo"].ToString();
-                Name = dts.Tables[0].Rows[0]["Nombre"].ToString();
+                objparam[2] = tipoConsulta;
+
+                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+
+                if (dts == null || dts.Tables.Count == 0 || dts.Tables[0].Rows.Count == 0)
+                {
+                    if (tipoConsulta == 223)
+                    {
+                        Lblerror.Text = "La solicitud no tiene un PDF generado.";
+                    }
+                    else if (tipoConsulta == 225)
+                    {
+                        Lblerror.Text = "La solicitud no tiene documento adicional DAQUILEMA.";
+                    }
+                    else
+                    {
+                        Lblerror.Text = "La solicitud no tiene un archivo adjunto.";
+                    }
+
+                    return;
+                }
+
+                if (dts.Tables[0].Rows[0]["DataBin"]== DBNull.Value)
+                {
+                    Lblerror.Text="El documento no contiene información para descargar.";
+                    return;
+                }
+
+                byte[] archivo=(byte[])dts.Tables[0].Rows[0]["DataBin"];
+
+                if (archivo == null || archivo.Length == 0)
+                {
+                    Lblerror.Text="El documento se encuentra vacío.";
+                    return;
+                }
+
+                type=dts.Tables[0].Rows[0]["Tipo"].ToString();
+                Name=dts.Tables[0].Rows[0]["Nombre"].ToString();
 
                 Response.Clear();
                 Response.Buffer = true;
-                Response.ContentType = type;
-                Response.AddHeader("content-disposition", "attachment;filename=" + Name);
+                Response.ContentType=type;
+
+                Response.AddHeader("content-disposition","attachment;filename=\"" + Name + "\"");
                 Response.Charset = "";
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                Response.BinaryWrite((byte[])dts.Tables[0].Rows[0]["DataBin"]);
+                Response.BinaryWrite(archivo);
                 HttpContext.Current.ApplicationInstance.CompleteRequest();
                 Session["Descargado"] = "SI";
             }
@@ -110,15 +145,14 @@ namespace Pry_PrestasaludWAP.Examenes
         #endregion
 
         #region Botones y Eventos
-        protected void GrdvDatos_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void GrdvDatos_RowDataBound(object sender,GridViewRowEventArgs e)
         {
             try
             {
-                if (e.Row.RowIndex >= 0)
+                if (e.Row.RowType == DataControlRowType.DataRow)
                 {
+                
                     estado = GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString();
-                    imgview = (ImageButton)(e.Row.Cells[7].FindControl("ImgView"));
-                    extension = GrdvDatos.DataKeys[e.Row.RowIndex].Values["Ext"].ToString();
                     switch (estado)
                     {
                         case "SRR":
@@ -128,6 +162,26 @@ namespace Pry_PrestasaludWAP.Examenes
                             e.Row.Cells[5].BackColor = System.Drawing.Color.Coral;
                             break;
                     }
+
+                    ImageButton btnDaquilema = e.Row.FindControl("ImgDescargarDaquilema") as ImageButton;
+
+                    string producto = "";
+
+                    if (e.Row.DataItem != null)
+                    {
+                        object valorProducto = DataBinder.Eval(e.Row.DataItem,"Producto");
+                        if (valorProducto != null)
+                        {
+                            producto = valorProducto.ToString().Trim();
+                        }
+                    }
+
+                    bool esDaquilema = producto.IndexOf("DAQUILEMA",StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (btnDaquilema != null)
+                    {
+                        btnDaquilema.Visible = esDaquilema;
+                    }
                 }
             }
             catch (Exception ex)
@@ -136,19 +190,53 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void ImgDescargar_Click(object sender, ImageClickEventArgs e)
+        protected void ImgDescargar_Click(object sender,ImageClickEventArgs e)
         {
             try
             {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                imgdescargar = (ImageButton)(gvRow.Cells[6].FindControl("ImgDescargar"));
-                imgagendar = (ImageButton)(gvRow.Cells[7].FindControl("ImgAgendar"));
+                ImageButton boton =(ImageButton)sender;
+                GridViewRow gvRow =(GridViewRow)boton.NamingContainer;
+
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
-                FunDownloadDocument(int.Parse(codigoexso));
+                FunDownloadDocument(int.Parse(codigoexso),161);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text =
+                    ex.ToString();
+            }
+        }
+        protected void ImgDescargarPdf_Click(object sender,ImageClickEventArgs e)
+        {
+            try
+            {
+                ImageButton boton =(ImageButton)sender;
+
+
+                GridViewRow gvRow =(GridViewRow)boton.NamingContainer;
+                codigoexso =GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
+
+                FunDownloadDocument(int.Parse(codigoexso),223);
             }
             catch (Exception ex)
             {
                 Lblerror.Text = ex.ToString();
+            }
+        }
+
+        protected void ImgDescargarDaquilema_Click(object sender,ImageClickEventArgs e)
+        {
+            try
+            {
+                ImageButton boton =(ImageButton)sender;
+                GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
+                codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
+
+                FunDownloadDocument(int.Parse(codigoexso),225);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text =ex.ToString();
             }
         }
 
@@ -167,7 +255,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?CodigoTitular=" + codigotitu +
                         "&CodigoProducto=" + codigoprod + "&Regresar=1", true);
                 }
-                else new Funciones().funShowJSMessage("Descarge el Documento de Autorización..!", this);
+                else new Funciones().funShowJSMessage("Descargue el Examen Solicitado!", this);
             }
             catch (Exception ex)
             {

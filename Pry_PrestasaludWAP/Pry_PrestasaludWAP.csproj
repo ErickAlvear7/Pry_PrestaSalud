@@ -159,6 +159,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ddl\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
+    </Reference>
     <Reference Include="SIFunBasicas, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ddl\SIFunBasicas.dll</HintPath>
@@ -615,6 +621,13 @@
     </Compile>
     <Compile Include="Examenes\FrmExamenSegurosAdmin.aspx.designer.cs">
       <DependentUpon>FrmExamenSegurosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\FrmGrupoExamenes.aspx.cs">
+      <DependentUpon>FrmGrupoExamenes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmGrupoExamenes.aspx.designer.cs">
+      <DependentUpon>FrmGrupoExamenes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Examenes\FrmNuevoExamenAdmin.aspx.cs">
       <DependentUpon>FrmNuevoExamenAdmin.aspx</DependentUpon>
@@ -1592,6 +1605,7 @@
     <Content Include="Examenes\FrmExamenNegadoAdmin.aspx" />
     <Content Include="Examenes\FrmExamenRealizadoAdmin.aspx" />
     <Content Include="Examenes\FrmExamenSegurosAdmin.aspx" />
+    <Content Include="Examenes\FrmGrupoExamenes.aspx" />
     <Content Include="Examenes\FrmNuevoExamenAdmin.aspx" />
     <Content Include="Examenes\FrmNuevoExamenCliente.aspx" />
     <Content Include="Examenes\FrmPrestadoraExamenAdmin.aspx" />

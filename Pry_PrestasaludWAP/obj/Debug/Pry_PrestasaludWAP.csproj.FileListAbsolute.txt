@@ -93,6 +93,8 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\MySql.Data.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\net.Mensaje.Web.PopupWin.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\Newtonsoft.Json.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\Owin.dll
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\PdfSharp.Charting.dll
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\PdfSharp.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\SIFunBasicas.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Buffers.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Memory.dll
@@ -111,6 +113,8 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\WebGrease.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\Microsoft.SqlServer.Types.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\Newtonsoft.Json.xml
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\PdfSharp.xml
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\PdfSharp.Charting.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Buffers.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Memory.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Numerics.Vectors.xml
@@ -122,6 +126,8 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.Razor.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Deployment.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Razor.xml
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\de\PdfSharp.resources.dll
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\de\PdfSharp.Charting.resources.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\RdlCompile.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\RdlCompile.compiled
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.CoreCompileInputs.cache

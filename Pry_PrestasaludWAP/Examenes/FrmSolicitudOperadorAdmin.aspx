@@ -46,9 +46,30 @@
                                     <asp:BoundField DataField="NumDocumento" HeaderText="No.Documento" />
                                     <asp:BoundField DataField="Cliente" HeaderText="Paciente" />
                                     <asp:BoundField DataField="Proceso" HeaderText="Proceso" />
-                                    <asp:TemplateField HeaderText="Descargar">
+                                    <asp:TemplateField HeaderText="Adjunto">
                                         <ItemTemplate>
                                             <asp:ImageButton ID="ImgDescargar" runat="server" Height="20px" ImageUrl="~/Botones/downloadcolor.png" OnClick="ImgDescargar_Click" />
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Adjunto Daq.">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="ImgDescargarDaquilema"
+                                                runat="server"
+                                                Height="20px"
+                                                ImageUrl="~/Botones/downloadcolor.png"
+                                                ToolTip="Descargar documento adicional DAQUILEMA"
+                                                Visible="false"
+                                                OnClick="ImgDescargarDaquilema_Click" />
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Examen">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="ImgDescargarPdf" runat="server" Height="20px"
+                                                ImageUrl="~/Botones/downloadcolor.png"
+                                                ToolTip="Descargar solicitud en PDF"
+                                                OnClick="ImgDescargarPdf_Click" />
                                         </ItemTemplate>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
@@ -62,9 +83,9 @@
                                 <RowStyle Font-Size="X-Small" />
                             </asp:GridView>
                             <script>
-                                $(document).ready(function () {
-                                    $('#GrdvDatos').dataTable();
-                                });
+                                //$(document).ready(function () {
+                                //    $('#GrdvDatos').dataTable();
+                                //});
                             </script>
                         </td>
                     </tr>
