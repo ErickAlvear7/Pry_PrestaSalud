@@ -500,6 +500,28 @@ public class Funciones
         return mensaje;
     }
 
+    //PARA EDJUNTAR EXAMEN
+    public string funEnviarMailExamen(string mailsTo,string subject,object[] objBody,string emailTemplate,string host,
+                   int port,bool enableSSl,string usuario,string password,string ePathLogo,string eAlterMail,string eDocMail,
+                   string eUsuMail,string fechaCita,string fechaNaci,byte[] archivoAdjunto,string nombreAdjunto)
+    {
+        string mensaje = "";
+
+        try
+        {
+         
+            string body = ReplaceBody(objBody,emailTemplate,fechaCita,fechaNaci);
+            mensaje = SendHtmlEmailConAdjunto(mailsTo,subject,body,host,port,enableSSl,usuario,password,ePathLogo,
+                       eAlterMail,eDocMail,eUsuMail,archivoAdjunto,nombreAdjunto);
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.Message;
+        }
+
+        return mensaje;
+    }
+
     public string funEnviarMailLink(string mailsTo,string subject, object[] objBody,string emailTemplate,
      string host,int port,bool enableSSl,string usuario,string password,string email,string pathLogo, string mailsalterna)
     {
@@ -822,6 +844,97 @@ public class Funciones
         {
             mensaje = ex.ToString(); // para ver InnerException real
             funCrearLogAuditoria(1, "Envío Mail - Noenvia", mensaje, 1);
+            return mensaje;
+        }
+    }
+
+    //FUNCION PARA EXAMENES
+    private string SendHtmlEmailConAdjunto(string mailTO,string subject,string body,string ehost,int eport,bool eEnableSSL,
+                string eusername,string epassword,string pathLogo,string mailAlter,string mailDoc,string mailUsu,byte[] archivoAdjunto,string nombreAdjunto)
+    {
+        string mensaje = "";
+
+        try
+        {
+          
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
+            using (MailMessage mailMessage = new MailMessage())
+            {
+                mailMessage.From = new MailAddress(eusername);
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+
+                if (!string.IsNullOrWhiteSpace(pathLogo) && File.Exists(pathLogo))
+                {
+                    AlternateView htmlView =
+                        AlternateView.CreateAlternateViewFromString(body,null,"text/html");
+                    LinkedResource img = new LinkedResource(pathLogo);
+
+                    img.ContentId = "myImageID";
+
+                    htmlView.LinkedResources.Add(img);
+                    mailMessage.AlternateViews.Add(htmlView);
+                }
+
+                if (!string.IsNullOrEmpty(mailTO))
+                {
+                    foreach (var m in mailTO.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                    {
+                        mailMessage.To.Add(new MailAddress(m));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(mailAlter))
+                {
+                    foreach (var m in mailAlter.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                    {
+                        mailMessage.CC.Add(new MailAddress(m));
+                    }
+                }
+
+
+                if (!string.IsNullOrEmpty(mailDoc))
+                {
+                    foreach (var m in mailDoc.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                    {
+                        mailMessage.Bcc.Add(new MailAddress(m));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(mailUsu))
+                {
+                    foreach (var m in mailUsu.Split(',').Select(x => x.Trim()).Where(x => x != ""))
+                    {
+                        mailMessage.Bcc.Add(new MailAddress(m));
+                    }
+                }
+
+                if (archivoAdjunto != null && archivoAdjunto.Length > 0)
+                {
+                    MemoryStream streamAdjunto = new MemoryStream(archivoAdjunto);
+                    Attachment adjunto = new Attachment(streamAdjunto,nombreAdjunto,"application/pdf");
+                    mailMessage.Attachments.Add(adjunto);
+                }
+
+                using (SmtpClient smtp = new SmtpClient(ehost,eport))
+                {
+                    smtp.EnableSsl = eEnableSSL;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(eusername,epassword);
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Timeout = 30000;
+                    smtp.Send(mailMessage);
+                }
+            }
+
+            return "";
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.ToString();
+            funCrearLogAuditoria(1,"Envío Mail Examen - Noenvia",mensaje,1);
             return mensaje;
         }
     }

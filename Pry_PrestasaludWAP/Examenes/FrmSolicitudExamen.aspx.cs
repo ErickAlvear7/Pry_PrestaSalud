@@ -19,15 +19,10 @@ namespace Pry_PrestasaludWAP.Examenes
         DataTable dtbexamenes = new DataTable();
         Object[] objparam = new Object[1];
         Object[] objparamp = new Object[1]; //cambio aki
-        DataRow resultado, filagre;
-        DataRow[] resultedad, resultgenero, resultmonto;
-        bool lexiste = false;
         Byte[] bytes;
-        ImageButton imgeliminar;
-        string adicional = "", codigo = "", fechaactual = "", filePath = "", filename1 = "", ext = "", type = "",
-            mensaje = "";
-        int codigoclus = 0, codigocamp = 0;
-        bool continuaredad = false, continuargenero = false, continuarmonto = false;
+        string fechaactual = "", filePath = "", filename1 = "", ext = "", type = "";
+        int codigocamp = 0, codigoclus=0;
+       
         #endregion
 
         #region Load
@@ -47,8 +42,6 @@ namespace Pry_PrestasaludWAP.Examenes
             TxtFechaNacimientoCodep.Attributes["onchange"] = guardarFechaCodep;
             DdlProvinciaCodep.Attributes["onchange"] = guardarFechaCodep;
 
-            //TxtPvp.Attributes.Add("onchange", "ValidarDecimales();");
-            //TxtMonto.Attributes.Add("onchange", "ValidarDecimales();"); codigo comentado
             TxtFechaNacimiento.Attributes.Add("onchange", "Calcular_Edad();");
             TxtNumeroDocumento.Attributes.Add("onchange", "Validar_Cedula();");
             if (!IsPostBack)
@@ -85,10 +78,11 @@ namespace Pry_PrestasaludWAP.Examenes
                     FunCargarCombos(0);
                     if (ViewState["CodigoEXSO"].ToString() != "0")
                     {
+                        BtnCancelarSolicitud.Visible = true;
                         DdlCampaign.Enabled = false;
                         DdlProducto.Enabled = false;
-                        TxtMonto.Enabled = true;
-                        TxtMontoAc.Enabled = true;
+                        TxtMonto.Enabled = false;
+                        TxtMontoAc.Enabled = false;
                         TxtNumeroDocumento.Text = Request["NumDocumento"];
                         DdlTipoDocumento.Enabled = false;
                         TxtNumeroDocumento.Enabled = false;
@@ -99,8 +93,8 @@ namespace Pry_PrestasaludWAP.Examenes
                         DdlGenero.Enabled = false;
                         DdlEstadoCivil.Enabled = false;
                         TxtFechaNacimiento.Enabled = false;
-                        DdlProvincia.Enabled = false;
-                        DdlCiudad.Enabled = false;
+                        DdlProvincia.Enabled = true;
+                        DdlCiudad.Enabled = true;
                         //TxtDireccion.Enabled = false;
                         //TxtFonoCasa.Enabled = false;
                         //TxtFonoOficina.Enabled = false;
@@ -121,11 +115,18 @@ namespace Pry_PrestasaludWAP.Examenes
                         //BtnGrabar.Enabled = false;
                         FunCargarCabecera();
                         FunCargaMantenimiento();
-                        //FunCargarExamenes(); //codigo comentado
                         ActualizarArchivoDaquilema();
+                        BtnConsultarRequisitos.Enabled = false;
+                        BtnGrabar.Enabled = true;
+                        BtnGrabar.Text = "Actualizar";
                         Lbltitulo.Text = "Solicitud Examen Realizada";
                     }
-                    else Lbltitulo.Text = "Nueva Solicitud Examen";
+                    else
+                    {
+                        BtnCancelarSolicitud.Visible = false;
+                        Lbltitulo.Text = "Nueva Solicitud Examen";
+                    }
+                       
                 }
                 catch (Exception ex)
                 {
@@ -149,7 +150,6 @@ namespace Pry_PrestasaludWAP.Examenes
             TxtFechaNacimiento.Text = DateTime.Now.ToString("MM/dd/yyyy");
             TxtEdad.Text = "0";
             DdlProvincia.SelectedIndex = 0;
-            //DdlProducto.SelectedIndex = 0; //codigo aumentado
             FunCargarCombos(1);
             TxtDireccion.Text = "";
             TxtFonoCasa.Text = "";
@@ -162,63 +162,89 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
+            
+                int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
+
                 Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(ViewState["CodigoEXSO"].ToString());
+                objparam[0] = codigoEXSO;
                 objparam[1] = "";
                 objparam[2] = 150;
-                dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //DdlCampaign.SelectedValue = dtx.Tables[0].Rows[0]["CodigoCampaign"].ToString(); //cambio aki
-                //DdlProducto.SelectedValue = dtx.Tables[0].Rows[0]["CodigoPROD"].ToString();
-                //FunCargarCombos(2);
 
-                //CODIGO AUMENTADO
-                string codigoCampaign = dtx.Tables[0].Rows[0]["CodigoCampaign"].ToString();
-                string codigoProducto = dtx.Tables[0].Rows[0]["CodigoPROD"].ToString();
+                dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
 
-                //FunCargarCampaign(); codigo comentado
+                if (dtx == null || dtx.Tables.Count == 0 || dtx.Tables[0].Rows.Count == 0)
+                {
+                    Lblerror.Text = "No fue posible cargar la información de la solicitud.";
+                    return;
+                }
+
+                DataRow filaCabecera = dtx.Tables[0].Rows[0];
+
+                string codigoCampaign = filaCabecera["CodigoCampaign"].ToString().Trim();
+                string codigoProducto = filaCabecera["CodigoPROD"].ToString().Trim();
+
+                string estadoSolicita = "";
+
+                if (filaCabecera.Table.Columns.Contains("EstadoSolicita") && filaCabecera["EstadoSolicita"] != DBNull.Value)
+                {
+                    estadoSolicita = filaCabecera["EstadoSolicita"].ToString().Trim().ToUpper();
+                }
+
+                if (estadoSolicita == "SGA")
+                {
+                    BtnCancelarSolicitud.Visible = false;
+                    BtnGrabar.Visible = false;
+                    BtnGrabar.Enabled = false;
+                }
+                else
+                {
+                    BtnCancelarSolicitud.Visible = true;
+                    BtnGrabar.Visible = true;
+                    BtnGrabar.Enabled = true;
+                }
+
                 if (DdlCampaign.Items.FindByValue(codigoCampaign) != null)
                 {
                     DdlCampaign.ClearSelection();
                     DdlCampaign.SelectedValue = codigoCampaign;
                 }
 
-                int campaniaId;
+                int campaniaId = 0;
 
-                if (int.TryParse(codigoCampaign, out campaniaId))
+                if (int.TryParse(codigoCampaign,out campaniaId))
                 {
                     FunCargarProductos(campaniaId);
                 }
+
                 if (DdlProducto.Items.FindByValue(codigoProducto) != null)
                 {
                     DdlProducto.ClearSelection();
-                    DdlProducto.SelectedValue = codigoProducto;
+
+                    DdlProducto.SelectedValue =
+                        codigoProducto;
                 }
 
+                TxtFechaSolicitud.Text = filaCabecera["FechaSolicita"].ToString();
+                string estado = filaCabecera["Estado"].ToString().Trim();
 
-                //DdlGrupoExamen.SelectedValue = dtx.Tables[0].Rows[0]["CodigoEXGC"].ToString();
-                TxtFechaSolicitud.Text = dtx.Tables[0].Rows[0]["FechaSolicita"].ToString();
-                //TxtObservacion.Text = dtx.Tables[0].Rows[0]["Observacion"].ToString();
-                ChkEstado.Checked = dtx.Tables[0].Rows[0]["Estado"].ToString() == "Activo" ? true : false;
-                ChkEstado.Text = dtx.Tables[0].Rows[0]["Estado"].ToString();
-                TxtMonto.Text = dtx.Tables[0].Rows[0]["Monto"].ToString().Trim();
-                TxtMontoAc.Text = dtx.Tables[0].Rows[0]["Total"].ToString().Trim();
+                ChkEstado.Checked = estado.Equals("Activo",StringComparison.OrdinalIgnoreCase);
+                ChkEstado.Text = estado;
+                TxtMonto.Text = filaCabecera["Monto"].ToString().Trim();
+                TxtMontoAc.Text = filaCabecera["Total"].ToString().Trim();
 
-                //Codigo titular en vase al id del producto
-                //Array.Resize(ref objparamp, 3);
-                //objparamp[0] = 24;//int.Parse(DdlProducto.SelectedValue);
-                //objparamp[1] = TxtNumeroDocumento.Text;
-                //objparamp[2] = 23;
-                //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamp);
-                //ViewState["CodigoTITU"] = dts.Tables[0].Rows[0]["TITU_CODIGO"].ToString();
+                DataSet dsSolicitud = ObtenerDatosSolicitudPdf(codigoEXSO);
+                CargarRequisitosGuardadosEdicion(dsSolicitud);
 
-                //Comentado
-                //objparam[0] = int.Parse(ViewState["CodigoTITU"].ToString());
-                //objparam[1] = "";
-                //objparam[2] = 128;
-                //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //if (dts.Tables[0].Rows.Count > 0)
-                //    TxtMonto.Text = dts.Tables[0].Rows[0]["Inf10"].ToString();
-                //else TxtMonto.Text = "0.00";
+                TxtExamenAdicional.Text = "";
+
+                if (dsSolicitud != null && dsSolicitud.Tables.Count > 0 && dsSolicitud.Tables[0].Rows.Count > 0)
+                {
+                    TxtExamenAdicional.Text = ObtenerValor(dsSolicitud.Tables[0].Rows[0],"EXAMEN_ADICIONAL");
+                }
+
+                CargarCodependienteEdicion(codigoEXSO);
+                MostrarEstadoCodependiente();
+                ViewState["QuitarCodependiente"] = false;
             }
             catch (Exception ex)
             {
@@ -230,7 +256,6 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
                 objparam[1] = TxtNumeroDocumento.Text.Trim();
@@ -239,24 +264,8 @@ namespace Pry_PrestasaludWAP.Examenes
                 dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 if (dts.Tables[0].Rows.Count > 0)
                 {
-                    //objparam[0] = int.Parse(dts.Tables[0].Rows[0]["CodigoPERS"].ToString());// codigo comentado
-                    //objparam[1] = "";
-                    //objparam[2] = 152;
-                    //dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //if (dtx.Tables[0].Rows.Count > 0)
-                    //{
-                    //    mensaje = "El Cliente Presenta proceso de Examen " +
-                    //        dtx.Tables[0].Rows[0]["Proceso"].ToString() + " Realizado el " +
-                    //        dtx.Tables[0].Rows[0]["FechaProceso"].ToString();
-                    //    new Funciones().funShowJSMessage(mensaje, this);
-                    //    TxtNumeroDocumento.Text = "";
-                    //    return;
-                    //}
-
-                    //ViewState["PersonaExiste"] = "SI";
-
+               
                     BtnConsultarRequisitos.Enabled = true;
-                    //BtnGrabar.Text = "Actualizar";
                     ViewState["CodigoPERS"] = dts.Tables[0].Rows[0]["CodigoPERS"].ToString();
 
                     DdlTipoDocumento.SelectedValue = dts.Tables[0].Rows[0]["TipoDocumento"].ToString();
@@ -272,6 +281,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         TxtNumeroDocumento_FilteredTextBoxExtender.InvalidChars = ".-*/{{}}[[]]\\";
                         TxtNumeroDocumento_FilteredTextBoxExtender.FilterType = AjaxControlToolkit.FilterTypes.Custom;
                     }
+
                     ViewState["CodigoPERS"] = dts.Tables[0].Rows[0]["CodigoPERS"].ToString();
                     TxtNumeroDocumento.Text = dts.Tables[0].Rows[0]["Identificacion"].ToString();
                     TxtPrimerNombre.Text = dts.Tables[0].Rows[0]["PrimerNombre"].ToString();
@@ -294,12 +304,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
                 else
                 {
-                    //ViewState["PersonaExiste"] = "NO";
-                    //ViewState["CodigoPERS"] = "0";
-                    //BtnConsultarRequisitos.Enabled = false;
-                    //BtnGrabar.Text = "Crear Titular";
-                    //LimpiarRequisitosAsegurabilidad();
-                    //new Funciones().funShowJSMessage("Titular no registrado. Complete los datos y presione Crear Titular.",this);
                     ViewState["CodigoPERS"] = "0";
                     BtnConsultarRequisitos.Enabled = false;
                     BtnGrabar.Enabled = true;
@@ -329,27 +333,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 dsPersona.Tables[0].Rows.Count > 0;
         }
 
-
-
-        //private void FunCargarExamenes()
-        //{
-        //    try
-        //    {
-        //        //TrExamenes.Visible = true;
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = int.Parse(ViewState["CodigoEXSO"].ToString());
-        //        objparam[1] = "";
-        //        objparam[2] = 143;
-        //        dts= new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-        //        //GrdvExamenes.DataSource = dts;
-        //        //GrdvExamenes.DataBind();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Lblerror.Text = ex.ToString();
-        //    }
-        //}
-
         private void FunCargarCombos(int opcion)
         {
             try
@@ -368,41 +351,12 @@ namespace Pry_PrestasaludWAP.Examenes
                             codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());
                         }
 
-                        //Array.Resize(ref objparam, 11);
-                        //objparam[0] = 14;
-                        //objparam[1] = "";
-                        //objparam[2] = "";
-                        //objparam[3] = "";
-                        //objparam[4] = "";
-                        //objparam[5] = "";
-                        //objparam[6] = codigocamp;
-                        //objparam[7] = int.Parse(Session["usuCodigo"].ToString());
-                        //objparam[8] = 0;
-                        //objparam[9] = 0;
-                        //objparam[10] = 0;
-                        //dts = new Conexion(2, "").FunConsultaDatos1(objparam);
-                        //if (dts.Tables[0].Rows.Count > 0)
-                        //{
-                        //    DdlProducto.DataSource = dts;
-                        //    DdlProducto.DataTextField = "Descripcion";
-                        //    DdlProducto.DataValueField = "Codigo";
-                        //    DdlProducto.DataBind();
-                        //}
-
                         Array.Resize(ref objparam, 1);
                         objparam[0] = 6;
                         DdlProvincia.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
                         DdlProvincia.DataTextField = "Descripcion";
                         DdlProvincia.DataValueField = "Codigo";
                         DdlProvincia.DataBind();
-
-                        //codigo aumentado para llenar combo campaign
-                        //Array.Resize(ref objparam, 1);
-                        //objparam[0] = 64;
-                        //DdlCampaign.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                        //DdlCampaign.DataTextField = "Descripcion";
-                        //DdlCampaign.DataValueField = "Codigo";
-                        //DdlCampaign.DataBind();
 
                         //cambiar aki
                         Array.Resize(ref objparam, 3);
@@ -413,7 +367,6 @@ namespace Pry_PrestasaludWAP.Examenes
                         DdlCampaign.DataTextField = "Descripcion";
                         DdlCampaign.DataValueField = "Codigo";
                         DdlCampaign.DataBind();
-
 
                         Array.Resize(ref objparam, 3);
                         objparam[0] = DdlProvincia.SelectedValue;
@@ -449,10 +402,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         objparam[1] = "";
                         objparam[2] = 137;
                         dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //DdlExamen.DataSource = dts;
-                        //DdlExamen.DataTextField = "Descripcion";
-                        //DdlExamen.DataValueField = "Codigo";
-                        //DdlExamen.DataBind();
+     
                         break;
                     case 1:
                         DdlCiudad.Items.Clear();
@@ -506,54 +456,34 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         private void LimpiarFormularioNuevoCodependiente()
         {
-            // Documento
+   
             TxtNumeroDocumentoCodep.Text = "";
-
-
-            // Nombres
             TxtPrimerNombreCodep.Text = "";
             TxtSegundoNombreCodep.Text = "";
-
             TxtPrimerApellidoCodep.Text = "";
             TxtSegundoApellidoCodep.Text = "";
-
-
-            // Fecha
             TxtFechaNacimientoCodep.Text = "";
-
-
-            // Contacto
             TxtEmailCodep.Text = "";
-
             TxtDireccionCodep.Text = "";
-
             TxtFonoCasaCodep.Text = "";
             TxtFonoOficinaCodep.Text = "";
             TxtCelularCodep.Text = "";
 
-
-            // Tipo documento
             if (DdlTipoDocumentoCodep.Items.Count > 0)
             {
                 DdlTipoDocumentoCodep.SelectedIndex = 0;
             }
 
-
-            // Género
             if (DdlGeneroCodep.Items.Count > 0)
             {
                 DdlGeneroCodep.SelectedIndex = 0;
             }
 
-
-            // Estado civil
             if (DdlEstadoCivilCodep.Items.Count > 0)
             {
                 DdlEstadoCivilCodep.SelectedIndex = 0;
             }
 
-
-            // Provincia
             if (DdlProvinciaCodep.Items.Count > 0)
             {
                 DdlProvinciaCodep.SelectedIndex = 0;
@@ -568,9 +498,6 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             LblTituloExa.Visible = false;
             ActualizarArchivoDaquilema();
-            //TrExamenes.Visible = false;
-            //GrdvExamenes.DataSource = null;
-            //GrdvExamenes.DataBind();
             //FunCargarCombos(2);
             LimpiarRequisitosAsegurabilidad();
         }
@@ -640,334 +567,140 @@ namespace Pry_PrestasaludWAP.Examenes
             ChkEstado.Text = ChkEstado.Checked ? "Activo" : "Inactivo";
         }
 
-        protected void DdlGrupoExamen_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (DdlProducto.SelectedValue == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Producto..!", this);
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtNumeroDocumento.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingrese Numero de Documento..!", this);
-                    //DdlGrupoExamen.SelectedValue = "0";
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtPrimerNombre.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingrese Nombre del Cliente..!", this);
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtPrimerApellido.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingrese Apellido del Cliente..!", this);
-                    return;
-                }
-                if (DdlGenero.SelectedValue == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Genero del Cliente..!", this);
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtEdad.Text.Trim()) || TxtEdad.Text.Trim() == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Fecha de Nacimiento del CLiente..!", this);
-                    return;
-                }
-
-                //CODIGO COMENTADO
-                //Array.Resize(ref objparam, 3);
-                //objparam[0] = int.Parse(DdlGrupoExamen.SelectedValue);
-                //objparam[1] = "";
-                //objparam[2] = 149;
-                //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //VALIDAR SI HAY EDAD
-                continuaredad = true;
-                continuargenero = true;
-                continuarmonto = true;
-                resultedad = dts.Tables[0].Select("Campo='" + "Edad" + "'");
-                if (resultedad != null)
-                {
-                    if (resultedad.Count() == 1)
-                    {
-                        if (resultedad[0]["Operador"].ToString() == "=")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) == int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == ">")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == ">=")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == "<")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == "<=")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-                    }
-                    else if (resultedad.Count() == 2)
-                    {
-                        if (resultedad[0]["Operador"].ToString() == ">" && resultedad[1]["Operador"].ToString() == "<")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString()) &&
-                                int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == ">=" && resultedad[1]["Operador"].ToString() == "<")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString()) &&
-                                int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == ">" && resultedad[1]["Operador"].ToString() == "<=")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString()) &&
-                                int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-
-                        if (resultedad[0]["Operador"].ToString() == ">=" && resultedad[1]["Operador"].ToString() == "<=")
-                        {
-                            if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString()) &&
-                                int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
-                            else continuaredad = false;
-                        }
-                    }
-                    else if (resultedad.Count() == 0) continuaredad = true;
-                    else continuaredad = false;
-                }
-                else continuaredad = true;
-
-                resultgenero = dts.Tables[0].Select("Campo='" + "Genero" + "'");
-                if (resultgenero != null)
-                {
-                    if (resultgenero.Count() == 1)
-                    {
-                        if (resultgenero[0]["Operador"].ToString() == "=")
-                        {
-                            if (DdlGenero.SelectedValue == resultgenero[0]["Valor"].ToString()) continuargenero = true;
-                            else continuargenero = false;
-                        }
-                    }
-                    else if (resultgenero.Count() == 0) continuargenero = true;
-                    else continuargenero = false;
-                }
-                else continuargenero = true;
-
-                resultmonto = dts.Tables[0].Select("Campo='" + "Monto" + "'");
-
-                //codigo comentado columna de Monto
-                //if (resultmonto != null || resultmonto.Count() > 0)
-                //{
-                //    if (TxtMonto.Text.Trim() == "0" || TxtMonto.Text.Trim() == "0.0" || TxtMonto.Text.Trim() == "0.00")
-                //    {
-                //        new Funciones().funShowJSMessage("Ingrese Monto Solicitado..!", this);
-                //        DdlGrupoExamen.SelectedValue = "0";
-                //        return;
-                //    }
-                //    if (resultmonto.Count() == 1)
-                //    {
-                //        if (resultmonto[0]["Operador"].ToString() == "=")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) == decimal.Parse(resultmonto[0]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == ">")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) > decimal.Parse(resultmonto[0]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == ">=")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) >= decimal.Parse(resultmonto[0]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == "<")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) < decimal.Parse(resultmonto[0]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == "<=")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) <= decimal.Parse(resultmonto[0]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-                //    }
-                //    else if (resultmonto.Count() == 2)
-                //    {
-                //        if (resultmonto[0]["Operador"].ToString() == ">" && resultmonto[1]["Operador"].ToString() == "<")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) > decimal.Parse(resultmonto[0]["Valor"].ToString()) &&
-                //                decimal.Parse(TxtMonto.Text.Trim()) < decimal.Parse(resultmonto[1]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == ">=" && resultmonto[1]["Operador"].ToString() == "<")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) >= decimal.Parse(resultmonto[0]["Valor"].ToString()) &&
-                //                decimal.Parse(TxtMonto.Text.Trim()) < decimal.Parse(resultmonto[1]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == ">" && resultmonto[1]["Operador"].ToString() == "<=")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) > decimal.Parse(resultmonto[0]["Valor"].ToString()) &&
-                //                decimal.Parse(TxtMonto.Text.Trim()) <= decimal.Parse(resultmonto[1]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-
-                //        if (resultmonto[0]["Operador"].ToString() == ">=" && resultmonto[1]["Operador"].ToString() == "<=")
-                //        {
-                //            if (decimal.Parse(TxtMonto.Text.Trim()) >= decimal.Parse(resultmonto[0]["Valor"].ToString()) &&
-                //                decimal.Parse(TxtMonto.Text.Trim()) <= decimal.Parse(resultmonto[1]["Valor"].ToString())) continuarmonto = true;
-                //            else continuarmonto = false;
-                //        }
-                //    }
-                //    else if (resultmonto.Count() == 0) continuarmonto = true;
-                //    else continuarmonto = false;
-                //}
-                //else continuarmonto = true;
-
-                //CODIGO COMENTADO
-                //if (continuaredad && continuargenero && continuarmonto)
-                //{
-                //    Array.Resize(ref objparam, 3);
-                //    objparam[0] = int.Parse(DdlGrupoExamen.SelectedValue);
-                //    objparam[1] = "";
-                //    objparam[2] = 141;
-                //    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //    ViewState["Examenes"] = dts.Tables[0];
-                //    GrdvExamenes.DataSource = dts;
-                //    GrdvExamenes.DataBind();
-                //    if (dts.Tables[0].Rows.Count > 0) TrExamenes.Visible = true;
-                //}
-                //else
-                //{
-                //    new Funciones().funShowJSMessage("Configuración Exámenes NO Está Definida para los Parámetros del Cliente..!", this);
-                //    DdlExamen.SelectedValue = "0";
-                //    DdlGrupoExamen.SelectedValue = "0";
-                //    dtbexamenes.Clear();
-                //    ViewState["Examenes"] = dtbexamenes;
-                //    GrdvExamenes.DataSource = dtbexamenes;
-                //    GrdvExamenes.DataBind();                    
-                //}
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        //protected void ImgAddExamen_Click(object sender, ImageClickEventArgs e)
+        //protected void DdlGrupoExamen_SelectedIndexChanged(object sender, EventArgs e)
         //{
         //    try
         //    {
-        //        if (ViewState["Examenes"] == null)
+        //        if (DdlProducto.SelectedValue == "0")
         //        {
-        //            new Funciones().funShowJSMessage("Primero Seleccione Grupo Exámenes..!", this);
+        //            new Funciones().funShowJSMessage("Seleccione Producto..!", this);
         //            return;
         //        }
-        //        if (DdlExamen.SelectedValue == "0")
+        //        if (string.IsNullOrEmpty(TxtNumeroDocumento.Text.Trim()))
         //        {
-        //            new Funciones().funShowJSMessage("Seleccione Examen..!", this);
+        //            new Funciones().funShowJSMessage("Ingrese Numero de Documento..!", this);
+        //            //DdlGrupoExamen.SelectedValue = "0";
         //            return;
         //        }
-        //        if (ViewState["Examenes"] != null)
+        //        if (string.IsNullOrEmpty(TxtPrimerNombre.Text.Trim()))
         //        {
-        //            dtbexamenes = (DataTable)ViewState["Examenes"];
-        //            resultado = dtbexamenes.Select("CodigoEXSE='" + DdlExamen.SelectedValue + "'").FirstOrDefault();
-        //            if (resultado != null) lexiste = true;
-        //        }
-        //        if (lexiste)
-        //        {
-        //            new Funciones().funShowJSMessage("Examen ya se encuentra Agregado..!", this);
+        //            new Funciones().funShowJSMessage("Ingrese Nombre del Cliente..!", this);
         //            return;
         //        }
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = int.Parse(DdlExamen.SelectedValue);
-        //        objparam[1] = "";
-        //        objparam[2] = 138;
-        //        dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-        //        dtbexamenes = (DataTable)ViewState["Examenes"];
-        //        filagre = dtbexamenes.NewRow();
-        //        filagre["CodigoEXSE"] = DdlExamen.SelectedValue;
-        //        filagre["Categoria"] = dts.Tables[0].Rows[0]["Categoria"].ToString();
-        //        filagre["Examen"] = DdlExamen.SelectedItem.ToString();
-        //        filagre["Costo"] = dts.Tables[0].Rows[0]["Valor"].ToString().Replace(".",",");
-        //        filagre["Pvp"] = "0";
-        //        filagre["Adicional"] = "SI";
-        //        dtbexamenes.Rows.Add(filagre);
-        //        dtbexamenes.DefaultView.Sort = "Examen";
-        //        ViewState["Examenes"] = dtbexamenes;
-        //        GrdvExamenes.DataSource = dtbexamenes;
-        //        GrdvExamenes.DataBind();
-        //        DdlExamen.SelectedValue = "0";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Lblerror.Text = ex.ToString();
-        //    }
-        //}
+        //        if (string.IsNullOrEmpty(TxtPrimerApellido.Text.Trim()))
+        //        {
+        //            new Funciones().funShowJSMessage("Ingrese Apellido del Cliente..!", this);
+        //            return;
+        //        }
+        //        if (DdlGenero.SelectedValue == "0")
+        //        {
+        //            new Funciones().funShowJSMessage("Seleccione Genero del Cliente..!", this);
+        //            return;
+        //        }
+        //        if (string.IsNullOrEmpty(TxtEdad.Text.Trim()) || TxtEdad.Text.Trim() == "0")
+        //        {
+        //            new Funciones().funShowJSMessage("Seleccione Fecha de Nacimiento del CLiente..!", this);
+        //            return;
+        //        }
 
-        //protected void ImgDelExamen_Click(object sender, ImageClickEventArgs e)
-        //{
-        //    try
-        //    {
-        //        GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-        //        codigo = GrdvExamenes.DataKeys[gvRow.RowIndex].Values["CodigoEXSE"].ToString();
-        //        //Buscar si no existe Efecto agregado
-        //        dtbexamenes = (DataTable)ViewState["Examenes"];
-        //        resultado = dtbexamenes.Select("CodigoEXSE='" + codigo + "'").FirstOrDefault();
-        //        resultado.Delete();
-        //        dtbexamenes.AcceptChanges();
-        //        ViewState["Examenes"] = dtbexamenes;
-        //        GrdvExamenes.DataSource = dtbexamenes;
-        //        GrdvExamenes.DataBind();
-        //        if (dtbexamenes.Rows.Count == 0) TrExamenes.Visible = false;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Lblerror.Text = ex.Message;
-        //    }
-        //}
-
-        //protected void GrdvExamenes_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.Row.RowIndex >= 0)
+        //        //CODIGO COMENTADO
+        //        //Array.Resize(ref objparam, 3);
+        //        //objparam[0] = int.Parse(DdlGrupoExamen.SelectedValue);
+        //        //objparam[1] = "";
+        //        //objparam[2] = 149;
+        //        //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //        //VALIDAR SI HAY EDAD
+        //        continuaredad = true;
+        //        continuargenero = true;
+        //        continuarmonto = true;
+        //        resultedad = dts.Tables[0].Select("Campo='" + "Edad" + "'");
+        //        if (resultedad != null)
         //        {
-        //            imgeliminar = (ImageButton)(e.Row.Cells[2].FindControl("ImgDelExamen"));
-        //            adicional = GrdvExamenes.DataKeys[e.Row.RowIndex].Values["Adicional"].ToString();
-        //            if (adicional == "SI" && ViewState["CodigoEXSO"].ToString() == "0")
+        //            if (resultedad.Count() == 1)
         //            {
-        //                imgeliminar.ImageUrl = "~/Botones/eliminar.png";
-        //                imgeliminar.Height = 15;                        
-        //                imgeliminar.Enabled = true;
+        //                if (resultedad[0]["Operador"].ToString() == "=")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) == int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == ">")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == ">=")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == "<")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == "<=")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[0]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
         //            }
+        //            else if (resultedad.Count() == 2)
+        //            {
+        //                if (resultedad[0]["Operador"].ToString() == ">" && resultedad[1]["Operador"].ToString() == "<")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString()) &&
+        //                        int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == ">=" && resultedad[1]["Operador"].ToString() == "<")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString()) &&
+        //                        int.Parse(TxtEdad.Text.Trim()) < int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == ">" && resultedad[1]["Operador"].ToString() == "<=")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) > int.Parse(resultedad[0]["Valor"].ToString()) &&
+        //                        int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+
+        //                if (resultedad[0]["Operador"].ToString() == ">=" && resultedad[1]["Operador"].ToString() == "<=")
+        //                {
+        //                    if (int.Parse(TxtEdad.Text.Trim()) >= int.Parse(resultedad[0]["Valor"].ToString()) &&
+        //                        int.Parse(TxtEdad.Text.Trim()) <= int.Parse(resultedad[1]["Valor"].ToString())) continuaredad = true;
+        //                    else continuaredad = false;
+        //                }
+        //            }
+        //            else if (resultedad.Count() == 0) continuaredad = true;
+        //            else continuaredad = false;
         //        }
+        //        else continuaredad = true;
+
+        //        resultgenero = dts.Tables[0].Select("Campo='" + "Genero" + "'");
+        //        if (resultgenero != null)
+        //        {
+        //            if (resultgenero.Count() == 1)
+        //            {
+        //                if (resultgenero[0]["Operador"].ToString() == "=")
+        //                {
+        //                    if (DdlGenero.SelectedValue == resultgenero[0]["Valor"].ToString()) continuargenero = true;
+        //                    else continuargenero = false;
+        //                }
+        //            }
+        //            else if (resultgenero.Count() == 0) continuargenero = true;
+        //            else continuargenero = false;
+        //        }
+        //        else continuargenero = true;
+
+        //        resultmonto = dts.Tables[0].Select("Campo='" + "Monto" + "'");
+
         //    }
         //    catch (Exception ex)
         //    {
@@ -989,8 +722,6 @@ namespace Pry_PrestasaludWAP.Examenes
                         {
                             return;
                         }
-
-                        /* CREAR PERSONA + TITULAR */
 
                         DataSet dsTitular = GuardarTitularNuevo();
 
@@ -1266,60 +997,38 @@ namespace Pry_PrestasaludWAP.Examenes
                     string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN", body, "mail.prestasalud.com", 587,
                         true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
 
-
-                    //codigo comentado
-                    //if (dts.Tables[0].Rows.Count > 0)
-                    //{
-                    //    objparam[0] = 1;
-                    //    objparam[29] = int.Parse(dts.Tables[0].Rows[0]["CodigoEXSO"].ToString());
-                    //    dtbexamenes = (DataTable)ViewState["Examenes"];
-                    //    foreach (DataRow drfila in dtbexamenes.Rows)
-                    //    {
-                    //        objparam[25] = int.Parse(drfila["CodigoEXSE"].ToString());
-                    //        objparam[26] = drfila["Costo"].ToString().Replace(",", ".");
-                    //        objparam[27] = drfila["Pvp"].ToString().Replace(",", ".");
-                    //        objparam[28] = drfila["Adicional"].ToString();
-                    //        dts = new Conexion(2, "").FunInsertSolictudExamen(objparam);
-                    //    }
-                    //}
                 }
                 else
                 {
-                    Array.Resize(ref objparam, 3);
-                    objparam[0] = int.Parse(ViewState["CodigoEXSO"].ToString());
-                    objparam[1] = ChkEstado.Text;
-                    objparam[2] = 151;
-                    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-                    //codigo aumentado
-                    int codper = 0;
+                    int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
+                    DataSet dsSolicitud = ObtenerDatosSolicitudPdf(codigoEXSO);
 
-                    if (dts != null && dts.Tables.Count > 0 && dts.Tables[0].Rows.Count > 0)
+                    if (dsSolicitud == null || dsSolicitud.Tables.Count == 0 || dsSolicitud.Tables[0].Rows.Count == 0)
                     {
-                        codper = Convert.ToInt32(dts.Tables[0].Rows[0]["codper"]);
+                        Lblerror.Text = "No fue posible obtener los datos del titular.";
+                        return;
                     }
 
-                    Array.Resize(ref objparam, 11);
-                    objparam[0] = 43;
-                    objparam[1] = TxtPrimerNombre.Text.Trim().ToUpper();
-                    objparam[2] = TxtPrimerApellido.Text.Trim().ToUpper();
-                    objparam[3] = TxtDireccion.Text.Trim().ToUpper();
-                    objparam[4] = TxtFonoCasa.Text.Trim();
-                    objparam[5] = TxtCelular.Text.Trim();
-                    objparam[6] = codper;
-                    objparam[7] = 0;
-                    objparam[8] = 0;
-                    objparam[9] = 0;
-                    objparam[10] = 0;
-                    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos1", objparam);
+                    int codper = Convert.ToInt32(dsSolicitud.Tables[0].Rows[0]["PERS_CODIGO"]);
 
-                    string resultado = dts.Tables[0].Rows[0]["Resultado"].ToString();
+                    ActualizarTitularSolicitud(codigoEXSO);
+                    ProcesarCodependienteEdicion(codigoEXSO);
+                    ActualizarExamenAdicional(codigoEXSO);
+                    byte[] pdf = GenerarPdfSolicitud(codigoEXSO);
+                    GuardarPdfSolicitud(codigoEXSO,pdf);
 
-                    if (resultado.Trim() == "OK UPDATE")
-                    {
-                        Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
-                    }
+                    string body = "SOLICITUD DE EXAMEN EDITADA" + "<br/> ";
+                    body += "------------------------------------------------------------------" + "<br/>";
+                    body += "CEDULA:" + " " + TxtNumeroDocumento.Text.Trim() + "<br/>";
+                    body += "TITULAR:" + " " + TxtPrimerNombre.Text.Trim().ToUpper() + " " + TxtPrimerApellido.Text.Trim().ToUpper() + "<br/>";
 
+                    string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN EDITADA", body, "mail.prestasalud.com", 587,
+                        true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
+
+                    Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'",true );
+                    return;
+                   
                 }
                 Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Guardado con Éxito'", true);
                 Context.ApplicationInstance.CompleteRequest();
@@ -1329,7 +1038,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 Lblerror.Text = ex.ToString();
             }
         }
-
         protected void BtnSalir_Click(object sender, EventArgs e)
         {
             Response.Redirect("FrmSolicitudExamenAdmin.aspx");
@@ -1374,7 +1082,6 @@ namespace Pry_PrestasaludWAP.Examenes
             try
             {
                 object[] parametros = new object[3];
-
                 parametros[0] = codigoCampaign;
                 parametros[1] = "";
                 parametros[2] = 222;
@@ -1449,40 +1156,6 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        //private void BindExamenesSeleccionados()
-        //{
-        //    GrdvExamenesSeleccionados.DataSource = ExamenesSeleccionados;
-
-        //    GrdvExamenesSeleccionados.DataBind();
-        //    LblCantidadExamenes.Text = ExamenesSeleccionados.Rows.Count.ToString() + " examen(es)";
-        //}
-
-        //protected void GrdvExamenesSeleccionados_RowCommand(object sender,GridViewCommandEventArgs e)
-        //{
-        //    if (e.CommandName != "Quitar")
-        //    {
-        //        return;
-        //    }
-
-        //    GridViewRow row = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-
-        //    int examenId =Convert.ToInt32(GrdvExamenesSeleccionados.DataKeys[row.RowIndex].Value);
-
-        //    DataTable dt =ExamenesSeleccionados;
-        //    DataRow[] filas = dt.Select("EXPR_CODIGO = " + examenId.ToString());
-
-        //    if (filas.Length > 0)
-        //    {
-        //        dt.Rows.Remove(filas[0]);
-        //    }
-
-        //    ExamenesSeleccionados = dt;
-
-        //    // Refrescar seleccionados
-        //    BindExamenesSeleccionados();
-        //    CargarExamenesDisponibles();
-        //}
-
         private DataTable ObtenerTodosLosExamenes()
         {
             DataSet ds = new DataSet();
@@ -1538,22 +1211,6 @@ namespace Pry_PrestasaludWAP.Examenes
             int registros = dt.Rows.Count;
             int paginas = 0;
 
-            //if (GrdvExamenesDisponibles.PageSize > 0)
-            //{
-            //    paginas = (int)Math.Ceiling((double)registros/GrdvExamenesDisponibles.PageSize);
-            //}
-
-            //if (paginas == 0)
-            //{
-            //    GrdvExamenesDisponibles.PageIndex = 0;
-            //}
-            //else if (GrdvExamenesDisponibles.PageIndex >= paginas)
-            //{
-            //    GrdvExamenesDisponibles.PageIndex = paginas - 1;
-            //}
-
-            //GrdvExamenesDisponibles.DataSource = dt;
-            //GrdvExamenesDisponibles.DataBind();
         }
         protected void BtnBuscarExamen_Click(object sender, EventArgs e)
         {
@@ -1572,57 +1229,10 @@ namespace Pry_PrestasaludWAP.Examenes
             //CargarExamenesDisponibles();
         }
 
-        //protected void GrdvExamenesDisponibles_RowCommand(object sender,GridViewCommandEventArgs e)
-        //{
-        //    if (e.CommandName != "Agregar")
-        //    {
-        //        return;
-        //    }
-
-
-        //    GridViewRow row = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-        //    int examenId = Convert.ToInt32(GrdvExamenesDisponibles.DataKeys[row.RowIndex].Value);
-        //    string examen = Server.HtmlDecode(row.Cells[0].Text).Trim();
-
-        //    DataTable dt = ExamenesSeleccionados;
-
-        //    DataRow[] existe = dt.Select("EXPR_CODIGO = " + examenId.ToString());
-        //    if (existe.Length > 0)
-        //    {
-        //        return;
-        //    }
-
-        //    DataRow nueva = dt.NewRow();
-        //    nueva["EXPR_CODIGO"] = examenId;
-        //    nueva["EXAMEN"] = examen;
-        //    nueva["COSTO"] = 0m;
-        //    nueva["PVP"] = 0m;
-        //    dt.Rows.Add(nueva);
-
-        //    ExamenesSeleccionados = dt;
-
-
-        //    BindExamenesSeleccionados();
-
-
-        //    CargarExamenesDisponibles();
-        //}
-
-
-        //private void GuardarExamenesSeleccionados(int codigoEXSO)
-        //{
-        //    foreach (DataRow fila in ExamenesSeleccionados.Rows)
-        //    {
-        //        GuardarDetalleExamen(codigoEXSO, fila);
-        //    }
-        //}
-
-
 
         private void GuardarDetalleExamen(int codigoEXSO, DataRow fila)
         {
             object[] parametros = new object[43];
-
             parametros[0] = 1;
             parametros[1] = 0;
             parametros[2] = "";
@@ -1763,6 +1373,7 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 codependiente = ds.Tables[2].Rows[0];
             }
+
             string examenAdicional = ObtenerValor(titular, "EXAMEN_ADICIONAL");
             PdfDocument documento = new PdfDocument();
             documento.Info.Title = "Solicitud de Exámenes " + codigoEXSO.ToString();
@@ -1875,7 +1486,6 @@ namespace Pry_PrestasaludWAP.Examenes
                     fechaNacimientoCodependiente = Convert.ToDateTime(codependiente["pers_fechanacimiento"]).ToString("dd/MM/yyyy");
                 }
 
-
                 DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Fecha nacimiento:",fechaNacimientoCodependiente);
                 DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Estado civil:",ObtenerValor(codependiente,"pers_estadocivil"));
                 y += 24;
@@ -1911,7 +1521,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
             gfx.DrawString("EXÁMENES SOLICITADOS",fuenteSubtitulo,XBrushes.Black,margen,y);
             y += 8;
-
             gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
             y += 22;
 
@@ -1966,7 +1575,6 @@ namespace Pry_PrestasaludWAP.Examenes
             if (!string.IsNullOrWhiteSpace(examenAdicional))
             {
                 double altoFilaAdicional = 32;
-
 
                 if (examenAdicional.Length > 150)
                 {
@@ -2035,7 +1643,6 @@ namespace Pry_PrestasaludWAP.Examenes
             y += 20;
 
             gfx.DrawString("Total de exámenes: " + totalExamenes.ToString(),fuenteNegrita,XBrushes.Black,margen,y);
-
             gfx.Dispose();
 
             using (MemoryStream memoria = new MemoryStream())
@@ -2277,6 +1884,20 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
+                int codigoEXSO = 0;
+
+                if (ViewState["CodigoEXSO"] != null)
+                {
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                }
+                if (codigoEXSO > 0)
+                {
+                    Lblerror.Text = "Los requisitos de una solicitud existente no pueden recalcularse.";
+
+                    BtnConsultarRequisitos.Enabled = false;
+                    return;
+                }
+
                 bool personaExiste = ExistePersonaPorDocumento();
                 if (!personaExiste)
                 {
@@ -2294,12 +1915,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 if (DdlProducto.SelectedValue == "0")
                 {
                     new Funciones().funShowJSMessage("Seleccione Canal.", this);
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(TxtNumeroDocumento.Text))
-                {
-                    new Funciones().funShowJSMessage("Ingrese una cédula válida.", this);
                     return;
                 }
 
@@ -2337,7 +1952,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 decimal montoTotal;
 
-
                 if (!decimal.TryParse(FormatearDecimal(TxtMontoAc.Text), NumberStyles.Any, CultureInfo.InvariantCulture, out montoTotal) || montoTotal <= 0)
                 {
                     new Funciones().funShowJSMessage("Ingrese un Monto Total válido.", this);
@@ -2371,46 +1985,12 @@ namespace Pry_PrestasaludWAP.Examenes
 
         protected void TxtMontoAc_TextChanged(object sender, EventArgs e)
         {
-            //LimpiarRequisitosAsegurabilidad();
-            //if (ViewState["TitularCargado"] != null && Convert.ToBoolean(ViewState["TitularCargado"]))
-            //{
-            //    LblEstadoRequisitos.Text = "Monto Total modificado. Consulte nuevamente los requisitos.";
-            //}
             if (!string.IsNullOrWhiteSpace(TxtNumeroDocumento.Text))
             {
                 LblEstadoRequisitos.Text = "Monto Total modificado. Consulte nuevamente los requisitos.";
             }
         }
 
-        //private void GuardarRequisitosSolicitud(int codigoEXSO,DataTable requisitos)
-        //{
-        //    if (requisitos == null || requisitos.Rows.Count == 0)
-        //    {
-        //        throw new Exception("No existen requisitos para guardar.");
-        //    }
-
-
-        //    foreach (DataRow fila in requisitos.Rows)
-        //    {
-        //        object[] parametros = CrearParametrosOperacionSolicitud(7,codigoEXSO);
-
-        //        parametros[0] = 7;
-        //        parametros[25] = Convert.ToInt32(fila["ASRQ_CODIGO"]);
-        //        parametros[29] = codigoEXSO;
-
-
-        //        parametros[41] = Convert.ToInt32(Session["usuCodigo"]);
-
-        //        parametros[42] = Session["MachineName"] != null ? Session["MachineName"].ToString() : "";
-
-        //        DataSet dsResultado = new Conexion(2, "").FunInsertSolictudExamen(parametros);
-
-        //        if (dsResultado == null || dsResultado.Tables.Count == 0 || dsResultado.Tables[0].Rows.Count == 0)
-        //        {
-        //            throw new Exception("No se pudo guardar uno de los requisitos de la solicitud.");
-        //        }
-        //    }
-        //}
         private void GuardarRequisitosSolicitud(int codigoEXSO, DataTable requisitos)
         {
             if (requisitos == null || requisitos.Rows.Count == 0)
@@ -2550,11 +2130,8 @@ namespace Pry_PrestasaludWAP.Examenes
             return true;
         }
 
-    
         protected void DdlProvinciaCodep_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //CargarCiudadesCodependiente();
-            //MostrarModalCodependiente();
             try
             {
             
@@ -2695,16 +2272,25 @@ namespace Pry_PrestasaludWAP.Examenes
             return ds;
         }
 
-        private void MostrarCodependienteSeleccionado(int codigoPERS, int codigoTITU, string documento, string nombre)
+        private void MostrarCodependienteSeleccionado(int codigoPERS,int codigoTITU,string documento,string nombre)
         {
+            
             ViewState["CodigoPERSCodependiente"] = codigoPERS;
             ViewState["CodigoTITUCodependiente"] = codigoTITU;
+            ViewState["DocumentoCodependiente"] = documento.Trim();
+            ViewState["NombreCodependiente"] = nombre.Trim().ToUpper();
+            ViewState["QuitarCodependiente"] = false;
+
             LblDocumentoCodependiente.Text = documento.Trim();
             LblNombreCodependiente.Text = nombre.Trim().ToUpper();
             PnlCodependienteSeleccionado.Visible = true;
             LblSinCodependiente.Visible = false;
             BtnAgregarCodependiente.Text = "Cambiar Codependiente";
+            BtnAgregarCodependiente.Enabled = true;
+            BtnQuitarCodependiente.Visible =true;
         }
+
+
         private void GuardarCodependienteSolicitud(int codigoEXSO)
         {
 
@@ -2747,8 +2333,6 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             string texto = TxtFechaNacimientoCodep.Text.Trim();
 
-
-            // Respaldo
             if (string.IsNullOrWhiteSpace(texto))
             {
                 texto = HdnFechaNacimientoCodep.Value.Trim();
@@ -2758,7 +2342,6 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 throw new Exception("Seleccione la fecha de nacimiento del codependiente.");
             }
-
 
             DateTime fecha;
 
@@ -2801,10 +2384,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             if (nombreArchivo.Length > 100)
             {
-                throw new Exception(
-                    "El nombre del documento adicional DAQUILEMA " +
-                    "no puede superar los 100 caracteres."
-                );
+                throw new Exception("El nombre del documento adicional DAQUILEMA " + "no puede superar los 100 caracteres.");
             }
 
             string extension = Path.GetExtension(nombreArchivo).ToLower();
@@ -2830,15 +2410,11 @@ namespace Pry_PrestasaludWAP.Examenes
                     break;
 
                 case ".docx":
-                    mime =
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
                     break;
 
                 default:
-                    throw new Exception(
-                        "El documento adicional DAQUILEMA debe ser " +
-                        "PDF, DOC, DOCX, PNG, JPG o JPEG."
-                    );
+                    throw new Exception("El documento adicional DAQUILEMA debe ser " + "PDF, DOC, DOCX, PNG, JPG o JPEG.");
             }
 
             byte[] archivo;
@@ -2863,13 +2439,220 @@ namespace Pry_PrestasaludWAP.Examenes
                 throw new Exception("No fue posible guardar el documento adicional DAQUILEMA.");
             }
 
-
             string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
-
 
             if (resultado != "OK-DOCUMENTO-DAQUILEMA")
             {
                 throw new Exception("No fue posible guardar el documento adicional DAQUILEMA. " + resultado);
+            }
+        }
+
+        private void ActualizarExamenAdicional(int codigoEXSO)
+        {
+            string examenAdicional = TxtExamenAdicional.Text.Trim();
+            object[] parametros = CrearParametrosOperacionSolicitud(11,codigoEXSO);
+
+            parametros[0] = 11;
+            parametros[20] = examenAdicional.ToUpper();
+            parametros[29] = codigoEXSO;
+
+            DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No fue posible actualizar el examen adicional.");
+            }
+
+            string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
+
+            if (resultado != "OK-EXAMEN-ADICIONAL")
+            {
+                throw new Exception("No fue posible actualizar el examen adicional. " + "Respuesta: " + resultado);
+            }
+        }
+        private void ActualizarTitularSolicitud(int codigoEXSO)
+        {
+     
+            DataSet dsSolicitud = ObtenerDatosSolicitudPdf(codigoEXSO);
+
+            if (dsSolicitud == null || dsSolicitud.Tables.Count == 0 || dsSolicitud.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No fue posible obtener los datos del titular de la solicitud.");
+            }
+
+            int codigoPERS = 0;
+
+            if (!int.TryParse(dsSolicitud.Tables[0].Rows[0]["PERS_CODIGO"].ToString(),out codigoPERS))
+            {
+                codigoPERS = 0;
+            }
+
+            if (codigoPERS <= 0)
+            {
+                throw new Exception("No fue posible obtener el código de persona del titular.");
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtNumeroDocumento.Text))
+            {
+                throw new Exception("Ingrese el número de documento.");
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtPrimerNombre.Text))
+            {
+                throw new Exception("Ingrese el primer nombre.");
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtPrimerApellido.Text))
+            {
+                throw new Exception("Ingrese el primer apellido.");
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtFechaNacimiento.Text))
+            {
+                throw new Exception("Ingrese la fecha de nacimiento.");
+            }
+
+            int codigoCiudad = 0;
+
+            if (!int.TryParse(DdlCiudad.SelectedValue,out codigoCiudad))
+            {
+                codigoCiudad = 0;
+            }
+
+            if (codigoCiudad <= 0)
+            {
+                throw new Exception("Seleccione la ciudad.");
+            }
+
+            object[] parametros = CrearParametrosOperacionSolicitud(13,codigoEXSO);
+            parametros[0] = 13;
+            parametros[2] = DdlTipoDocumento.SelectedValue;
+            parametros[3] = TxtNumeroDocumento.Text.Trim();
+            parametros[4] = TxtPrimerNombre.Text.Trim().ToUpper();
+            parametros[5] = TxtSegundoNombre.Text.Trim().ToUpper();
+            parametros[6] = TxtPrimerApellido.Text.Trim().ToUpper();
+            parametros[7] = TxtSegundoApellido.Text.Trim().ToUpper();
+            parametros[8] = DdlGenero.SelectedValue;
+            parametros[9] = DdlEstadoCivil.SelectedValue;
+            parametros[10] = TxtFechaNacimiento.Text.Trim();
+            parametros[11] = codigoCiudad;
+            parametros[12] = TxtDireccion.Text.Trim().ToUpper();
+            parametros[13] = TxtFonoCasa.Text.Trim();
+            parametros[14] = TxtFonoOficina.Text.Trim();
+            parametros[15] = TxtCelular.Text.Trim();
+            parametros[16] = TxtEmail.Text.Trim().ToLower();
+            parametros[29] = codigoEXSO;
+            parametros[36] = codigoPERS;
+
+            DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No se obtuvo respuesta al actualizar los datos del titular.");
+            }
+
+            string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
+
+            if (resultado == "DOCUMENTO-DUPLICADO")
+            {
+                throw new Exception("El número de documento ingresado pertenece a otra persona.");
+            }
+
+            if (resultado != "OK-TITULAR-ACTUALIZADO")
+            {
+                throw new Exception("No fue posible actualizar los datos del titular. " + "Respuesta: " + resultado);
+            }
+        }
+        private void QuitarCodependienteSolicitud(int codigoEXSO)
+        {
+            object[] parametros = CrearParametrosOperacionSolicitud(12,codigoEXSO);
+
+            parametros[0] = 12;
+            parametros[29] = codigoEXSO;
+
+            DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No fue posible quitar el codependiente.");
+            }
+
+            string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
+
+            if (resultado != "OK-CODEPENDIENTE-ELIMINADO")
+            {
+                throw new Exception("No fue posible quitar el codependiente. " + "Respuesta: " + resultado);
+            }
+
+            ViewState["CodigoTITUCodependiente"] = null;
+        }
+
+        private void ProcesarCodependienteEdicion(int codigoEXSO)
+        {
+         
+            bool quitarCodependiente = false;
+
+            if (ViewState["QuitarCodependiente"] != null)
+            {
+                bool.TryParse(ViewState["QuitarCodependiente"].ToString(),out quitarCodependiente);
+            }
+
+            if (quitarCodependiente)
+            {
+                QuitarCodependienteSolicitud(codigoEXSO);
+                return;
+            }
+
+            if (ViewState["CodigoTITUCodependiente"] != null)
+            {
+                int codigoTITUCodependiente = 0;
+
+                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(),out codigoTITUCodependiente);
+
+                if (codigoTITUCodependiente > 0)
+                {
+                    GuardarCodependienteSolicitud(codigoEXSO);
+                }
+            }
+        }
+        private void MostrarEstadoCodependiente()
+        {
+            bool tieneCodependiente = false;
+
+            int codigoTITUCodependiente = 0;
+
+            if (ViewState["CodigoTITUCodependiente"] != null)
+            {
+                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(),out codigoTITUCodependiente);
+            }
+
+            tieneCodependiente = codigoTITUCodependiente > 0;
+
+            if (tieneCodependiente)
+            {
+                PnlCodependienteSeleccionado.Visible = true;
+                LblSinCodependiente.Visible = false;
+                LblDocumentoCodependiente.Text = ViewState["DocumentoCodependiente"] != null ? ViewState["DocumentoCodependiente"].ToString() : "";
+                LblNombreCodependiente.Text = ViewState["NombreCodependiente"] != null ? ViewState["NombreCodependiente"].ToString() : "";
+                BtnAgregarCodependiente.Text = "Cambiar Codeudor";
+                BtnAgregarCodependiente.Enabled = true;
+                BtnQuitarCodependiente.Visible = true;
+            }
+
+            else
+            {
+                PnlCodependienteSeleccionado.Visible = false;
+                LblSinCodependiente.Visible = true;
+                LblNombreCodependiente.Text = "";
+                LblDocumentoCodependiente.Text = "";
+                BtnAgregarCodependiente.Text = "Agregar Codeudor";
+
+                if (ViewState["CodigoEXSO"] != null)
+                {
+                    int codigoEXSO = 0;
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                    BtnAgregarCodependiente.Enabled = codigoEXSO > 0;
+                }
             }
         }
 
@@ -2920,7 +2703,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 DataSet dsPersona = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", parametros);
 
-
                 if (dsPersona != null && dsPersona.Tables.Count > 0 && dsPersona.Tables[0].Rows.Count > 0)
                 {
                     DataRow fila = dsPersona.Tables[0].Rows[0];
@@ -2931,12 +2713,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     string segundoNombre = fila["SegundNombre"].ToString().Trim();
                     string primerApellido = fila["PrimerApellido"].ToString().Trim();
                     string segundoApellido = fila["SegundoApellido"].ToString().Trim();
-                    string nombreCompleto = (
-                            primerNombre + " " +
-                            segundoNombre + " " +
-                            primerApellido + " " +
-                            segundoApellido
-                        ).Trim();
+                    string nombreCompleto = (primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido).Trim();
 
                     LblDocumentoCodepEncontrado.Text = fila["Identificacion"].ToString().Trim();
                     LblNombreCodepEncontrado.Text = nombreCompleto;
@@ -3105,7 +2882,6 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-
                 if (DdlEstadoCivilCodep.Items.Count == 0 || string.IsNullOrWhiteSpace(DdlEstadoCivilCodep.SelectedValue))
                 {
                     LblMensajeCodependiente.Text = "Seleccione el estado civil.";
@@ -3119,7 +2895,6 @@ namespace Pry_PrestasaludWAP.Examenes
                     MpeCodependiente.Show();
                     return;
                 }
-
 
                 int codigoCiudad;
 
@@ -3194,28 +2969,56 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnQuitarCodependiente_Click(object sender, EventArgs e)
+        protected void BtnQuitarCodependiente_Click(object sender,EventArgs e)
         {
             try
             {
+               
+                int codigoEXSO = 0;
+
+                if (ViewState["CodigoEXSO"] != null)
+                {
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                }
+
+                if (codigoEXSO > 0)
+                {
+                    ViewState["QuitarCodependiente"] = true;
+                }
+                else
+                {
+                   
+                    ViewState["QuitarCodependiente"] = false;
+                }
+
                 ViewState["CodigoPERSCodependiente"] = 0;
                 ViewState["CodigoTITUCodependiente"] = 0;
                 ViewState["CodigoPERSCodependienteBusqueda"] = 0;
-
+                ViewState["DocumentoCodependiente"] = null;
+                ViewState["NombreCodependiente"] = null;
                 LblNombreCodependiente.Text = "";
                 LblDocumentoCodependiente.Text = "";
                 PnlCodependienteSeleccionado.Visible = false;
                 LblSinCodependiente.Visible = true;
-
-                BtnAgregarCodependiente.Text = "Agregar Codependiente";
+                BtnAgregarCodependiente.Text = "Agregar Codeudor";
                 BtnAgregarCodependiente.Enabled = true;
-
                 TxtNumeroDocumentoCodep.Text = "";
+
                 LimpiarResultadoBusquedaCodependiente();
+
+                if (codigoEXSO > 0)
+                {
+                    Lblerror.Text = "El codependiente será retirado al guardar la solicitud.";
+                }
+                else
+                {
+                    Lblerror.Text = "";
+                }
             }
             catch (Exception ex)
             {
-                Lblerror.Text = ex.ToString();
+                Lblerror.Text =
+                    ex.ToString();
             }
         }
 
@@ -3231,12 +3034,9 @@ namespace Pry_PrestasaludWAP.Examenes
 
             PnlCodependienteEncontrado.Visible = false;
             PnlNuevoCodependiente.Visible = false;
-
             BtnSeleccionarCodependiente.Visible = false;
             BtnCrearCodependiente.Visible = false;
-
             LblMensajeCodependiente.Text = "";
-
             LblDocumentoCodepEncontrado.Text = "";
             LblNombreCodepEncontrado.Text = "";
             LblFechaNacimientoCodepEncontrado.Text = "";
@@ -3276,6 +3076,167 @@ namespace Pry_PrestasaludWAP.Examenes
                 Lblerror.Text = ex.ToString();
             }
         }
+        private void CargarCodependienteEdicion(int codigoEXSO)
+        {
+            // Estado inicial
+            ViewState["CodigoTITUCodependiente"] = null;
+            ViewState["CodigoPERSCodependiente"] = null;
+            ViewState["QuitarCodependiente"] = false;
+
+            DataSet ds = ObtenerDatosSolicitudPdf(codigoEXSO);
+
+            if (ds == null)
+                return;
+
+            if (ds.Tables.Count < 3)
+                return;
+
+            if (ds.Tables[2].Rows.Count == 0)
+            {
+                return;
+            }
+
+            DataRow fila = ds.Tables[2].Rows[0];
+
+            int codigoTITU = 0;
+
+            if (fila["TITU_CODIGO"] != DBNull.Value)
+            {
+                int.TryParse(fila["TITU_CODIGO"].ToString(),out codigoTITU);
+            }
+
+            int codigoPERS = 0;
+
+            if (fila["PERS_CODIGO"] != DBNull.Value)
+            {
+                int.TryParse(fila["PERS_CODIGO"].ToString(),out codigoPERS);
+            }
+
+            if (codigoTITU > 0)
+            {
+                ViewState["CodigoTITUCodependiente"] = codigoTITU;
+            }
+
+            if (codigoPERS > 0)
+            {
+                ViewState["CodigoPERSCodependiente"] = codigoPERS;
+            }
+
+            ViewState["DocumentoCodependiente"] = ObtenerValor(fila,"pers_numerodocumento");
+            ViewState["NombreCodependiente"] = (ObtenerValor(fila,"pers_primernombre") + " " + ObtenerValor(fila,"pers_segundonombre") + " " +
+                    ObtenerValor(fila,"pers_primerapellido") + " " + ObtenerValor(fila,"pers_segundoapellido")).Trim();
+        }
+        private void CargarRequisitosGuardadosEdicion(DataSet dsSolicitud)
+        {
+            DataTable dt = CrearTablaRequisitos();
+
+            if (dsSolicitud == null || dsSolicitud.Tables.Count < 2)
+            {
+                RequisitosActuales = dt;
+                BindRequisitos();
+                LblEstadoRequisitos.Text ="No existen requisitos guardados.";
+                return;
+            }
+
+            DataTable tablaGuardada = dsSolicitud.Tables[1];
+            int orden = 1;
+
+            foreach (DataRow fila in tablaGuardada.Rows)
+            {
+                DataRow nueva = dt.NewRow();
+                int codigo = 0;
+
+                if (fila.Table.Columns.Contains("EXPR_CODIGO"))
+                {
+                    int.TryParse(fila["EXPR_CODIGO"].ToString(),out codigo);
+                }
+
+                nueva["ASRQ_CODIGO"] = codigo;
+                nueva["GRUPO"] = fila.Table.Columns.Contains("GRUPO") ? fila["GRUPO"].ToString() : "";
+                nueva["REQUISITO"] = fila.Table.Columns.Contains("EXAMEN") ? fila["EXAMEN"].ToString() : "";
+                nueva["TIPO"] = "";
+                nueva["ORDEN"] = orden;
+                dt.Rows.Add(nueva);
+                orden++;
+            }
+
+            RequisitosActuales = dt;
+            BindRequisitos();
+
+
+            if (dt.Rows.Count > 0)
+            {
+                LblEstadoRequisitos.Text = "Requisitos guardados de la solicitud.";
+            }
+            else
+            {
+                LblEstadoRequisitos.Text = "La solicitud no tiene requisitos guardados.";
+            }
+
+            BtnConsultarRequisitos.Enabled = false;
+        }
+        private string CancelarSolicitud(int codigoEXSO)
+        {
+            if (codigoEXSO <= 0)
+            {
+                throw new Exception("No se pudo obtener el código de la solicitud.");
+            }
+
+            object[] parametros = CrearParametrosOperacionSolicitud(14, codigoEXSO);
+
+            parametros[0] = 14;
+            parametros[29] = codigoEXSO;
+
+            DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No fue posible cancelar la solicitud.");
+            }
+
+            string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
+
+            if (resultado != "OK-SOLICITUD-CANCELADA" && resultado != "YA-CANCELADA")
+            {
+                throw new Exception("No fue posible cancelar la solicitud. " + "Respuesta: " + resultado);
+            }
+
+            return resultado;
+        }
+        protected void BtnCancelarSolicitud_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int codigoEXSO = 0;
+
+                if (ViewState["CodigoEXSO"] == null || !int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO) || codigoEXSO <= 0)
+                {
+                    new Funciones().funShowJSMessage("No fue posible obtener el código de la solicitud.",this);
+                    return;
+                }
+
+                string resultado = CancelarSolicitud(codigoEXSO);
+
+                if (resultado == "OK-SOLICITUD-CANCELADA")
+                {
+                    Response.Redirect("FrmSolicitudExamenAdmin.aspx");
+                    return;
+                }
+
+                if (resultado == "YA-CANCELADA")
+                {
+                    new Funciones().funShowJSMessage("La solicitud ya se encuentra cancelada.",this);
+                    BtnCancelarSolicitud.Enabled = false;
+                    BtnGrabar.Enabled = false;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                new Funciones().funShowJSMessage("Error al cancelar la solicitud: " + ex.Message,this);
+            }
+        }
+
 
         #endregion
 

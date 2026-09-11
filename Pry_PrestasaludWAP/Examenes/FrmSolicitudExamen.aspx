@@ -644,6 +644,57 @@
                         <asp:PostBackTrigger ControlID="TxtNumeroDocumento" />
                     </Triggers>
                 </asp:UpdatePanel>
+                <%--                <h3 id="TituloCodependiente" runat="server" class="label label-primary"
+                    style="font-size: 14px; display: block; text-align: left; margin-top: 10px;">CODEPENDIENTE
+                </h3>
+                <asp:UpdatePanel
+                    ID="UpdatePanel1"
+                    runat="server">
+                    <ContentTemplate>
+                        <div class="panel panel-default"
+                            style="margin-top: 10px;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <asp:Button
+                                            ID="Button1"
+                                            runat="server"
+                                            Text="Agregar Codependiente"
+                                            CssClass="btn btn-primary"
+                                            Enabled="false"
+                                            CausesValidation="false"
+                                            OnClick="BtnAgregarCodependiente_Click" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <asp:Panel
+                                            ID="Panel1"
+                                            runat="server"
+                                            Visible="false">
+                                            <div class="alert alert-info" style="margin-bottom: 0px;">
+                                                <strong>Codependiente:</strong>
+                                                <asp:Label ID="Label1" runat="server"></asp:Label>
+                                                &nbsp;&nbsp;
+                                                <strong>Documento:</strong>
+                                                <asp:Label ID="Label2" runat="server"></asp:Label>
+                                                &nbsp;&nbsp;
+                                                <asp:Button ID="Button2" runat="server" Text="Quitar"
+                                                    CssClass="btn btn-danger btn-xs"
+                                                    CausesValidation="false"
+                                                    OnClick="BtnQuitarCodependiente_Click" />
+                                            </div>
+                                        </asp:Panel>
+                                        <asp:Label
+                                            ID="Label3"
+                                            runat="server"
+                                            Text="No se ha agregado codependiente."
+                                            ForeColor="Gray">
+                                        </asp:Label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>--%>
                 <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left; margin-top: 10px;">CODEPENDIENTE</h3>
                 <asp:UpdatePanel ID="UpdCodependiente" runat="server">
                     <ContentTemplate>
@@ -651,10 +702,8 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <asp:Button
-                                            ID="BtnAgregarCodependiente"
-                                            runat="server"
-                                            Text="Agregar Codependiente"
+                                        <asp:Button ID="BtnAgregarCodependiente" runat="server"
+                                            Text="Agregar Codeudor"
                                             CssClass="btn btn-primary"
                                             Enabled="false"
                                             CausesValidation="false"
@@ -672,9 +721,7 @@
                                                 <strong>Documento:</strong>
                                                 <asp:Label ID="LblDocumentoCodependiente" runat="server"></asp:Label>
                                                 &nbsp;&nbsp;
-                                                <asp:Button
-                                                    ID="BtnQuitarCodependiente"
-                                                    runat="server"
+                                                <asp:Button ID="BtnQuitarCodependiente" runat="server"
                                                     Text="Quitar"
                                                     CssClass="btn btn-danger btn-xs"
                                                     CausesValidation="false"
@@ -966,7 +1013,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td colspan="2"><h5>Examen adicional (opcional):</h5></td>
+                                <td colspan="2">
+                                    <h5>Examen adicional (opcional):</h5>
+                                </td>
                                 <td colspan="4">
                                     <asp:TextBox ID="TxtExamenAdicional" runat="server" CssClass="form-control upperCase"
                                         Width="100%"
@@ -980,7 +1029,7 @@
                             <tr>
                                 <td colspan="8">
                                     <asp:Panel ID="PnlEspacioExamenAdicional" runat="server" Height="15px"></asp:Panel>
-                                 </td>
+                                </td>
                             </tr>
                             <tr id="TrDocumentoAdjunto" runat="server" visible="false">
                                 <td></td>
@@ -1014,7 +1063,7 @@
                 <div class="panel panel-default">
                     <asp:UpdatePanel ID="UpdOpciones" runat="server">
                         <ContentTemplate>
-                            <table style="width: 100%">
+                            <%--<table style="width: 100%">
                                 <tr>
                                     <td style="text-align: right; width: 45%">
                                         <asp:Button ID="BtnGrabar" runat="server" Text="Grabar" Width="160px" CssClass="button" OnClick="BtnGrabar_Click" TabIndex="27" />
@@ -1022,6 +1071,38 @@
                                     <td style="width: 10%"></td>
                                     <td style="text-align: left; width: 45%">
                                         <asp:Button ID="BtnSalir" runat="server" Text="Salir" Width="160px" CausesValidation="False" CssClass="button" OnClick="BtnSalir_Click" TabIndex="28" />
+                                    </td>
+                                </tr>
+                            </table>--%>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="text-align: center; width: 33%">
+                                        <asp:Button ID="BtnGrabar" runat="server"
+                                            Text="Grabar"
+                                            Width="160px"
+                                            CssClass="button"
+                                            OnClick="BtnGrabar_Click"
+                                            TabIndex="27" />
+                                    </td>
+                                    <td style="text-align: center; width: 34%">
+                                        <asp:Button ID="BtnCancelarSolicitud" runat="server"
+                                            Text="Cancelar Solicitud"
+                                            Width="160px"
+                                            CssClass="button"
+                                            CausesValidation="False"
+                                            Visible="False"
+                                            OnClick="BtnCancelarSolicitud_Click"
+                                            OnClientClick="return confirm('¿Está seguro de cancelar esta solicitud? La solicitud quedará inactiva y deberá crear una nueva si necesita corregir el monto.');"
+                                            TabIndex="28" />
+                                    </td>
+                                    <td style="text-align: center; width: 33%">
+                                        <asp:Button ID="BtnSalir" runat="server"
+                                            Text="Salir"
+                                            Width="160px"
+                                            CausesValidation="False"
+                                            CssClass="button"
+                                            OnClick="BtnSalir_Click"
+                                            TabIndex="29" />
                                     </td>
                                 </tr>
                             </table>
@@ -1033,30 +1114,17 @@
                 </div>
             </div>
         </div>
-        <asp:Button
-            ID="BtnDummyCodependiente"
-            runat="server"
-            Style="display: none;" />
-
-        <asp:ModalPopupExtender
-            ID="MpeCodependiente"
-            runat="server"
+        <asp:Button ID="BtnDummyCodependiente" runat="server" Style="display: none;" />
+        <asp:ModalPopupExtender ID="MpeCodependiente" runat="server"
             TargetControlID="BtnDummyCodependiente"
             PopupControlID="PnlModalCodependiente"
             BackgroundCssClass="popupCodepFondo"
             PopupDragHandleControlID="PnlCabeceraCodependiente">
         </asp:ModalPopupExtender>
         <asp:Panel ID="PnlModalCodependiente" runat="server" CssClass="popupCodep" Style="display: none;">
-            <asp:Panel
-                ID="PnlCabeceraCodependiente"
-                runat="server"
-                CssClass="popupCodepCabecera">
-
-                <span>Agregar Codependiente</span>
-
-                <span class="popupCodepMover">Arrastrar
-                </span>
-
+            <asp:Panel ID="PnlCabeceraCodependiente" runat="server" CssClass="popupCodepCabecera">
+                <span>Agregar Codeudor</span>
+                <span class="popupCodepMover">Mover</span>
             </asp:Panel>
             <asp:UpdatePanel ID="UpdModalCodependiente" runat="server" UpdateMode="Conditional">
                 <ContentTemplate>
@@ -1076,8 +1144,7 @@
                                             CssClass="form-control upperCase"
                                             MaxLength="20">
                                         </asp:TextBox>
-                                        <asp:FilteredTextBoxExtender ID="FteNumeroDocumentoCodep"
-                                            runat="server"
+                                        <asp:FilteredTextBoxExtender ID="FteNumeroDocumentoCodep" runat="server"
                                             Enabled="True"
                                             FilterType="Numbers"
                                             TargetControlID="TxtNumeroDocumentoCodep">
@@ -1087,10 +1154,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>&nbsp;</label>
-                                        <asp:Button
-                                            ID="BtnBuscarCodependiente"
-                                            runat="server"
-                                            Text="Buscar"
+                                        <asp:Button ID="BtnBuscarCodependiente" runat="server" Text="Buscar"
                                             CssClass="btn btn-primary btn-block"
                                             CausesValidation="false"
                                             OnClick="BtnBuscarCodependiente_Click" />
@@ -1125,15 +1189,13 @@
                             <asp:Panel ID="PnlNuevoCodependiente" runat="server" Visible="false">
                                 <hr />
                                 <div class="popupCodepSubtitulo">
-                                    Datos del nuevo codependiente
+                                    Datos del nuevo codeudor
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Primer Nombre:</label>
-                                            <asp:TextBox
-                                                ID="TxtPrimerNombreCodep"
-                                                runat="server"
+                                            <asp:TextBox ID="TxtPrimerNombreCodep" runat="server"
                                                 CssClass="form-control upperCase"
                                                 MaxLength="80">
                                             </asp:TextBox>
@@ -1142,8 +1204,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Segundo Nombre:</label>
-                                            <asp:TextBox ID="TxtSegundoNombreCodep"
-                                                runat="server"
+                                            <asp:TextBox ID="TxtSegundoNombreCodep" runat="server"
                                                 CssClass="form-control upperCase"
                                                 MaxLength="80">
                                             </asp:TextBox>
@@ -1154,9 +1215,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Primer Apellido:</label>
-                                            <asp:TextBox
-                                                ID="TxtPrimerApellidoCodep"
-                                                runat="server"
+                                            <asp:TextBox ID="TxtPrimerApellidoCodep" runat="server"
                                                 CssClass="form-control upperCase"
                                                 MaxLength="80">
                                             </asp:TextBox>
@@ -1165,9 +1224,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Segundo Apellido:</label>
-                                            <asp:TextBox
-                                                ID="TxtSegundoApellidoCodep"
-                                                runat="server"
+                                            <asp:TextBox ID="TxtSegundoApellidoCodep" runat="server"
                                                 CssClass="form-control upperCase"
                                                 MaxLength="80">
                                             </asp:TextBox>
@@ -1178,21 +1235,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Género:</label>
-                                            <asp:DropDownList
-                                                ID="DdlGeneroCodep"
-                                                runat="server"
-                                                CssClass="form-control">
-                                            </asp:DropDownList>
+                                            <asp:DropDownList ID="DdlGeneroCodep" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Estado Civil:</label>
-                                            <asp:DropDownList
-                                                ID="DdlEstadoCivilCodep"
-                                                runat="server"
-                                                CssClass="form-control">
-                                            </asp:DropDownList>
+                                            <asp:DropDownList ID="DdlEstadoCivilCodep" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
@@ -1200,36 +1249,22 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Fecha Nacimiento:</label>
-                                            <asp:TextBox
-                                                ID="TxtFechaNacimientoCodep"
-                                                runat="server"
-                                                CssClass="form-control"
-                                                TextMode="Date">
-                                            </asp:TextBox>
+                                            <asp:TextBox ID="TxtFechaNacimientoCodep" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                             <asp:HiddenField ID="HdnFechaNacimientoCodep" runat="server" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Email:</label>
-                                            <asp:TextBox
-                                                ID="TxtEmailCodep"
-                                                runat="server"
-                                                CssClass="form-control lowCase"
-                                                MaxLength="80">
-                                            </asp:TextBox>
+                                            <asp:TextBox ID="TxtEmailCodep" runat="server" CssClass="form-control lowCase" MaxLength="80"></asp:TextBox>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Provincia:</label>
-                                            <asp:DropDownList
-                                                ID="DdlProvinciaCodep"
-                                                runat="server"
-                                                CssClass="form-control"
+                                            <asp:DropDownList ID="DdlProvinciaCodep" runat="server" CssClass="form-control"
                                                 AutoPostBack="true"
                                                 OnSelectedIndexChanged="DdlProvinciaCodep_SelectedIndexChanged">
                                             </asp:DropDownList>
@@ -1238,11 +1273,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Ciudad:</label>
-                                            <asp:DropDownList
-                                                ID="DdlCiudadCodep"
-                                                runat="server"
-                                                CssClass="form-control">
-                                            </asp:DropDownList>
+                                            <asp:DropDownList ID="DdlCiudadCodep" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
@@ -1250,10 +1281,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Dirección:</label>
-                                            <asp:TextBox
-                                                ID="TxtDireccionCodep"
-                                                runat="server"
-                                                CssClass="form-control upperCase"
+                                            <asp:TextBox ID="TxtDireccionCodep" runat="server" CssClass="form-control upperCase"
                                                 MaxLength="250"
                                                 TextMode="MultiLine"
                                                 Rows="2">
@@ -1265,59 +1293,35 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Teléfono Casa:</label>
-                                            <asp:TextBox
-                                                ID="TxtFonoCasaCodep"
-                                                runat="server"
-                                                CssClass="form-control"
-                                                MaxLength="10">
-                                            </asp:TextBox>
+                                            <asp:TextBox ID="TxtFonoCasaCodep" runat="server" CssClass="form-control" MaxLength="10"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Teléfono Oficina:</label>
-                                            <asp:TextBox
-                                                ID="TxtFonoOficinaCodep"
-                                                runat="server"
-                                                CssClass="form-control"
-                                                MaxLength="10">
-                                            </asp:TextBox>
+                                            <asp:TextBox ID="TxtFonoOficinaCodep" runat="server" CssClass="form-control" MaxLength="10"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Celular:</label>
-                                            <asp:TextBox
-                                                ID="TxtCelularCodep"
-                                                runat="server"
-                                                CssClass="form-control"
-                                                MaxLength="10">
-                                            </asp:TextBox>
+                                            <asp:TextBox ID="TxtCelularCodep" runat="server" CssClass="form-control" MaxLength="10"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
                             </asp:Panel>
                         </div>
                         <div class="popupCodepPie">
-                            <asp:Button
-                                ID="BtnCancelarCodependiente"
-                                runat="server"
-                                Text="Cancelar"
+                            <asp:Button ID="BtnCancelarCodependiente" runat="server" Text="Cancelar"
                                 CssClass="btn btn-default"
                                 CausesValidation="false"
                                 OnClick="BtnCancelarCodependiente_Click" />
-                            <asp:Button
-                                ID="BtnSeleccionarCodependiente"
-                                runat="server"
-                                Text="Agregar Codependiente"
+                            <asp:Button ID="BtnSeleccionarCodependiente" runat="server" Text="Agregar Codependiente"
                                 CssClass="btn btn-primary"
                                 Visible="false"
                                 CausesValidation="false"
                                 OnClick="BtnSeleccionarCodependiente_Click" />
-                            <asp:Button
-                                ID="BtnCrearCodependiente"
-                                runat="server"
-                                Text="Crear y Agregar"
+                            <asp:Button ID="BtnCrearCodependiente" runat="server" Text="Crear y Agregar"
                                 CssClass="btn btn-success"
                                 Visible="false"
                                 CausesValidation="false"

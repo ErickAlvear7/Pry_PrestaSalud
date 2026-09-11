@@ -1827,6 +1827,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\external\jquery\jquery.js" />
+    <Content Include="PlantillasDocumentos\CartaAutorizacionExamenes.pdf" />
     <None Include="Properties\PublishProfiles\Expert_Prestasalud.pubxml" />
     <None Include="Properties\PublishProfiles\PrestaSalud.pubxml" />
     <None Include="Properties\PublishProfiles\PRESTASALUD_PRODUCCION.pubxml" />

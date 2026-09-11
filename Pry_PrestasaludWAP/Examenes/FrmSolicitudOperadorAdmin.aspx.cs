@@ -252,8 +252,8 @@ namespace Pry_PrestasaludWAP.Examenes
                     FunActualizarEstado(int.Parse(codigoexso));
                     codigopers = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPERS"].ToString();
                     codigotitu = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
-                    Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?CodigoTitular=" + codigotitu +
-                        "&CodigoProducto=" + codigoprod + "&Regresar=1", true);
+                    Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?CodigoTitular=" + codigotitu + "&CodigoProducto=" 
+                        + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1",true);
                 }
                 else new Funciones().funShowJSMessage("Descargue el Examen Solicitado!", this);
             }

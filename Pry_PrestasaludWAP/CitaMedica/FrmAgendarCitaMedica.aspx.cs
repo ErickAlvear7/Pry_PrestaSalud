@@ -20,6 +20,10 @@ using System.Web.UI.WebControls;
 using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 using static Pry_PrestasaludWAP.Modelo.Models;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
 
 
 namespace Pry_PrestasaludWAP.CitaMedica
@@ -176,6 +180,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     Session["CodigoTitular"] = Request["CodigoTitular"];
                     Session["CodigoProducto"] = Request["CodigoProducto"];
                     Session["Regresar"] = Request["Regresar"];
+                    ViewState["CodigoEXSO"] = Request["CodigoEXSO"];//cambio aki
                     Session["TipoCita"] = "CitaMedica";
                     ViewState["Intervalo"] = 0;
 
@@ -256,7 +261,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     if (Session["Regresar"] != null)
                     {
-                        if (Session["Regresar"].ToString() == "1") TrFileUpload.Visible = true;
+                        if (Session["Regresar"].ToString() == "1")
+                        {
+                            TrFileUpload.Visible = false;
+                        }
                     }
 
                     if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
@@ -1498,7 +1506,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //Thread.Sleep(300);
 
                 Array.Resize(ref objcitamedica, 25); //cambio 24
-
                 objcitamedica[16] = "";
                 objcitamedica[17] = "";
                 objcitamedica[18] = "";
@@ -1526,6 +1533,28 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
                 subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
+                //adjunto
+                bool esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                byte[] cartaPdf = null;
+                string nombreCartaPdf = "";
+
+                if (esAgendamientoExamen)
+                {
+                    if (Session["CartaAutorizacionPdf"] == null || Session["CartaAutorizacionNombre"] == null)
+                    {
+                        lblerror.Text = "No se encontró la carta de autorización para adjuntar al correo.";
+                        return;
+                    }
+
+                    cartaPdf = Session["CartaAutorizacionPdf"] as byte[];
+                    nombreCartaPdf = Session["CartaAutorizacionNombre"].ToString();
+
+                    if (cartaPdf == null || cartaPdf.Length == 0)
+                    {
+                        lblerror.Text = "La carta de autorización se encuentra vacía.";
+                        return;
+                    }
+                }
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 8;
                 objparam[13] = "";
@@ -1563,7 +1592,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     DataSet dtdirec = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparamdirecpre);
                     string direcpres = dtdirec.Tables[0].Rows[0][0].ToString();
-
 
                     objparam[5] = dr[6].ToString();
                     objparam[6] = dr[7].ToString();
@@ -1619,9 +1647,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         thrEnviarSMS.Start();
                     }
 
-                    //nameFile = filePath + "CitaMedica_" + dr[5].ToString().Replace("/", "") + "_" + codigocita.ToString() + ".txt";
-                    //returnFile = new Funciones().funCrearArchivoCita(nameFile, objcitamedica);
-
                     //Cambia laboratorio
                     if (codproducto == 225 || codproducto == 226 || codproducto == 227)
                     {
@@ -1632,22 +1657,29 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else
                     {
-                        mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
-                        ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                        ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                        if (esAgendamientoExamen)
+                        {
+                            mensaje = new Funciones().funEnviarMailExamen(mailsP, subject, objcitamedica, fileTemplate, ViewState["Host"].ToString(),
+                            int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), fileLogo,
+                            mailsA, mailsD, mailsU, newFecha, newFechaNaci, cartaPdf, nombreCartaPdf);
+                        }
+                        else
+                        {
+                            mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
+                            ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
+                            ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
+                        }
                     }
-
-
-                    //mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
-                    //    ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
-                    //    ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), returnFile, fileLogo, mailsA, mailsD, mailsU, newFecha, newFechaNaci);
 
                 }
 
-                //mensaje = "";
                 if (mensaje == "")
                 {
-                    //Session["codigocita"] = int.Parse(ViewState["CodigoCitapop"].ToString());
+                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    {
+                        LimpiarCartaAutorizacionTemporal();
+                    }
+  
                     if (Session["Perfil"].ToString() == "NOVA")
                     {
                         string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
@@ -1656,11 +1688,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         if (Session["Regresar"].ToString() == "0")
                         Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
-                    else
+                        else
                         Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
                 }
                 else
                 {
+                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    {
+                        LimpiarCartaAutorizacionTemporal();
+                    }
+
+
                     if (Session["Regresar"].ToString() == "0")
                         Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
                     else
@@ -3436,54 +3474,50 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if (tbCitaMedica.Rows.Count > 0)
                 {
                     //ACTUALIZAR EN EL CASO DE SER AGENDAMIENTO POR EXAMENES
-                    if (Session["Regresar"].ToString() == "1")
+                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
                     {
-                        if (FileUpload1.HasFile == false)
+
+                        if (ViewState["CodigoEXSO"] == null || ViewState["CodigoEXSO"].ToString().Trim() == "")
                         {
-                            new Funciones().funShowJSMessage("Seleccione Archivo..!", this);
+                            lblerror.Text = "No se recibió el código de la solicitud de exámenes.";
+                            imgAgendar.Enabled = false;
                             return;
                         }
-                        else
+
+                        int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
+                        bool continuarCarta = ViewState["ContinuarCarta"] != null && ViewState["ContinuarCarta"].ToString() == "SI";
+
+                        if (!continuarCarta)
                         {
-                            filePath1 = FileUpload1.PostedFile.FileName;
-                            filename1 = Path.GetFileName(filePath1);
-                            ext1 = Path.GetExtension(filename1);
-                            type1 = string.Empty;
+                            string fechaCita = ViewState["FechaCita"] != null ? ViewState["FechaCita"].ToString() : "";
+                            string horaCita = ViewState["HoraCita"] != null ? ViewState["HoraCita"].ToString() : "";
+                            string prestador = ddlPrestadora.SelectedItem != null ? ddlPrestadora.SelectedItem.Text.Trim() : "";
 
-                            if (filename1.Length > 100)
-                            {
-                                new Funciones().funShowJSMessage("Nombre del Archivo Máximo 100 Caractéres..!", this);
-                                return;
-                            }
+                            bytes = GenerarCartaAutorizacionPdf(codigoEXSO, fechaCita, horaCita, prestador);
+                            DataSet dsCartaNombre = ObtenerDatosCartaAutorizacion(codigoEXSO);
+                            string nombreTitularCarta = dsCartaNombre.Tables[0].Rows[0]["TITULAR"].ToString().Trim();
+                            filename1 = "Carta_Autorizacion_" + codigoEXSO.ToString() + "_" + LimpiarNombreArchivo(nombreTitularCarta) + ".pdf";
+                            type1 = "application/pdf";
+                            ext1 = ".pdf";
 
-                            switch (ext1)
-                            {
-                                case ".doc":
-                                case ".docx":
-                                    type1 = "application/word";
-                                    break;
-                                case ".pdf":
-                                    type1 = "application/pdf";
-                                    break;
-                                case ".png":
-                                    type1 = "application/png";
-                                    break;
-                                case ".jpg":
-                                    type1 = "application/jpg";
-                                    break;
-                            }
-                            if (type1 != String.Empty)
-                            {
-                                Stream fs = FileUpload1.PostedFile.InputStream;
-                                BinaryReader br = new BinaryReader(fs);
-                                bytes = br.ReadBytes((Int32)fs.Length);
-                            }
-                            else
-                            {
-                                new Funciones().funShowJSMessage("Seleccione Archivos de Tipo (.doc,.docx,.pdf,.png,.jpg", this);
-                                return;
-                            }
+                            Session["CartaAutorizacionPdf"] = bytes;
+                            Session["CartaAutorizacionNombre"] = filename1;
+                            Session["CartaAutorizacionTipo"] = type1;
+                            Session["CartaAutorizacionExtension"] = ext1;
+                            Session["CartaAutorizacionEXSO"] = codigoEXSO;
+
+                            string base64Carta = Convert.ToBase64String(bytes);
+                            string nombreCartaJs = HttpUtility.JavaScriptStringEncode(filename1);
+                            string scriptCarta = "mostrarCartaAutorizacion('" + base64Carta + "','" + nombreCartaJs + "');";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "MostrarCartaAutorizacion", scriptCarta, true);
+
+                            return;
                         }
+
+                        bytes = (byte[])Session["CartaAutorizacionPdf"];
+                        filename1 = Session["CartaAutorizacionNombre"].ToString();
+                        type1 = Session["CartaAutorizacionTipo"].ToString();
+                        ext1 = Session["CartaAutorizacionExtension"].ToString();
 
                         Array.Resize(ref objparam, 43);
                         objparam[0] = 3;
@@ -3515,7 +3549,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[26] = "0";
                         objparam[27] = "0";
                         objparam[28] = "";
-                        objparam[29] = 0;
+                        objparam[29] = codigoEXSO;
                         objparam[30] = "";
                         objparam[31] = "SGA";
                         objparam[32] = ViewState["FechaCita"].ToString() + " " + ViewState["HoraCita"].ToString().Substring(0, 5);
@@ -3531,7 +3565,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[42] = Session["MachineName"].ToString();
                         dtsexa = new Conexion(2, "").FunInsertSolictudExamen(objparam);
                     }
-
 
                     string[] columnas = new[] { "PreeCodigo", "MediCodigo","CodigoPrestadora", "TipoCliente", "TituCodigo", "BeneCodigo", "CodParentesco",
                         "EstatusCita","FechaCita","DiaCita","Hora","HodeCodigo","Detalle","Longitud","Latitud","Observacion"};
@@ -3563,14 +3596,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
                     if (codCita > 0)
                     {
-                        Session["SalirAgenda"] = "SI";
-                        Session["codigocita"] = codCita;
-
+                        //ViewState["ContinuarCarta"] = "NO";
+                        //Session.Remove("CartaAutorizacionPdf");
+                        //Session.Remove("CartaAutorizacionNombre");
+                        //Session.Remove("CartaAutorizacionTipo");
+                        //Session.Remove("CartaAutorizacionExtension");
+                        //Session.Remove("CartaAutorizacionEXSO");
+                        //Session["SalirAgenda"] = "SI";
+                        //Session["codigocita"] = codCita;
 
                         FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString()); //AKI SE ENVIA EL EMAIL
                     }
                 }
-
 
                 else FunShowJSMessage("Seleccione Datos para Agendar la Cita");
             }
@@ -3613,7 +3650,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
                 }
 
-
             }
 
         }
@@ -3639,7 +3675,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
                 }
             }
-
         }
         protected void grdvHistorialCitas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -4039,6 +4074,546 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 $"hideModal('{panelId}');",
                 true
             );
+        }
+
+        private DataSet ObtenerDatosCartaAutorizacion(int codigoEXSO)
+        {
+            if (codigoEXSO <= 0)
+            {
+                throw new Exception("No se recibió un código de solicitud válido.");
+            }
+
+            object[] parametros = new object[3];
+
+            parametros[0] = codigoEXSO;
+            parametros[1] = "";
+            parametros[2] = 226;
+
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("No fue posible obtener los datos de la solicitud para generar la carta.");
+            }
+
+            return ds;
+        }
+        private string FormatearFechaCarta(string fecha)
+        {
+            DateTime fechaCita;
+
+            if (!DateTime.TryParse(fecha, new CultureInfo("es-EC"), DateTimeStyles.None, out fechaCita))
+            {
+                if (!DateTime.TryParse(fecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaCita))
+                {
+                    return fecha;
+                }
+            }
+
+            CultureInfo cultura = new CultureInfo("es-EC");
+            string mes = cultura.DateTimeFormat.GetMonthName(fechaCita.Month).ToUpper();
+            return fechaCita.Day + " de " + mes + " del " + fechaCita.Year;
+        }
+        private string FormatearHoraCarta(string hora)
+        {
+            DateTime horaCita;
+
+            if (DateTime.TryParse(hora, new CultureInfo("es-EC"), DateTimeStyles.None, out horaCita))
+            {
+                return horaCita.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+            }
+
+            return hora;
+        }
+
+        private XFont CrearFuenteAjustada(XGraphics gfx,string texto,double anchoMaximo,double tamanoInicial,double tamanoMinimo,XFontStyle estilo)
+        {
+            double tamano = tamanoInicial;
+            XFont fuente = new XFont("Arial",tamano,estilo);
+
+            while (tamano > tamanoMinimo && gfx.MeasureString(texto, fuente).Width > anchoMaximo)
+            {
+                tamano -= 0.25;
+                fuente = new XFont("Arial",tamano,estilo);
+            }
+
+            return fuente;
+        }
+
+        private byte[] GenerarCartaAutorizacionPdf(int codigoEXSO,string fechaCita,string horaCita,string prestador)
+        {
+            if (codigoEXSO <= 0)
+            {
+                throw new Exception("Código de solicitud inválido.");
+            }
+
+
+            DataSet dsCarta =
+                ObtenerDatosCartaAutorizacion(
+                    codigoEXSO
+                );
+
+            if (dsCarta == null ||
+                dsCarta.Tables.Count == 0 ||
+                dsCarta.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception(
+                    "No existen datos para generar la carta."
+                );
+            }
+
+            DataRow solicitud =
+                dsCarta.Tables[0].Rows[0];
+
+            string titular =
+                solicitud["TITULAR"]
+                .ToString()
+                .Trim();
+
+            List<string> listaExamenes =
+                new List<string>();
+
+            if (dsCarta.Tables.Count > 1)
+            {
+                foreach (
+                    DataRow fila
+                    in dsCarta.Tables[1].Rows)
+                {
+                    string requisito =
+                        fila["REQUISITO"]
+                        .ToString()
+                        .Trim();
+
+                    if (requisito != "")
+                    {
+                        listaExamenes.Add(
+                            requisito
+                        );
+                    }
+                }
+            }
+
+            if (
+                solicitud.Table.Columns.Contains(
+                    "EXAMEN_ADICIONAL"
+                ))
+            {
+                string adicional =
+                    solicitud["EXAMEN_ADICIONAL"]
+                    .ToString()
+                    .Trim();
+
+                if (adicional != "")
+                {
+                    listaExamenes.Add(
+                        adicional
+                    );
+                }
+            }
+
+            string examenes = string.Join(", ",listaExamenes.ToArray());
+
+            if (examenes == "")
+            {
+                examenes = "SIN EXÁMENES REGISTRADOS";
+            }
+
+            string rutaPlantilla = Server.MapPath("~/PlantillasDocumentos/CartaAutorizacionExamenes.pdf");
+
+            if (!File.Exists(rutaPlantilla))
+            {
+                throw new Exception("No se encontró la plantilla PDF: " + rutaPlantilla);
+            }
+
+            PdfDocument documento = PdfReader.Open(rutaPlantilla,PdfDocumentOpenMode.Modify);
+
+            if (documento.PageCount == 0)
+            {
+                documento.Close();
+                throw new Exception("La plantilla PDF no contiene páginas.");
+            }
+
+            PdfPage pagina = documento.Pages[0];
+
+            XGraphics gfx = XGraphics.FromPdfPage(pagina,XGraphicsPdfPageOptions.Append);
+
+            //fuente
+            XFont fuenteTitular = new XFont("Arial",11,XFontStyle.Bold);
+            string textoFecha = FormatearFechaCarta(fechaCita);
+            string textoHora = FormatearHoraCarta(horaCita);
+
+            string texto1 = "de ";
+            string texto2 = "Seguros Unidos S.A.";
+            string texto3 = ", el día ";
+            string texto4 = textoFecha;
+            string texto5 = " y hora de la cita médica ";
+            string texto6 = textoHora;
+
+            gfx.DrawRectangle(
+                XBrushes.White,
+                65,     // X
+                61,     // Y
+                475,    // ancho
+                18      // alto
+            );
+
+            double tamanoLinea = 7.5;
+            XFont fuenteLineaNormal = null;
+            XFont fuenteLineaBold = null;
+            double anchoDisponible = 470;
+
+            while (tamanoLinea >= 5.5)
+            {
+                fuenteLineaNormal =
+                    new XFont(
+                        "Arial",
+                        tamanoLinea,
+                        XFontStyle.Regular
+                    );
+
+                fuenteLineaBold =
+                    new XFont(
+                        "Arial",
+                        tamanoLinea,
+                        XFontStyle.Bold
+                    );
+
+                double anchoTotal =
+                    gfx.MeasureString(
+                        texto1,
+                        fuenteLineaNormal
+                    ).Width
+                    +
+                    gfx.MeasureString(
+                        texto2,
+                        fuenteLineaBold
+                    ).Width
+                    +
+                    gfx.MeasureString(
+                        texto3,
+                        fuenteLineaNormal
+                    ).Width
+                    +
+                    gfx.MeasureString(
+                        texto4,
+                        fuenteLineaBold
+                    ).Width
+                    +
+                    gfx.MeasureString(
+                        texto5,
+                        fuenteLineaNormal
+                    ).Width
+                    +
+                    gfx.MeasureString(
+                        texto6,
+                        fuenteLineaBold
+                    ).Width;
+
+                if (anchoTotal <= anchoDisponible)
+                {
+                    break;
+                }
+
+                tamanoLinea -= 0.25;
+            }
+
+            double xLinea = 68;
+            double yLinea = 63;
+
+            // "de "
+            gfx.DrawString(
+                texto1,
+                fuenteLineaNormal,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            xLinea +=
+                gfx.MeasureString(
+                    texto1,
+                    fuenteLineaNormal
+                ).Width;
+
+
+            // "Seguros Unidos S.A."
+            gfx.DrawString(
+                texto2,
+                fuenteLineaBold,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            xLinea +=
+                gfx.MeasureString(
+                    texto2,
+                    fuenteLineaBold
+                ).Width;
+
+            // ", el día "
+            gfx.DrawString(
+                texto3,
+                fuenteLineaNormal,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            xLinea +=
+                gfx.MeasureString(
+                    texto3,
+                    fuenteLineaNormal
+                ).Width;
+
+
+            // FECHA
+            gfx.DrawString(
+                texto4,
+                fuenteLineaBold,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            xLinea +=
+                gfx.MeasureString(
+                    texto4,
+                    fuenteLineaBold
+                ).Width;
+
+            gfx.DrawString(
+                texto5,
+                fuenteLineaNormal,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            xLinea +=
+                gfx.MeasureString(
+                    texto5,
+                    fuenteLineaNormal
+                ).Width;
+
+            // HORA
+            gfx.DrawString(
+                texto6,
+                fuenteLineaBold,
+                XBrushes.Black,
+                new XRect(
+                    xLinea,
+                    yLinea,
+                    470,
+                    15
+                ),
+                XStringFormats.TopLeft
+            );
+
+            gfx.DrawString(
+                titular,
+                fuenteTitular,
+                XBrushes.Black,
+                new XRect(
+                    177,
+                    89,
+                    350,
+                    20
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double tamanoExamen = 7.0;
+
+            if (examenes.Length > 250)
+            {
+                tamanoExamen =
+                    5.5;
+            }
+            else if (examenes.Length > 180)
+            {
+                tamanoExamen =
+                    6.0;
+            }
+            else if (examenes.Length > 120)
+            {
+                tamanoExamen =
+                    6.5;
+            }
+
+            XFont fuenteExamen =
+                new XFont(
+                    "Arial",
+                    tamanoExamen,
+                    XFontStyle.Regular
+                );
+
+            XTextFormatter formatter =
+                new XTextFormatter(
+                    gfx
+                );
+
+            formatter.DrawString(
+                examenes,
+                fuenteExamen,
+                XBrushes.Black,
+                new XRect(
+                    120,
+                    115,
+                    410,
+                    42
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double tamanoPrestador = 7.5;
+
+            XFont fuentePrestador =
+                new XFont(
+                    "Arial",
+                    tamanoPrestador,
+                    XFontStyle.Regular
+                );
+
+            while (
+                tamanoPrestador > 5.5 &&
+                gfx.MeasureString(
+                    prestador,
+                    fuentePrestador
+                ).Width > 155)
+            {
+                tamanoPrestador -=
+                    0.25;
+
+                fuentePrestador =
+                    new XFont(
+                        "Arial",
+                        tamanoPrestador,
+                        XFontStyle.Regular
+                    );
+            }
+
+            gfx.DrawString(
+                prestador,
+                fuentePrestador,
+                XBrushes.Black,
+                new XRect(
+                    135,
+                    417,
+                    155,
+                    18
+                ),
+                XStringFormats.TopLeft
+            );
+
+
+            gfx.Dispose();
+
+            using (
+                MemoryStream memoria =
+                    new MemoryStream())
+            {
+                documento.Save(
+                    memoria,
+                    false
+                );
+
+                documento.Close();
+                return memoria.ToArray();
+            }
+        }
+
+        private string LimpiarNombreArchivo(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+            {
+                return "TITULAR";
+            }
+
+            string nombre = texto.Trim().ToUpper();
+
+            foreach (char caracter in Path.GetInvalidFileNameChars())
+            {
+                nombre = nombre.Replace(caracter.ToString(),"");
+            }
+
+            nombre = nombre.Replace(" ", "_");
+
+            return nombre;
+        }
+
+        protected void BtnCancelarCarta_Click(object sender,EventArgs e)
+        {
+            try
+            {
+                ViewState["ContinuarCarta"] = "NO";
+                Session.Remove("CartaAutorizacionPdf");
+                Session.Remove("CartaAutorizacionNombre");
+                Session.Remove("CartaAutorizacionTipo");
+                Session.Remove("CartaAutorizacionExtension");
+                Session.Remove("CartaAutorizacionEXSO");
+                Session.Remove("CartaAutorizacionPendiente");
+
+                ScriptManager.RegisterStartupScript(this,this.GetType(),"CerrarCartaAutorizacion","cerrarCartaAutorizacion();",true);
+            }
+            catch (Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+            }
+        }
+        protected void BtnContinuarCarta_Click(object sender,EventArgs e)
+        {
+            try
+            {
+                if (Session["CartaAutorizacionPdf"] == null)
+                {
+                    new Funciones().funShowJSMessage("No existe una carta pendiente de confirmación.",this);
+                    return;
+                }
+
+                ViewState["ContinuarCarta"] = "SI";
+                imgAgendar_Click(imgAgendar,null);
+            }
+            catch (Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+            }
+        }
+        private void LimpiarCartaAutorizacionTemporal()
+        {
+            Session.Remove("CartaAutorizacionPdf");
+            Session.Remove("CartaAutorizacionNombre");
+            Session.Remove("CartaAutorizacionTipo");
+            Session.Remove("CartaAutorizacionExtension");
+            Session.Remove("CartaAutorizacionEXSO");
+            Session.Remove("CartaAutorizacionPendiente");
+
+            ViewState["ContinuarCarta"] = "NO";
         }
 
 

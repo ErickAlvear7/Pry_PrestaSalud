@@ -128,10 +128,10 @@ C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Depl
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\System.Web.WebPages.Razor.xml
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\de\PdfSharp.resources.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\bin\de\PdfSharp.Charting.resources.dll
+C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.AssemblyReference.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\RdlCompile.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\RdlCompile.compiled
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.CoreCompileInputs.cache
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.CopyComplete
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.dll
 C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.pdb
-C:\respaldox\ExpertWeb\ExpertWeb\Pry_PrestasaludWAP\obj\Debug\Pry_PrestasaludWAP.csproj.AssemblyReference.cache
