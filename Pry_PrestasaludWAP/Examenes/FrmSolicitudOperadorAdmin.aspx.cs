@@ -24,8 +24,7 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-                //Session["usuCodigo"] = "2675";
-                //Session["MachineName"] = "pc";
+               
                 if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                     Response.Redirect("~/Reload.html");
                 if (!IsPostBack)
@@ -89,7 +88,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 objparam[1] = "";
                 objparam[2] = tipoConsulta;
 
-                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
                 if (dts == null || dts.Tables.Count == 0 || dts.Tables[0].Rows.Count == 0)
                 {
@@ -109,28 +108,28 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-                if (dts.Tables[0].Rows[0]["DataBin"]== DBNull.Value)
+                if (dts.Tables[0].Rows[0]["DataBin"] == DBNull.Value)
                 {
-                    Lblerror.Text="El documento no contiene información para descargar.";
+                    Lblerror.Text = "El documento no contiene información para descargar.";
                     return;
                 }
 
-                byte[] archivo=(byte[])dts.Tables[0].Rows[0]["DataBin"];
+                byte[] archivo = (byte[])dts.Tables[0].Rows[0]["DataBin"];
 
                 if (archivo == null || archivo.Length == 0)
                 {
-                    Lblerror.Text="El documento se encuentra vacío.";
+                    Lblerror.Text = "El documento se encuentra vacío.";
                     return;
                 }
 
-                type=dts.Tables[0].Rows[0]["Tipo"].ToString();
-                Name=dts.Tables[0].Rows[0]["Nombre"].ToString();
+                type = dts.Tables[0].Rows[0]["Tipo"].ToString();
+                Name = dts.Tables[0].Rows[0]["Nombre"].ToString();
 
                 Response.Clear();
                 Response.Buffer = true;
-                Response.ContentType=type;
+                Response.ContentType = type;
 
-                Response.AddHeader("content-disposition","attachment;filename=\"" + Name + "\"");
+                Response.AddHeader("content-disposition", "attachment;filename=\"" + Name + "\"");
                 Response.Charset = "";
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.BinaryWrite(archivo);
@@ -145,14 +144,36 @@ namespace Pry_PrestasaludWAP.Examenes
         #endregion
 
         #region Botones y Eventos
-        protected void GrdvDatos_RowDataBound(object sender,GridViewRowEventArgs e)
+        protected void GrdvDatos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             try
             {
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
-                
+
                     estado = GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString();
+                    ImageButton btnAgendar = e.Row.FindControl("ImgAgendar") as ImageButton;
+
+                    if (btnAgendar != null)
+                    {
+                        if (estado == "SRR" || estado == "SRV")
+                        {
+                            btnAgendar.Enabled = true;
+                            btnAgendar.ToolTip = "Agendar solicitud";
+                            btnAgendar.Style["opacity"] = "1";
+                            btnAgendar.Style["cursor"] = "pointer";
+                        }
+                        else
+                        {
+                            btnAgendar.Enabled = false;
+                            btnAgendar.ToolTip = "La solicitud ya se encuentra en una etapa posterior";
+                            btnAgendar.Style["opacity"] = "0.35";
+                            btnAgendar.Style["cursor"] = "not-allowed";
+                        }
+                    }
+
+                    extension = GrdvDatos.DataKeys[e.Row.RowIndex].Values["Ext"].ToString();
+
                     switch (estado)
                     {
                         case "SRR":
@@ -161,6 +182,31 @@ namespace Pry_PrestasaludWAP.Examenes
                         case "SRV":
                             e.Row.Cells[5].BackColor = System.Drawing.Color.Coral;
                             break;
+                        case "SGA":
+                            e.Row.Cells[5].BackColor = System.Drawing.Color.LightGreen;
+                            break;
+                        case "EXR":
+                            e.Row.Cells[5].BackColor = System.Drawing.Color.Aquamarine;
+                            break;
+                    }
+
+                    LinkButton btnResultados = e.Row.FindControl("BtnResultados") as LinkButton;
+                    if (btnResultados != null)
+                    {
+                        if (estado == "SGA")
+                        {
+                            btnResultados.Enabled = true;
+                            btnResultados.ToolTip = "Cargar resultados de exámenes";
+                            btnResultados.CssClass = "btn btn-success btn-xs";
+                        }
+                        else
+                        {
+                            btnResultados.Enabled = false;
+                            btnResultados.ToolTip = "Disponible únicamente cuando la solicitud esté agendada";
+                            btnResultados.CssClass = "btn btn-default btn-xs";
+                            btnResultados.Style["opacity"] = "0.40";
+                            btnResultados.Style["cursor"] = "not-allowed";
+                        }
                     }
 
                     ImageButton btnDaquilema = e.Row.FindControl("ImgDescargarDaquilema") as ImageButton;
@@ -169,14 +215,14 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     if (e.Row.DataItem != null)
                     {
-                        object valorProducto = DataBinder.Eval(e.Row.DataItem,"Producto");
+                        object valorProducto = DataBinder.Eval(e.Row.DataItem, "Producto");
                         if (valorProducto != null)
                         {
                             producto = valorProducto.ToString().Trim();
                         }
                     }
 
-                    bool esDaquilema = producto.IndexOf("DAQUILEMA",StringComparison.OrdinalIgnoreCase) >= 0;
+                    bool esDaquilema = producto.IndexOf("DAQUILEMA", StringComparison.OrdinalIgnoreCase) >= 0;
 
                     if (btnDaquilema != null)
                     {
@@ -190,33 +236,31 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void ImgDescargar_Click(object sender,ImageClickEventArgs e)
+        protected void ImgDescargar_Click(object sender, ImageClickEventArgs e)
         {
             try
             {
-                ImageButton boton =(ImageButton)sender;
-                GridViewRow gvRow =(GridViewRow)boton.NamingContainer;
+                ImageButton boton = (ImageButton)sender;
+                GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
 
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
-                FunDownloadDocument(int.Parse(codigoexso),161);
+                FunDownloadDocument(int.Parse(codigoexso), 161);
             }
             catch (Exception ex)
             {
-                Lblerror.Text =
-                    ex.ToString();
+                Lblerror.Text = ex.ToString();
             }
         }
-        protected void ImgDescargarPdf_Click(object sender,ImageClickEventArgs e)
+        protected void ImgDescargarPdf_Click(object sender, ImageClickEventArgs e)
         {
             try
             {
-                ImageButton boton =(ImageButton)sender;
+                ImageButton boton = (ImageButton)sender;
 
+                GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
+                codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
 
-                GridViewRow gvRow =(GridViewRow)boton.NamingContainer;
-                codigoexso =GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
-
-                FunDownloadDocument(int.Parse(codigoexso),223);
+                FunDownloadDocument(int.Parse(codigoexso), 223);
             }
             catch (Exception ex)
             {
@@ -224,38 +268,89 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void ImgDescargarDaquilema_Click(object sender,ImageClickEventArgs e)
+        protected void ImgDescargarDaquilema_Click(object sender, ImageClickEventArgs e)
         {
             try
             {
-                ImageButton boton =(ImageButton)sender;
+                ImageButton boton = (ImageButton)sender;
                 GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
 
-                FunDownloadDocument(int.Parse(codigoexso),225);
+                FunDownloadDocument(int.Parse(codigoexso), 225);
             }
             catch (Exception ex)
             {
-                Lblerror.Text =ex.ToString();
+                Lblerror.Text = ex.ToString();
             }
         }
 
-        protected void ImgAgendar_Click(object sender, ImageClickEventArgs e)
+        protected void ImgAgendar_Click(object sender,ImageClickEventArgs e)
         {
             try
             {
-                if (Session["Descargado"].ToString() == "SI")
+                if (Session["Descargado"] == null || Session["Descargado"].ToString() != "SI")
                 {
-                    GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                    codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
-                    codigoprod = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPROD"].ToString();
-                    FunActualizarEstado(int.Parse(codigoexso));
-                    codigopers = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPERS"].ToString();
-                    codigotitu = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
-                    Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?CodigoTitular=" + codigotitu + "&CodigoProducto=" 
-                        + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1",true);
+                    new Funciones().funShowJSMessage("Descargue el Examen Solicitado!",this);
+                    return;
                 }
-                else new Funciones().funShowJSMessage("Descargue el Examen Solicitado!", this);
+
+                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
+
+                codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
+                codigoprod = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPROD"].ToString();
+
+                string estadoActual = GrdvDatos.DataKeys[gvRow.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
+
+                if (estadoActual != "SRR" && estadoActual != "SRV")
+                {
+                    new Funciones().funShowJSMessage("La solicitud ya se encuentra en una etapa posterior y no puede volver a agendarse.",this);
+                    return;
+                }
+
+                if (estadoActual == "SRR")
+                {
+                    FunActualizarEstado(int.Parse(codigoexso));
+                }
+
+                codigopers = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPERS"].ToString();
+                codigotitu = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
+
+                Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx" + "?CodigoTitular=" + codigotitu + "&CodigoProducto=" + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1", true);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+            }
+        }
+
+        protected void BtnResultados_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LinkButton boton = sender as LinkButton;
+
+                if (boton == null)
+                {
+                    return;
+                }
+
+                GridViewRow gvRow = boton.NamingContainer as GridViewRow;
+
+                if (gvRow == null)
+                {
+                    return;
+                }
+
+                string codigoEXSO = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
+                string estadoSolicitud = GrdvDatos.DataKeys[gvRow.RowIndex].Values["EstadoCodigo"].ToString().Trim();
+
+                if (estadoSolicitud != "SGA")
+                {
+                    new Funciones().funShowJSMessage("La solicitud debe estar agendada para cargar resultados.", this);
+                    return;
+                }
+
+                Response.Redirect("~/Examenes/FrmResultadoExamen.aspx?CodigoEXSO=" + codigoEXSO, true);
             }
             catch (Exception ex)
             {

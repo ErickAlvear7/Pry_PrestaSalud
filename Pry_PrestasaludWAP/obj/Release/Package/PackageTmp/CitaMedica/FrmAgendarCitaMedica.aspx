@@ -67,7 +67,7 @@
 
                     modal.style.left = (e.clientX - offsetX) + "px";
                     modal.style.top = (e.clientY - offsetY) + "px";
-                    modal.style.transform = "none"; 
+                    modal.style.transform = "none";
                 };
 
                 document.onmouseup = function () {
@@ -77,6 +77,7 @@
                 };
             };
         }
+
         function calcTotalEsp() {
             var grid = document.getElementById('<%= gvEspecialidades.ClientID %>');
             if (!grid) return;
@@ -88,9 +89,9 @@
 
                 var chk = row.cells[0].querySelector('input[type="checkbox"]');
                 if (chk && chk.checked) {
-                   
+
                     var txt = row.cells[2].innerText || row.cells[2].textContent;
-                    txt = (txt || "").trim().replace(',', '.'); 
+                    txt = (txt || "").trim().replace(',', '.');
 
                     var val = parseFloat(txt);
                     if (!isNaN(val)) total += val;
@@ -101,41 +102,218 @@
 
             document.getElementById('lblTotalEsp').innerText = total.toFixed(2);
 
-                var hf = document.getElementById('<%= hfTotalEsp.ClientID %>');
-                if (hf) hf.value = total.toFixed(2);
+            var hf = document.getElementById('<%= hfTotalEsp.ClientID %>');
+            if (hf) hf.value = total.toFixed(2);
         }
-  
+
+        var urlCartaAutorizacion = null;
+
+        function mostrarCartaAutorizacion(base64Pdf,nombreArchivo) {
+
+            try {
+
+                var contenido = atob(base64Pdf);
+                var bytes = new Uint8Array(contenido.length);
+
+                for (var i = 0; i < contenido.length; i++)
+                {
+                    bytes[i] = contenido.charCodeAt(i);
+                }
+
+                var blob = new Blob([bytes],{type:"application/pdf"});
+
+                if (urlCartaAutorizacion != null)
+                {
+
+                    URL.revokeObjectURL(urlCartaAutorizacion);
+                }
+
+                urlCartaAutorizacion = URL.createObjectURL(blob);
+                document.getElementById("iframeCartaAutorizacion").src = urlCartaAutorizacion;
+
+                var enlace = document.getElementById("lnkDescargarCarta");
+                enlace.href = urlCartaAutorizacion;
+                enlace.download = nombreArchivo;
+
+                //$("#modalCartaAutorizacion")
+                //    .modal({
+                //        backdrop: "static",
+                //        keyboard: false
+                //});
+
+                var modal = document.getElementById("modalCartaAutorizacion");
+
+                if (modal) {
+                    modal.style.display = "block";
+                    modal.className = "modal fade in";
+                }
+
+                document.body.style.overflow = "hidden";
+
+            }
+            catch (error) {
+
+                alert("No fue posible mostrar la carta: " + error.message);
+            }
+        }
+
+        function cerrarCartaAutorizacion() {
+
+            var modal =
+                document.getElementById(
+                    "modalCartaAutorizacion"
+                );
+
+            if (modal) {
+
+                modal.style.display =
+                    "none";
+
+                modal.className =
+                    "modal fade";
+            }
+
+
+            var iframe =
+                document.getElementById(
+                    "iframeCartaAutorizacion"
+                );
+
+            if (iframe) {
+
+                iframe.src =
+                    "about:blank";
+            }
+
+
+            if (urlCartaAutorizacion != null) {
+
+                URL.revokeObjectURL(
+                    urlCartaAutorizacion
+                );
+
+                urlCartaAutorizacion =
+                    null;
+            }
+
+            document.body.style.overflow = "";
+        }
+
     </script>
-        <style>
-          .overlayModal{
-            display:none;
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,.55);
-            z-index:2147483646; 
-          }
+    <style>
+        .overlayModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 2147483646;
+        }
 
-          .modalCustom{
-            display:none;
-            position:fixed;
-            left:50%;
-            top:50%;
-            transform:translate(-50%,-50%);
-            width:70%;
-            max-width:900px;
-            background:#fff;
-            border-radius:6px;
-            box-shadow:0 10px 30px rgba(0,0,0,.35);
-            z-index:2147483647; 
-          }
+        .modalCustom {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 70%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.35);
+            z-index: 2147483647;
+        }
 
-          .modalHeader{ padding:12px; font-weight:bold; border-bottom:1px solid #ddd; background:#f4f4f4; }
-          .modalBody{ padding:12px; max-height:60vh; overflow:auto; }
-          .modalFooter{ padding:10px; border-top:1px solid #ddd; text-align:right; background:#f9f9f9; }
+        .modalHeader {
+            padding: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            background: #f4f4f4;
+        }
+
+        .modalBody {
+            padding: 12px;
+            max-height: 60vh;
+            overflow: auto;
+        }
+
+        .modalFooter {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-align: right;
+            background: #f9f9f9;
+        }
+
+        #modalCartaAutorizacion .modal-dialog {
+            width: 90%;
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+
+        #modalCartaAutorizacion .modal-content {
+            max-height: calc(100vh - 40px);
+        }
+
+        #modalCartaAutorizacion .modal-body {
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #iframeCartaAutorizacion {
+            width: 100%;
+            height: calc(100vh - 210px);
+            min-height: 300px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 767px) {
+
+            #modalCartaAutorizacion .modal-dialog {
+                width: auto;
+                margin: 10px;
+            }
+
+            #modalCartaAutorizacion .modal-header {
+                padding: 10px;
+            }
+
+            #modalCartaAutorizacion .modal-title {
+                font-size: 16px;
+            }
+
+            #modalCartaAutorizacion .modal-body {
+                padding: 5px;
+            }
+
+            #iframeCartaAutorizacion {
+                height: calc(100vh - 190px);
+                min-height: 250px;
+            }
+
+            #modalCartaAutorizacion .modal-footer {
+                padding: 8px;
+                text-align: center;
+            }
+
+            #modalCartaAutorizacion .modal-footer .btn {
+                margin: 3px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+
+            #modalCartaAutorizacion .modal-dialog {
+                max-width: 1200px;
+            }
+
+            #iframeCartaAutorizacion {
+                height: calc(100vh - 220px);
+            }
+        }
+
     </style>
     <script type="text/javascript">
 
-       function confirmarCopago() {
+        function confirmarCopago() {
             var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
             var copago = ddl.options[ddl.selectedIndex].text;
 
@@ -143,7 +321,7 @@
                 return confirm("¿Desea continuar con el copago seleccionado?\n\nCopago: " + copago);
             }
 
-            return true; 
+            return true;
         }
         <%--function confirmarCopago() {
             var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
@@ -244,6 +422,7 @@
             width: 30%;
             height: 35px;
         }
+
         .auto-style4 {
             height: 61px;
         }
@@ -264,7 +443,7 @@
                     </div>
                 </ContentTemplate>
             </asp:UpdatePanel>
-      <%--      <div class="panel-info">
+            <%--      <div class="panel-info">
                 <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
                     <ProgressTemplate>
                         <div class="overlay" />
@@ -516,7 +695,7 @@
                                             <td></td>
                                         </tr>
                                         <tr>
-                                          <%--  <td></td>
+                                            <%--  <td></td>
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>
@@ -532,7 +711,7 @@
                                                 </asp:DropDownList>
                                             </td>--%>
                                             <td></td>
-                                             <td>
+                                            <td>
                                                 <h5>Prestadora:</h5>
                                             </td>
                                             <td colspan="3">
@@ -551,7 +730,7 @@
                                             <td colspan="3">
                                                 <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="11">
                                                 </asp:DropDownList>
-                                           <%--     <br />
+                                                <%--     <br />
                                                     <asp:TextBox ID="txtEspecialidades"
                                                     runat="server"
                                                     CssClass="form-control"
@@ -638,18 +817,18 @@
                                             <td></td>
                                             <td>
                                                 <asp:Button ID="btnLink" runat="server" Text="TeleMedicina" Width="241px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled = true; this.value='Un Momento Generando LInk...';" UseSubmitBehavior="false" />
-                                            <td>
-                                                <asp:TextBox ID="txtUrl" runat="server" CssClass="form-control" Height="58px" ReadOnly="true" TextMode="MultiLine" Visible="true" Width="470px"></asp:TextBox>
-                                             <td>
-                                                 <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
-                                             </td>   
+                                                <td>
+                                                    <asp:TextBox ID="txtUrl" runat="server" CssClass="form-control" Height="58px" ReadOnly="true" TextMode="MultiLine" Visible="true" Width="470px"></asp:TextBox>
+                                                    <td>
+                                                        <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
+                                                    </td>
                                         </tr>
                                         <tr>
                                             <td></td>
                                             <td>
                                                 <h5 id="txtHora" runat="server" visible="false">Hora Disponible</h5>
                                             </td>
-                                             <td>
+                                            <td>
                                                 <asp:Label ID="lblHora" runat="server" Visible="false"></asp:Label>
                                             </td>
                                         </tr>
@@ -826,7 +1005,6 @@
                                 </asp:Panel>
                                 <asp:UpdatePanel ID="updCitaMedica" runat="server">
                                     <ContentTemplate>
-                                       <%-- <asp:HiddenField ID="hfCampCodigo" runat="server" Value="0" />--%>
                                         <table style="width: 100%">
                                             <tr>
                                                 <td style="text-align: center">
@@ -839,6 +1017,23 @@
                                         </table>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
+                                <div class="modal fade" id="modalCartaAutorizacion" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Vista previa Carta de Autorización</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <iframe id="iframeCartaAutorizacion"></iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a id="lnkDescargarCarta" href="#" class="btn btn-info" download>Descargar PDF</a>
+                                                <asp:Button ID="Button1" runat="server" Text="Continuar" CssClass="btn btn-success" CausesValidation="false" OnClick="BtnContinuarCarta_Click" />
+                                                <asp:Button ID="BtnCancelarCarta" runat="server" Text="Cancelar" CssClass="btn btn-default" CausesValidation="false" OnClick="BtnCancelarCarta_Click" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </ContentTemplate>
                         <Triggers>
@@ -846,7 +1041,7 @@
                         </Triggers>
                     </asp:UpdatePanel>
                     <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">HISTORIAL CITAS MEDICAS</h3>
-              <%--      <div class="panel-info">
+                    <%--      <div class="panel-info">
                         <asp:UpdateProgress ID="UpdateProgress1" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCancelarCita">
                             <ProgressTemplate>
                                 <div class="overlay" />
@@ -995,22 +1190,19 @@
         </div>
         <asp:UpdatePanel ID="updModalEsp" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
-                <div id="overlayModal" class="overlayModal" style="display:none;"
-                     onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
+                <div id="overlayModal" class="overlayModal" style="display: none;"
+                    onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
                 </div>
                 <asp:Panel ID="pnlModalEspecialidades" runat="server"
                     CssClass="modalCustom"
-                    Style="display:none;">
-
-                    <div class="modalHeader" id="modalHeaderEsp" style="cursor:move;">
+                    Style="display: none;">
+                    <div class="modalHeader" id="modalHeaderEsp" style="cursor: move;">
                         Seleccione Especialidades
                     </div>
-
                     <div class="modalBody">
-                        <div style="margin-bottom:10px; font-weight:bold;">
+                        <div style="margin-bottom: 10px; font-weight: bold;">
                             Total seleccionado: <span id="lblTotalEsp">0.00</span>
                         </div>
-
                         <asp:HiddenField ID="hfTotalEsp" runat="server" Value="0.00" />
                         <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
                         <asp:GridView ID="gvEspecialidades" runat="server"
@@ -1018,33 +1210,24 @@
                             DataKeyNames="PVP,Red"
                             GridLines="None"
                             Width="100%">
-
                             <Columns>
-
                                 <asp:TemplateField>
                                     <ItemTemplate>
                                         <asp:CheckBox ID="chkSeleccionar" runat="server" onclick="calcTotalEsp();" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
-
                                 <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
                                 <asp:BoundField DataField="PVP" HeaderText="PVP" />
                                 <asp:BoundField DataField="Red" HeaderText="Red" Visible="false" />
-
                             </Columns>
-
                         </asp:GridView>
-
                     </div>
-
                     <div class="modalFooter">
-
                         <asp:Button ID="btnAgregarEspecialidades"
                             runat="server"
                             Text="Agregar Seleccionadas"
                             CssClass="btnModal btnPrimary"
                             OnClick="btnAgregarEspecialidades_Click" />
-
                         <button type="button"
                             class="btnModal btnClose"
                             onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
@@ -1052,10 +1235,8 @@
                         </button>
                     </div>
                 </asp:Panel>
-             </ContentTemplate>
-          </asp:UpdatePanel>
+            </ContentTemplate>
+        </asp:UpdatePanel>
     </form>
-
-
 </body>
 </html>

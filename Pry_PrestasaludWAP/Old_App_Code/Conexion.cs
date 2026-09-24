@@ -1323,8 +1323,8 @@ public class Conexion
 
                 objparam[19] = dtmfechasolicita;
                 cmd.Parameters.Add("@in_fechasolcita", SqlDbType.DateTime).Value = objparam[19];
-                //cmd.Parameters.AddWithValue("@in_fechasolcita", objparam[19]);
-                cmd.Parameters.AddWithValue("@in_observacion", objparam[20]);
+                //cmd.Parameters.AddWithValue("@in_observacion", objparam[20]);
+                cmd.Parameters.Add("@in_observacion",SqlDbType.NVarChar,-1).Value = objparam[20] != null ? objparam[20].ToString() : "";
                 cmd.Parameters.AddWithValue("@in_docautoizacion", objparam[21]);
                 cmd.Parameters.AddWithValue("@in_namedoc", objparam[22]);
                 cmd.Parameters.AddWithValue("@in_typedoc", objparam[23]);
@@ -1335,8 +1335,6 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_adicional", objparam[28]);
                 cmd.Parameters.AddWithValue("@in_exsocodigo", objparam[29]);
                 cmd.Parameters.AddWithValue("@in_estado", objparam[30]);
-                //cmd.Parameters.AddWithValue("@in_auxv1", objparam[31]);
-                //cmd.Parameters.AddWithValue("@in_auxv2", objparam[32]);
                 cmd.Parameters.Add("@in_auxv1", SqlDbType.VarChar, 50).Value = objparam[31];
                 cmd.Parameters.Add("@in_auxv2", SqlDbType.VarChar, 50).Value = objparam[32];
                 cmd.Parameters.AddWithValue("@in_auxv3", objparam[33]);

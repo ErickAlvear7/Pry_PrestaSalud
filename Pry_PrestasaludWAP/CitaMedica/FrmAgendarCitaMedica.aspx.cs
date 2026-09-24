@@ -1673,36 +1673,86 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
+                esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+
                 if (mensaje == "")
                 {
-                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    //if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    //{
+                    //    LimpiarCartaAutorizacionTemporal();
+                    //}
+
+                    //if (Session["Perfil"].ToString() == "NOVA")
+                    //{
+                    //    string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
+                    //    logHelper.RegistrarAccion(usuario, "Citas", "FrmAgendarCitaMedica.aspx.cs/Enviando Mail cita", $"HoraCita: {ViewState["HoraCita"] + " " + "CodigoCita: " + ViewState["CodigoCita"] + " " + "Prestador:" + ViewState["Prestadora"] + " " + "Medico:" + ViewState["Medico"] + " " + "Especialidad:" + ViewState["Especialidad"] }");
+                    //}
+
+                    //    if (Session["Regresar"].ToString() == "0")
+                    //    Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
+                    //    else
+                    //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
+                    if (Session["Perfil"] != null && Session["Perfil"].ToString() == "NOVA")
                     {
-                        LimpiarCartaAutorizacionTemporal();
-                    }
-  
-                    if (Session["Perfil"].ToString() == "NOVA")
-                    {
-                        string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
-                        logHelper.RegistrarAccion(usuario, "Citas", "FrmAgendarCitaMedica.aspx.cs/Enviando Mail cita", $"HoraCita: {ViewState["HoraCita"] + " " + "CodigoCita: " + ViewState["CodigoCita"] + " " + "Prestador:" + ViewState["Prestadora"] + " " + "Medico:" + ViewState["Medico"] + " " + "Especialidad:" + ViewState["Especialidad"] }");
+                        string usuario = Session["usuLogin"] != null
+                            ? Session["usuLogin"].ToString()
+                            : "Anonimo";
+
+                        logHelper.RegistrarAccion(
+                            usuario,
+                            "Citas",
+                            "FrmAgendarCitaMedica.aspx.cs/Enviando Mail cita",
+                            "HoraCita: " + ViewState["HoraCita"] +
+                            " CodigoCita: " + ViewState["CodigoCita"] +
+                            " Prestador:" + ViewState["Prestadora"] +
+                            " Medico:" + ViewState["Medico"] +
+                            " Especialidad:" + ViewState["Especialidad"]
+                        );
                     }
 
-                        if (Session["Regresar"].ToString() == "0")
-                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
-                        else
-                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
+                    if (esAgendamientoExamen)
+                    {
+                        Response.Redirect(
+                            "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'",
+                            true
+                        );
+                    }
+                    else
+                    {
+                        // CITA NORMAL
+                        Response.Redirect(
+                            "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito",
+                            true
+                        );
+                    }
                 }
                 else
                 {
-                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    //if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    //{
+                    //    LimpiarCartaAutorizacionTemporal();
+                    //}
+
+
+                    //if (Session["Regresar"].ToString() == "0")
+                    //    Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                    //else
+                    //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                    if (esAgendamientoExamen)
                     {
-                        LimpiarCartaAutorizacionTemporal();
+                        Response.Redirect(
+                            "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!",
+                            true
+                        );
                     }
-
-
-                    if (Session["Regresar"].ToString() == "0")
-                        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
                     else
-                        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
+                    {
+                        // CITA NORMAL
+                        Response.Redirect(
+                            "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!",
+                            true
+                        );
+                    }
                 }
 
                 
@@ -3602,8 +3652,8 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         //Session.Remove("CartaAutorizacionTipo");
                         //Session.Remove("CartaAutorizacionExtension");
                         //Session.Remove("CartaAutorizacionEXSO");
-                        //Session["SalirAgenda"] = "SI";
-                        //Session["codigocita"] = codCita;
+                        Session["SalirAgenda"] = "SI";
+                        Session["codigocita"] = codCita;
 
                         FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString()); //AKI SE ENVIA EL EMAIL
                     }
@@ -3816,16 +3866,59 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         protected void btnSalir_Click(object sender, EventArgs e)
         {
-            if (Session["SalirAgenda"].ToString() == "NO")
+            //if (Session["SalirAgenda"].ToString() == "NO")
+            //{
+            //    string alerta = "Existe una reserva, realice el agendamiento para poder salir..! ";
+            //    ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", "alert('" + alerta + "')", true);
+            //    return;
+            //}
+            //if (Session["Regresar"].ToString() == "0")
+            //    Response.Redirect("FrmCitaMedicaAdmin.aspx", true);
+            //else
+            //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx", true);
+            try
             {
-                string alerta = "Existe una reserva, realice el agendamiento para poder salir..! ";
-                ScriptManager.RegisterStartupScript(this, typeof(Page), "alerta", "alert('" + alerta + "')", true);
-                return;
+                // Validar si existe una reserva pendiente
+                if (Session["SalirAgenda"] != null && Session["SalirAgenda"].ToString() == "NO")
+                {
+                    string alerta = "Existe una reserva, realice el agendamiento para poder salir..! ";
+
+                    ScriptManager.RegisterStartupScript(
+                        this,
+                        typeof(Page),
+                        "alerta",
+                        "alert('" + alerta + "')",
+                        true
+                    );
+
+                    return;
+                }
+
+                // Solo es examen cuando Regresar = 1.
+                // Si viene null, se considera cita normal.
+                bool esAgendamientoExamen =
+                    Session["Regresar"] != null &&
+                    Session["Regresar"].ToString() == "1";
+
+                if (esAgendamientoExamen)
+                {
+                    Response.Redirect(
+                        "~/Examenes/FrmSolicitudOperadorAdmin.aspx",
+                        true
+                    );
+                }
+                else
+                {
+                    Response.Redirect(
+                        "FrmCitaMedicaAdmin.aspx",
+                        true
+                    );
+                }
             }
-            if (Session["Regresar"].ToString() == "0")
-                Response.Redirect("FrmCitaMedicaAdmin.aspx", true);
-            else
-                Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx", true);
+            catch (Exception ex)
+            {
+                lblerror.Text = ex.ToString();
+            }
         }
         protected void imgCancelar_Click(object sender, ImageClickEventArgs e)
         {

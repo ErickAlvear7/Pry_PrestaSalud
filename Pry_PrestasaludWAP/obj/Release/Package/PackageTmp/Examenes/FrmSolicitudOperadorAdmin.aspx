@@ -52,9 +52,21 @@
                                         </ItemTemplate>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Adjunto Daq.">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="ImgDescargarDaquilema"
+                                                runat="server"
+                                                Height="20px"
+                                                ImageUrl="~/Botones/downloadcolor.png"
+                                                ToolTip="Descargar documento adicional DAQUILEMA"
+                                                Visible="false"
+                                                OnClick="ImgDescargarDaquilema_Click" />
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Examen">
                                         <ItemTemplate>
-                                              <asp:ImageButton ID="ImgDescargarPdf" runat="server" Height="20px"
+                                            <asp:ImageButton ID="ImgDescargarPdf" runat="server" Height="20px"
                                                 ImageUrl="~/Botones/downloadcolor.png"
                                                 ToolTip="Descargar solicitud en PDF"
                                                 OnClick="ImgDescargarPdf_Click" />
@@ -64,6 +76,18 @@
                                     <asp:TemplateField HeaderText="Agendar">
                                         <ItemTemplate>
                                             <asp:ImageButton ID="ImgAgendar" runat="server" Height="20px" ImageUrl="~/Botones/citamedica.png" OnClick="ImgAgendar_Click" />
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Resultados">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="BtnResultados" runat="server"
+                                                CssClass="btn btn-primary btn-xs"
+                                                ToolTip="Cargar resultados de exámenes"
+                                                OnClick="BtnResultados_Click"
+                                                CausesValidation="false">
+                                                <span class="glyphicon glyphicon-upload"></span>
+                                              </asp:LinkButton>
                                         </ItemTemplate>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>

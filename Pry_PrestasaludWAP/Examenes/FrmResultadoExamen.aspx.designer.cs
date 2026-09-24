@@ -7,11 +7,11 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Procedimientos
+namespace Pry_PrestasaludWAP.Examenes
 {
 
 
-    public partial class FrmAsignarProcedimiento
+    public partial class FrmResultadoExamen
     {
 
         /// <summary>
@@ -24,156 +24,219 @@ namespace Pry_PrestasaludWAP.Procedimientos
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control lbltitulo.
+        /// Control Lblerror.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbltitulo;
+        protected global::System.Web.UI.WebControls.Label Lblerror;
 
         /// <summary>
-        /// Control ToolkitScriptManager1.
+        /// Control LblSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
+        protected global::System.Web.UI.WebControls.Label LblSolicitud;
 
         /// <summary>
-        /// Control updError.
+        /// Control LblFechaSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updError;
+        protected global::System.Web.UI.WebControls.Label LblFechaSolicitud;
 
         /// <summary>
-        /// Control lblerror.
+        /// Control LblProducto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblerror;
+        protected global::System.Web.UI.WebControls.Label LblProducto;
 
         /// <summary>
-        /// Control updCabecera.
+        /// Control LblEstado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updCabecera;
+        protected global::System.Web.UI.WebControls.Label LblEstado;
 
         /// <summary>
-        /// Control trvPrestadoras.
+        /// Control GrdvPacientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TreeView trvPrestadoras;
+        protected global::System.Web.UI.WebControls.GridView GrdvPacientes;
 
         /// <summary>
-        /// Control txtPrestadora.
+        /// Control PnlCarga.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrestadora;
+        protected global::System.Web.UI.WebControls.Panel PnlCarga;
 
         /// <summary>
-        /// Control ddlProcedimientos.
+        /// Control LblPacienteSeleccionado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlProcedimientos;
+        protected global::System.Web.UI.WebControls.Label LblPacienteSeleccionado;
 
         /// <summary>
-        /// Control txtCostoRed.
+        /// Control LblDocumentoSeleccionado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCostoRed;
+        protected global::System.Web.UI.WebControls.Label LblDocumentoSeleccionado;
 
         /// <summary>
-        /// Control txtCostoReal.
+        /// Control LblTipoPersonaSeleccionada.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCostoReal;
+        protected global::System.Web.UI.WebControls.Label LblTipoPersonaSeleccionada;
 
         /// <summary>
-        /// Control imgAgregar.
+        /// Control FileResultado1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgAgregar;
+        protected global::System.Web.UI.WebControls.FileUpload FileResultado1;
 
         /// <summary>
-        /// Control imgModificar.
+        /// Control LblArchivo1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgModificar;
+        protected global::System.Web.UI.WebControls.Label LblArchivo1;
 
         /// <summary>
-        /// Control imgCancelar.
+        /// Control BtnEliminarArchivo1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgCancelar;
+        protected global::System.Web.UI.WebControls.LinkButton BtnEliminarArchivo1;
 
         /// <summary>
-        /// Control pnlProcedimientos.
+        /// Control FileResultado2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlProcedimientos;
+        protected global::System.Web.UI.WebControls.FileUpload FileResultado2;
 
         /// <summary>
-        /// Control grdvDatos.
+        /// Control LblArchivo2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdvDatos;
+        protected global::System.Web.UI.WebControls.Label LblArchivo2;
 
         /// <summary>
-        /// Control btnGrabar.
+        /// Control BtnEliminarArchivo2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGrabar;
+        protected global::System.Web.UI.WebControls.LinkButton BtnEliminarArchivo2;
 
         /// <summary>
-        /// Control updOpciones.
+        /// Control FileResultado3.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updOpciones;
+        protected global::System.Web.UI.WebControls.FileUpload FileResultado3;
+
+        /// <summary>
+        /// Control LblArchivo3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblArchivo3;
+
+        /// <summary>
+        /// Control BtnEliminarArchivo3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton BtnEliminarArchivo3;
+
+        /// <summary>
+        /// Control TxtObservacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtObservacion;
+
+        /// <summary>
+        /// Control BtnGuardarResultados.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnGuardarResultados;
+
+        /// <summary>
+        /// Control BtnCancelarCarga.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnCancelarCarga;
+
+        /// <summary>
+        /// Control BtnEnviarResultados.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnEnviarResultados;
+
+        /// <summary>
+        /// Control BtnSalir.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnSalir;
     }
 }

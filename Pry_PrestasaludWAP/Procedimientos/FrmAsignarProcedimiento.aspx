@@ -129,10 +129,10 @@
                                                     <asp:ImageButton ID="imgAgregar" runat="server" Height="20px" ImageUrl="~/Botones/agregar.jpg" OnClick="imgAgregar_Click" TabIndex="6" />
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <asp:ImageButton ID="imgModificar" runat="server" Enabled="False" Height="20px" ImageUrl="~/Botones/modificar.png" OnClick="imgModificar_Click" TabIndex="7" />
+                                                    <asp:ImageButton ID="imgModificar" runat="server" Height="20px" ImageUrl="~/Botones/modificar.png" OnClick="imgModificar_Click" TabIndex="7" />
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <asp:ImageButton ID="imgCancelar" runat="server" Enabled="False" Height="20px" ImageUrl="~/Botones/cancelar.jpg" OnClick="imgCancelar_Click" TabIndex="8" />
+                                                    <asp:ImageButton ID="imgCancelar" runat="server" Height="20px" ImageUrl="~/Botones/cancelar.jpg" OnClick="imgCancelar_Click" TabIndex="8" />
                                                 </td>
                                             </tr>
                                             <tr>

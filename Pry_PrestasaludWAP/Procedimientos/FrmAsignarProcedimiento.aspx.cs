@@ -30,6 +30,10 @@ namespace Pry_PrestasaludWAP.Procedimientos
                 Response.Redirect("~/Reload.html");
             if (!IsPostBack)
             {
+                imgAgregar.Enabled = true;
+                imgModificar.Enabled = false;
+                imgCancelar.Enabled = false;
+
                 tbProcedimiento.Columns.Add("Codigo");
                 tbProcedimiento.Columns.Add("CodigoPrestadora");
                 tbProcedimiento.Columns.Add("CodigoProcedimiento");
@@ -342,6 +346,7 @@ namespace Pry_PrestasaludWAP.Procedimientos
                 {
                     grdvDatos.Rows[row.RowIndex].BackColor = System.Drawing.Color.White;
                 }
+
                 imgModificar.Enabled = false;
                 imgCancelar.Enabled = false;
                 imgAgregar.Enabled = true;
@@ -396,6 +401,7 @@ namespace Pry_PrestasaludWAP.Procedimientos
 
         protected void imgEditar_Click(object sender, ImageClickEventArgs e)
         {
+       
             GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
             int intIndex = gvRow.RowIndex;
             ViewState["index"] = intIndex;
@@ -410,10 +416,12 @@ namespace Pry_PrestasaludWAP.Procedimientos
             imgModificar.Enabled = true;
             imgAgregar.Enabled = false;
             imgCancelar.Enabled = true;
+
             foreach (GridViewRow row in grdvDatos.Rows)
             {
                 grdvDatos.Rows[row.RowIndex].BackColor = System.Drawing.Color.White;
             }
+
             grdvDatos.Rows[intIndex].BackColor = System.Drawing.Color.DarkGray;
             Array.Resize(ref objparam, 3);
             objparam[0] = int.Parse(ViewState["CodigoProced"].ToString());
@@ -422,6 +430,7 @@ namespace Pry_PrestasaludWAP.Procedimientos
             dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
             ViewState["ProcedimientoAnterior"] = dt.Tables[0].Rows[0][0].ToString();
         }
+
 
         protected void grdvDatos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -476,6 +485,13 @@ namespace Pry_PrestasaludWAP.Procedimientos
             result[0]["Estado"] = chkest.Checked ? "Activo" : "Inactivo";
             tbProcedimiento.AcceptChanges();
         }
+
+        //protected void Page_PreRender(object sender, EventArgs e)
+        //{
+        //    imgModificar.Enabled = true;
+        //    imgCancelar.Enabled = true;
+        //}
+
         #endregion
     }
 }

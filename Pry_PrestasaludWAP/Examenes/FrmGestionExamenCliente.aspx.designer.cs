@@ -7,11 +7,11 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Procedimientos
+namespace Pry_PrestasaludWAP.Examenes
 {
 
 
-    public partial class FrmAsignarProcedimiento
+    public partial class FrmGestionExamenCliente
     {
 
         /// <summary>
@@ -24,15 +24,6 @@ namespace Pry_PrestasaludWAP.Procedimientos
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control lbltitulo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbltitulo;
-
-        /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
         /// <remarks>
@@ -42,138 +33,120 @@ namespace Pry_PrestasaludWAP.Procedimientos
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
 
         /// <summary>
-        /// Control updError.
+        /// Control Lbltitulo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updError;
+        protected global::System.Web.UI.WebControls.Label Lbltitulo;
 
         /// <summary>
-        /// Control lblerror.
+        /// Control UpdError.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblerror;
+        protected global::System.Web.UI.UpdatePanel UpdError;
 
         /// <summary>
-        /// Control updCabecera.
+        /// Control Lblerror.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updCabecera;
+        protected global::System.Web.UI.WebControls.Label Lblerror;
 
         /// <summary>
-        /// Control trvPrestadoras.
+        /// Control UpdProgress.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TreeView trvPrestadoras;
+        protected global::System.Web.UI.UpdateProgress UpdProgress;
 
         /// <summary>
-        /// Control txtPrestadora.
+        /// Control LblCodigoSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrestadora;
+        protected global::System.Web.UI.WebControls.Label LblCodigoSolicitud;
 
         /// <summary>
-        /// Control ddlProcedimientos.
+        /// Control RptPacientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlProcedimientos;
+        protected global::System.Web.UI.WebControls.Repeater RptPacientes;
 
         /// <summary>
-        /// Control txtCostoRed.
+        /// Control PnlSinPacientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCostoRed;
+        protected global::System.Web.UI.WebControls.Panel PnlSinPacientes;
 
         /// <summary>
-        /// Control txtCostoReal.
+        /// Control PnlEditorCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCostoReal;
+        protected global::System.Web.UI.WebControls.Panel PnlEditorCliente;
 
         /// <summary>
-        /// Control imgAgregar.
+        /// Control LblPacienteEditorCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgAgregar;
+        protected global::System.Web.UI.WebControls.Label LblPacienteEditorCliente;
 
         /// <summary>
-        /// Control imgModificar.
+        /// Control EditorInformeCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgModificar;
+        protected global::AjaxControlToolkit.HTMLEditor.Editor EditorInformeCliente;
 
         /// <summary>
-        /// Control imgCancelar.
+        /// Control BtnAceptarInformeCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgCancelar;
+        protected global::System.Web.UI.WebControls.Button BtnAceptarInformeCliente;
 
         /// <summary>
-        /// Control pnlProcedimientos.
+        /// Control BtnCerrarEditorCliente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlProcedimientos;
+        protected global::System.Web.UI.WebControls.Button BtnCerrarEditorCliente;
 
         /// <summary>
-        /// Control grdvDatos.
+        /// Control BtnSalir.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdvDatos;
-
-        /// <summary>
-        /// Control btnGrabar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGrabar;
-
-        /// <summary>
-        /// Control updOpciones.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updOpciones;
+        protected global::System.Web.UI.WebControls.Button BtnSalir;
     }
 }

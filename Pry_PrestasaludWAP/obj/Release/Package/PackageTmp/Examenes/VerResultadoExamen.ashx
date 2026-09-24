@@ -1,0 +1,1 @@
+﻿<%@ WebHandler Language="C#" CodeBehind="VerResultadoExamen.ashx.cs" Class="Pry_PrestasaludWAP.Examenes.VerResultadoExamen" %>

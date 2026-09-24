@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Pry_PrestasaludWAP.Examenes {
-    
-    
-    public partial class FrmAuditarExamen {
-        
+namespace Pry_PrestasaludWAP.Examenes
+{
+
+
+    public partial class FrmAuditarExamen
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control Lbltitulo.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Lbltitulo;
-        
+
         /// <summary>
         /// Control ToolkitScriptManager1.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// Control updError.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updError;
-        
+
         /// <summary>
         /// Control Lblerror.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Lblerror;
-        
+
         /// <summary>
         /// Control updProgress.
         /// </summary>
@@ -65,106 +67,70 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress updProgress;
-        
+
         /// <summary>
-        /// Control GrdvDatos.
+        /// Control RptPacientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GrdvDatos;
-        
+        protected global::System.Web.UI.WebControls.Repeater RptPacientes;
+
         /// <summary>
-        /// Control UpdCabecera.
+        /// Control PnlEditorAuditoria.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdCabecera;
-        
+        protected global::System.Web.UI.WebControls.Panel PnlEditorAuditoria;
+
         /// <summary>
-        /// Control TrExamenes.
+        /// Control LblPacienteEditor.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow TrExamenes;
-        
+        protected global::System.Web.UI.WebControls.Label LblPacienteEditor;
+
         /// <summary>
-        /// Control PnlExamenes.
+        /// Control EditorObservacionAuditor.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel PnlExamenes;
-        
+        protected global::AjaxControlToolkit.HTMLEditor.Editor EditorObservacionAuditor;
+
         /// <summary>
-        /// Control Panel4.
+        /// Control BtnAceptarObservacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel4;
-        
+        protected global::System.Web.UI.WebControls.Button BtnAceptarObservacion;
+
         /// <summary>
-        /// Control PnlExamenesAgregados.
+        /// Control BtnCerrarEditor.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel PnlExamenesAgregados;
-        
+        protected global::System.Web.UI.WebControls.Button BtnCerrarEditor;
+
         /// <summary>
-        /// Control GrdvExamenes.
+        /// Control PnlSinPacientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GrdvExamenes;
-        
-        /// <summary>
-        /// Control Panel1.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
-        
-        /// <summary>
-        /// Control Panel2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel2;
-        
-        /// <summary>
-        /// Control TxtObservacion.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtObservacion;
-        
-        /// <summary>
-        /// Control Panel3.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel3;
-        
+        protected global::System.Web.UI.WebControls.Panel PnlSinPacientes;
+
         /// <summary>
         /// Control UpdOpciones.
         /// </summary>
@@ -173,16 +139,7 @@ namespace Pry_PrestasaludWAP.Examenes {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdOpciones;
-        
-        /// <summary>
-        /// Control BtnGrabar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnGrabar;
-        
+
         /// <summary>
         /// Control BtnSalir.
         /// </summary>

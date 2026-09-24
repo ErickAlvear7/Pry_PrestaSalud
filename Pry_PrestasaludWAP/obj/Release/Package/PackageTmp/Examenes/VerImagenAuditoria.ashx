@@ -1,0 +1,1 @@
+﻿<%@ WebHandler Language="C#" CodeBehind="VerImagenAuditoria.ashx.cs" Class="Pry_PrestasaludWAP.Examenes.VerImagenAuditoria" %>

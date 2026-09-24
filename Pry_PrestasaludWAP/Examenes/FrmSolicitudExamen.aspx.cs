@@ -190,7 +190,25 @@ namespace Pry_PrestasaludWAP.Examenes
                     estadoSolicita = filaCabecera["EstadoSolicita"].ToString().Trim().ToUpper();
                 }
 
-                if (estadoSolicita == "SGA")
+                bool solicitudYaAgendada = estadoSolicita == "SGA" || estadoSolicita == "EXR" || estadoSolicita == "AUA"
+                                         || estadoSolicita == "AUR";
+
+               
+
+                //if (estadoSolicita == "SGA")
+                //{
+                //    BtnCancelarSolicitud.Visible = false;
+                //    BtnGrabar.Visible = false;
+                //    BtnGrabar.Enabled = false;
+                //}
+                //else
+                //{
+                //    BtnCancelarSolicitud.Visible = true;
+                //    BtnGrabar.Visible = true;
+                //    BtnGrabar.Enabled = true;
+                //}
+
+                if (solicitudYaAgendada)
                 {
                     BtnCancelarSolicitud.Visible = false;
                     BtnGrabar.Visible = false;
@@ -745,11 +763,11 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     DataTable requisitosGuardar = null;
 
-                    if (TxtMonto.Text.Trim() == "0" || TxtMonto.Text.Trim() == "0.0" || TxtMonto.Text.Trim() == "0.00")
-                    {
-                        new Funciones().funShowJSMessage("Ingrese Monto Anterior..!", this);
-                        return;
-                    }
+                    //if (TxtMonto.Text.Trim() == "0" || TxtMonto.Text.Trim() == "0.0" || TxtMonto.Text.Trim() == "0.00")
+                    //{
+                    //    new Funciones().funShowJSMessage("Ingrese Monto Anterior..!", this);
+                    //    return;
+                    //}
 
                     if (TxtMontoAc.Text.Trim() == "0" || TxtMontoAc.Text.Trim() == "0.0" || TxtMontoAc.Text.Trim() == "0.00")
                     {

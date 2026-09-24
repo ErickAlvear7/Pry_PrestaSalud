@@ -286,7 +286,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 if(strCodProducto == "225" || strCodProducto == "226" || strCodProducto == "227")
                 {
                     
-
                     int mesCobertura = Cobertura.Month;
                     switch (mesCobertura)
                     {
@@ -320,14 +319,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     DateTime _fechacobertura = DateTime.ParseExact(strFechaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     DateTime _fechafincobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                    DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
+                    DateTime FinCobertura = DateTime.ParseExact(strFechaFinCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(30); //cambio aki
                     DateTime Actual = DateTime.Now.Date;
 
                     //Cambio
                     if (strFechaActuaCobertura != "")
                     {
-                        DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        DateTime _fechactualicobertura = DateTime.ParseExact(strFechaActuaCobertura, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddDays(30); //cambio aki
                         DateTime nuevaFecha = _fechactualicobertura;
 
                         if (nuevaFecha < Actual)
@@ -368,7 +366,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                         Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                         strCodProducto + "&Regresar=0");
-
 
                     }
 
@@ -443,10 +440,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 Response.Redirect("FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + strCodigo + "&CodigoProducto=" +
                       strCodProducto + "&Regresar=0");
-
-                
             }
-         
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {

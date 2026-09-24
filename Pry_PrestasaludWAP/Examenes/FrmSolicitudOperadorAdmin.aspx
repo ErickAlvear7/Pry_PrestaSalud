@@ -79,6 +79,18 @@
                                         </ItemTemplate>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Resultados">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="BtnResultados" runat="server"
+                                                CssClass="btn btn-primary btn-xs"
+                                                ToolTip="Cargar resultados de exámenes"
+                                                OnClick="BtnResultados_Click"
+                                                CausesValidation="false">
+                                                <span class="glyphicon glyphicon-upload"></span>
+                                              </asp:LinkButton>
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
                                 </Columns>
                                 <RowStyle Font-Size="X-Small" />
                             </asp:GridView>

@@ -1,9 +1,6 @@
-﻿using AjaxControlToolkit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -41,46 +38,20 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                     Response.Redirect("~/Reload.html");
-                //TxtMonto.Attributes.Add("onchange", "ValidarDecimales();");
-                TxtValorExamen.Attributes.Add("onchange", "ValidarDecimales();");
+
                 if (!IsPostBack)
-                {
-                    Lbltitulo.Text = "Configuración Clientes - Grupo Exámenes";
-                    dtbgrupoexamen.Columns.Add("Codigo");
-                    dtbgrupoexamen.Columns.Add("CodigoPROD");
-                    dtbgrupoexamen.Columns.Add("GrupoExamen");
-                    dtbgrupoexamen.Columns.Add("Observacion");
-                    dtbgrupoexamen.Columns.Add("Estado");
-                    dtbgrupoexamen.Columns.Add("ConVariables");
-                    dtbgrupoexamen.Columns.Add("ConExamen");
-                    ViewState["GrupoExamen"] = dtbgrupoexamen;
+                   
+                    if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
+                        {
+                            Response.Redirect("~/Reload.html");
+                            return;
+                        }
 
-                    dtbvariables.Columns.Add("Codigo");
-                    dtbvariables.Columns.Add("CodigoEXGC");
-                    dtbvariables.Columns.Add("Campo");
-                    dtbvariables.Columns.Add("Field");
-                    dtbvariables.Columns.Add("Operador");
-                    dtbvariables.Columns.Add("Valor");
-                    dtbvariables.Columns.Add("Estado");
-                    ViewState["Variables"] = dtbvariables;
-                    ViewState["VariablesTmp"] = dtbvariables.Copy();
-
-                    dtbexamenes.Columns.Add("Codigo");
-                    dtbexamenes.Columns.Add("CodigoEXGC");
-                    dtbexamenes.Columns.Add("CodigoEXSE");
-                    dtbexamenes.Columns.Add("Categoria");
-                    dtbexamenes.Columns.Add("Examen");
-                    dtbexamenes.Columns.Add("Costo");
-                    dtbexamenes.Columns.Add("Pvp");
-                    dtbexamenes.Columns.Add("Estado");
-                    ViewState["Examenes"] = dtbexamenes;
-                    ViewState["ExamenesTmp"] = dtbexamenes.Copy();
-
-                    FunCargarCombos(0);
-                    FunCargarCombos(1);
-                    FunCargarCombos(2);
-                    if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::MENSAJE::", Request["MensajeRetornado"].ToString());
-                }
+                    if (!IsPostBack)
+                    {
+                        Lbltitulo.Text = "Gestión de Solicitudes y Exámenes";
+                        CargarSolicitudesCliente();
+                    }
             }
             catch (Exception ex)
             {
@@ -90,835 +61,307 @@ namespace Pry_PrestasaludWAP.Examenes
         #endregion
 
         #region Procedimientos y Funciones
-        protected void FunCargaMantenimiento()
-        {
-            try
-            {
-                dtbgrupoexamen.Columns.Add("Codigo");
-                dtbgrupoexamen.Columns.Add("CodigoPROD");
-                dtbgrupoexamen.Columns.Add("GrupoExamen");
-                dtbgrupoexamen.Columns.Add("Observacion");
-                dtbgrupoexamen.Columns.Add("Estado");
-                dtbgrupoexamen.Columns.Add("ConVariables");
-                dtbgrupoexamen.Columns.Add("ConExamen");
-                ViewState["GrupoExamen"] = dtbgrupoexamen;
+        //protected void FunCargaMantenimiento()
+        //{
+        //    try
+        //    {
+        //        dtbgrupoexamen.Columns.Add("Codigo");
+        //        dtbgrupoexamen.Columns.Add("CodigoPROD");
+        //        dtbgrupoexamen.Columns.Add("GrupoExamen");
+        //        dtbgrupoexamen.Columns.Add("Observacion");
+        //        dtbgrupoexamen.Columns.Add("Estado");
+        //        dtbgrupoexamen.Columns.Add("ConVariables");
+        //        dtbgrupoexamen.Columns.Add("ConExamen");
+        //        ViewState["GrupoExamen"] = dtbgrupoexamen;
 
-                dtbvariables.Columns.Add("Codigo");
-                dtbvariables.Columns.Add("CodigoEXGC");
-                dtbvariables.Columns.Add("Campo");
-                dtbvariables.Columns.Add("Field");
-                dtbvariables.Columns.Add("Operador");
-                dtbvariables.Columns.Add("Valor");
-                dtbvariables.Columns.Add("Estado");
-                ViewState["Variables"] = dtbvariables;
-                ViewState["VariablesTmp"] = dtbvariables.Copy();
+        //        dtbvariables.Columns.Add("Codigo");
+        //        dtbvariables.Columns.Add("CodigoEXGC");
+        //        dtbvariables.Columns.Add("Campo");
+        //        dtbvariables.Columns.Add("Field");
+        //        dtbvariables.Columns.Add("Operador");
+        //        dtbvariables.Columns.Add("Valor");
+        //        dtbvariables.Columns.Add("Estado");
+        //        ViewState["Variables"] = dtbvariables;
+        //        ViewState["VariablesTmp"] = dtbvariables.Copy();
 
-                dtbexamenes.Columns.Add("Codigo");
-                dtbexamenes.Columns.Add("CodigoEXGC");
-                dtbexamenes.Columns.Add("CodigoEXSE");
-                dtbexamenes.Columns.Add("Categoria");
-                dtbexamenes.Columns.Add("Examen");
-                dtbexamenes.Columns.Add("Costo");
-                dtbexamenes.Columns.Add("Pvp");
-                dtbexamenes.Columns.Add("Estado");
-                ViewState["Examenes"] = dtbexamenes;
-                ViewState["Examenestmp"] = dtbexamenes.Copy();
+        //        dtbexamenes.Columns.Add("Codigo");
+        //        dtbexamenes.Columns.Add("CodigoEXGC");
+        //        dtbexamenes.Columns.Add("CodigoEXSE");
+        //        dtbexamenes.Columns.Add("Categoria");
+        //        dtbexamenes.Columns.Add("Examen");
+        //        dtbexamenes.Columns.Add("Costo");
+        //        dtbexamenes.Columns.Add("Pvp");
+        //        dtbexamenes.Columns.Add("Estado");
+        //        ViewState["Examenes"] = dtbexamenes;
+        //        ViewState["Examenestmp"] = dtbexamenes.Copy();
 
-                dtbgrupoexamen.Clear();
-                dtbvariables.Clear();
-                dtbexamenes.Clear();
+        //        dtbgrupoexamen.Clear();
+        //        dtbvariables.Clear();
+        //        dtbexamenes.Clear();
 
-                TrGrupoExamen.Visible = false;
-                TrVariables.Visible = false;
-                TrExamenes.Visible = false;
+        //        //TrGrupoExamen.Visible = false;
+        //        //TrVariables.Visible = false;
+        //        //TrExamenes.Visible = false;
 
-                Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(DdlProducto.SelectedValue);
-                objparam[1] = "";
-                //objparam[2] = 148;
-                //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                //TxtMonto.Text = dts.Tables[0].Rows[0]["Costo"].ToString().Replace(",",".");
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = /*int.Parse(DdlProducto.SelectedValue);*/
+        //        objparam[1] = "";
+        //        //objparam[2] = 148;
+        //        //dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //        //TxtMonto.Text = dts.Tables[0].Rows[0]["Costo"].ToString().Replace(",",".");
 
-                objparam[2] = 135;
-                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                if (dts.Tables[0].Rows.Count > 0) TrGrupoExamen.Visible = true;
-                ViewState["GrupoExamen"] = dts.Tables[0];
-                GrdvGrupoExamen.DataSource = dts;
-                GrdvGrupoExamen.DataBind();
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                Array.Resize(ref objparam, 3);
-                objparam[1] = "";
-                objparam[2] = 136;                
-                foreach (DataRow drfila in dts.Tables[0].Rows)
-                {
-                    objparam[0] = int.Parse(drfila["Codigo"].ToString());
-                    dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    foreach (DataRow drvariable in dtx.Tables[0].Rows)
-                    {
-                        filagre = dtbvariables.NewRow();
-                        filagre["Codigo"] = drvariable["Codigo"].ToString();
-                        filagre["CodigoEXGC"] = drfila["Codigo"].ToString();
-                        filagre["Campo"] = drvariable["Campo"].ToString();
-                        filagre["Field"] = drvariable["Field"].ToString();
-                        filagre["Operador"] = drvariable["Operador"].ToString();
-                        filagre["Valor"] = drvariable["Valor"].ToString();
-                        filagre["Estado"] = drvariable["Estado"].ToString();
-                        dtbvariables.Rows.Add(filagre);
-                    }
-                    ViewState["Variables"] = dtbvariables;
-                    foreach (DataRow drexamen in dtx.Tables[1].Rows)
-                    {
-                        filagre = dtbexamenes.NewRow();
-                        filagre["Codigo"] = drexamen["Codigo"].ToString();
-                        filagre["CodigoEXGC"] = drfila["Codigo"].ToString();
-                        filagre["CodigoEXSE"] = drexamen["CodigoEXSE"].ToString();
-                        filagre["Categoria"] = drexamen["Categoria"].ToString();
-                        filagre["Examen"] = drexamen["Examen"].ToString();
-                        filagre["Costo"] = drexamen["Costo"].ToString();
-                        filagre["Pvp"] = drexamen["Pvp"].ToString();
-                        filagre["Estado"] = drexamen["Estado"].ToString();
-                        dtbexamenes.Rows.Add(filagre);
-                    }
-                    ViewState["Examenes"] = dtbexamenes;
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
+        //        objparam[2] = 135;
+        //        dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //        //if (dts.Tables[0].Rows.Count > 0) TrGrupoExamen.Visible = true;
+        //        ViewState["GrupoExamen"] = dts.Tables[0];
+        //        GrdvGrupoExamen.DataSource = dts;
+        //        GrdvGrupoExamen.DataBind();
+        //        dtbexamenes = (DataTable)ViewState["Examenes"];
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[1] = "";
+        //        objparam[2] = 136;                
+        //        foreach (DataRow drfila in dts.Tables[0].Rows)
+        //        {
+        //            objparam[0] = int.Parse(drfila["Codigo"].ToString());
+        //            dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //            foreach (DataRow drvariable in dtx.Tables[0].Rows)
+        //            {
+        //                filagre = dtbvariables.NewRow();
+        //                filagre["Codigo"] = drvariable["Codigo"].ToString();
+        //                filagre["CodigoEXGC"] = drfila["Codigo"].ToString();
+        //                filagre["Campo"] = drvariable["Campo"].ToString();
+        //                filagre["Field"] = drvariable["Field"].ToString();
+        //                filagre["Operador"] = drvariable["Operador"].ToString();
+        //                filagre["Valor"] = drvariable["Valor"].ToString();
+        //                filagre["Estado"] = drvariable["Estado"].ToString();
+        //                dtbvariables.Rows.Add(filagre);
+        //            }
+        //            ViewState["Variables"] = dtbvariables;
+        //            foreach (DataRow drexamen in dtx.Tables[1].Rows)
+        //            {
+        //                filagre = dtbexamenes.NewRow();
+        //                filagre["Codigo"] = drexamen["Codigo"].ToString();
+        //                filagre["CodigoEXGC"] = drfila["Codigo"].ToString();
+        //                filagre["CodigoEXSE"] = drexamen["CodigoEXSE"].ToString();
+        //                filagre["Categoria"] = drexamen["Categoria"].ToString();
+        //                filagre["Examen"] = drexamen["Examen"].ToString();
+        //                filagre["Costo"] = drexamen["Costo"].ToString();
+        //                filagre["Pvp"] = drexamen["Pvp"].ToString();
+        //                filagre["Estado"] = drexamen["Estado"].ToString();
+        //                dtbexamenes.Rows.Add(filagre);
+        //            }
+        //            ViewState["Examenes"] = dtbexamenes;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Lblerror.Text = ex.ToString();
+        //    }
+        //}
 
-        private void FunCargarCombos(int opcion)
-        {
-            switch (opcion)
-            {
-                case 0:
-                    Array.Resize(ref Objparam, 3);
-                    Objparam[0] = int.Parse(Session["usuCodigo"].ToString());
-                    Objparam[1] = "";
-                    Objparam[2] = 145;
-                    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
-                    codigoclus = int.Parse(dts.Tables[0].Rows[0]["CodigoCLUS"].ToString());
-                    codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());
+        //private void FunCargarCombos(int opcion)
+        //{
+        //    switch (opcion)
+        //    {
+        //        case 0:
+        //            Array.Resize(ref Objparam, 3);
+        //            Objparam[0] = int.Parse(Session["usuCodigo"].ToString());
+        //            Objparam[1] = "";
+        //            Objparam[2] = 145;
+        //            dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
+        //            codigoclus = int.Parse(dts.Tables[0].Rows[0]["CodigoCLUS"].ToString());
+        //            codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());
 
-                    Objparam[2] = 146;
-                    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
-                    DdlCampos.DataSource = dts;
-                    DdlCampos.DataTextField = "Descripcion";
-                    DdlCampos.DataValueField = "Codigo";
-                    DdlCampos.DataBind();
+        //            Objparam[2] = 146;
+        //            dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
+        //            //DdlCampos.DataSource = dts;
+        //            //DdlCampos.DataTextField = "Descripcion";
+        //            //DdlCampos.DataValueField = "Codigo";
+        //            //DdlCampos.DataBind();
 
-                    Array.Resize(ref Objparam, 11);
-                    Objparam[0] = 14;
-                    Objparam[1] = "";
-                    Objparam[2] = "";
-                    Objparam[3] = "";
-                    Objparam[4] = "";
-                    Objparam[5] = "";
-                    Objparam[6] = codigocamp;
-                    Objparam[7] = int.Parse(Session["usuCodigo"].ToString());
-                    Objparam[8] = 0;
-                    Objparam[9] = 0;
-                    Objparam[10] = 0;
-                    dts = new Conexion(2, "").FunConsultaDatos1(Objparam);
-                    DdlProducto.DataSource = dts;
-                    DdlProducto.DataTextField = "Descripcion";
-                    DdlProducto.DataValueField = "Codigo";
-                    DdlProducto.DataBind();
-                    break;
-                case 1:
-                    List<KeyValuePair<string, string>> listOper = new List<KeyValuePair<string, string>>();
-                    listOper.Add(new KeyValuePair<string, string>("0", "--<Seleccion Operación>--"));
-                    listOper.Add(new KeyValuePair<string, string>("=", "Igual (=)"));
-                    listOper.Add(new KeyValuePair<string, string>(">", "Mayor que (>)"));
-                    listOper.Add(new KeyValuePair<string, string>(">=", "Mayor Igual que (>=)"));
-                    listOper.Add(new KeyValuePair<string, string>("<", "Menor que (<)"));
-                    listOper.Add(new KeyValuePair<string, string>("<=", "Menor Igual que (<=)"));
-                    //listOper.Add(new KeyValuePair<string, string>("like", "Contiene Caracteres (Like)"));
-                    //listOper.Add(new KeyValuePair<string, string>("between", "Entre"));
-                    DdlOperador.DataSource = listOper;
-                    DdlOperador.DataTextField = "Value";
-                    DdlOperador.DataValueField = "Key";
-                    DdlOperador.DataBind();
-                    break;
-                case 2:
-                    Array.Resize(ref objparam, 3);
-                    objparam[0] = 0;
-                    objparam[1] = "";
-                    objparam[2] = 137;
-                    dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    DdlExamen.DataSource = dts;
-                    DdlExamen.DataTextField = "Descripcion";
-                    DdlExamen.DataValueField = "Codigo";
-                    DdlExamen.DataBind();
-                    break;
-            }
-        }
+        //            Array.Resize(ref Objparam, 11);
+        //            Objparam[0] = 14;
+        //            Objparam[1] = "";
+        //            Objparam[2] = "";
+        //            Objparam[3] = "";
+        //            Objparam[4] = "";
+        //            Objparam[5] = "";
+        //            Objparam[6] = codigocamp;
+        //            Objparam[7] = int.Parse(Session["usuCodigo"].ToString());
+        //            Objparam[8] = 0;
+        //            Objparam[9] = 0;
+        //            Objparam[10] = 0;
+        //            dts = new Conexion(2, "").FunConsultaDatos1(Objparam);
+        //            //DdlProducto.DataSource = dts;
+        //            //DdlProducto.DataTextField = "Descripcion";
+        //            //DdlProducto.DataValueField = "Codigo";
+        //            //DdlProducto.DataBind();
+        //            break;
+        //        case 1:
+        //            List<KeyValuePair<string, string>> listOper = new List<KeyValuePair<string, string>>();
+        //            listOper.Add(new KeyValuePair<string, string>("0", "--<Seleccion Operación>--"));
+        //            listOper.Add(new KeyValuePair<string, string>("=", "Igual (=)"));
+        //            listOper.Add(new KeyValuePair<string, string>(">", "Mayor que (>)"));
+        //            listOper.Add(new KeyValuePair<string, string>(">=", "Mayor Igual que (>=)"));
+        //            listOper.Add(new KeyValuePair<string, string>("<", "Menor que (<)"));
+        //            listOper.Add(new KeyValuePair<string, string>("<=", "Menor Igual que (<=)"));
+        //            //listOper.Add(new KeyValuePair<string, string>("like", "Contiene Caracteres (Like)"));
+        //            //listOper.Add(new KeyValuePair<string, string>("between", "Entre"));
+        //            //DdlOperador.DataSource = listOper;
+        //            //DdlOperador.DataTextField = "Value";
+        //            //DdlOperador.DataValueField = "Key";
+        //            //DdlOperador.DataBind();
+        //            break;
+        //        case 2:
+        //            Array.Resize(ref objparam, 3);
+        //            objparam[0] = 0;
+        //            objparam[1] = "";
+        //            objparam[2] = 137;
+        //            dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //            //DdlExamen.DataSource = dts;
+        //            //DdlExamen.DataTextField = "Descripcion";
+        //            //DdlExamen.DataValueField = "Codigo";
+        //            //DdlExamen.DataBind();
+        //            break;
+        //    }
+        //}
 
-        private void FunSetearCampos(string campo)
-        {
-            try
-            {
-                TxtValor.Text = "";
-                Array.Resize(ref Objparam, 3);
-                Objparam[0] = 0;
-                Objparam[1] = campo;
-                Objparam[2] = 147;
-                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
-                ViewState["Tipo"] = dts.Tables[0].Rows[0]["Tipo"].ToString();
-                TxtValor.Attributes.Clear();
-                switch (ViewState["Tipo"].ToString())
-                {
-                    case "date":
-                    case "datetime":
-                        CalendarExtender calExtender = new CalendarExtender();
-                        calExtender.Format = "MM/dd/yyyy";
-                        calExtender.TargetControlID = TxtValor.ID;
-                        PlaceTxt.Controls.Add(calExtender);
-                        break;
-                    case "int":
-                    case "smallint":
-                    case "tinyint":
-                        FilteredTextBoxExtender filter = new FilteredTextBoxExtender();
-                        filter.FilterType = FilterTypes.Numbers;
-                        filter.TargetControlID = TxtValor.ID;
-                        PlaceTxt.Controls.Add(filter);
-                        break;
-                    case "decimal":
-                    case "numeric":
-                    case "float":
-                    case "money":
-                    case "real":
-                        TxtValor.Attributes.Add("onkeypress", "return NumeroDecimal(this.form.txtValor, event)");
-                        TxtValor.Attributes.Add("onchange", "ValidarDecimales();");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
+        //private void FunSetearCampos(string campo)
+        //{
+        //    try
+        //    {
+        //        TxtValor.Text = "";
+        //        Array.Resize(ref Objparam, 3);
+        //        Objparam[0] = 0;
+        //        Objparam[1] = campo;
+        //        Objparam[2] = 147;
+        //        dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", Objparam);
+        //        ViewState["Tipo"] = dts.Tables[0].Rows[0]["Tipo"].ToString();
+        //        TxtValor.Attributes.Clear();
+        //        switch (ViewState["Tipo"].ToString())
+        //        {
+        //            case "date":
+        //            case "datetime":
+        //                CalendarExtender calExtender = new CalendarExtender();
+        //                calExtender.Format = "MM/dd/yyyy";
+        //                calExtender.TargetControlID = TxtValor.ID;
+        //                PlaceTxt.Controls.Add(calExtender);
+        //                break;
+        //            case "int":
+        //            case "smallint":
+        //            case "tinyint":
+        //                FilteredTextBoxExtender filter = new FilteredTextBoxExtender();
+        //                filter.FilterType = FilterTypes.Numbers;
+        //                filter.TargetControlID = TxtValor.ID;
+        //                PlaceTxt.Controls.Add(filter);
+        //                break;
+        //            case "decimal":
+        //            case "numeric":
+        //            case "float":
+        //            case "money":
+        //            case "real":
+        //                TxtValor.Attributes.Add("onkeypress", "return NumeroDecimal(this.form.txtValor, event)");
+        //                TxtValor.Attributes.Add("onchange", "ValidarDecimales();");
+        //                break;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Lblerror.Text = ex.ToString();
+        //    }
+        //}
 
-        private bool FunValidarCondiciones()
-        {
-            if (DdlCampos.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Debe seleccionar un Campo para la condición", this);
-                return false;
-            }
-            if (DdlOperador.SelectedValue == "0")
-            {
-                new Funciones().funShowJSMessage("Debe seleccionar tipo de operación", this);
-                return false;
-            }
-            if (TxtValor.Text == "")
-            {
-                new Funciones().funShowJSMessage("Debe ingresar un valor de comparación para la condición", this);
-                return false;
-            }
-            if (ViewState["Variables"] != null)
-            {
-                dtbvariables = (DataTable)ViewState["Variables"];
-                result = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "' and Campo='"+
-                    DdlCampos.SelectedItem.ToString() + "' and Operador='" + DdlOperador.SelectedItem.ToString() + "'").FirstOrDefault();
-                lexiste = result != null ? true : false;
-            }            
-            lexiste = result != null ? true : false;
-            if (lexiste)
-            {
-                new Funciones().funShowJSMessage("Ya existe un registro con esta condición", this);
-                return false;
-            }
+        //private bool FunValidarCondiciones()
+        //{
+        //    if (DdlCampos.SelectedValue == "0")
+        //    {
+        //        new Funciones().funShowJSMessage("Debe seleccionar un Campo para la condición", this);
+        //        return false;
+        //    }
+        //    if (DdlOperador.SelectedValue == "0")
+        //    {
+        //        new Funciones().funShowJSMessage("Debe seleccionar tipo de operación", this);
+        //        return false;
+        //    }
+        //    if (TxtValor.Text == "")
+        //    {
+        //        new Funciones().funShowJSMessage("Debe ingresar un valor de comparación para la condición", this);
+        //        return false;
+        //    }
+        //    if (ViewState["Variables"] != null)
+        //    {
+        //        dtbvariables = (DataTable)ViewState["Variables"];
+        //        result = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "' and Campo='"+
+        //            DdlCampos.SelectedItem.ToString() + "' and Operador='" + DdlOperador.SelectedItem.ToString() + "'").FirstOrDefault();
+        //        lexiste = result != null ? true : false;
+        //    }            
+        //    lexiste = result != null ? true : false;
+        //    if (lexiste)
+        //    {
+        //        new Funciones().funShowJSMessage("Ya existe un registro con esta condición", this);
+        //        return false;
+        //    }
             //FunSetearCampos(DdlCampos.SelectedValue);
-            switch (ViewState["Tipo"].ToString())
-            {
-                case "numeric":
-                case "double":
-                case "decimal":
-                case "int":
-                    if (DdlOperador.SelectedValue.ToString() == "like")
-                    {
-                        new Funciones().funShowJSMessage("No puede utilizar la operacion like para datos numéricos", this);
-                        return false;
-                    }
-                    break;
-                case "date":
-                case "smalldatetime":
-                case "datetime":
-                    if (DdlOperador.SelectedValue.ToString() == "like")
-                    {
-                        new Funciones().funShowJSMessage("No puede utilizar la operacion like para datos tipo fecha", this);
-                        return false;
-                    }
-                    break;
-            }
-            return true;
-        }
+        //    switch (ViewState["Tipo"].ToString())
+        //    {
+        //        case "numeric":
+        //        case "double":
+        //        case "decimal":
+        //        case "int":
+        //            if (DdlOperador.SelectedValue.ToString() == "like")
+        //            {
+        //                new Funciones().funShowJSMessage("No puede utilizar la operacion like para datos numéricos", this);
+        //                return false;
+        //            }
+        //            break;
+        //        case "date":
+        //        case "smalldatetime":
+        //        case "datetime":
+        //            if (DdlOperador.SelectedValue.ToString() == "like")
+        //            {
+        //                new Funciones().funShowJSMessage("No puede utilizar la operacion like para datos tipo fecha", this);
+        //                return false;
+        //            }
+        //            break;
+        //    }
+        //    return true;
+        //}
         #endregion
 
         #region Botones y Eventos
-        protected void ImgAgregar_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                if (DdlProducto.SelectedValue == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Producto..!", this);
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtGrupoExamen.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingres Nombre Grupo Exámenes..!", this);
-                    return;
-                }
-                //if (TxtMonto.Text.Trim() == "0" || TxtMonto.Text.Trim() == "0.0" || TxtMonto.Text.Trim() == "0.00")
-                //{
-                //    new Funciones().funShowJSMessage("Ingrese Monto del Producto..!", this);
-                //    return;
-                //}
-                if (ViewState["GrupoExamen"] != null)
-                {
-                    dtbdatos = (DataTable)ViewState["GrupoExamen"];
-                    if (dtbdatos.Rows.Count > 0)
-                        maxcodigo = dtbdatos.AsEnumerable()
-                            .Max(row => int.Parse((string)row["Codigo"]));
-                    else maxcodigo = 0;
-                    result = dtbdatos.Select("GrupoExamen='" + TxtGrupoExamen.Text.Trim().ToUpper() + "'").FirstOrDefault();
-                    if (result != null) lexiste = true;
-                }
-
-                if (lexiste)
-                {
-                    new Funciones().funShowJSMessage("Grupo Examen ya se encuentra Agregado..!", this);
-                    return;
-                }
-                dtbgrupoexamen = (DataTable)ViewState["GrupoExamen"];
-                filagre = dtbgrupoexamen.NewRow();
-                filagre["Codigo"] = maxcodigo + 1;
-                filagre["CodigoPROD"] = DdlProducto.SelectedValue;
-                filagre["GrupoExamen"] = TxtGrupoExamen.Text.Trim().ToUpper();
-                filagre["Observacion"] = TxtObservacion.Text.Trim().ToUpper();
-                filagre["Estado"] = "Activo";
-                filagre["ConVariables"] = "NO";
-                filagre["ConExamen"] = "NO";
-                dtbgrupoexamen.Rows.Add(filagre);
-                dtbgrupoexamen.DefaultView.Sort = "GrupoExamen";
-                ViewState["GrupoExamen"] = dtbgrupoexamen;
-                GrdvGrupoExamen.DataSource = dtbgrupoexamen;
-                GrdvGrupoExamen.DataBind();
-                TxtGrupoExamen.Text = "";
-                TxtObservacion.Text = "";
-                ImgModificar.Enabled = false;
-                TrGrupoExamen.Visible = true;
-                TrVariables.Visible = false;
-                TrExamenes.Visible = false;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgModificar_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                lexiste = false;
-                if (string.IsNullOrEmpty(TxtGrupoExamen.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingres Nombre Grupo Exámenes..!", this);
-                    return;
-                }
-                if (TxtMonto.Text.Trim() == "0" || TxtMonto.Text.Trim() == "0.0" || TxtMonto.Text.Trim() == "0.00")
-                {
-                    new Funciones().funShowJSMessage("Ingrese Monto del Producto..!", this);
-                    return;
-                }
-                if (ViewState["GrupoExamen"] != null)
-                {
-                    dtbgrupoexamen = (DataTable)ViewState["GrupoExamen"];
-                    if (ViewState["GrupoAnterior"].ToString() != TxtGrupoExamen.Text.Trim().ToUpper())
-                    {
-                        result = dtbgrupoexamen.Select("GrupoExamen='" + TxtGrupoExamen.Text.Trim().ToUpper() + "'").FirstOrDefault();
-                        if (result != null) lexiste = true;
-                    }
-                }
-                if (lexiste)
-                {
-                    new Funciones().funShowJSMessage("Grupo Examen ya se encuentra Agregado..!", this);
-                    return;
-                }
-                result = dtbgrupoexamen.Select("Codigo='" + ViewState["CodigoEXGC"].ToString() + "'").FirstOrDefault();
-                result["GrupoExamen"] = TxtGrupoExamen.Text.Trim().ToUpper();
-                result["Observacion"] = TxtObservacion.Text.Trim().ToUpper();
-                result["Estado"] = ChkEstadoGrupo.Checked ? "Activo" : "Inactivo";
-                dtbgrupoexamen.AcceptChanges();
-                ViewState["GrupoExamen"] = dtbgrupoexamen;
-                GrdvGrupoExamen.DataSource = dtbgrupoexamen;
-                GrdvGrupoExamen.DataBind();
-                TxtGrupoExamen.Text = "";
-                TxtObservacion.Text = "";
-                ImgModificar.Enabled = false;
-                ImgAgregar.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgVariables_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                foreach (GridViewRow fr in GrdvGrupoExamen.Rows)
-                {
-                    fr.Cells[0].BackColor = System.Drawing.Color.White;
-                }
-                GrdvGrupoExamen.Rows[gvRow.RowIndex].Cells[0].BackColor = Color.Beige;
-                codigo = GrdvGrupoExamen.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                ViewState["CodigoEXGC"] = codigo;
-                dtbvariables = (DataTable)ViewState["Variables"];
-                dtbvariablestmp = (DataTable)ViewState["VariablesTmp"];
-                dtbvariablestmp.Clear();
-                drtemp = dtbvariables.Select("CodigoEXGC='" + codigo + "'");
-                foreach (DataRow fila in drtemp)
-                {
-                    filagretem = dtbvariablestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["Campo"] = fila["Campo"].ToString();
-                    filagretem["Field"] = fila["Field"].ToString();
-                    filagretem["Operador"] = fila["Operador"].ToString();
-                    filagretem["Valor"] = fila["Valor"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbvariablestmp.Rows.Add(filagretem);
-                }
-                dtbvariablestmp.DefaultView.Sort = "Campo";
-                dtbvariablestmp = dtbvariablestmp.DefaultView.ToTable();
-                GrdvVariables.DataSource = dtbvariablestmp;
-                GrdvVariables.DataBind();
-                TrVariables.Visible = true;
-                TrExamenes.Visible = false;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgExamenes_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                foreach (GridViewRow fr in GrdvGrupoExamen.Rows)
-                {
-                    fr.Cells[0].BackColor = Color.White;
-                }
-                GrdvGrupoExamen.Rows[gvRow.RowIndex].Cells[0].BackColor = Color.Beige;
-                codigo = GrdvGrupoExamen.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                ViewState["CodigoEXGC"] = codigo;
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                dtbexamenestmp = (DataTable)ViewState["ExamenesTmp"];
-                dtbexamenestmp.Clear();
-                drtemp = dtbexamenes.Select("CodigoEXGC='" + codigo + "'");
-                foreach (DataRow fila in drtemp)
-                {
-                    filagretem = dtbexamenestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["CodigoEXSE"] = fila["CodigoEXSE"].ToString();
-                    filagretem["Categoria"] = fila["Categoria"].ToString();
-                    filagretem["Examen"] = fila["Examen"].ToString();
-                    filagretem["Costo"] = fila["Costo"].ToString();
-                    filagretem["Pvp"] = fila["Pvp"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbexamenestmp.Rows.Add(filagretem);
-                }
-                dtbexamenestmp.DefaultView.Sort = "Examen";
-                dtbexamenestmp = dtbexamenestmp.DefaultView.ToTable();
-                GrdvExamenes.DataSource = dtbexamenestmp;
-                GrdvExamenes.DataBind();
-                TrVariables.Visible = false;
-                TrExamenes.Visible = true;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgSeleccGrupo_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                foreach (GridViewRow fr in GrdvGrupoExamen.Rows)
-                {
-                    fr.Cells[0].BackColor = Color.White;
-                }
-                GrdvGrupoExamen.Rows[gvRow.RowIndex].Cells[0].BackColor = Color.Coral;
-                TrVariables.Visible = false;
-                TrExamenes.Visible = false;
-                ImgModificar.Enabled = true;
-                codigo = GrdvGrupoExamen.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                dtbgrupoexamen = (DataTable)ViewState["GrupoExamen"];
-                result = dtbgrupoexamen.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                TxtGrupoExamen.Text = result["GrupoExamen"].ToString();
-                TxtObservacion.Text = result["Observacion"].ToString();
-                ViewState["GrupoAnterior"] = result["GrupoExamen"].ToString();
-                ViewState["CodigoEXGC"] = codigo;                
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ChkEstado_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                chkestado = (CheckBox)(gvRow.Cells[4].FindControl("ChkEstado"));
-                codigo = GrdvGrupoExamen.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                dtbgrupoexamen = (DataTable)ViewState["GrupoExamen"];
-                result = dtbgrupoexamen.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result["Estado"] = chkestado.Checked ? "Activo" : "Inactivo";
-                dtbgrupoexamen.AcceptChanges();
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgEliminar_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                codigo = GrdvGrupoExamen.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                //Buscar si no existe Efecto agregado
-                dtbvariables = (DataTable)ViewState["Variables"];
-                result = dtbvariables.Select("CodigoEXGC='" + codigo + "'").FirstOrDefault();
-                if (result != null)
-                {
-                    new Funciones().funShowJSMessage("Elimine antes Variables..!", this);
-                    return;
-                }
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                result = dtbexamenes.Select("CodigoEXGC='" + codigo + "'").FirstOrDefault();
-                if (result != null)
-                {
-                    new Funciones().funShowJSMessage("Elimine antes Examenes asociados..!", this);
-                    return;
-                }
-                dtbgrupoexamen = (DataTable)ViewState["GrupoExamen"];
-                result = dtbgrupoexamen.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result.Delete();
-                dtbgrupoexamen.AcceptChanges();
-                ViewState["GrupoExamen"] = dtbgrupoexamen;
-                GrdvGrupoExamen.DataSource = dtbgrupoexamen;
-                GrdvGrupoExamen.DataBind();
-                if (dtbgrupoexamen.Rows.Count == 0)
-                {
-                    TrGrupoExamen.Visible = false;
-                    TxtMonto.Text = "0.00";
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.Message;
-            }
-        }
+    
 
         protected void GrdvGrupoExamen_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             try
             {
-                if (e.Row.RowIndex >= 0)
+           
+                if (e.Row.RowType != DataControlRowType.DataRow)
                 {
-                    imgvariables = (ImageButton)(e.Row.Cells[2].FindControl("ImgVariables"));
-                    imgexamen = (ImageButton)(e.Row.Cells[2].FindControl("ImgExamenes"));
-                    chkestado = (CheckBox)(e.Row.Cells[3].FindControl("ChkEstado"));
-                    imgeliminar = (ImageButton)(e.Row.Cells[4].FindControl("ImgEliminar"));                    
-                    estado = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["Estado"].ToString();
-                    codigo = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["Codigo"].ToString();
-                    conexamen = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["ConExamen"].ToString();
-                    convariables = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["ConVariables"].ToString();
-                    if (estado == "Activo") chkestado.Checked = true;
-                    if (conexamen == "SI") imgexamen.ImageUrl = "~/Botones/notepadcolor.png";
-                    if (convariables == "SI") imgvariables.ImageUrl = "~/Botones/variablescolor.png";
-                    Array.Resize(ref objparam, 11);
-                    objparam[0] = 19;
-                    objparam[1] = "";
-                    objparam[2] = "";
-                    objparam[3] = "";
-                    objparam[4] = "";
-                    objparam[5] = "";
-                    objparam[6] = int.Parse(DdlProducto.SelectedValue);
-                    objparam[7] = 0;
-                    objparam[8] = 0;
-                    objparam[9] = 0;
-                    objparam[10] = 0;
-                    dtx = new Conexion(2, "").FunConsultaDatos1(objparam);
-                    if (dtx.Tables[0].Rows.Count > 0)
-                    {
-                        imgeliminar.ImageUrl = "~/Botones/eliminaroff.jpg";
-                        imgeliminar.Enabled = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgAddCampo_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                lexiste = false;
-                if (FunValidarCondiciones())
-                {
-                    textoValor = TxtValor.Text;
-                    switch (ViewState["Tipo"].ToString())
-                    {
-                        case "date":
-                        case "datetime":
-                        case "varchar":
-                        case "char":
-                            if (DdlOperador.SelectedValue == "like") textoValor = "'" + TxtValor.Text + "%'";
-                            //else textoValor = "'" + TxtValor.Text + "'";
-                            break;
-                    }
-                    if (ViewState["Variables"] != null)
-                    {
-                        dtbvariables = (DataTable)ViewState["Variables"];
-                        if (dtbvariables.Rows.Count > 0)
-                            maxcodigo = dtbvariables.AsEnumerable()
-                                .Max(row => int.Parse((string)row["Codigo"]));
-                        else maxcodigo = 0;
-                        result = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() +
-                            "' and Field='" + DdlCampos.SelectedValue + "' and Operador='" + DdlOperador.SelectedValue + "'").FirstOrDefault();
-                        if (result != null) lexiste = true;
-                    }
-                    if (lexiste)
-                    {
-                        new Funciones().funShowJSMessage("Definición de Variable ya está Agregada..!", this);
-                        return;
-                    }
-                    filagre = dtbvariables.NewRow();
-                    filagre["Codigo"] = maxcodigo + 1;
-                    filagre["CodigoEXGC"] = ViewState["CodigoEXGC"].ToString();
-                    filagre["Campo"] = DdlCampos.SelectedItem.ToString();
-                    filagre["Field"] = DdlCampos.SelectedValue;
-                    filagre["Operador"] = DdlOperador.SelectedValue;
-                    filagre["Valor"] = textoValor;
-                    filagre["Estado"] = "Activo";
-                    dtbvariables.Rows.Add(filagre);
-                    dtbvariablestmp = (DataTable)ViewState["VariablesTmp"];
-                    dtbvariablestmp.Clear();
-                    drtemp = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                    foreach (DataRow fila in drtemp)
-                    {
-                        filagretem = dtbvariablestmp.NewRow();
-                        filagretem["Codigo"] = fila["Codigo"].ToString();
-                        filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                        filagretem["Campo"] = fila["Campo"].ToString();
-                        filagretem["Field"] = fila["Field"].ToString();
-                        filagretem["Operador"] = fila["Operador"].ToString();
-                        filagretem["Valor"] = fila["Valor"].ToString();
-                        filagretem["Estado"] = fila["Estado"].ToString();
-                        dtbvariablestmp.Rows.Add(filagretem);
-                    }
-                    dtbvariablestmp.DefaultView.Sort = "Campo";
-                    dtbvariablestmp = dtbvariablestmp.DefaultView.ToTable();
-                    ViewState["Variables"] = dtbvariables;
-                    GrdvVariables.DataSource = dtbvariablestmp;
-                    GrdvVariables.DataBind();
-                    DdlCampos.SelectedValue = "0";
-                    DdlOperador.SelectedValue = "0";
-                    TxtValor.Text = "";
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ChkEstadoCampo_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                chkestado = (CheckBox)(gvRow.Cells[3].FindControl("ChkEstadoCampo"));
-                dtbvariables = (DataTable)ViewState["Variables"];
-                codigo = GrdvVariables.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                result = dtbvariables.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result["Estado"] = chkestado.Checked ? "Activo" : "Inactivo";
-                dtbvariables.AcceptChanges();
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgSeleccCampo_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                foreach (GridViewRow fr in GrdvVariables.Rows)
-                {
-                    fr.Cells[0].BackColor = Color.White;
-                }
-                GrdvVariables.Rows[gvRow.RowIndex].Cells[0].BackColor = Color.Coral;
-                codigo = GrdvVariables.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                ViewState["CodigoVar"] = codigo;
-                dtbvariables = (DataTable)ViewState["Variables"];
-                result = dtbvariables.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                ViewState["Estado"] = result["Estado"].ToString();
-                DdlCampos.SelectedValue = result["Field"].ToString();
-                FunSetearCampos(DdlCampos.SelectedItem.ToString());
-                DdlOperador.SelectedValue = result["Operador"].ToString();
-                TxtValor.Text = result["Valor"].ToString().Replace("'", "");
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.Message;
-            }
-        }
-
-        protected void ImgDelCampo_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                codigo = GrdvVariables.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                Array.Resize(ref objparam, 11);
-                objparam[0] = 22;
-                objparam[1] = "";
-                objparam[2] = "";
-                objparam[3] = "";
-                objparam[4] = "";
-                objparam[5] = "";
-                objparam[6] = int.Parse(ViewState["CodigoEXGC"].ToString());
-                objparam[7] = codigo;
-                objparam[8] = 0;
-                objparam[9] = 0;
-                objparam[10] = 0;
-                new Conexion(2, "").FunConsultaDatos1(objparam);
-                dtbvariables = (DataTable)ViewState["Variables"];
-                result = dtbvariables.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result.Delete();
-                dtbvariables.AcceptChanges();
-                dtbvariablestmp = (DataTable)ViewState["VariablesTmp"];
-                dtbvariablestmp.Clear();
-                drtemp = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                foreach (DataRow fila in drtemp)
-                {
-                    filagretem = dtbvariablestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["Campo"] = fila["Campo"].ToString();
-                    filagretem["Field"] = fila["Field"].ToString();
-                    filagretem["Operador"] = fila["Operador"].ToString();
-                    filagretem["Valor"] = fila["Valor"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbvariablestmp.Rows.Add(filagretem);
-                }
-                dtbvariablestmp.DefaultView.Sort = "Campo";
-                dtbvariablestmp = dtbvariablestmp.DefaultView.ToTable();
-                GrdvVariables.DataSource = dtbvariablestmp;
-                GrdvVariables.DataBind();
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.Message;
-            }
-        }
-
-        protected void ImgAddExamen_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                lexiste = false;
-                if (DdlExamen.SelectedValue == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Examen..!", this);
                     return;
                 }
-                if (string.IsNullOrEmpty(TxtValorExamen.Text.Trim()))
+
+                string estadoCodigo = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
+                ImageButton btnGestion = e.Row.FindControl("ImgSeleccGrupo") as ImageButton;
+
+                if (btnGestion == null)
                 {
-                    new Funciones().funShowJSMessage("Ingrese Costo Examen..!", this);
                     return;
                 }
-                if (TxtValorExamen.Text.Trim() == "0" || TxtValorExamen.Text.Trim() == "0.0" || TxtValorExamen.Text.Trim() == "0.00")
+
+                if (estadoCodigo == "AUA" || estadoCodigo == "AUR")
                 {
-                    new Funciones().funShowJSMessage("Ingrese Costo Examen..!", this);
-                    return;
+                    btnGestion.Enabled = true;
+                    btnGestion.ImageUrl = "~/Botones/modificar.png";
+                    btnGestion.ToolTip = "Gestionar auditoría";
                 }
-                if (ViewState["Examenes"] != null)
+                else
                 {
-                    dtbexamenes = (DataTable)ViewState["Examenes"];
-                    if (dtbexamenes.Rows.Count > 0)
-                        maxcodigo = dtbexamenes.AsEnumerable()
-                            .Max(row => int.Parse((string)row["Codigo"]));
-                    else maxcodigo = 0;
-                    result = dtbexamenes.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() +
-                        "' and CodigoEXSE='" + DdlExamen.SelectedValue + "'").FirstOrDefault();
-                    if (result != null) lexiste = true;
+                    btnGestion.Enabled = false;
+                    btnGestion.ImageUrl = "~/Botones/selecc.png";
+                    btnGestion.ToolTip = "Disponible después de la auditoría";
                 }
-                if (lexiste)
-                {
-                    new Funciones().funShowJSMessage("Examen ya se encuentra Agregado..!", this);
-                    return;
-                }
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                filagre = dtbexamenes.NewRow();
-                filagre["Codigo"] = maxcodigo + 1;
-                filagre["CodigoEXGC"] = ViewState["CodigoEXGC"].ToString();
-                filagre["CodigoEXSE"] = DdlExamen.SelectedValue;
-                filagre["Categoria"] = TxtCategoria.Text.Trim();
-                filagre["Examen"] = DdlExamen.SelectedItem.ToString();
-                filagre["Costo"] = TxtValorExamen.Text;
-                filagre["Pvp"] = ViewState["Pvp"].ToString();
-                filagre["Estado"] = "Activo";
-                dtbexamenes.Rows.Add(filagre);
-                dtbexamenes.DefaultView.Sort = "Examen";
-                ViewState["Examenes"] = dtbexamenes;
-                dtbexamenestmp = (DataTable)ViewState["ExamenesTmp"];
-                dtbexamenestmp.Clear();
-                drtemp = dtbexamenes.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                foreach (DataRow fila in drtemp)
-                {
-                    filagretem = dtbexamenestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["CodigoEXSE"] = fila["CodigoEXSE"].ToString();
-                    filagretem["Categoria"] = fila["Categoria"].ToString();
-                    filagretem["Examen"] = fila["Examen"].ToString();
-                    filagretem["Costo"] = fila["Costo"].ToString();
-                    filagretem["Pvp"] = fila["Pvp"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbexamenestmp.Rows.Add(filagretem);
-                }
-                dtbexamenestmp.DefaultView.Sort = "Examen";
-                dtbexamenestmp = dtbexamenestmp.DefaultView.ToTable();
-                GrdvExamenes.DataSource = dtbexamenestmp;
-                GrdvExamenes.DataBind();
-                DdlExamen.SelectedValue = "0";
-                TxtCategoria.Text = "";
-                TxtValorExamen.Text = "0.00";
-                ImgModExamen.Enabled = false;
+            
             }
             catch (Exception ex)
             {
@@ -926,321 +369,337 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void ChkEstadoGrupo_CheckedChanged(object sender, EventArgs e)
-        {
-            ChkEstadoGrupo.Text = ChkEstadoGrupo.Checked ? "Activo" : "Inactivo";
-        }
-
-        protected void DdlCampos_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (DdlCampos.SelectedValue != "0")
-            {
-                FunSetearCampos(DdlCampos.SelectedItem.ToString());
-            }
-        }
-
-        protected void DdlExamen_SelectedIndexChanged(object sender, EventArgs e)
+        private void CargarSolicitudesCliente()
         {
             try
             {
-                Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(DdlExamen.SelectedValue);
-                objparam[1] = "";
-                objparam[2] = 138;
-                dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                if (dts.Tables[0].Rows.Count > 0)
+
+                Lblerror.Text = "";
+
+                int codigoUsuario = Convert.ToInt32(Session["usuCodigo"]);
+                int codigoCampania = ObtenerCampaniaUsuario(codigoUsuario);
+
+                Dictionary<int, string> productos =ObtenerProductosCliente(codigoCampania,codigoUsuario);
+
+                DataTable listado = CrearTablaSolicitudesCliente();
+
+                object[] parametros = new object[3];
+                parametros[0] = 0;
+                parametros[1] = "";
+                parametros[2] = 144;
+
+                DataSet dsSolicitudes = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",parametros);
+
+                if (dsSolicitudes != null && dsSolicitudes.Tables.Count > 0)
                 {
-                    TxtCategoria.Text = dts.Tables[0].Rows[0]["Categoria"].ToString();
-                    ViewState["Pvp"] = dts.Tables[0].Rows[0]["Valor"].ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-
-        }
-
-        protected void DdlProducto_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            FunCargaMantenimiento();
-        }
-
-        protected void GrdvVariables_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            try
-            {
-                if (e.Row.RowIndex >= 0)
-                {
-                    chkestado = (CheckBox)(e.Row.Cells[3].FindControl("ChkEstadoCampo"));
-                    estado = GrdvVariables.DataKeys[e.Row.RowIndex].Values["Estado"].ToString();
-                    if (estado == "Activo") chkestado.Checked = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
-
-        protected void ImgModCampo_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                if (FunValidarCondiciones())
-                {
-                    dtbvariables = (DataTable)ViewState["Variables"];
-                    result = dtbvariables.Select("Codigo='" + ViewState["CodigoVar"].ToString() + "'").FirstOrDefault();
-                    result["Campo"] = DdlCampos.SelectedItem.ToString();
-                    result["Field"] = DdlCampos.SelectedValue;
-                    result["Operador"] = DdlOperador.SelectedValue;
-                    result["Valor"] = TxtValor.Text.Trim();
-                    dtbvariables.AcceptChanges();
-                    ViewState["Variables"] = dtbvariables;
-                    dtbvariablestmp = (DataTable)ViewState["VariablesTmp"];
-                    dtbvariablestmp.Clear();
-                    drtemp = dtbvariables.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                    foreach (DataRow fila in drtemp)
+                    foreach (DataRow fila in dsSolicitudes.Tables[0].Rows)
                     {
-                        filagretem = dtbvariablestmp.NewRow();
-                        filagretem["Codigo"] = fila["Codigo"].ToString();
-                        filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                        filagretem["Campo"] = fila["Campo"].ToString();
-                        filagretem["Field"] = fila["Field"].ToString();
-                        filagretem["Operador"] = fila["Operador"].ToString();
-                        filagretem["Valor"] = fila["Valor"].ToString();
-                        filagretem["Estado"] = fila["Estado"].ToString();
-                        dtbvariablestmp.Rows.Add(filagretem);
-                    }
-                    dtbvariablestmp.DefaultView.Sort = "Campo";
-                    dtbvariablestmp = dtbvariablestmp.DefaultView.ToTable();
-                    ViewState["Variables"] = dtbvariables;
-                    GrdvVariables.DataSource = dtbvariablestmp;
-                    GrdvVariables.DataBind();
-                    DdlCampos.SelectedValue = "0";
-                    DdlOperador.SelectedValue = "0";
-                    TxtValor.Text = "";
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
+                        int codigoProducto = 0;
 
-        protected void DdlOperador_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (DdlCampos.SelectedValue != "0")
-            {
-                FunSetearCampos(DdlCampos.SelectedItem.ToString());
-            }
-        }
+                        int.TryParse(fila["CodigoPROD"].ToString(),out codigoProducto);
 
-        protected void ImgModExamen_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                lexiste = false;
-                if (DdlExamen.SelectedValue == "0")
-                {
-                    new Funciones().funShowJSMessage("Seleccione Examen..!", this);
-                    return;
-                }
-                if (string.IsNullOrEmpty(TxtValorExamen.Text.Trim()))
-                {
-                    new Funciones().funShowJSMessage("Ingrese Costo..!", this);
-                    return;
-                }
-                if (TxtValorExamen.Text.Trim() == "0" || TxtValorExamen.Text.Trim() == "0.0" || TxtValorExamen.Text.Trim() == "0.00")
-                {
-                    new Funciones().funShowJSMessage("Ingrese Pvp..!", this);
-                    return;
-                }
-                if (ViewState["Examenes"] != null)
-                {
-                    if (DdlExamen.SelectedValue != ViewState["CodiExeAnterior"].ToString())
-                    {
-                        dtbexamenes = (DataTable)ViewState["Examenes"];
-                        result = dtbexamenes.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() +
-                            "' and Codigo='" + DdlExamen.SelectedValue + "'").FirstOrDefault();
-                        if (result != null) lexiste = true;
+                        if (!productos.ContainsKey(codigoProducto))
+                        {
+                            continue;
+                        }
+
+                        int codigoEXSO = 0;
+
+                        int.TryParse(fila["CodigoEXSO"].ToString(),out codigoEXSO);
+
+
+                        if (codigoEXSO <= 0)
+                        {
+                            continue;
+                        }
+
+                        DataRow nueva = listado.NewRow();
+
+                        nueva["CodigoEXSO"] = codigoEXSO;
+                        nueva["FechaSolicitud"] = fila["FecSolicitud"].ToString();
+                        nueva["Cedula"] = fila["NumDocumento"].ToString();
+                        nueva["Paciente"] = fila["Cliente"].ToString();
+                        nueva["Producto"] = fila["Producto"].ToString();
+                        string estadoCodigo = fila["EstadoCodigo"].ToString().Trim().ToUpper();
+                        nueva["EstadoCodigo"] = estadoCodigo;
+                        nueva["Estado"] = ObtenerDescripcionEstado(estadoCodigo);
+                        nueva["FechaResultado"] = "";
+                        listado.Rows.Add(nueva);
                     }
                 }
-                if (lexiste)
-                {
-                    new Funciones().funShowJSMessage("Examen ya se encuentra Agregado..!", this);
-                    return;
-                }
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                result = dtbexamenes.Select("Codigo='" + ViewState["CodigoExamen"].ToString() + "'").FirstOrDefault();
-                result["CodigoEXSE"] = DdlExamen.SelectedValue;
-                result["Examen"] = DdlExamen.SelectedItem.ToString();
-                result["Categoria"] = TxtCategoria.Text.Trim();
-                result["Costo"] = TxtValorExamen.Text;
-                ViewState["Examenes"] = dtbexamenes;
-                dtbexamenestmp = (DataTable)ViewState["ExamenesTmp"];
-                dtbexamenestmp.Clear();
-                drtemp = dtbexamenes.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                foreach (DataRow fila in drtemp)
-                {
-                    filagretem = dtbexamenestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["CodigoEXSE"] = fila["CodigoEXSE"].ToString();
-                    filagretem["Categoria"] = fila["Categoria"].ToString();
-                    filagretem["Examen"] = fila["Examen"].ToString();
-                    filagretem["Costo"] = fila["Costo"].ToString();
-                    filagretem["Pvp"] = fila["Pvp"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbexamenestmp.Rows.Add(filagretem);
-                }
-                dtbexamenestmp.DefaultView.Sort = "Examen";
-                dtbexamenestmp = dtbexamenestmp.DefaultView.ToTable();
-                GrdvExamenes.DataSource = dtbexamenestmp;
-                GrdvExamenes.DataBind();
-                DdlExamen.SelectedValue = "0";
-                TxtCategoria.Text = "";
-                TxtValorExamen.Text = "0.00";
-                ImgModExamen.Enabled = false;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
 
-        protected void ImgSeleccExa_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                foreach (GridViewRow fr in GrdvExamenes.Rows)
-                {
-                    fr.Cells[0].BackColor = Color.White;
-                }
-                GrdvExamenes.Rows[gvRow.RowIndex].Cells[0].BackColor = Color.Coral;
-                ImgModExamen.Enabled = true;
-                codigo = GrdvExamenes.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                codigoexeanterior = GrdvExamenes.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                result = dtbexamenes.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                DdlExamen.SelectedValue = result["CodigoEXSE"].ToString();
-                TxtCategoria.Text = result["Categoria"].ToString();
-                TxtValorExamen.Text = result["Costo"].ToString();
-                ViewState["CodiExeAnterior"] = codigo;
-                ViewState["CodigoExamen"] = codigo;
-                dtbgrupoexamen.AcceptChanges();
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
+                parametros = new object[3];
+                parametros[0] = codigoCampania;
+                parametros[1] = "";
+                parametros[2] = 159;
 
-        protected void ChkEstExamen_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                chkestado = (CheckBox)(gvRow.Cells[2].FindControl("ChkEstExamen"));
-                codigo = GrdvExamenes.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                result = dtbexamenes.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result["Estado"] = chkestado.Checked ? "Activo" : "Inactivo";
-                dtbexamenes.AcceptChanges();
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
-        }
+                DataSet dsAuditoria = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",parametros);
 
-        protected void ImgDelExamen_Click(object sender, ImageClickEventArgs e)
-        {
-            try
-            {
-                GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
-                codigo = GrdvExamenes.DataKeys[gvRow.RowIndex].Values["Codigo"].ToString();
-                Array.Resize(ref objparam, 11);
-                objparam[0] = 23;
-                objparam[1] = "";
-                objparam[2] = "";
-                objparam[3] = "";
-                objparam[4] = "";
-                objparam[5] = "";
-                objparam[6] = int.Parse(ViewState["CodigoEXGC"].ToString());
-                objparam[7] = codigo;
-                objparam[8] = 0;
-                objparam[9] = 0;
-                objparam[10] = 0;
-                new Conexion(2, "").FunConsultaDatos1(objparam);
-                //Buscar si no existe Efecto agregado
-                dtbexamenes = (DataTable)ViewState["Examenes"];
-                result = dtbexamenes.Select("Codigo='" + codigo + "'").FirstOrDefault();
-                result.Delete();
-                dtbexamenes.AcceptChanges();
-                ViewState["Examenes"] = dtbexamenes;
-                dtbexamenestmp = (DataTable)ViewState["ExamenesTmp"];
-                dtbexamenestmp.Clear();
-                drtemp = dtbexamenes.Select("CodigoEXGC='" + ViewState["CodigoEXGC"].ToString() + "'");
-                foreach (DataRow fila in drtemp)
+                if (dsAuditoria != null && dsAuditoria.Tables.Count > 0)
                 {
-                    filagretem = dtbexamenestmp.NewRow();
-                    filagretem["Codigo"] = fila["Codigo"].ToString();
-                    filagretem["CodigoEXGC"] = fila["CodigoEXGC"].ToString();
-                    filagretem["CodigoEXSE"] = fila["CodigoEXSE"].ToString();
-                    filagretem["Categoria"] = fila["Categoria"].ToString();
-                    filagretem["Examen"] = fila["Examen"].ToString();
-                    filagretem["Costo"] = fila["Costo"].ToString();
-                    filagretem["Pvp"] = fila["Pvp"].ToString();
-                    filagretem["Estado"] = fila["Estado"].ToString();
-                    dtbexamenestmp.Rows.Add(filagretem);
-                }
-                dtbexamenestmp.DefaultView.Sort = "Examen";
-                dtbexamenestmp = dtbexamenestmp.DefaultView.ToTable();
-                GrdvExamenes.DataSource = dtbexamenestmp;
-                GrdvExamenes.DataBind();
-                DdlExamen.SelectedValue = "0";
-                TxtCategoria.Text = "";
-                TxtValorExamen.Text = "0.00";
-                ImgModExamen.Enabled = false;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.Message;
-            }
-        }
-
-        protected void GrdvExamenes_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            try
-            {
-                if (e.Row.RowIndex >= 0)
-                {
-                    chkestado = (CheckBox)(e.Row.Cells[4].FindControl("ChkEstExamen"));
-                    imgeliminar = (ImageButton)(e.Row.Cells[5].FindControl("ImgDelExamen"));
-                    estado = GrdvExamenes.DataKeys[e.Row.RowIndex].Values["Estado"].ToString();
-                    codigo = GrdvExamenes.DataKeys[e.Row.RowIndex].Values["CodigoEXSE"].ToString();
-                    if (estado == "Activo") chkestado.Checked = true;
-                    Array.Resize(ref objparam, 11);
-                    objparam[0] = 20;
-                    objparam[1] = "";
-                    objparam[2] = "";
-                    objparam[3] = "";
-                    objparam[4] = "";
-                    objparam[5] = "";
-                    objparam[6] = int.Parse(ViewState["CodigoEXGC"].ToString());
-                    objparam[7] = int.Parse(codigo);
-                    objparam[8] = 0;
-                    objparam[9] = 0;
-                    objparam[10] = 0;
-                    dtx = new Conexion(2, "").FunConsultaDatos1(objparam);
-                    if (dtx.Tables[0].Rows.Count > 0)
+                    foreach (DataRow fila in dsAuditoria.Tables[0].Rows)
                     {
-                        imgeliminar.ImageUrl = "~/Botones/eliminaroff.jpg";
-                        imgeliminar.Enabled = false;
+                        int codigoEXSO = 0;
+                        int.TryParse(fila["CodigoEXSO"].ToString(),out codigoEXSO);
+
+                        if (codigoEXSO <= 0)
+                        {
+                            continue;
+                        }
+
+                        DataRow registro = null;
+                        DataRow[] encontrados = listado.Select("CodigoEXSO = " + codigoEXSO.ToString());
+
+                        if (encontrados.Length > 0)
+                        {
+                            registro = encontrados[0];
+                        }
+                        else
+                        {
+                            registro = listado.NewRow();
+                            registro["CodigoEXSO"] = codigoEXSO;
+
+                            DataRow datosSolicitud = ObtenerDatosSolicitud(codigoEXSO);
+
+                            if (datosSolicitud != null)
+                            {
+                                registro["FechaSolicitud"] = datosSolicitud["FechaSolicita"].ToString();
+
+                                int codigoProducto = 0;
+                                int.TryParse(datosSolicitud["CodigoPROD"].ToString(),out codigoProducto);
+
+
+                                if (productos.ContainsKey(codigoProducto))
+                                {
+                                    registro["Producto"] = productos[codigoProducto];
+                                }
+                                else
+                                {
+                                    registro["Producto"] = "";
+                                }
+                            }
+                            else
+                            {
+                                registro["FechaSolicitud"] = "";
+                                registro["Producto"] = "";
+                            }
+
+                            listado.Rows.Add(registro);
+                        }
+
+                        registro["Cedula"] = fila["Cedula"].ToString();
+                        registro["Paciente"] = fila["Paciente"].ToString();
+                        string estadoCodigo = fila["EstadoCodigo"].ToString().Trim().ToUpper();
+                        registro["EstadoCodigo"] = estadoCodigo;
+                        registro["Estado"] = ObtenerDescripcionEstado(estadoCodigo);
+                        string fechaResultado = fila["FechaEnvioResultados"].ToString();
+
+                        if (string.IsNullOrEmpty(fechaResultado))
+                        {
+                            fechaResultado = fila["FechaAprobado"].ToString();
+                        }
+
+                        registro["FechaResultado"] = fechaResultado;
                     }
                 }
+
+                DataView vista = listado.DefaultView;
+                vista.Sort = "CodigoEXSO DESC";
+                DataTable resultado = vista.ToTable();
+                ViewState["SolicitudesCliente"] = resultado;
+                GrdvGrupoExamen.DataSource = resultado;
+                GrdvGrupoExamen.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+            }
+        }
+
+        private int ObtenerCampaniaUsuario(int codigoUsuario)
+        {
+
+            object[] parametros = new object[3];
+            parametros[0] = codigoUsuario;
+            parametros[1] = "";
+            parametros[2] = 145;
+
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                throw new Exception("El usuario no tiene un cliente/campaña seleccionado.");
+            }
+
+            int codigoCampania = 0;
+
+            if (!int.TryParse(ds.Tables[0].Rows[0]["CodigoCAMP"].ToString(),out codigoCampania))
+            {
+                throw new Exception("No fue posible determinar la campaña del usuario.");
+            }
+
+            if (codigoCampania <= 0)
+            {
+                throw new Exception("El usuario no tiene una campaña válida.");
+            }
+
+            return codigoCampania;
+        }
+
+        private Dictionary<int, string> ObtenerProductosCliente(int codigoCampania,int codigoUsuario)
+        {
+            Dictionary<int, string> productos = new Dictionary<int, string>();
+
+            object[] parametros = new object[3];
+            parametros[0] = codigoCampania;
+            parametros[1] = "";
+            parametros[2] = 220;
+
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",parametros);
+
+            if (ds == null || ds.Tables.Count == 0)
+            {
+                return productos;
+            }
+
+            foreach (DataRow fila in ds.Tables[0].Rows)
+            {
+
+                int codigoProducto = 0;
+                int.TryParse(fila["Codigo"].ToString(),out codigoProducto);
+
+                if (codigoProducto <= 0)
+                {
+                    continue;
+                }
+
+                string descripcion = fila["Descripcion"].ToString();
+
+                if (!productos.ContainsKey(codigoProducto))
+                {
+                    productos.Add(codigoProducto,descripcion);
+                }
+            }
+
+            return productos;
+        }
+
+        private DataRow ObtenerDatosSolicitud(int codigoEXSO)
+        {
+            object[] parametros = new object[3];
+
+            parametros[0] = codigoEXSO;
+            parametros[1] = "";
+            parametros[2] = 150;
+
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",parametros);
+
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+
+            return ds.Tables[0].Rows[0];
+        }
+
+        private DataTable CrearTablaSolicitudesCliente()
+        {
+            DataTable tabla = new DataTable();
+
+            tabla.Columns.Add("CodigoEXSO",typeof(int));
+            tabla.Columns.Add("FechaSolicitud",typeof(string));
+            tabla.Columns.Add("Cedula",typeof(string));
+            tabla.Columns.Add("Paciente",typeof(string));
+            tabla.Columns.Add("Producto",typeof(string));
+            tabla.Columns.Add("EstadoCodigo",typeof(string));
+            tabla.Columns.Add("Estado",typeof(string));
+            tabla.Columns.Add("FechaResultado",typeof(string));
+
+            return tabla;
+        }
+
+        private string ObtenerDescripcionEstado(string estadoCodigo)
+        {
+            string estado = estadoCodigo == null ? "" : estadoCodigo.Trim().ToUpper();
+
+            switch (estado)
+            {
+                case "SRR":
+
+                    return "SOLICITADO";
+
+                case "SRV":
+
+                    return "SOLICITUD REVISADA";
+
+                case "SGA":
+
+                    return "AGENDADO";
+
+                case "EXR":
+
+                    return
+                        "PENDIENTE DE AUDITORÍA";
+
+                case "AUA":
+
+                    return
+                        "AUDITADO ACEPTADO";
+
+                case "AUR":
+
+                    return
+                        "AUDITADO RECHAZADO";
+
+                default:
+
+                    return estado;
+            }
+        }
+
+        protected void GrdvGrupoExamen_PageIndexChanging(object sender,GridViewPageEventArgs e)
+        {
+            try
+            {
+
+                GrdvGrupoExamen.PageIndex = e.NewPageIndex;
+
+                DataTable tabla =ViewState["SolicitudesCliente"] as DataTable;
+
+                if (tabla == null)
+                {
+                    CargarSolicitudesCliente();
+                    return;
+                }
+
+                GrdvGrupoExamen.DataSource = tabla;
+                GrdvGrupoExamen.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+            }
+        }
+
+        protected void ImgGestion_Command(object sender,CommandEventArgs e)
+        {
+            try
+            {
+                int codigoEXSO = 0;
+
+                if (!int.TryParse(e.CommandArgument.ToString(),out codigoEXSO))
+                {
+                    Lblerror.Text = "No se pudo identificar la solicitud.";
+                    return;
+                }
+
+                if (codigoEXSO <= 0)
+                {
+                    Lblerror.Text = "El código de la solicitud no es válido.";
+                    return;
+                }
+
+                Response.Redirect("FrmGestionExamenCliente.aspx?CodigoEXSO=" + codigoEXSO.ToString(),true);
             }
             catch (Exception ex)
             {
@@ -1261,16 +720,13 @@ namespace Pry_PrestasaludWAP.Examenes
                     new Funciones().funShowJSMessage("Ingrese Grupo de Examen..!", this);
                     return;
                 }
-                //if (dtbvariables.Rows.Count == 0)
-                //{
-                //    new Funciones().funShowJSMessage("Defina Variables de Configuración..!", this);
-                //    return;
-                //}
+          
                 if (dtbexamenes.Rows.Count == 0)
                 {
                     new Funciones().funShowJSMessage("Ingrese al menos un Examen..!", this);
                     return;
                 }
+
                 Array.Resize(ref objparam, 28);
                 objparam[6] = 0;
                 objparam[7] = "";
@@ -1339,10 +795,10 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnSalir_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("../Mantenedor/FrmDetalle.aspx", true);
-        }
+        //protected void BtnSalir_Click(object sender, EventArgs e)
+        //{
+        //    Response.Redirect("../Examenes/FrmNuevoExamenCliente.aspx", true);
+        //}
         #endregion
     }
 }

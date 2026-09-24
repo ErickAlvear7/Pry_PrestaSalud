@@ -22,8 +22,8 @@
             <div class="panel-heading">
                 <asp:Label ID="Lbltitulo" runat="server"></asp:Label>
             </div>
-                <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-                </asp:ToolkitScriptManager>
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+            </asp:ToolkitScriptManager>
             <asp:UpdatePanel ID="updTimer" runat="server">
                 <ContentTemplate>
                     <asp:Timer ID="Tmrdat" runat="server" Interval="300000">
@@ -48,7 +48,7 @@
                                         ShowHeaderWhenEmpty="True" DataKeyNames="CodigoEXSO">
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                         <Columns>
-                                            <asp:BoundField DataField="Cedula" HeaderText="Cédula" />
+                                            <%--<asp:BoundField DataField="Cedula" HeaderText="Cédula" />
                                             <asp:BoundField DataField="Paciente" HeaderText="Paciente" />
                                             <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
                                             <asp:BoundField DataField="FechaAprobado" HeaderText="FechaAprobado" />
@@ -58,13 +58,31 @@
                                                     <asp:ImageButton ID="BtnAuditar" runat="server" Height="20px" ImageUrl="~/Botones/btnauditarexamen.png" OnClick="BtnAuditar_Click" />
                                                 </ItemTemplate>
                                                 <ItemStyle HorizontalAlign="Center" />
+                                            </asp:TemplateField>--%>
+                                            <asp:BoundField DataField="Cedula" HeaderText="Cédula" />
+                                            <asp:BoundField DataField="Paciente" HeaderText="Paciente" />
+                                            <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                                            <asp:BoundField DataField="Estado" HeaderText="Estado" />
+                                            <asp:BoundField DataField="FechaEnvioResultados" HeaderText="Fecha Envío Resultados" />
+                                            <asp:BoundField DataField="Observacion" HeaderText="Observación" />
+                                            <asp:TemplateField HeaderText="Auditar">
+                                                <ItemTemplate>
+                                                    <asp:ImageButton ID="BtnAuditar" runat="server"
+                                                        Height="20px"
+                                                        ImageUrl="~/Botones/btnauditarexamen.png"
+                                                        OnClick="BtnAuditar_Click" />
+                                                </ItemTemplate>
+                                                <ItemStyle HorizontalAlign="Center" />
                                             </asp:TemplateField>
                                         </Columns>
                                         <RowStyle Font-Size="X-Small" />
                                     </asp:GridView>
                                     <script>
-                                        $(document).ready(function () {
-                                            $('#GrdvDatos').dataTable();
+                                        //$(document).ready(function () {
+                                        //    $('#GrdvDatos').dataTable();
+                                        //});
+                                        $('#GrdvDatos').dataTable({
+                                            "aaSorting": []
                                         });
                                     </script>
                                 </td>

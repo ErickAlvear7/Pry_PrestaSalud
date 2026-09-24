@@ -16,9 +16,7 @@ namespace Pry_PrestasaludWAP.Examenes
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Session["usuCodigo"] = "2674";
-            //Session["MachineName"] = "pc";
-            //Session["CodGerencial"] = "78";
+       
             try
             {
                 if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")

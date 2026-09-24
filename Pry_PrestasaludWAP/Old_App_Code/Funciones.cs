@@ -1011,7 +1011,8 @@ public class Funciones
                 AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
                 mailMessage.AlternateViews.Add(htmlView);
                 mailMessage.From = new MailAddress(eusername);
-                mailMessage.Subject = "SOLICITUD EXAMEN";
+                //mailMessage.Subject = "SOLICITUD EXAMEN";
+                mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
 
@@ -1049,7 +1050,7 @@ public class Funciones
             catch (Exception ex)
             {
                 mensaje = ex.Message;
-                new Funciones().funCrearLogAuditoria(1, "Funciones.cs/SendHtmlEmailLink", ex.ToString(), 1);
+                new Funciones().funCrearLogAuditoria(1, "Funciones.cs/SendHtmlEmailExamen", ex.ToString(), 1);
             }
             return mensaje;
         }

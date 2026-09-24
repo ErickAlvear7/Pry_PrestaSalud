@@ -622,6 +622,13 @@
     <Compile Include="Examenes\FrmExamenSegurosAdmin.aspx.designer.cs">
       <DependentUpon>FrmExamenSegurosAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmGestionExamenCliente.aspx.cs">
+      <DependentUpon>FrmGestionExamenCliente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmGestionExamenCliente.aspx.designer.cs">
+      <DependentUpon>FrmGestionExamenCliente.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\FrmGrupoExamenes.aspx.cs">
       <DependentUpon>FrmGrupoExamenes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -650,6 +657,13 @@
     <Compile Include="Examenes\FrmPrestadoraExamenAdmin.aspx.designer.cs">
       <DependentUpon>FrmPrestadoraExamenAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmResultadoExamen.aspx.cs">
+      <DependentUpon>FrmResultadoExamen.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmResultadoExamen.aspx.designer.cs">
+      <DependentUpon>FrmResultadoExamen.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\FrmRevisionExamen.aspx.cs">
       <DependentUpon>FrmRevisionExamen.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -677,6 +691,15 @@
     </Compile>
     <Compile Include="Examenes\FrmSolicitudOperadorAdmin.aspx.designer.cs">
       <DependentUpon>FrmSolicitudOperadorAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\VerImagenAuditoria.ashx.cs">
+      <DependentUpon>VerImagenAuditoria.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\VerImagenCliente.ashx.cs">
+      <DependentUpon>VerImagenCliente.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\VerResultadoExamen.ashx.cs">
+      <DependentUpon>VerResultadoExamen.ashx</DependentUpon>
     </Compile>
     <Compile Include="Expert_WebDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1605,10 +1628,12 @@
     <Content Include="Examenes\FrmExamenNegadoAdmin.aspx" />
     <Content Include="Examenes\FrmExamenRealizadoAdmin.aspx" />
     <Content Include="Examenes\FrmExamenSegurosAdmin.aspx" />
+    <Content Include="Examenes\FrmGestionExamenCliente.aspx" />
     <Content Include="Examenes\FrmGrupoExamenes.aspx" />
     <Content Include="Examenes\FrmNuevoExamenAdmin.aspx" />
     <Content Include="Examenes\FrmNuevoExamenCliente.aspx" />
     <Content Include="Examenes\FrmPrestadoraExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmResultadoExamen.aspx" />
     <Content Include="Examenes\FrmRevisionExamen.aspx" />
     <Content Include="Examenes\FrmSolicitudExamen.aspx" />
     <Content Include="Examenes\FrmSolicitudExamenAdmin.aspx" />
@@ -1700,6 +1725,9 @@
     <Content Include="Titulares\Frm_TitularAdminSet.aspx" />
     <Content Include="Usuarios\FrmChangePassword.aspx" />
     <Content Include="WFrm_Login.aspx" />
+    <Content Include="Examenes\VerResultadoExamen.ashx" />
+    <Content Include="Examenes\VerImagenAuditoria.ashx" />
+    <Content Include="Examenes\VerImagenCliente.ashx" />
     <None Include="Expert_WebDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>Expert_WebDataSet.Designer.cs</LastGenOutput>
