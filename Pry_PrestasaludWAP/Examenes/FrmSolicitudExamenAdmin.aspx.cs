@@ -45,11 +45,17 @@ namespace Pry_PrestasaludWAP.Examenes
             dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);//comentado sp traer solo solicitados
             GrdvDatos.DataSource = dts;
             GrdvDatos.DataBind();
-            if (GrdvDatos.Rows.Count > 0)
+
+            if (GrdvDatos.HeaderRow != null)
             {
                 GrdvDatos.UseAccessibleHeader = true;
                 GrdvDatos.HeaderRow.TableSection = TableRowSection.TableHeader;
             }
+            //if (GrdvDatos.Rows.Count > 0)
+            //{
+            //    GrdvDatos.UseAccessibleHeader = true;
+            //    GrdvDatos.HeaderRow.TableSection = TableRowSection.TableHeader;
+            //}
         }
         #endregion
 

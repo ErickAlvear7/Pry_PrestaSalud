@@ -309,6 +309,23 @@
                 height: calc(100vh - 220px);
             }
         }
+        #acordionParametro > h3.ui-accordion-header {
+            background: #337ab7 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-color: #337ab7 !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+        }
+
+        #acordionParametro > h3.ui-accordion-header:hover,
+        #acordionParametro > h3.ui-accordion-header.ui-state-hover,
+        #acordionParametro > h3.ui-accordion-header.ui-state-active {
+            background: #337ab7 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-color: #337ab7 !important;
+        }
 
     </style>
     <script type="text/javascript">

@@ -70,7 +70,24 @@
                                     </asp:GridView>
                                     <script>
                                         $(document).ready(function () {
-                                            $('#GrdvDatos').dataTable();
+                                            /*$('#GrdvDatos').dataTable();*/
+                                            var tabla = $('#GrdvDatos');
+
+                                            if (tabla.length == 0) {
+                                                return;
+                                            }
+
+                                            var filas = tabla.find('tbody tr');
+
+                                            if (filas.length == 0) {
+                                                return;
+                                            }
+
+                                            if (filas.first().find('td[colspan]').length > 0) {
+                                                return;
+                                            }
+
+                                            tabla.dataTable();
                                         });
                                     </script>
                                 </td>

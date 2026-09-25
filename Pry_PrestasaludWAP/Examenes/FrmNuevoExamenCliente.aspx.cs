@@ -373,7 +373,6 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-
                 Lblerror.Text = "";
 
                 int codigoUsuario = Convert.ToInt32(Session["usuCodigo"]);
