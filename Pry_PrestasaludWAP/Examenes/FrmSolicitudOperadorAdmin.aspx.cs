@@ -213,7 +213,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     e.Row.Cells[5].Font.Bold = true;
 
-
                     LinkButton btnResultados = e.Row.FindControl("BtnResultados") as LinkButton;
                     if (btnResultados != null)
                     {
