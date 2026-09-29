@@ -143,10 +143,6 @@
                                                 <ItemStyle HorizontalAlign="Center" Width="12%" />
                                             </asp:BoundField>
                                             <asp:TemplateField HeaderText="Gestión">
-                                                <%--<ItemTemplate>
-                                                    <asp:ImageButton ID="ImgSeleccGrupo" runat="server" Height="18px" ImageUrl="~/Botones/selecc.png" CausesValidation="false" OnClick="ImgSeleccGrupo_Click" />
-                                                </ItemTemplate>
-                                                <ItemStyle HorizontalAlign="Center" Width="8%" />--%>
                                                 <ItemTemplate>
                                                     <asp:ImageButton ID="ImgGestion" runat="server" Height="22px"
                                                         ImageUrl="~/Botones/selecc.png"
@@ -155,7 +151,6 @@
                                                         CommandArgument='<%# Eval("CodigoEXSO") %>'
                                                         OnCommand="ImgGestion_Command" />
                                                 </ItemTemplate>
-
                                                 <ItemStyle HorizontalAlign="Center" />
                                             </asp:TemplateField>
                                         </Columns>

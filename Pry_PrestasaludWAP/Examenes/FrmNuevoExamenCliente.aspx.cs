@@ -335,11 +335,47 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-           
+
                 if (e.Row.RowType != DataControlRowType.DataRow)
                 {
                     return;
                 }
+
+                string estado = "";
+
+                if (GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"] != null)
+                {
+                    estado = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
+                }
+
+                TableCell celdaEstado = e.Row.Cells[5];
+
+                switch (estado)
+                {
+                    // AUDITADO ACEPTADO
+                    case "AUA":
+
+                        celdaEstado.BackColor = System.Drawing.Color.LightGreen;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkGreen;
+                        break;
+
+                    // AUDITADO RECHAZADO
+                    case "AUR":
+
+                        celdaEstado.BackColor = System.Drawing.Color.LightCoral;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkRed;
+                        break;
+
+                    // Por si llegara a visualizarse
+                    // pendiente de auditoría
+                    case "EXR":
+
+                        celdaEstado.BackColor = System.Drawing.Color.Aquamarine;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkSlateGray;
+                        break;
+                }
+
+                celdaEstado.Font.Bold = true;
 
                 string estadoCodigo = GrdvGrupoExamen.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
                 ImageButton btnGestion = e.Row.FindControl("ImgSeleccGrupo") as ImageButton;

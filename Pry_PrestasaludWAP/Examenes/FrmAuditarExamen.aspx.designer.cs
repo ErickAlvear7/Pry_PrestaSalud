@@ -105,6 +105,24 @@ namespace Pry_PrestasaludWAP.Examenes
         protected global::AjaxControlToolkit.HTMLEditor.Editor EditorObservacionAuditor;
 
         /// <summary>
+        /// Control FupImagenInformeAuditor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload FupImagenInformeAuditor;
+
+        /// <summary>
+        /// Control BtnInsertarImagenAuditor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnInsertarImagenAuditor;
+
+        /// <summary>
         /// Control BtnAceptarObservacion.
         /// </summary>
         /// <remarks>

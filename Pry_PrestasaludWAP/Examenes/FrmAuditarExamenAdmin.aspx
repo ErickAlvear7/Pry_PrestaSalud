@@ -45,20 +45,10 @@
                                 <td>
                                     <asp:GridView ID="GrdvDatos" runat="server" Width="100%" AutoGenerateColumns="False"
                                         CssClass="table table-condensed table-bordered table-hover table-responsive"
-                                        ShowHeaderWhenEmpty="True" DataKeyNames="CodigoEXSO">
+                                        ShowHeaderWhenEmpty="True" DataKeyNames="CodigoEXSO,EstadoCodigo" EmptyDataText="No existen datos para mostrar"
+                                        OnRowDataBound="GrdvDatos_RowDataBound">
                                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                         <Columns>
-                                            <%--<asp:BoundField DataField="Cedula" HeaderText="Cédula" />
-                                            <asp:BoundField DataField="Paciente" HeaderText="Paciente" />
-                                            <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
-                                            <asp:BoundField DataField="FechaAprobado" HeaderText="FechaAprobado" />
-                                            <asp:BoundField DataField="Observacion" HeaderText="Observación" />
-                                            <asp:TemplateField HeaderText="Auditar">
-                                                <ItemTemplate>
-                                                    <asp:ImageButton ID="BtnAuditar" runat="server" Height="20px" ImageUrl="~/Botones/btnauditarexamen.png" OnClick="BtnAuditar_Click" />
-                                                </ItemTemplate>
-                                                <ItemStyle HorizontalAlign="Center" />
-                                            </asp:TemplateField>--%>
                                             <asp:BoundField DataField="Cedula" HeaderText="Cédula" />
                                             <asp:BoundField DataField="Paciente" HeaderText="Paciente" />
                                             <asp:BoundField DataField="Tipo" HeaderText="Tipo" />

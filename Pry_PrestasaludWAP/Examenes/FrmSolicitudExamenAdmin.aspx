@@ -70,6 +70,8 @@
                                     </asp:GridView>
                                     <script>
                                         $(document).ready(function () {
+
+                                            //console.log('FrmSolicitudExamenAdmin - VALIDACION DATATABLE NUEVA');
                                             /*$('#GrdvDatos').dataTable();*/
                                             var tabla = $('#GrdvDatos');
 
@@ -86,6 +88,12 @@
                                             if (filas.first().find('td[colspan]').length > 0) {
                                                 return;
                                             }
+
+                                            //if (filas.first().find('td[colspan]').length > 0) {
+                                            //    console.log('GRID VACIO - DATATABLE NO SE INICIALIZA');
+                                            //    return;
+                                            //}
+
 
                                             tabla.dataTable();
                                         });

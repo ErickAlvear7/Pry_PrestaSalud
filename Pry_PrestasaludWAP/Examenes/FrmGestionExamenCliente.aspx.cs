@@ -13,7 +13,6 @@ namespace Pry_PrestasaludWAP.Examenes
     {
 
         #region Load
-
         protected void Page_Load(object sender,EventArgs e)
         {
             try
@@ -25,6 +24,12 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
 
                 Page.Form.Attributes.Add("enctype","multipart/form-data");
+                ScriptManager sm = ScriptManager.GetCurrent(Page);
+
+                if (sm != null)
+                {
+                    sm.RegisterPostBackControl(BtnInsertarImagenCliente);
+                }
 
                 if (!IsPostBack)
                 {
@@ -96,7 +101,6 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-
         protected void RptPacientes_ItemDataBound(object sender,RepeaterItemEventArgs e)
         {
             try
@@ -113,83 +117,48 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-
                 int codigoPERS = 0;
 
                 int.TryParse(fila["PERS_CODIGO"].ToString(),out codigoPERS);
-
 
                 if (codigoPERS <= 0)
                 {
                     return;
                 }
 
-
                 int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
+                Repeater rptResultados = e.Item.FindControl("RptResultados") as Repeater;
+                Label lblSinResultados = e.Item.FindControl("LblSinResultados") as Label;
 
-
-                Repeater rptResultados =
-                    e.Item.FindControl(
-                        "RptResultados"
-                    ) as Repeater;
-
-
-                Label lblSinResultados =
-                    e.Item.FindControl(
-                        "LblSinResultados"
-                    ) as Label;
-
-
-                object[] parametrosResultado =
-                    CrearParametrosOperacionSolicitud(
-                        20,
-                        codigoEXSO
-                    );
-
-
+                object[] parametrosResultado = CrearParametrosOperacionSolicitud(20,codigoEXSO);
                 parametrosResultado[36] = codigoPERS;
 
+                DataSet dsResultado = new Conexion(2, "").FunInsertSolictudExamen(parametrosResultado);
 
-                DataSet dsResultado =
-                    new Conexion(2, "")
-                        .FunInsertSolictudExamen(
-                            parametrosResultado
-                        );
-
-
-                if (dsResultado != null && dsResultado.Tables.Count >= 2 &&
-                    dsResultado.Tables[1].Rows.Count > 0)
+                if (dsResultado != null && dsResultado.Tables.Count >= 2 && dsResultado.Tables[1].Rows.Count > 0)
                 {
                     if (rptResultados != null)
                     {
-                        rptResultados.DataSource =
-                            dsResultado.Tables[1];
-
+                        rptResultados.DataSource = dsResultado.Tables[1];
                         rptResultados.DataBind();
                     }
 
-
                     if (lblSinResultados != null)
                     {
-                        lblSinResultados.Visible =
-                            false;
+                        lblSinResultados.Visible = false;
                     }
                 }
                 else
                 {
                     if (rptResultados != null)
                     {
-                        rptResultados.DataSource =
-                            null;
-
+                        rptResultados.DataSource = null;
                         rptResultados.DataBind();
                     }
 
-
                     if (lblSinResultados != null)
                     {
-                        lblSinResultados.Visible =
-                            true;
+                        lblSinResultados.Visible = true;
                     }
                 }
 
@@ -198,148 +167,71 @@ namespace Pry_PrestasaludWAP.Examenes
                 // AUDITORIA - TIPO 22
                 // ==========================================
 
-                object[] parametrosAuditoria =
-                    CrearParametrosOperacionSolicitud(
-                        22,
-                        codigoEXSO
-                    );
+                object[] parametrosAuditoria = CrearParametrosOperacionSolicitud(22,codigoEXSO);
+                parametrosAuditoria[36] = codigoPERS;
+                DataSet dsAuditoria = new Conexion(2, "").FunInsertSolictudExamen(parametrosAuditoria);
 
+                Label lblEstado = e.Item.FindControl("LblEstadoAuditoria") as Label;
+                Label lblEstadoDetalle = e.Item.FindControl("LblEstadoAuditoriaDetalle") as Label;
+                Literal litInforme = e.Item.FindControl("LitInformeAuditor") as Literal;
+                Label lblAdjunto = e.Item.FindControl("LblAdjuntoAuditor") as Label;
 
-                parametrosAuditoria[36] =
-                    codigoPERS;
-
-
-                DataSet dsAuditoria =
-                    new Conexion(2, "")
-                        .FunInsertSolictudExamen(
-                            parametrosAuditoria
-                        );
-
-
-                Label lblEstado =
-                    e.Item.FindControl(
-                        "LblEstadoAuditoria"
-                    ) as Label;
-
-
-                Label lblEstadoDetalle =
-                    e.Item.FindControl(
-                        "LblEstadoAuditoriaDetalle"
-                    ) as Label;
-
-
-                Literal litInforme =
-                    e.Item.FindControl(
-                        "LitInformeAuditor"
-                    ) as Literal;
-
-
-                Label lblAdjunto =
-                    e.Item.FindControl(
-                        "LblAdjuntoAuditor"
-                    ) as Label;
-
-
-                if (dsAuditoria != null &&
-                    dsAuditoria.Tables.Count > 0 &&
-                    dsAuditoria.Tables[0].Rows.Count > 0)
+                if (dsAuditoria != null && dsAuditoria.Tables.Count > 0 && dsAuditoria.Tables[0].Rows.Count > 0)
                 {
-                    DataRow auditoria =
-                        dsAuditoria.Tables[0]
-                            .Rows[0];
 
-
-                    string estado =
-                        auditoria["EXRA_ESTADO"]
-                            .ToString()
-                            .Trim()
-                            .ToUpper();
-
-
-                    string informe =
-                        auditoria[
-                            "EXRA_OBSERVACION"
-                        ] != DBNull.Value
-                        ? auditoria[
-                            "EXRA_OBSERVACION"
-                          ].ToString()
-                        : "";
-
-
-                    string adjunto =
-                        auditoria[
-                            "EXRA_NOMBRE_DOC"
-                        ].ToString()
-                         .Trim();
-
+                    DataRow auditoria = dsAuditoria.Tables[0].Rows[0];
+                    string estado = auditoria["EXRA_ESTADO"].ToString().Trim().ToUpper();
+                    string informe = auditoria["EXRA_OBSERVACION"] != DBNull.Value ? auditoria["EXRA_OBSERVACION"].ToString() : "";
+                    string adjunto = auditoria["EXRA_NOMBRE_DOC"].ToString().Trim();
 
                     if (lblEstado != null)
                     {
-                        lblEstado.Text =
-                            estado;
-
+                        lblEstado.Text = estado;
 
                         if (estado == "ACEPTADO")
                         {
-                            lblEstado.CssClass =
-                                "pull-right estado-aceptado";
+                            lblEstado.CssClass = "pull-right estado-aceptado";
                         }
                         else if (
                             estado == "RECHAZADO")
                         {
-                            lblEstado.CssClass =
-                                "pull-right estado-rechazado";
+                            lblEstado.CssClass = "pull-right estado-rechazado";
                         }
                         else
                         {
-                            lblEstado.CssClass =
-                                "pull-right estado-pendiente";
+                            lblEstado.CssClass = "pull-right estado-pendiente";
                         }
                     }
-
 
                     if (lblEstadoDetalle != null)
                     {
-                        lblEstadoDetalle.Text =
-                            estado;
-
+                        lblEstadoDetalle.Text = estado;
 
                         if (estado == "ACEPTADO")
                         {
-                            lblEstadoDetalle.ForeColor =
-                                System.Drawing.Color.Green;
+                            lblEstadoDetalle.ForeColor = System.Drawing.Color.Green;
                         }
-                        else if (
-                            estado == "RECHAZADO")
+                        else if (estado == "RECHAZADO")
                         {
-                            lblEstadoDetalle.ForeColor =
-                                System.Drawing.Color.Red;
+                            lblEstadoDetalle.ForeColor = System.Drawing.Color.Red;
                         }
                     }
-
 
                     if (litInforme != null)
                     {
-                        if (string.IsNullOrWhiteSpace(
-                                informe))
+                        if (string.IsNullOrWhiteSpace(informe))
                         {
-                            litInforme.Text =
-                                "<span style='color:gray;'>Sin informe registrado.</span>";
+                            litInforme.Text = "<span style='color:gray;'>Sin informe registrado.</span>";
                         }
                         else
                         {
-                            litInforme.Text =
-                                informe;
+                            litInforme.Text = informe;
                         }
                     }
 
-
                     if (lblAdjunto != null)
                     {
-                        lblAdjunto.Text =
-                            string.IsNullOrEmpty(adjunto)
-                            ? "Sin archivo adjunto."
-                            : adjunto;
+                        lblAdjunto.Text = string.IsNullOrEmpty(adjunto) ? "Sin archivo adjunto." : adjunto;
                     }
                 }
 
@@ -348,58 +240,18 @@ namespace Pry_PrestasaludWAP.Examenes
                 // TIPO 30
                 // ==========================================
 
-                object[] parametrosCliente =
-                    CrearParametrosOperacionSolicitud(
-                        30,
-                        codigoEXSO
-                    );
+                object[] parametrosCliente = CrearParametrosOperacionSolicitud(30,codigoEXSO);
 
+                parametrosCliente[36] = codigoPERS;
 
-                parametrosCliente[36] =
-                    codigoPERS;
+                DataSet dsCliente = new Conexion(2, "").FunInsertSolictudExamen(parametrosCliente);
+                RadioButton rdbClienteAceptado = e.Item.FindControl("RdbClienteAceptado") as RadioButton;
+                RadioButton rdbClienteRechazado = e.Item.FindControl("RdbClienteRechazado") as RadioButton;
+                Label lblEstadoCliente = e.Item.FindControl("LblEstadoCliente") as Label;
+                Label lblResumenCliente = e.Item.FindControl("LblResumenInformeCliente") as Label;
+                Label lblAdjuntoCliente = e.Item.FindControl("LblAdjuntoCliente") as Label;
 
-
-                DataSet dsCliente =
-                    new Conexion(2, "")
-                        .FunInsertSolictudExamen(
-                            parametrosCliente
-                        );
-
-
-                RadioButton rdbClienteAceptado =
-                    e.Item.FindControl(
-                        "RdbClienteAceptado"
-                    ) as RadioButton;
-
-
-                RadioButton rdbClienteRechazado =
-                    e.Item.FindControl(
-                        "RdbClienteRechazado"
-                    ) as RadioButton;
-
-
-                Label lblEstadoCliente =
-                    e.Item.FindControl(
-                        "LblEstadoCliente"
-                    ) as Label;
-
-
-                Label lblResumenCliente =
-                    e.Item.FindControl(
-                        "LblResumenInformeCliente"
-                    ) as Label;
-
-
-                Label lblAdjuntoCliente =
-                    e.Item.FindControl(
-                        "LblAdjuntoCliente"
-                    ) as Label;
-
-
-                GridView historial =
-                    e.Item.FindControl(
-                        "GrdvHistorialCliente"
-                    ) as GridView;
+                GridView historial = e.Item.FindControl("GrdvHistorialCliente") as GridView;
 
 
                 // ==========================================
@@ -437,15 +289,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         }
                     }
 
-
-                    string informeCliente =
-                        gestion["EXRC_OBSERVACION"]
-                            != DBNull.Value
-                        ? gestion[
-                            "EXRC_OBSERVACION"
-                          ].ToString()
-                        : "";
-
+                    string informeCliente = gestion["EXRC_OBSERVACION"] != DBNull.Value ? gestion["EXRC_OBSERVACION"].ToString() : "";
 
                     ViewState["InformeCliente_" + codigoPERS.ToString()] = informeCliente;
 
@@ -463,14 +307,10 @@ namespace Pry_PrestasaludWAP.Examenes
                         }
                     }
 
-
                     if (lblAdjuntoCliente != null)
                     {
                         string adjuntoCliente = gestion["EXRC_NOMBRE_DOC"].ToString().Trim();
-                        lblAdjuntoCliente.Text = string.IsNullOrEmpty(adjuntoCliente)
-                            ? "Sin archivo adjunto."
-                            : "Archivo actual: " +
-                              adjuntoCliente;
+                        lblAdjuntoCliente.Text = string.IsNullOrEmpty(adjuntoCliente) ? "Sin archivo adjunto." : "Archivo actual: " + adjuntoCliente;
                     }
                 }
                 else
@@ -548,118 +388,160 @@ namespace Pry_PrestasaludWAP.Examenes
 
         #region Informe Cliente
 
-        protected void BtnEditarInformeCliente_Command(
-            object sender,
-            CommandEventArgs e)
+        protected void BtnEditarInformeCliente_Command(object sender,CommandEventArgs e)
         {
             try
             {
                 int codigoPERS = 0;
 
-
-                if (!int.TryParse(
-                        e.CommandArgument.ToString(),
-                        out codigoPERS) ||
-                    codigoPERS <= 0)
+                if (!int.TryParse(e.CommandArgument.ToString(),out codigoPERS) || codigoPERS <= 0)
                 {
-                    Lblerror.Text =
-                        "No se pudo identificar al paciente.";
-
+                    Lblerror.Text = "No se pudo identificar al paciente.";
                     return;
                 }
 
+                ViewState["PacienteEditorCliente"] = codigoPERS;
 
-                ViewState["PacienteEditorCliente"] =
-                    codigoPERS;
-
-
-                string clave =
-                    "InformeCliente_" +
-                    codigoPERS.ToString();
-
+                string clave = "InformeCliente_" + codigoPERS.ToString();
 
                 if (ViewState[clave] != null)
                 {
-                    EditorInformeCliente.Content =
-                        ViewState[clave].ToString();
+                    EditorInformeCliente.Content = ViewState[clave].ToString();
                 }
                 else
                 {
-                    EditorInformeCliente.Content =
-                        "";
+                    EditorInformeCliente.Content = "";
                 }
 
-
-                LblPacienteEditorCliente.Text =
-                    "Paciente código " +
-                    codigoPERS.ToString();
-
-
-                PnlEditorCliente.Visible =
-                    true;
+                LblPacienteEditorCliente.Text = "Paciente código " + codigoPERS.ToString();
+                PnlEditorCliente.Visible = true;
             }
             catch (Exception ex)
             {
-                Lblerror.Text =
-                    ex.ToString();
+                Lblerror.Text = ex.ToString();
             }
         }
 
 
-        protected void BtnAceptarInformeCliente_Click(
-            object sender,
-            EventArgs e)
+        protected void BtnAceptarInformeCliente_Click(object sender,EventArgs e)
         {
             try
             {
-                if (ViewState[
-                        "PacienteEditorCliente"
-                    ] == null)
+                if (ViewState["PacienteEditorCliente"] == null)
                 {
-                    Lblerror.Text =
-                        "No se pudo identificar al paciente.";
-
+                    Lblerror.Text = "No se pudo identificar al paciente.";
                     return;
                 }
 
+                int codigoPERS = Convert.ToInt32(ViewState["PacienteEditorCliente"]);
+                string clave = "InformeCliente_" + codigoPERS.ToString();
 
-                int codigoPERS =
-                    Convert.ToInt32(
-                        ViewState[
-                            "PacienteEditorCliente"
-                        ]
-                    );
-
-
-                string clave =
-                    "InformeCliente_" +
-                    codigoPERS.ToString();
-
-
-                ViewState[clave] =
-                    EditorInformeCliente.Content;
-
-
-                PnlEditorCliente.Visible =
-                    false;
-
+                ViewState[clave] = EditorInformeCliente.Content;
+                PnlEditorCliente.Visible = false;
 
                 CargarSolicitud();
             }
             catch (Exception ex)
             {
-                Lblerror.Text =
-                    ex.ToString();
+                Lblerror.Text = ex.ToString();
+            }
+        }
+
+        protected void BtnInsertarImagenCliente_Click(object sender,EventArgs e)
+        {
+            try
+            {
+                if (ViewState["PacienteEditorCliente"] == null)
+                {
+                    Lblerror.Text = "No se pudo identificar al paciente.";
+                    return;
+                }
+
+                if (FupImagenInformeCliente == null || !FupImagenInformeCliente.HasFile)
+                {
+                    new Funciones().funShowJSMessage("Seleccione una imagen.",this);
+                    PnlEditorCliente.Visible = true;
+                    return;
+                }
+
+                string nombre = System.IO.Path.GetFileName(FupImagenInformeCliente.PostedFile.FileName);
+                string extension = System.IO.Path.GetExtension(nombre).ToLower();
+                string mime = "";
+
+                switch (extension)
+                {
+                    case ".png":
+
+                        mime = "image/png";
+                        break;
+
+
+                    case ".jpg":
+
+                    case ".jpeg":
+
+                        mime = "image/jpeg";
+                        break;
+
+
+                    case ".gif":
+
+                        mime = "image/gif";
+                        break;
+
+
+                    default:
+
+                        new Funciones().funShowJSMessage("La imagen debe ser PNG, JPG, JPEG o GIF.",this);
+                        PnlEditorCliente.Visible = true;
+                        return;
+                }
+
+                int maxImagenBytes = 4 * 1024 * 1024;
+
+                if (FupImagenInformeCliente.PostedFile.ContentLength > maxImagenBytes)
+                {
+                    new Funciones().funShowJSMessage("La imagen no puede superar 4 MB.",this);
+                    PnlEditorCliente.Visible = true;
+                    return;
+                }
+
+                byte[] bytes;
+
+                using (System.IO.BinaryReader br = new System.IO.BinaryReader(FupImagenInformeCliente.PostedFile.InputStream))
+                {
+                    bytes = br.ReadBytes(FupImagenInformeCliente.PostedFile.ContentLength);
+                }
+
+                string base64 = Convert.ToBase64String(bytes);
+                string imagenHtml =
+                    "<p style=\"text-align:center;\">" +
+                    "<img src=\"data:" +
+                    mime +
+                    ";base64," +
+                    base64 +
+                    "\" " +
+                    "style=\"max-width:600px;width:auto;height:auto;" +
+                    "display:block;margin:8px auto;\" />" +
+                    "</p>";
+
+                string contenidoActual = EditorInformeCliente.Content != null ? EditorInformeCliente.Content : "";
+                EditorInformeCliente.Content = contenidoActual + imagenHtml;
+                PnlEditorCliente.Visible = true;
+
+                new Funciones().funShowJSMessage("Imagen insertada en el informe.",this);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+                PnlEditorCliente.Visible = true;
             }
         }
 
 
-        protected void BtnCerrarEditorCliente_Click(
-            object sender,
-            EventArgs e)
+        protected void BtnCerrarEditorCliente_Click(object sender,EventArgs e)
         {
-            PnlEditorCliente.Visible =
-                false;
+            PnlEditorCliente.Visible = false;
         }
 
         #endregion
@@ -673,195 +555,103 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 int codigoPERS = 0;
 
-                if (!int.TryParse(
-                        e.CommandArgument.ToString(),
-                        out codigoPERS) ||
-                    codigoPERS <= 0)
+                if (!int.TryParse(e.CommandArgument.ToString(),out codigoPERS) || codigoPERS <= 0)
                 {
-                    Lblerror.Text =
-                        "No se pudo identificar al paciente.";
-
+                    Lblerror.Text = "No se pudo identificar al paciente.";
                     return;
                 }
 
+                int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
 
-                int codigoEXSO =
-                    Convert.ToInt32(
-                        ViewState["CodigoEXSO"]
-                    );
-
-
-                Button boton =
-                    sender as Button;
-
+                Button boton = sender as Button;
 
                 if (boton == null)
                 {
                     return;
                 }
 
-
-                RepeaterItem item =
-                    boton.NamingContainer
-                    as RepeaterItem;
-
+                RepeaterItem item = boton.NamingContainer as RepeaterItem;
 
                 if (item == null)
                 {
                     return;
                 }
 
-
-                RadioButton aceptado =
-                    item.FindControl(
-                        "RdbClienteAceptado"
-                    ) as RadioButton;
-
-
-                RadioButton rechazado =
-                    item.FindControl(
-                        "RdbClienteRechazado"
-                    ) as RadioButton;
-
-
-                FileUpload adjunto =
-                    item.FindControl(
-                        "FupAdjuntoCliente"
-                    ) as FileUpload;
-
+                RadioButton aceptado = item.FindControl("RdbClienteAceptado") as RadioButton;
+                RadioButton rechazado = item.FindControl("RdbClienteRechazado") as RadioButton;
+                FileUpload adjunto = item.FindControl("FupAdjuntoCliente") as FileUpload;
 
                 string estado = "";
 
-
-                if (aceptado != null &&
-                    aceptado.Checked)
+                if (aceptado != null && aceptado.Checked)
                 {
                     estado = "ACEPTADO";
                 }
 
-
-                if (rechazado != null &&
-                    rechazado.Checked)
+                if (rechazado != null && rechazado.Checked)
                 {
                     estado = "RECHAZADO";
                 }
 
-
                 if (string.IsNullOrEmpty(estado))
                 {
-                    new Funciones().funShowJSMessage(
-                        "Seleccione ACEPTADO o RECHAZADO.",
-                        this
-                    );
-
+                    new Funciones().funShowJSMessage("Seleccione ACEPTADO o RECHAZADO.",this);
                     return;
                 }
 
-
-                string claveInforme =
-                    "InformeCliente_" +
-                    codigoPERS.ToString();
-
-
+                string claveInforme = "InformeCliente_" + codigoPERS.ToString();
                 string informeHtml = "";
-
 
                 if (ViewState[claveInforme] != null)
                 {
-                    informeHtml =
-                        ViewState[claveInforme]
-                            .ToString();
+                    informeHtml = ViewState[claveInforme].ToString();
                 }
 
+                List<ImagenInformeCliente> imagenes = ExtraerImagenesCliente(ref informeHtml);
 
-                List<ImagenInformeCliente> imagenes =
-                    ExtraerImagenesCliente(
-                        ref informeHtml
-                    );
-
-
-                byte[] archivo =
-                    new byte[0];
-
+                byte[] archivo = new byte[0];
                 string nombreArchivo = "";
                 string extension = "";
                 string tipoArchivo = "";
 
-
-                if (adjunto != null &&
-                    adjunto.HasFile)
+                if (adjunto != null && adjunto.HasFile)
                 {
-                    nombreArchivo =
-                        System.IO.Path.GetFileName(
-                            adjunto.PostedFile.FileName
-                        );
-
+                    nombreArchivo = System.IO.Path.GetFileName(adjunto.PostedFile.FileName);
 
                     if (nombreArchivo.Length > 100)
                     {
-                        new Funciones().funShowJSMessage(
-                            "El nombre del archivo no puede superar 100 caracteres.",
-                            this
-                        );
-
+                        new Funciones().funShowJSMessage("El nombre del archivo no puede superar 100 caracteres.",this);
                         return;
                     }
 
-
-                    extension =
-                        System.IO.Path.GetExtension(
-                            nombreArchivo
-                        ).ToLower();
-
+                    extension = System.IO.Path.GetExtension(nombreArchivo).ToLower();
 
                     switch (extension)
                     {
                         case ".pdf":
 
-                            tipoArchivo =
-                                "application/pdf";
-
+                            tipoArchivo = "application/pdf";
                             break;
-
 
                         case ".xls":
 
-                            tipoArchivo =
-                                "application/vnd.ms-excel";
-
+                            tipoArchivo = "application/vnd.ms-excel";
                             break;
-
 
                         case ".xlsx":
 
-                            tipoArchivo =
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
+                            tipoArchivo = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                             break;
-
 
                         default:
 
-                            new Funciones().funShowJSMessage(
-                                "El archivo adjunto debe ser PDF, XLS o XLSX.",
-                                this
-                            );
-
+                            new Funciones().funShowJSMessage("El archivo adjunto debe ser PDF, XLS o XLSX.",this);
                             return;
                     }
 
-
-                    using (
-                        System.IO.BinaryReader br =
-                            new System.IO.BinaryReader(
-                                adjunto.PostedFile.InputStream
-                            )
-                    )
+                    using (System.IO.BinaryReader br = new System.IO.BinaryReader(adjunto.PostedFile.InputStream))
                     {
-                        archivo =
-                            br.ReadBytes(
-                                adjunto.PostedFile.ContentLength
-                            );
+                        archivo = br.ReadBytes(adjunto.PostedFile.ContentLength);
                     }
                 }
 
@@ -871,76 +661,33 @@ namespace Pry_PrestasaludWAP.Examenes
                 // TIPO 27
                 // =====================================
 
-                object[] parametros =
-                    CrearParametrosOperacionSolicitud(
-                        27,
-                        codigoEXSO
-                    );
+                object[] parametros = CrearParametrosOperacionSolicitud(27,codigoEXSO);
+
+                parametros[20] = informeHtml;
+                parametros[21] =archivo;
+                parametros[22] = nombreArchivo;
+                parametros[23] = tipoArchivo;
+                parametros[24] = extension;
+                parametros[29] = codigoEXSO;
+                parametros[31] = estado;
+                parametros[36] = codigoPERS;
+
+                DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
 
 
-                parametros[20] =
-                    informeHtml;
-
-                parametros[21] =
-                    archivo;
-
-                parametros[22] =
-                    nombreArchivo;
-
-                parametros[23] =
-                    tipoArchivo;
-
-                parametros[24] =
-                    extension;
-
-                parametros[29] =
-                    codigoEXSO;
-
-                parametros[31] =
-                    estado;
-
-                parametros[36] =
-                    codigoPERS;
-
-
-                DataSet ds =
-                    new Conexion(2, "")
-                        .FunInsertSolictudExamen(
-                            parametros
-                        );
-
-
-                if (ds == null ||
-                    ds.Tables.Count == 0 ||
-                    ds.Tables[0].Rows.Count == 0)
+                if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
                 {
-                    throw new Exception(
-                        "No fue posible guardar la gestión del cliente."
-                    );
+                    throw new Exception("No fue posible guardar la gestión del cliente.");
                 }
 
-
-                string resultado =
-                    ds.Tables[0]
-                      .Rows[0]["Resultado"]
-                      .ToString()
-                      .Trim();
-
+                string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
 
                 if (resultado != "OK-CLIENTE")
                 {
-                    throw new Exception(
-                        "No fue posible guardar la gestión. " +
-                        resultado
-                    );
+                    throw new Exception("No fue posible guardar la gestión. " + resultado);
                 }
 
-
-                int codigoEXRC =
-                    Convert.ToInt32(
-                        ds.Tables[0]
-                          .Rows[0]["CodigoEXRC"]
-                    );
+                int codigoEXRC = Convert.ToInt32(ds.Tables[0].Rows[0]["CodigoEXRC"]);
 
 
                 // =====================================
@@ -948,80 +695,30 @@ namespace Pry_PrestasaludWAP.Examenes
                 // TIPO 28
                 // =====================================
 
-                foreach (
-                    ImagenInformeCliente imagen
-                    in imagenes)
+                foreach (ImagenInformeCliente imagen in imagenes)
                 {
-                    object[] parametrosImagen =
-                        CrearParametrosOperacionSolicitud(
-                            28,
-                            codigoEXSO
-                        );
+                    object[] parametrosImagen = CrearParametrosOperacionSolicitud(28,codigoEXSO);
 
+                    parametrosImagen[21] = imagen.Bytes;
+                    parametrosImagen[22] = imagen.Nombre;
+                    parametrosImagen[23] = imagen.Mime;
+                    parametrosImagen[24] = imagen.Extension;
+                    parametrosImagen[29] = codigoEXSO;
+                    parametrosImagen[36] = codigoEXRC;
+                    parametrosImagen[37] = imagen.Orden;
 
-                    parametrosImagen[21] =
-                        imagen.Bytes;
+                    DataSet dsImagen = new Conexion(2, "").FunInsertSolictudExamen(parametrosImagen);
 
-                    parametrosImagen[22] =
-                        imagen.Nombre;
-
-                    parametrosImagen[23] =
-                        imagen.Mime;
-
-                    parametrosImagen[24] =
-                        imagen.Extension;
-
-                    parametrosImagen[29] =
-                        codigoEXSO;
-
-                    // @in_auxi1 = EXRC
-                    parametrosImagen[36] =
-                        codigoEXRC;
-
-                    // @in_auxi2 = ORDEN
-                    parametrosImagen[37] =
-                        imagen.Orden;
-
-
-                    DataSet dsImagen =
-                        new Conexion(2, "")
-                            .FunInsertSolictudExamen(
-                                parametrosImagen
-                            );
-
-
-                    if (dsImagen == null ||
-                        dsImagen.Tables.Count == 0 ||
-                        dsImagen.Tables[0].Rows.Count == 0)
+                    if (dsImagen == null || dsImagen.Tables.Count == 0 || dsImagen.Tables[0].Rows.Count == 0)
                     {
-                        throw new Exception(
-                            "No fue posible guardar una imagen del informe."
-                        );
+                        throw new Exception("No fue posible guardar una imagen del informe.");
                     }
 
+                    int codigoEXCI = Convert.ToInt32(dsImagen.Tables[0].Rows[0]["CodigoEXCI"]);
 
-                    int codigoEXCI =
-                        Convert.ToInt32(
-                            dsImagen.Tables[0]
-                                    .Rows[0]["CodigoEXCI"]
-                        );
+                    string urlImagen = ResolveUrl("~/Examenes/VerImagenCliente.ashx" + "?exso=" + codigoEXSO.ToString() + "&id=" + codigoEXCI.ToString());
 
-
-                    string urlImagen =
-                        ResolveUrl(
-                            "~/Examenes/VerImagenCliente.ashx" +
-                            "?exso=" +
-                            codigoEXSO.ToString() +
-                            "&id=" +
-                            codigoEXCI.ToString()
-                        );
-
-
-                    informeHtml =
-                        informeHtml.Replace(
-                            imagen.Token,
-                            urlImagen
-                        );
+                    informeHtml = informeHtml.Replace(imagen.Token,urlImagen);
                 }
 
 
@@ -1030,61 +727,26 @@ namespace Pry_PrestasaludWAP.Examenes
                 // TIPO 29
                 // =====================================
 
-                object[] parametrosInforme =
-                    CrearParametrosOperacionSolicitud(
-                        29,
-                        codigoEXSO
-                    );
+                object[] parametrosInforme = CrearParametrosOperacionSolicitud(29,codigoEXSO);
+                parametrosInforme[20] = informeHtml;
+                parametrosInforme[29] = codigoEXSO;
+                parametrosInforme[36] = codigoEXRC;
 
+                DataSet dsInforme = new Conexion(2, "").FunInsertSolictudExamen(parametrosInforme);
 
-                parametrosInforme[20] =
-                    informeHtml;
-
-                parametrosInforme[29] =
-                    codigoEXSO;
-
-                parametrosInforme[36] =
-                    codigoEXRC;
-
-
-                DataSet dsInforme =
-                    new Conexion(2, "")
-                        .FunInsertSolictudExamen(
-                            parametrosInforme
-                        );
-
-
-                if (dsInforme == null ||
-                    dsInforme.Tables.Count == 0 ||
-                    dsInforme.Tables[0].Rows.Count == 0 ||
-                    dsInforme.Tables[0]
-                             .Rows[0]["Resultado"]
-                             .ToString()
-                             .Trim()
-                        != "OK-INFORME-CLIENTE")
+                if (dsInforme == null || dsInforme.Tables.Count == 0 || dsInforme.Tables[0].Rows.Count == 0 || dsInforme.Tables[0].Rows[0]["Resultado"].ToString().Trim() != "OK-INFORME-CLIENTE")
                 {
-                    throw new Exception(
-                        "La gestión fue guardada, pero no fue posible finalizar el informe."
-                    );
+                    throw new Exception("La gestión fue guardada, pero no fue posible finalizar el informe.");
                 }
 
-
-                ViewState[claveInforme] =
-                    informeHtml;
-
-
+                ViewState[claveInforme] = informeHtml;
                 CargarSolicitud();
 
-
-                new Funciones().funShowJSMessage(
-                    "Gestión del cliente guardada correctamente.",
-                    this
-                );
+                new Funciones().funShowJSMessage("Gestión del cliente guardada correctamente.",this);
             }
             catch (Exception ex)
             {
-                Lblerror.Text =
-                    ex.ToString();
+                Lblerror.Text = ex.ToString();
             }
         }
 
@@ -1093,14 +755,10 @@ namespace Pry_PrestasaludWAP.Examenes
 
         #region Helpers
 
-        private object[] CrearParametrosOperacionSolicitud(
-            int tipo,
-            int codigoEXSO)
+        private object[] CrearParametrosOperacionSolicitud(int tipo,int codigoEXSO)
         {
-            object[] parametros =
-                new object[43];
 
-
+            object[] parametros = new object[43];
             parametros[0] = tipo;
             parametros[1] = 0;
             parametros[2] = "";
@@ -1148,17 +806,15 @@ namespace Pry_PrestasaludWAP.Examenes
             return parametros;
         }
 
-
         public string FormatearFecha(object valor)
         {
+
             if (valor == null || valor == DBNull.Value)
             {
                 return "";
             }
 
-
             DateTime fecha;
-
 
             if (DateTime.TryParse(valor.ToString(),out fecha))
             {
@@ -1169,54 +825,31 @@ namespace Pry_PrestasaludWAP.Examenes
         }
 
 
-        public string FormatearMonto(
-            object valor)
+        public string FormatearMonto(object valor)
         {
             if (valor == null || valor == DBNull.Value)
             {
                 return "$ 0,00";
             }
 
-
             string texto = valor.ToString().Trim();
-
             decimal monto = 0m;
 
-            if (!decimal.TryParse(
-                    texto,
-                    NumberStyles.Any,
-                    CultureInfo.InvariantCulture,
-                    out monto))
+            if (!decimal.TryParse(texto,NumberStyles.Any,CultureInfo.InvariantCulture,out monto))
             {
-                decimal.TryParse(
-                    texto,
-                    NumberStyles.Any,
-                    new CultureInfo(
-                        "es-EC"
-                    ),
-                    out monto
-                );
+                decimal.TryParse(texto,NumberStyles.Any,new CultureInfo("es-EC"),out monto);
             }
 
-
-            return "$ " +
-                   monto.ToString(
-                       "N2",
-                       new CultureInfo(
-                           "es-EC"
-                       )
-                   );
+            return "$ " + monto.ToString("N2",new CultureInfo("es-EC"));
         }
 
 
-        public bool EsPdf(
-            object extension)
+        public bool EsPdf(object extension)
         {
             if (extension == null || extension == DBNull.Value)
             {
                 return false;
             }
-
 
             string ext = extension.ToString().Trim().ToLower();
 
@@ -1224,30 +857,20 @@ namespace Pry_PrestasaludWAP.Examenes
         }
 
 
-        public string MostrarTipoArchivo(
-            object extension)
+        public string MostrarTipoArchivo(object extension)
         {
             if (extension == null || extension == DBNull.Value)
             {
                 return "";
             }
 
-
-            string ext =
-                extension.ToString()
-                         .Trim()
-                         .ToLower()
-                         .Replace(".", "");
-
+            string ext = extension.ToString().Trim().ToLower().Replace(".", "");
 
             if (ext == "pdf")
                 return "PDF";
 
-
-            if (ext == "xls" ||
-                ext == "xlsx")
+            if (ext == "xls" || ext == "xlsx")
                 return "EXCEL";
-
 
             return ext.ToUpper();
         }
@@ -1255,38 +878,21 @@ namespace Pry_PrestasaludWAP.Examenes
 
         public string ObtenerUrlResultado(object codigoEXRD)
         {
-            string codigoEXSO =
-                ViewState["CodigoEXSO"] != null
-                ? ViewState["CodigoEXSO"]
-                    .ToString()
-                : "0";
+            string codigoEXSO = ViewState["CodigoEXSO"] != null ? ViewState["CodigoEXSO"].ToString() : "0";
 
-            return ResolveUrl(
-                "~/Examenes/VerResultadoExamen.ashx" +
-                "?exso=" +
-                HttpUtility.UrlEncode(
-                    codigoEXSO
-                ) +
-                "&exrd=" +
-                HttpUtility.UrlEncode(
-                    codigoEXRD.ToString()
-                )
-            );
+            return ResolveUrl("~/Examenes/VerResultadoExamen.ashx" + "?exso=" + HttpUtility.UrlEncode(codigoEXSO) + "&exrd=" + HttpUtility.UrlEncode(codigoEXRD.ToString()));
         }
 
 
         private DataTable CrearTablaHistorialVacia()
         {
-            DataTable tabla =
-                new DataTable();
 
-
+            DataTable tabla = new DataTable();
             tabla.Columns.Add("Fecha");
             tabla.Columns.Add("Usuario");
             tabla.Columns.Add("Estado");
             tabla.Columns.Add("Informe");
             tabla.Columns.Add("Adjunto");
-
 
             return tabla;
         }
@@ -1294,15 +900,10 @@ namespace Pry_PrestasaludWAP.Examenes
         private class ImagenInformeCliente
         {
             public int Orden { get; set; }
-
             public string Token { get; set; }
-
             public string Mime { get; set; }
-
             public string Extension { get; set; }
-
             public string Nombre { get; set; }
-
             public byte[] Bytes { get; set; }
         }
         private List<ImagenInformeCliente>ExtraerImagenesCliente(ref string html)
@@ -1316,8 +917,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             int orden = 0;
 
-            string patron =
-                @"src\s*=\s*[""']data:(?<mime>image\/(?:png|jpeg|jpg|gif));base64,(?<data>[^""']+)[""']";
+            string patron = @"src\s*=\s*[""']data:(?<mime>image\/(?:png|jpeg|jpg|gif));base64,(?<data>[^""']+)[""']";
 
 
             html =
@@ -1327,101 +927,47 @@ namespace Pry_PrestasaludWAP.Examenes
                     {
                         orden++;
 
-
-                        string mime =
-                            match.Groups["mime"]
-                                 .Value
-                                 .ToLower();
-
-
-                        string base64 =
-                            match.Groups["data"]
-                                 .Value;
-
-
+                        string mime = match.Groups["mime"].Value.ToLower();
+                        string base64 = match.Groups["data"].Value;
                         byte[] bytes;
-
 
                         try
                         {
-                            bytes =
-                                Convert.FromBase64String(
-                                    base64
-                                );
+                            bytes = Convert.FromBase64String(base64);
                         }
                         catch
                         {
-                            throw new Exception(
-                                "No fue posible procesar la imagen " +
-                                orden.ToString() +
-                                " del informe."
-                            );
+                            throw new Exception("No fue posible procesar la imagen " + orden.ToString() + " del informe.");
                         }
 
+                        string extension = ".png";
 
-                        string extension =
-                            ".png";
-
-
-                        if (mime == "image/jpeg" ||
-                            mime == "image/jpg")
+                        if (mime == "image/jpeg" || mime == "image/jpg")
                         {
-                            extension =
-                                ".jpg";
+                            extension = ".jpg";
                         }
-                        else if (
-                            mime == "image/gif")
+                        else if (mime == "image/gif")
                         {
-                            extension =
-                                ".gif";
+                            extension = ".gif";
                         }
 
+                        string token = "__CLIENTE_IMAGEN_" + orden.ToString() + "__";
+                        ImagenInformeCliente imagen = new ImagenInformeCliente();
 
-                        string token =
-                            "__CLIENTE_IMAGEN_" +
-                            orden.ToString() +
-                            "__";
-
-
-                        ImagenInformeCliente imagen =
-                            new ImagenInformeCliente();
-
-
-                        imagen.Orden =
-                            orden;
-
-                        imagen.Token =
-                            token;
-
-                        imagen.Mime =
-                            mime;
-
-                        imagen.Extension =
-                            extension;
-
-                        imagen.Nombre =
-                            "imagen_cliente_" +
-                            orden.ToString() +
-                            extension;
-
-                        imagen.Bytes =
-                            bytes;
-
-
-                        imagenes.Add(
-                            imagen
-                        );
-
+                        imagen.Orden = orden;
+                        imagen.Token = token;
+                        imagen.Mime = mime;
+                        imagen.Extension = extension;
+                        imagen.Nombre = "imagen_cliente_" + orden.ToString() + extension;
+                        imagen.Bytes = bytes;
+                        imagenes.Add(imagen);
 
                         return
-                            "src=\"" +
-                            token +
-                            "\"";
+                            "src=\"" + token + "\"";
                     },
 
                     RegexOptions.IgnoreCase
                 );
-
 
             return imagenes;
         }
@@ -1431,9 +977,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
         #region Salir
 
-        protected void BtnSalir_Click(
-            object sender,
-            EventArgs e)
+        protected void BtnSalir_Click(object sender,EventArgs e)
         {
             Response.Redirect("../Examenes/FrmNuevoExamenCliente.aspx", true);
         }

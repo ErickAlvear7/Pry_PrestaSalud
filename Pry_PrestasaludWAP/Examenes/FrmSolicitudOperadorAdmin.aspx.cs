@@ -128,7 +128,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 Response.Clear();
                 Response.Buffer = true;
                 Response.ContentType = type;
-
                 Response.AddHeader("content-disposition", "attachment;filename=\"" + Name + "\"");
                 Response.Charset = "";
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -150,7 +149,6 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
-
                     estado = GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString();
                     ImageButton btnAgendar = e.Row.FindControl("ImgAgendar") as ImageButton;
 
@@ -177,18 +175,44 @@ namespace Pry_PrestasaludWAP.Examenes
                     switch (estado)
                     {
                         case "SRR":
+
                             e.Row.Cells[5].BackColor = System.Drawing.Color.LightSeaGreen;
                             break;
+
                         case "SRV":
+
                             e.Row.Cells[5].BackColor = System.Drawing.Color.Coral;
                             break;
+
                         case "SGA":
+
                             e.Row.Cells[5].BackColor = System.Drawing.Color.LightGreen;
                             break;
+
                         case "EXR":
+
                             e.Row.Cells[5].BackColor = System.Drawing.Color.Aquamarine;
+                            e.Row.Cells[5].ForeColor = System.Drawing.Color.DarkSlateGray;
+                            break;
+
+                        // AUDITADO ACEPTADO
+                        case "AUA":
+
+                            e.Row.Cells[5].BackColor = System.Drawing.Color.LightGreen;
+                            e.Row.Cells[5].ForeColor = System.Drawing.Color.DarkGreen;
+                            break;
+
+
+                        // AUDITADO RECHAZADO
+                        case "AUR":
+
+                            e.Row.Cells[5].BackColor = System.Drawing.Color.LightCoral;
+                            e.Row.Cells[5].ForeColor = System.Drawing.Color.DarkRed;
                             break;
                     }
+
+                    e.Row.Cells[5].Font.Bold = true;
+
 
                     LinkButton btnResultados = e.Row.FindControl("BtnResultados") as LinkButton;
                     if (btnResultados != null)
@@ -210,7 +234,6 @@ namespace Pry_PrestasaludWAP.Examenes
                     }
 
                     ImageButton btnDaquilema = e.Row.FindControl("ImgDescargarDaquilema") as ImageButton;
-
                     string producto = "";
 
                     if (e.Row.DataItem != null)
@@ -256,7 +279,6 @@ namespace Pry_PrestasaludWAP.Examenes
             try
             {
                 ImageButton boton = (ImageButton)sender;
-
                 GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
 

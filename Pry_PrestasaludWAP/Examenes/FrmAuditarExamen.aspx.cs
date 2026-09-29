@@ -26,6 +26,15 @@ namespace Pry_PrestasaludWAP.Examenes
             if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                 Response.Redirect("~/Reload.html");
             Page.Form.Attributes.Add("enctype", "multipart/form-data");
+
+            ScriptManager sm = ScriptManager.GetCurrent(Page);
+
+            if (sm != null)
+            {
+                sm.RegisterPostBackControl(BtnInsertarImagenAuditor);
+            }
+
+
             if (!IsPostBack)
             {
                 try
@@ -986,6 +995,106 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 Lblerror.Text =
                     ex.ToString();
+            }
+        }
+
+        protected void BtnInsertarImagenAuditor_Click(object sender,EventArgs e)
+        {
+            try
+            {
+                if (ViewState["PacienteEditorPERS"] == null)
+                {
+                    Lblerror.Text = "No se pudo identificar al paciente.";
+                    return;
+                }
+
+                if (FupImagenInformeAuditor == null || !FupImagenInformeAuditor.HasFile)
+                {
+                    new Funciones().funShowJSMessage("Seleccione una imagen.",this);
+                    PnlEditorAuditoria.Visible = true;
+                    return;
+                }
+
+                string nombre = System.IO.Path.GetFileName(FupImagenInformeAuditor.PostedFile.FileName);
+                string extension = System.IO.Path.GetExtension(nombre).ToLower();
+                string mime = "";
+
+                switch (extension)
+                {
+                    case ".png":
+
+                        mime = "image/png";
+                        break;
+
+
+                    case ".jpg":
+
+                    case ".jpeg":
+
+                        mime = "image/jpeg";
+                        break;
+
+
+                    case ".gif":
+
+                        mime = "image/gif";
+                        break;
+
+
+                    default:
+
+                        new Funciones().funShowJSMessage("La imagen debe ser PNG, JPG, JPEG o GIF.",this);
+                        PnlEditorAuditoria.Visible = true;
+                        return;
+                }
+
+                // Máximo 5 MB
+                int maxImagenBytes = 5 * 1024 * 1024;
+
+                if (FupImagenInformeAuditor.PostedFile.ContentLength > maxImagenBytes)
+                {
+                    new Funciones().funShowJSMessage("La imagen no puede superar 5 MB.",this);
+                    PnlEditorAuditoria.Visible = true;
+                    return;
+                }
+
+                byte[] bytes;
+
+                using (System.IO.BinaryReader br = new System.IO.BinaryReader(FupImagenInformeAuditor.PostedFile.InputStream))
+                {
+                    bytes = br.ReadBytes(FupImagenInformeAuditor.PostedFile.ContentLength);
+                }
+
+                if (bytes == null || bytes.Length == 0)
+                {
+                    new Funciones().funShowJSMessage("La imagen seleccionada está vacía.",this);
+                    PnlEditorAuditoria.Visible = true;
+                    return;
+                }
+
+                string base64 = Convert.ToBase64String(bytes);
+                string imagenHtml =
+                    "<p style=\"text-align:center;\">" +
+                    "<img src=\"data:" +
+                    mime +
+                    ";base64," +
+                    base64 +
+                    "\" " +
+                    "style=\"max-width:600px;width:auto;height:auto;" +
+                    "display:block;margin:8px auto;\" />" +
+                    "</p>";
+
+                string contenidoActual = EditorObservacionAuditor.Content != null ? EditorObservacionAuditor.Content : "";
+
+                EditorObservacionAuditor.Content = contenidoActual + imagenHtml;
+                PnlEditorAuditoria.Visible = true;
+
+                new Funciones().funShowJSMessage("Imagen insertada en el informe.",this);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+                PnlEditorAuditoria.Visible = true;
             }
         }
 

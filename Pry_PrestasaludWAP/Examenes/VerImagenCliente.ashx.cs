@@ -16,14 +16,10 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-
                 int codigoEXSO = 0;
                 int codigoEXCI = 0;
-
-
                 int.TryParse(context.Request["exso"],out codigoEXSO);
                 int.TryParse(context.Request["id"],out codigoEXCI);
-
 
                 if (codigoEXSO <= 0 || codigoEXCI <= 0)
                 {
@@ -31,10 +27,8 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-
                 object[] parametros = CrearParametros(context,31,codigoEXSO);
                 parametros[36] =codigoEXCI;
-
 
                 DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
 
@@ -45,31 +39,46 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-
                 DataRow fila = ds.Tables[0].Rows[0];
 
+                if (fila["EXCI_IMAGEN"] == DBNull.Value)
+                {
+                    context.Response.StatusCode = 404;
+                    context.Response.ContentType = "text/plain";
+                    context.Response.Write("La imagen se encuentra vacía.");
+                    return;
+                }
 
-                byte[] imagen =
-                    (byte[])fila[
-                        "EXCI_IMAGEN"
-                    ];
+                byte[] imagen = fila["EXCI_IMAGEN"] as byte[];
 
+                if (imagen == null || imagen.Length == 0)
+                {
+                    context.Response.StatusCode = 404;
+                    context.Response.ContentType = "text/plain";
+                    context.Response.Write("La imagen se encuentra vacía.");
+                    return;
+                }
 
-                string tipo =
-                    fila["EXCI_TIPO"]
-                        .ToString();
+                //byte[] imagen = (byte[])fila["EXCI_IMAGEN"];
 
+                string tipo = fila["EXCI_TIPO"] != DBNull.Value ? fila["EXCI_TIPO"].ToString().Trim() : "";
+
+                if (string.IsNullOrEmpty(tipo))
+                {
+                    tipo = "image/png";
+                }
+
+                //string tipo = fila["EXCI_TIPO"].ToString();
 
                 context.Response.Clear();
+                context.Response.Buffer = true;
+                context.Response.ContentType = tipo;
+                context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                context.Response.Cache.SetNoStore();
+                context.Response.BinaryWrite(imagen);
+                //context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
 
-                context.Response.ContentType =
-                    tipo;
-
-                context.Response.BinaryWrite(
-                    imagen
-                );
-
-                context.Response.End();
             }
             catch
             {
@@ -77,11 +86,10 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-
         private object[] CrearParametros(HttpContext context,int tipo,int codigoEXSO)
         {
-            object[] p = new object[43];
 
+            object[] p = new object[43];
             p[0] = tipo;
             p[1] = 0;
             p[2] = "";
@@ -128,7 +136,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
             return p;
         }
-
 
         public bool IsReusable
         {

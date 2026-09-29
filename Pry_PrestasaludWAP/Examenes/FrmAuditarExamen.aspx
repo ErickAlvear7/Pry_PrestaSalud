@@ -581,13 +581,26 @@
                                 Height="300px"
                                 Width="100%"
                                 AutoFocus="False" />
+                            <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                                <div class="col-sm-8">
+                                    <asp:FileUpload ID="FupImagenInformeAuditor" runat="server" />
+                                    <span style="font-size: 11px; color: gray;">Imagen permitida: PNG, JPG, JPEG o GIF. Máximo 5 MB.</span>
+                                </div>
+                                <div class="col-sm-4" style="text-align: right;">
+                                    <asp:Button ID="BtnInsertarImagenAuditor" runat="server"
+                                        Text="Insertar imagen"
+                                        CssClass="btn btn-info btn-sm"
+                                        CausesValidation="false"
+                                        OnClick="BtnInsertarImagenAuditor_Click" />
+                                </div>
+                            </div>
                             <div style="text-align: right; margin-top: 10px;">
                                 <asp:Button ID="BtnAceptarObservacion" runat="server"
                                     Text="Aceptar observación"
                                     CssClass="btn btn-success btn-sm"
                                     CausesValidation="false"
                                     OnClick="BtnAceptarObservacion_Click" />
-                                     &nbsp;
+                                &nbsp;
                                 <asp:Button ID="BtnCerrarEditor" runat="server"
                                     Text="Cerrar"
                                     CssClass="btn btn-default btn-sm"

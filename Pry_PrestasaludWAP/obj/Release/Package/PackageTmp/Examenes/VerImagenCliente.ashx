@@ -1,1 +1,0 @@
-﻿<%@ WebHandler Language="C#" Class="Pry_PrestasaludWAP.Examenes.VerImagenCliente" %>

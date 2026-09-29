@@ -83,6 +83,65 @@ namespace Pry_PrestasaludWAP.Examenes
                 Lblerror.Text = ex.ToString();
             }
         }
+
+        protected void GrdvDatos_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+            try
+            {
+                if (e.Row.RowType != DataControlRowType.DataRow)
+                {
+                    return;
+                }
+
+                string estado = "";
+
+                if (GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"] != null)
+                {
+                    estado =GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
+                }
+
+                // Columna Estado
+                TableCell celdaEstado = e.Row.Cells[3];
+
+
+                switch (estado)
+                {
+                    // =====================================
+                    // PENDIENTE DE AUDITAR
+                    // =====================================
+                    case "EXR":
+
+                        celdaEstado.BackColor = System.Drawing.Color.Aquamarine;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkSlateGray;
+                        break;
+
+                    // =====================================
+                    // AUDITADO ACEPTADO
+                    // =====================================
+                    case "AUA":
+
+                        celdaEstado.BackColor = System.Drawing.Color.LightGreen;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkGreen;
+                        break;
+
+
+                    // =====================================
+                    // AUDITADO RECHAZADO
+                    // =====================================
+                    case "AUR":
+
+                        celdaEstado.BackColor = System.Drawing.Color.LightCoral;
+                        celdaEstado.ForeColor = System.Drawing.Color.DarkRed;
+                        break;
+                }
+
+                celdaEstado.Font.Bold = true;
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+            }
+        }
         #endregion
     }
 }

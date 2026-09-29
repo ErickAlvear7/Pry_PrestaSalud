@@ -164,7 +164,6 @@ namespace Pry_PrestasaludWAP.Examenes
             {
             
                 int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
-
                 Array.Resize(ref objparam, 3);
                 objparam[0] = codigoEXSO;
                 objparam[1] = "";
@@ -193,21 +192,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 bool solicitudYaAgendada = estadoSolicita == "SGA" || estadoSolicita == "EXR" || estadoSolicita == "AUA"
                                          || estadoSolicita == "AUR";
 
-               
-
-                //if (estadoSolicita == "SGA")
-                //{
-                //    BtnCancelarSolicitud.Visible = false;
-                //    BtnGrabar.Visible = false;
-                //    BtnGrabar.Enabled = false;
-                //}
-                //else
-                //{
-                //    BtnCancelarSolicitud.Visible = true;
-                //    BtnGrabar.Visible = true;
-                //    BtnGrabar.Enabled = true;
-                //}
-
+              
                 if (solicitudYaAgendada)
                 {
                     BtnCancelarSolicitud.Visible = false;
@@ -237,9 +222,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 if (DdlProducto.Items.FindByValue(codigoProducto) != null)
                 {
                     DdlProducto.ClearSelection();
-
-                    DdlProducto.SelectedValue =
-                        codigoProducto;
+                    DdlProducto.SelectedValue = codigoProducto;
                 }
 
                 TxtFechaSolicitud.Text = filaCabecera["FechaSolicita"].ToString();
@@ -282,7 +265,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 if (dts.Tables[0].Rows.Count > 0)
                 {
-               
+
                     BtnConsultarRequisitos.Enabled = true;
                     ViewState["CodigoPERS"] = dts.Tables[0].Rows[0]["CodigoPERS"].ToString();
 
@@ -505,7 +488,6 @@ namespace Pry_PrestasaludWAP.Examenes
             if (DdlProvinciaCodep.Items.Count > 0)
             {
                 DdlProvinciaCodep.SelectedIndex = 0;
-
                 CargarCiudadesCodependiente();
             }
         }
@@ -1066,8 +1048,8 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-                object[] parametros = new object[3];
 
+                object[] parametros = new object[3];
                 parametros[0] = 0;
                 parametros[1] = "";
                 parametros[2] = 221;
@@ -1076,15 +1058,11 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 DdlCampaign.Items.Clear();
 
-                if (dsCampaign != null &&
-                    dsCampaign.Tables.Count > 0 &&
-                    dsCampaign.Tables[0].Rows.Count > 0)
+                if (dsCampaign != null && dsCampaign.Tables.Count > 0 && dsCampaign.Tables[0].Rows.Count > 0)
                 {
                     DdlCampaign.DataSource = dsCampaign.Tables[0];
-
                     DdlCampaign.DataValueField = "CAMP_CODIGO";
                     DdlCampaign.DataTextField = "camp_nombre";
-
                     DdlCampaign.DataBind();
                 }
 
@@ -1108,9 +1086,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 DdlProducto.Items.Clear();
 
-                if (dsProductos != null &&
-                    dsProductos.Tables.Count > 0 &&
-                    dsProductos.Tables[0].Rows.Count > 0)
+                if (dsProductos != null && dsProductos.Tables.Count > 0 && dsProductos.Tables[0].Rows.Count > 0)
                 {
                     DdlProducto.DataSource = dsProductos.Tables[0];
                     DdlProducto.DataValueField = "PROD_CODIGO";
@@ -1581,8 +1557,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 gfx.DrawRectangle(XPens.LightGray,margen,y,pagina.Width - 80,altoFila);
                 gfx.DrawString(numero.ToString() + ".",fuenteNegrita,XBrushes.Black,margen + 8,y + 17);
 
-                XTextFormatter formatter =
-                    new XTextFormatter(gfx);
+                XTextFormatter formatter = new XTextFormatter(gfx);
 
                 formatter.DrawString(nombreExamen,fuenteNormal,XBrushes.Black,new XRect(margen + 30,y + 5,pagina.Width - 125,altoFila - 8),XStringFormats.TopLeft);
                 y += altoFila;
@@ -1978,7 +1953,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 DataSet ds = ObtenerRequisitosAsegurabilidad();
                 ProcesarRequisitos(ds, true);
-
                 bool correcto = ProcesarRequisitos(ds, true);
                 ViewState["RequisitosConsultados"] = correcto;
             }
@@ -2047,8 +2021,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
         private DataSet GuardarTitularNuevo()
         {
-            object[] parametros = CrearParametrosOperacionSolicitud(8, 0);
 
+            object[] parametros = CrearParametrosOperacionSolicitud(8, 0);
             parametros[0] = 8;
             parametros[1] = Convert.ToInt32(DdlProducto.SelectedValue);
             parametros[2] = DdlTipoDocumento.SelectedValue;
@@ -2173,7 +2147,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 MpeCodependiente.Show();
             }
         }
-
         private void ActualizarEstadoCodependiente()
         {
             bool titularExiste = false;
@@ -2308,7 +2281,6 @@ namespace Pry_PrestasaludWAP.Examenes
             BtnQuitarCodependiente.Visible =true;
         }
 
-
         private void GuardarCodependienteSolicitud(int codigoEXSO)
         {
 
@@ -2442,7 +2414,6 @@ namespace Pry_PrestasaludWAP.Examenes
             }
 
             object[] parametros = CrearParametrosOperacionSolicitud(10, codigoEXSO);
-
             parametros[0] = 10;
             parametros[21] = archivo;
             parametros[22] = nombreArchivo;
@@ -2635,8 +2606,8 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         private void MostrarEstadoCodependiente()
         {
-            bool tieneCodependiente = false;
 
+            bool tieneCodependiente = false;
             int codigoTITUCodependiente = 0;
 
             if (ViewState["CodigoTITUCodependiente"] != null)
@@ -3005,7 +2976,6 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
                 else
                 {
-                   
                     ViewState["QuitarCodependiente"] = false;
                 }
 
@@ -3035,8 +3005,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
             catch (Exception ex)
             {
-                Lblerror.Text =
-                    ex.ToString();
+                Lblerror.Text = ex.ToString();
             }
         }
 
@@ -3048,8 +3017,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
         private void LimpiarResultadoBusquedaCodependiente()
         {
-            ViewState["CodigoPERSCodependienteBusqueda"] = 0;
 
+            ViewState["CodigoPERSCodependienteBusqueda"] = 0;
             PnlCodependienteEncontrado.Visible = false;
             PnlNuevoCodependiente.Visible = false;
             BtnSeleccionarCodependiente.Visible = false;
@@ -3180,7 +3149,6 @@ namespace Pry_PrestasaludWAP.Examenes
 
             RequisitosActuales = dt;
             BindRequisitos();
-
 
             if (dt.Rows.Count > 0)
             {
