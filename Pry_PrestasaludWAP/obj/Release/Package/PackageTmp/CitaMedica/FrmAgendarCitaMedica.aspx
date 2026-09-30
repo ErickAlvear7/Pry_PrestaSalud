@@ -1,0 +1,1259 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FrmAgendarCitaMedica.aspx.cs" Inherits="Pry_PrestasaludWAP.CitaMedica.FrmAgendarCitaMedica" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <%--<meta http-equiv="refresh" content="30"/>--%>
+    <title></title>
+    <link href="../css/DatePicker/jquery-ui.css" rel="stylesheet" />
+    <link href="../css/Estilos.css" rel="stylesheet" />
+    <link href="../Scripts/Tables/jquery.DataTable.min.css" rel="stylesheet" />
+    <link href="../Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../Scripts/external/jquery/jquery.js"></script>
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Scripts/Tables/DataTables.js"></script>
+    <script src="../Scripts/Tables/dataTable.bootstrap.min.js"></script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/jquery-ui.min.js"></script>
+    <link href="../css/jquery.ui.accordion.css" rel="stylesheet" />
+    <script type="text/javascript" src="../JS/DatePicker/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../JS/DatePicker/jquery-ui.js"></script>
+
+    <script>
+        $(function () {
+            $("#acordionParametro").accordion();
+
+        });
+
+        function showModal(panelId) {
+            var ov = document.getElementById('overlayModal');
+            var pnl = document.getElementById(panelId);
+
+            if (ov) ov.style.setProperty('display', 'block', 'important');
+            if (pnl) pnl.style.setProperty('display', 'block', 'important');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(panelId) {
+            var ov = document.getElementById('overlayModal');
+            var pnl = document.getElementById(panelId);
+
+            if (ov) ov.style.setProperty('display', 'none', 'important');
+            if (pnl) pnl.style.setProperty('display', 'none', 'important');
+
+            document.body.style.overflow = '';
+        }
+        function makeDraggable(panelId, headerId) {
+
+            var modal = document.getElementById(panelId);
+            var header = document.getElementById(headerId);
+
+            if (!modal || !header) return;
+
+            var offsetX = 0, offsetY = 0;
+            var isDown = false;
+
+            header.onmousedown = function (e) {
+                isDown = true;
+                offsetX = e.clientX - modal.offsetLeft;
+                offsetY = e.clientY - modal.offsetTop;
+
+                document.onmousemove = function (e) {
+                    if (!isDown) return;
+
+                    modal.style.left = (e.clientX - offsetX) + "px";
+                    modal.style.top = (e.clientY - offsetY) + "px";
+                    modal.style.transform = "none";
+                };
+
+                document.onmouseup = function () {
+                    isDown = false;
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+            };
+        }
+
+        function calcTotalEsp() {
+            var grid = document.getElementById('<%= gvEspecialidades.ClientID %>');
+            if (!grid) return;
+
+            var total = 0;
+
+            for (var r = 1; r < grid.rows.length; r++) {
+                var row = grid.rows[r];
+
+                var chk = row.cells[0].querySelector('input[type="checkbox"]');
+                if (chk && chk.checked) {
+
+                    var txt = row.cells[2].innerText || row.cells[2].textContent;
+                    txt = (txt || "").trim().replace(',', '.');
+
+                    var val = parseFloat(txt);
+                    if (!isNaN(val)) total += val;
+                }
+            }
+
+            total = Math.round(total * 100) / 100;
+
+            document.getElementById('lblTotalEsp').innerText = total.toFixed(2);
+
+            var hf = document.getElementById('<%= hfTotalEsp.ClientID %>');
+            if (hf) hf.value = total.toFixed(2);
+        }
+
+        var urlCartaAutorizacion = null;
+
+        function mostrarCartaAutorizacion(base64Pdf,nombreArchivo) {
+
+            try {
+
+                var contenido = atob(base64Pdf);
+                var bytes = new Uint8Array(contenido.length);
+
+                for (var i = 0; i < contenido.length; i++)
+                {
+                    bytes[i] = contenido.charCodeAt(i);
+                }
+
+                var blob = new Blob([bytes],{type:"application/pdf"});
+
+                if (urlCartaAutorizacion != null)
+                {
+
+                    URL.revokeObjectURL(urlCartaAutorizacion);
+                }
+
+                urlCartaAutorizacion = URL.createObjectURL(blob);
+                document.getElementById("iframeCartaAutorizacion").src = urlCartaAutorizacion;
+
+                var enlace = document.getElementById("lnkDescargarCarta");
+                enlace.href = urlCartaAutorizacion;
+                enlace.download = nombreArchivo;
+
+                //$("#modalCartaAutorizacion")
+                //    .modal({
+                //        backdrop: "static",
+                //        keyboard: false
+                //});
+
+                var modal = document.getElementById("modalCartaAutorizacion");
+
+                if (modal) {
+                    modal.style.display = "block";
+                    modal.className = "modal fade in";
+                }
+
+                document.body.style.overflow = "hidden";
+
+            }
+            catch (error) {
+
+                alert("No fue posible mostrar la carta: " + error.message);
+            }
+        }
+
+        function cerrarCartaAutorizacion() {
+
+            var modal =
+                document.getElementById(
+                    "modalCartaAutorizacion"
+                );
+
+            if (modal) {
+
+                modal.style.display =
+                    "none";
+
+                modal.className =
+                    "modal fade";
+            }
+
+
+            var iframe =
+                document.getElementById(
+                    "iframeCartaAutorizacion"
+                );
+
+            if (iframe) {
+
+                iframe.src =
+                    "about:blank";
+            }
+
+
+            if (urlCartaAutorizacion != null) {
+
+                URL.revokeObjectURL(
+                    urlCartaAutorizacion
+                );
+
+                urlCartaAutorizacion =
+                    null;
+            }
+
+            document.body.style.overflow = "";
+        }
+
+    </script>
+    <style>
+        .overlayModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 2147483646;
+        }
+
+        .modalCustom {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 70%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.35);
+            z-index: 2147483647;
+        }
+
+        .modalHeader {
+            padding: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            background: #f4f4f4;
+        }
+
+        .modalBody {
+            padding: 12px;
+            max-height: 60vh;
+            overflow: auto;
+        }
+
+        .modalFooter {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-align: right;
+            background: #f9f9f9;
+        }
+
+        #modalCartaAutorizacion .modal-dialog {
+            width: 90%;
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+
+        #modalCartaAutorizacion .modal-content {
+            max-height: calc(100vh - 40px);
+        }
+
+        #modalCartaAutorizacion .modal-body {
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #iframeCartaAutorizacion {
+            width: 100%;
+            height: calc(100vh - 210px);
+            min-height: 300px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 767px) {
+
+            #modalCartaAutorizacion .modal-dialog {
+                width: auto;
+                margin: 10px;
+            }
+
+            #modalCartaAutorizacion .modal-header {
+                padding: 10px;
+            }
+
+            #modalCartaAutorizacion .modal-title {
+                font-size: 16px;
+            }
+
+            #modalCartaAutorizacion .modal-body {
+                padding: 5px;
+            }
+
+            #iframeCartaAutorizacion {
+                height: calc(100vh - 190px);
+                min-height: 250px;
+            }
+
+            #modalCartaAutorizacion .modal-footer {
+                padding: 8px;
+                text-align: center;
+            }
+
+            #modalCartaAutorizacion .modal-footer .btn {
+                margin: 3px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+
+            #modalCartaAutorizacion .modal-dialog {
+                max-width: 1200px;
+            }
+
+            #iframeCartaAutorizacion {
+                height: calc(100vh - 220px);
+            }
+        }
+        #acordionParametro > h3.ui-accordion-header {
+            background: #337ab7 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-color: #337ab7 !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+        }
+
+        #acordionParametro > h3.ui-accordion-header:hover,
+        #acordionParametro > h3.ui-accordion-header.ui-state-hover,
+        #acordionParametro > h3.ui-accordion-header.ui-state-active {
+            background: #337ab7 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-color: #337ab7 !important;
+        }
+
+    </style>
+    <script type="text/javascript">
+
+        function confirmarCopago() {
+            var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
+            var copago = ddl.options[ddl.selectedIndex].text;
+
+            if (copago !== "") {
+                return confirm("¿Desea continuar con el copago seleccionado?\n\nCopago: " + copago);
+            }
+
+            return true;
+        }
+        <%--function confirmarCopago() {
+            var ddl = document.getElementById('<%= ddlTipoPago.ClientID %>');
+
+            if (ddl == null) {
+                return true;
+            }
+
+            var copago = ddl.options[ddl.selectedIndex].text;
+
+            if (copago !== "") {
+                return confirm("¿Desea continuar con el copago seleccionado?\n\nCopago: " + copago);
+            }
+
+            return true;
+        }
+
+        function validarObservacionG() {
+            var txt = document.getElementById('<%= txtObservacionG.ClientID %>');
+
+            if (txt == null) {
+                return true;
+            }
+
+            var observacion = txt.value.replace(/\s/g, '');
+
+            if (observacion === "") {
+                return confirm("Debe ingresar en observación póliza y certificado");
+               
+            }
+
+            return true;
+        }
+
+        function validarAntesAgendar() {
+
+            if (!confirmarCopago()) {
+                return false;
+            }
+
+            if (!validarObservacionG()) {
+                return false;
+            }
+
+            return true;
+        }--%>
+
+    </script>
+
+    <style type="text/css">
+        legend {
+            color: darkblue;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .overlay {
+            position: fixed;
+            z-index: 98;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #aaa;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+        }
+
+        .overlayContent {
+            z-index: 99;
+            margin: 250px auto;
+            width: 80px;
+            height: 80px;
+        }
+
+            .overlayContent h2 {
+                font-size: 18px;
+                font-weight: bold;
+                color: #000;
+            }
+
+            .overlayContent img {
+                width: 80px;
+                height: 80px;
+            }
+
+        .auto-style1 {
+            width: 5%;
+            height: 35px;
+        }
+
+        .auto-style2 {
+            width: 15%;
+            height: 35px;
+        }
+
+        .auto-style3 {
+            width: 30%;
+            height: 35px;
+        }
+
+        .auto-style4 {
+            height: 61px;
+        }
+    </style>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <asp:Label ID="lbltitulo" runat="server"></asp:Label>
+            </div>
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
+            <asp:UpdatePanel ID="updError" runat="server">
+                <ContentTemplate>
+                    <div style="background-color: beige; text-align: left; width: 100%; font-size: 25px">
+                        <asp:Label ID="lblerror" runat="server" ForeColor="Red"></asp:Label>
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <%--      <div class="panel-info">
+                <asp:UpdateProgress ID="updProgress" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCitaMedica">
+                    <ProgressTemplate>
+                        <div class="overlay" />
+                        <div class="overlayContent">
+                            <h2>Enviando..</h2>
+                            <img src="../Images/load.gif" alt="Loading" border="1" />
+                        </div>
+                    </ProgressTemplate>
+                </asp:UpdateProgress>
+            </div>--%>
+            <asp:UpdatePanel ID="updTimer" runat="server">
+                <ContentTemplate>
+                    <asp:Timer ID="tmrdat" runat="server" OnTick="tmrdat_Tick">
+                    </asp:Timer>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <div class="table-responsive">
+                <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">DATOS TITULAR</h3>
+                <asp:UpdatePanel ID="updDatosPersonales" runat="server">
+                    <ContentTemplate>
+                        <table style="width: 100%">
+                            <tr>
+                                <td class="auto-style1"></td>
+                                <td class="auto-style2"></td>
+                                <td class="auto-style3"></td>
+                                <td class="auto-style2"></td>
+                                <td class="auto-style3">
+                                    <h5 id="lblCelular" runat="server" visible="false"></h5>
+                                </td>
+                                <td class="auto-style1"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <asp:LinkButton ID="lnkActualizar" runat="server" OnClick="lnkActualizar_Click">Actualizar Datos</asp:LinkButton>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="4">
+                                    <asp:Panel ID="pnlDatosPersonales" runat="server" GroupingText="Datos Personales" Height="180px" ScrollBars="Vertical">
+                                        <asp:GridView ID="grdvDatosPersonales" runat="server" AutoGenerateColumns="False"
+                                            CssClass="table table-condensed table-bordered table-hover table-responsive"
+                                            ShowHeaderWhenEmpty="True" TabIndex="1" Width="100%">
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                            <Columns>
+                                                <asp:BoundField DataField="TipoDocumento" HeaderText="Tipo_Documento" />
+                                                <asp:BoundField DataField="Identificacion" HeaderText="Identificación" />
+                                                <asp:BoundField DataField="Titular" HeaderText="Titular" />
+                                                <asp:BoundField DataField="FonoCasa" HeaderText="Telf.Casa" />
+                                                <asp:BoundField DataField="FonoOficina" HeaderText="Telf.Oficina" />
+                                                <asp:BoundField DataField="Celular" HeaderText="Celular" />
+                                            </Columns>
+                                            <RowStyle Font-Size="X-Small" />
+                                            <HeaderStyle Font-Size="Small" />
+                                        </asp:GridView>
+                                    </asp:Panel>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <asp:Panel ID="PnlDiv7" runat="server" Height="20px"></asp:Panel>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="4">
+                                    <asp:Panel ID="pnlInfAdicional" runat="server" GroupingText="Datos Adicionales" Height="180px" ScrollBars="Vertical">
+                                        <asp:GridView ID="grdvDatosAdicionales" runat="server"
+                                            CssClass="table table-condensed table-bordered table-hover table-responsive"
+                                            ShowHeaderWhenEmpty="True" TabIndex="2" Width="100%">
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                            <RowStyle Font-Size="X-Small" />
+                                            <HeaderStyle Font-Size="Small" />
+                                        </asp:GridView>
+                                    </asp:Panel>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <div class="panel-body">
+                <div id="acordion">
+                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CONTADOR DE CITAS</h3>
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 5%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 5%"></td>
+                                    </tr>
+                                    <tr>
+                                        <asp:GridView ID="grdvContadorCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" OnRowDataBound="grdvContadorCitas_RowDataBound" ShowFooter="True">
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                            <Columns>
+                                                <asp:BoundField DataField="Tipo" HeaderText="TIPO CLIENTE"></asp:BoundField>
+                                                <asp:BoundField DataField="General" HeaderText="MEDICINA GENERAL" HeaderStyle-BackColor="#d2f0eb" />
+                                                <asp:BoundField DataField="Especialidad" HeaderText="ESPECIALIDADES" HeaderStyle-BackColor="#e7f0f2" />
+                                                <asp:BoundField DataField="Laboratorio" HeaderText="LABORATORIO" HeaderStyle-BackColor="#e5eaf6" />
+                                            </Columns>
+                                            <RowStyle Font-Size="X-Small" />
+                                            <HeaderStyle Font-Size="Small" />
+                                        </asp:GridView>
+                                    </tr>
+                                </table>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="lab">
+                    <h3 id="labh3" runat="server" class="label label-primary" style="font-size: 14px; display: block; text-align: left">VALORES LABORATORIO</h3>
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td class="auto-style2"></td>
+                                        <td class="auto-style2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:GridView ID="grdvSumaLaboratorio" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" ShowFooter="True" OnRowDataBound="grdvSumaLaboratorio_RowDataBound">
+                                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                <Columns>
+                                                    <%--<asp:BoundField DataField="Especialidad" HeaderText="LABORATORIO" HeaderStyle-BackColor="#d2f0eb"/>--%>
+
+                                                    <asp:BoundField DataField="" HeaderText="Cupo Asignado" HeaderStyle-BackColor="#d2f0eb">
+                                                        <HeaderStyle BackColor="#D2F0EB" />
+                                                    </asp:BoundField>
+                                                    <asp:BoundField DataField="ValorTotal" HeaderText="Valor: $100" HeaderStyle-BackColor="#e5eaf6" DataFormatString="{0:C}">
+                                                        <HeaderStyle BackColor="#E5EAF6" HorizontalAlign="right" />
+                                                    </asp:BoundField>
+                                                </Columns>
+                                                <RowStyle Font-Size="Small" />
+                                                <HeaderStyle Font-Size="Small" />
+                                            </asp:GridView>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="acordionParametro">
+                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">CITA MEDICA</h3>
+                    <asp:UpdatePanel ID="updCabecera" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <asp:Panel ID="pnlListaDatos" runat="server" GroupingText="Datos Titulares - Beneficiarios" TabIndex="3">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 15%"></td>
+                                            <td style="width: 30%"></td>
+                                            <td style="width: 15%"></td>
+                                            <td style="width: 30%"></td>
+                                            <td style="width: 5%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="4">
+
+                                                <asp:GridView ID="grdvTitulares" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="TituCodigo,BeneCodigo,CodTipo,CodParentesco" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+                                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                    <Columns>
+                                                        <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                                                        <asp:BoundField DataField="Cliente" HeaderText="Cliente">
+                                                            <HeaderStyle HorizontalAlign="Center" Wrap="True" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="Edad" HeaderText="Edad"></asp:BoundField>
+                                                        <asp:BoundField DataField="Parentesco" HeaderText="Parentesco" />
+                                                        <asp:BoundField DataField="UltimaCita" HeaderText="Ult. Cita" />
+                                                        <asp:TemplateField HeaderText="Seleccionar">
+                                                            <ItemTemplate>
+                                                                <asp:CheckBox ID="chkSeleccionar" runat="server" AutoPostBack="True" OnCheckedChanged="chkSeleccionar_CheckedChanged" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                    <RowStyle Font-Size="X-Small" />
+                                                    <HeaderStyle Font-Size="Small" />
+                                                </asp:GridView>
+
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <asp:Panel ID="Panel4" runat="server" GroupingText="Medilink" TabIndex="5" Visible="true">
+                                    <div>
+                                        <table>
+                                            <tr>
+                                                <td style="width: 20%"></td>
+                                                <td style="width: 75%"></td>
+                                                <td style="width: 5%"></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <asp:Button ID="btnMedilink" runat="server" Text="Medilink" Width="192px" CausesValidation="false" CssClass="button" OnClick="btnMedilink_Clik" />
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </asp:Panel>
+                                <asp:Panel ID="pnlOpcionesCita" runat="server" GroupingText="Opciones Cita" TabIndex="5">
+
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 15%"></td>
+                                            <td style="width: 35%"></td>
+                                            <td style="width: 10%"></td>
+                                            <td style="width: 30%"></td>
+                                            <td style="width: 5%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5>Provincia:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlProvincia" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlProvincia_SelectedIndexChanged" TabIndex="6">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td>
+                                                <h5 style="text-align: center">Ciudad:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlCiudad" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlCiudad_SelectedIndexChanged" TabIndex="7">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <%--  <td></td>
+                                            <td>
+                                                <h5>Sector:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlSector" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="8" OnSelectedIndexChanged="ddlSector_SelectedIndexChanged">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td>
+                                                <h5 style="text-align: center">Prestadora:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
+                                                </asp:DropDownList>
+                                            </td>--%>
+                                            <td></td>
+                                            <td>
+                                                <h5>Prestadora:</h5>
+                                            </td>
+                                            <td colspan="3">
+                                                <asp:DropDownList ID="ddlPrestadora" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlPrestadora_SelectedIndexChanged" TabIndex="9">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <asp:ImageButton ID="imgPrestadora" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgPrestadora_Click" ToolTip="Ver Horarios" TabIndex="10" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5>Especialidad:</h5>
+                                            </td>
+                                            <td colspan="3">
+                                                <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="11">
+                                                </asp:DropDownList>
+                                                <%--     <br />
+                                                    <asp:TextBox ID="txtEspecialidades"
+                                                    runat="server"
+                                                    CssClass="form-control"
+                                                    ReadOnly="true"
+                                                    placeholder="Especialidades seleccionadas">
+                                                </asp:TextBox>
+
+                                                <!-- NUEVO: Guarda los códigos seleccionados -->
+                                                <asp:HiddenField ID="hfEspecialidades"
+                                                    runat="server" />--%>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5>Medico:</h5>
+                                            </td>
+                                            <td colspan="3">
+                                                <asp:DropDownList ID="ddlMedico" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlMedico_SelectedIndexChanged" TabIndex="12">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <asp:ImageButton ID="imgHorarios" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" ToolTip="Ver Horarios" TabIndex="12" OnClick="imgAgendar_Click" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="txtRegistro">Registro:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlOpcion" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" OnSelectedIndexChanged="ddlOpcion_SelectedIndexChanged" TabIndex="13">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td>
+                                                <h5 style="text-align: center">Motivo:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlMotivoCita" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="14">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="txtPago">Tipo Pago:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:DropDownList ID="ddlTipoPago" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="15">
+                                                </asp:DropDownList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="txtObsev">Observación:</h5>
+                                            </td>
+                                            <td colspan="3">
+                                                <asp:TextBox ID="txtObservacion" runat="server" onkeydown="return (event.keyCode!=13);" CssClass="form-control upperCase" Height="50px" MaxLength="250" TabIndex="16" TextMode="MultiLine" Width="100%"></asp:TextBox>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3">
+                                                <asp:Panel ID="pnlEspacio" runat="server" Height="20px"></asp:Panel>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <asp:Panel ID="pnlLink" runat="server" GroupingText="Link Url LLamada" TabIndex="5" Visible="False">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 30%"></td>
+                                            <td style="width: 55%"></td>
+                                            <td style="width: 10%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <asp:Button ID="btnLink" runat="server" Text="TeleMedicina" Width="241px" CausesValidation="False" CssClass="button" TabIndex="30" OnClick="btnLink_Click" OnClientClick="this.disabled = true; this.value='Un Momento Generando LInk...';" UseSubmitBehavior="false" />
+                                                <td>
+                                                    <asp:TextBox ID="txtUrl" runat="server" CssClass="form-control" Height="58px" ReadOnly="true" TextMode="MultiLine" Visible="true" Width="470px"></asp:TextBox>
+                                                    <td>
+                                                        <asp:CheckBox runat="server" ID="chkEmail" Checked="True" Visible="False" />
+                                                    </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 id="txtHora" runat="server" visible="false">Hora Disponible</h5>
+                                            </td>
+                                            <td>
+                                                <asp:Label ID="lblHora" runat="server" Visible="false"></asp:Label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 5%"></td>
+                                        <td style="width: 15%"></td>
+                                        <td style="width: 5%"></td>
+                                        <td style="width: 70%"></td>
+                                        <td style="width: 5%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <asp:Calendar ID="CalendarioCita" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="166px" Width="100%" OnSelectionChanged="CalendarioCita_SelectionChanged" Visible="False" TabIndex="17">
+                                                <DayHeaderStyle BackColor="#CCCCCC" Font-Bold="True" Font-Size="7pt" />
+                                                <NextPrevStyle VerticalAlign="Bottom" />
+                                                <OtherMonthDayStyle ForeColor="#808080" />
+                                                <SelectedDayStyle BackColor="#666666" Font-Bold="True" ForeColor="White" />
+                                                <SelectorStyle BackColor="#CCCCCC" />
+                                                <TitleStyle BackColor="#999999" BorderColor="Black" Font-Bold="True" />
+                                                <TodayDayStyle BackColor="#CCCCCC" ForeColor="Black" />
+                                                <WeekendDayStyle BackColor="#FFFFCC" />
+                                            </asp:Calendar>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <asp:Panel ID="pnlAgendamientos" runat="server" Height="250px" GroupingText="Agendar" ScrollBars="Vertical" Visible="False" TabIndex="18">
+                                                <asp:GridView ID="grdvDatosCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" DataKeyNames="HodeCodigo,TumeCodigo" OnRowDataBound="grdvDatosCitas_RowDataBound" TabIndex="19">
+                                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Agendar">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imgSelecc" runat="server" Height="20px" ImageUrl="~/Botones/citamedica.png" OnClick="imgSelecc_Click" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                        <asp:BoundField DataField="Hora" HeaderText="Hora" />
+                                                        <asp:BoundField DataField="Accion" HeaderText="Accion" />
+                                                        <asp:BoundField DataField="Cliente" HeaderText="Cliente" />
+                                                        <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                                                        <asp:BoundField DataField="Usuario" HeaderText="Usuario" />
+                                                    </Columns>
+                                                    <RowStyle Font-Size="X-Small" />
+                                                    <HeaderStyle Font-Size="Small" />
+                                                </asp:GridView>
+                                            </asp:Panel>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <asp:Panel ID="pnlEspacio1" runat="server" Height="20px"></asp:Panel>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <h5 runat="server" id="txtObsvG">Observación General:</h5>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <asp:TextBox ID="txtObservacionG" runat="server" onkeydown="return (event.keyCode!=13);" CssClass="form-control upperCase" Height="50px" MaxLength="500" TabIndex="20" TextMode="MultiLine" Width="100%"></asp:TextBox>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <asp:Panel ID="Panel2" runat="server" Height="20px"></asp:Panel>
+                                        </td>
+                                    </tr>
+                                    <tr runat="server" id="TrFileUpload" visible="false">
+                                        <td></td>
+                                        <td>
+                                            <h5 runat="server" id="LblDocumento">Documento Adjunto:</h5>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <asp:FileUpload ID="FileUpload1" runat="server" TabIndex="21" />
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <asp:Panel ID="Panel3" runat="server" Height="20px"></asp:Panel>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <asp:Panel ID="Panel5" runat="server" GroupingText="" Visible="false">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="width: 10%;"></td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="poliza" visible="true">Poliza:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtPoliza" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <h5 runat="server" id="certificado" visible="true">Certificado:</h5>
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <asp:TextBox ID="txtCertificado" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td style="width: 30%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <h5 runat="server" id="ramo" visible="true">Ramo:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtRamo" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td>
+                                                <h5 runat="server" id="H1" visible="true">Sucursal:</h5>
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="txtSucursal" runat="server" CssClass="form-control" Width="150px" Visible="true"></asp:TextBox>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <asp:Panel ID="pnlResumenCita" runat="server" GroupingText="Resumen Cita" Visible="False" TabIndex="22">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 5%"></td>
+                                            <td style="width: 45%"></td>
+                                            <td style="width: 45%"></td>
+                                            <td style="width: 5%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="2">
+                                                <asp:GridView ID="grdvResumenCita" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" DataKeyNames="PreeCodigo,MediCodigo,HodeCodigo,CodigoPrestadora" TabIndex="23">
+                                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                    <Columns>
+                                                        <asp:BoundField HeaderText="Paciente" DataField="Cliente" />
+                                                        <asp:BoundField HeaderText="Ciudad" DataField="Ciudad" />
+                                                        <asp:BoundField HeaderText="Prestadora" DataField="Prestadora" />
+                                                        <asp:TemplateField HeaderText="Ver">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imgVer" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgVer_Click" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                        <asp:BoundField HeaderText="Medico" DataField="Medico" />
+                                                        <asp:BoundField HeaderText="Especialidad" DataField="Especialidad" />
+                                                        <asp:BoundField HeaderText="Fecha" DataField="FechaCita" />
+                                                        <asp:BoundField HeaderText="Hora" DataField="Hora" />
+                                                        <asp:TemplateField HeaderText="Eliminar">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imgEliminar" runat="server" Height="15px" ImageUrl="~/Botones/eliminar.png" OnClick="imgEliminar_Click" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                    <RowStyle Font-Size="X-Small" />
+                                                    <HeaderStyle Font-Size="Small" />
+                                                </asp:GridView>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <asp:UpdatePanel ID="updCitaMedica" runat="server">
+                                    <ContentTemplate>
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <td style="text-align: center">
+                                                    <asp:ImageButton ID="imgAgendar" runat="server" Height="25px" ImageUrl="~/Botones/agendarmail.png" OnClick="imgAgendar_Click" OnClientClick="return confirmarCopago();" TabIndex="24" />
+                                                </td>
+                                                <td style="text-align: center; margin-left: 40px;">
+                                                    <asp:ImageButton ID="imgCancelar" runat="server" Height="25px" ImageUrl="~/Botones/cancelar.jpg" OnClick="imgCancelar_Click" TabIndex="25" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                                <div class="modal fade" id="modalCartaAutorizacion" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Vista previa Carta de Autorización</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <iframe id="iframeCartaAutorizacion"></iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a id="lnkDescargarCarta" href="#" class="btn btn-info" download>Descargar PDF</a>
+                                                <asp:Button ID="Button1" runat="server" Text="Continuar" CssClass="btn btn-success" CausesValidation="false" OnClick="BtnContinuarCarta_Click" />
+                                                <asp:Button ID="BtnCancelarCarta" runat="server" Text="Cancelar" CssClass="btn btn-default" CausesValidation="false" OnClick="BtnCancelarCarta_Click" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="imgAgendar" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+                    <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left">HISTORIAL CITAS MEDICAS</h3>
+                    <%--      <div class="panel-info">
+                        <asp:UpdateProgress ID="UpdateProgress1" runat="server" DisplayAfter="0" AssociatedUpdatePanelID="updCancelarCita">
+                            <ProgressTemplate>
+                                <div class="overlay" />
+                                <div class="overlayContent">
+                                    <h2>Enviando..</h2>
+                                    <img src="../Images/load.gif" alt="Loading" border="1" />
+                                </div>
+                            </ProgressTemplate>
+                        </asp:UpdateProgress>
+                    </div>--%>
+                    <asp:UpdatePanel ID="updDetalle" runat="server">
+                        <ContentTemplate>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 5%"></td>
+                                        <td style="width: 15%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 15%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 5%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <asp:Panel ID="pnlHistorialCitas" runat="server" Height="250px" ScrollBars="Vertical" GroupingText="">
+                                                <asp:GridView ID="grdvHistorialCitas" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="CitaCodigo,HodeCodigo,PrestaCodigo,Estado,Prestadora,Tipo,CodigoGenerado,CodigoEspcialidad" ShowHeaderWhenEmpty="True" Width="100%" OnRowDataBound="grdvHistorialCitas_RowDataBound" TabIndex="26">
+                                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Estado">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imgEstado" runat="server" Height="22px" ImageUrl="~/Botones/mailagenda.png" OnClick="imgEstado_Click" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                        <asp:BoundField DataField="Cliente" HeaderText="Paciente" />
+                                                        <asp:TemplateField HeaderText="Prestadora">
+                                                            <ItemTemplate>
+                                                                <asp:ImageButton ID="imgBuscaPres" runat="server" Height="20px" ImageUrl="~/Botones/Buscar.png" OnClick="imgBuscaPres_Click" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                        <asp:BoundField DataField="Medico" HeaderText="Medico" />
+                                                        <asp:BoundField DataField="Especialidad" HeaderText="Especialidad" />
+                                                        <asp:BoundField DataField="Ciudad" HeaderText="Ciudad" />
+                                                        <asp:BoundField DataField="FechaCita" HeaderText="Fecha_Cita" />
+                                                        <asp:BoundField DataField="HoraCita" HeaderText="Hora_Cita" />
+                                                        <asp:TemplateField HeaderText="Cancelar">
+                                                            <ItemTemplate>
+                                                                <asp:CheckBox ID="chkSelecc" runat="server" />
+                                                            </ItemTemplate>
+                                                            <ItemStyle HorizontalAlign="Center" />
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                    <RowStyle Font-Size="X-Small" />
+                                                    <HeaderStyle Font-Size="Small" />
+                                                </asp:GridView>
+                                            </asp:Panel>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <asp:Panel ID="Panel1" runat="server" GroupingText="CANCELAR CITAS">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 15%"></td>
+                                            <td style="width: 25%">
+                                                <h5>Motivo Cancelación:</h5>
+                                            </td>
+                                            <td style="width: 45%">
+                                                <asp:DropDownList ID="ddlMotivoCancelar" runat="server" AutoPostBack="True" CssClass="form-control" Width="100%" TabIndex="27">
+                                                </asp:DropDownList>
+                                            </td>
+                                            <td style="width: 15%"></td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                                <asp:UpdatePanel ID="updCancelarCita" runat="server">
+                                    <ContentTemplate>
+                                        <table style="width: 100%">
+                                            <tr>
+                                                <td style="width: 15%"></td>
+                                                <td style="width: 25%">
+                                                    <asp:ImageButton ID="imgCancel" runat="server" Height="25px" ImageUrl="~/Botones/agendarmail.png" OnClick="imgCancel_Click" TabIndex="28" />
+                                                </td>
+                                                <td style="width: 45%"></td>
+                                                <td style="width: 15%"></td>
+                                            </tr>
+                                        </table>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                            <div class="table-responsive">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 5%"></td>
+                                        <td style="width: 15%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 15%"></td>
+                                        <td style="width: 30%"></td>
+                                        <td style="width: 5%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <asp:Panel ID="pnlHitorialDetalle" runat="server" Height="250px" ScrollBars="Vertical" GroupingText="Historial Agenda">
+                                                <asp:GridView ID="grdvHistorialDetalle" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="29">
+                                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                                    <Columns>
+                                                        <asp:BoundField DataField="TipoAgenda" HeaderText="Tipo Agenda" />
+                                                        <asp:BoundField DataField="CodigoGenerado" HeaderText="Codigo" />
+                                                        <asp:BoundField DataField="Fecha" HeaderText="Fecha" />
+                                                        <asp:BoundField DataField="Hora" HeaderText="Hora" />
+                                                        <asp:BoundField DataField="Motivo" HeaderText="Motivo" />
+                                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                                                        <asp:BoundField DataField="FechaRegistro" HeaderText="Fecha_Registro" />
+                                                        <asp:BoundField DataField="Usuario" HeaderText="Usuario" />
+                                                    </Columns>
+                                                    <RowStyle Font-Size="X-Small" />
+                                                    <HeaderStyle Font-Size="Small" />
+                                                </asp:GridView>
+                                            </asp:Panel>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <asp:UpdatePanel ID="updOpciones" runat="server">
+                    <ContentTemplate>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="text-align: right; width: 50%">
+                                    <%--<asp:Button ID="btnGrabar" runat="server" Text="GRABAR" Width="120px" CssClass="button" />--%>
+                                </td>
+                                <td style="text-align: left; width: 50%">
+                                    <asp:Button ID="btnSalir" runat="server" Text="Salir" Width="120px" CausesValidation="False" CssClass="button" OnClick="btnSalir_Click" TabIndex="30" />
+                                </td>
+                            </tr>
+                        </table>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+        </div>
+        <asp:UpdatePanel ID="updModalEsp" runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <div id="overlayModal" class="overlayModal" style="display: none;"
+                    onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
+                </div>
+                <asp:Panel ID="pnlModalEspecialidades" runat="server"
+                    CssClass="modalCustom"
+                    Style="display: none;">
+                    <div class="modalHeader" id="modalHeaderEsp" style="cursor: move;">
+                        Seleccione Especialidades
+                    </div>
+                    <div class="modalBody">
+                        <div style="margin-bottom: 10px; font-weight: bold;">
+                            Total seleccionado: <span id="lblTotalEsp">0.00</span>
+                        </div>
+                        <asp:HiddenField ID="hfTotalEsp" runat="server" Value="0.00" />
+                        <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
+                        <asp:GridView ID="gvEspecialidades" runat="server"
+                            AutoGenerateColumns="false"
+                            DataKeyNames="PVP,Red"
+                            GridLines="None"
+                            Width="100%">
+                            <Columns>
+                                <asp:TemplateField>
+                                    <ItemTemplate>
+                                        <asp:CheckBox ID="chkSeleccionar" runat="server" onclick="calcTotalEsp();" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                                <asp:BoundField DataField="PVP" HeaderText="PVP" />
+                                <asp:BoundField DataField="Red" HeaderText="Red" Visible="false" />
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                    <div class="modalFooter">
+                        <asp:Button ID="btnAgregarEspecialidades"
+                            runat="server"
+                            Text="Agregar Seleccionadas"
+                            CssClass="btnModal btnPrimary"
+                            OnClick="btnAgregarEspecialidades_Click" />
+                        <button type="button"
+                            class="btnModal btnClose"
+                            onclick="hideModal('<%= pnlModalEspecialidades.ClientID %>')">
+                            Cerrar
+                        </button>
+                    </div>
+                </asp:Panel>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </form>
+</body>
+</html>

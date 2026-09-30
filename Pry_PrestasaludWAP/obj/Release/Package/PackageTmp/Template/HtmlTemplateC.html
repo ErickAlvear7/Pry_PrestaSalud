@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+	<meta charset='utf-8' />
+	<style>
+		#customers {
+		  font-family: Arial, Helvetica, sans-serif;
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+		
+		#customers td, #customers th {
+		  border: 1px solid #ddd;
+		  padding: 8px;
+		}
+		
+		#customers tr:nth-child(even){background-color: #f2f2f2;}
+		
+		#customers tr:hover {background-color: #ddd;}
+		
+		#customers th {
+		  padding-top: 12px;
+		  padding-bottom: 12px;
+		  text-align: left;
+		  background-color: #d6dad6;
+		  color: red;
+		}
+		
+		
+		/**
+			COLORES
+			Rojo Uanataca:  #da272f
+			Celeste gris:   #5d91ab
+		**/
+		
+	</style>	
+	
+</head>
+<body>
+    <div>
+        <h5>Saludos Cordiales</h5>
+        <h5>Datos para registrar la Cita Cancelada</h5>
+		
+		<span style="font-family:Arial;font-size:10pt">
+			<table class="table table-border" style="width: 70%; border: 1px; " id="customers" >
+				<tr>
+					<td style="width:40%">Código_Cita</td>
+					<td style="width:60%">{CodigoCita}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Ciudad_Cita</td>
+					<td style="width:60%">{Ciudad}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Fecha_Cita</td>
+					<td style="width:60%">{FecCita}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Hora_Cita</td>
+					<td style="width:60%">{Horacita}</td>
+				</tr>			
+				<tr>
+					<td style="width:40%">Prestadora</td>
+					<td style="width:60%">{Prestadora}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Medico</td>
+					<td style="width:60%">{Medico}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Especialidad</td>
+					<td style="width:60%">{Especialidad}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Tipo</td>
+					<td style="width:60%">{Tipo}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Paciente</td>
+					<td style="width:60%">{Paciente}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Motivo</td>
+					<td style="width:60%">{Motivo}</td>
+				</tr>
+				<tr>
+					<td style="width:40%">Observacion</td>
+					<td style="width:60%">{Observacion}</td>
+				</tr>
+			</table>
+		</span>
+        <br />
+        <br /><br />
+        <img src=cid:myImageID>
+        <br /><br />
+        <span style="font-family:Arial;font-size:10pt;color:blue">
+            {Pie1}
+            <br />
+            {Pie2}
+            <br />
+            {Pie3}
+            <br />
+            {Pie4}
+        </span>
+    </div>
+</body>
+</html>
