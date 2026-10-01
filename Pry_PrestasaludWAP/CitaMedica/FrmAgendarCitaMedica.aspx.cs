@@ -4119,14 +4119,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
             }
 
-
             hfTotalEsp.Value = sumaCodigos.ToString("0.00", CultureInfo.InvariantCulture);
 
             if (!check)
             {
-                ScriptManager.RegisterStartupScript(
-                      this,
-                      this.GetType(),
+                ScriptManager.RegisterStartupScript(this,this.GetType(),
                       "msg",
                       "alert('Debe seleccionar al menos un examen.');",
                       true
@@ -4144,14 +4141,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string seleccionados = ViewState["descripcion"].ToString();
             string seleccionadosJs = HttpUtility.JavaScriptStringEncode(seleccionados);
 
-            ScriptManager.RegisterStartupScript(
-                this,
-                this.GetType(),
+            ScriptManager.RegisterStartupScript(this,this.GetType(),
                 "mostrarSeleccionados",
                 "alert('Seleccionados:\\n\\n" + seleccionadosJs + "');",
                 true
             );
-
 
             CerrarModalEspecialidades();
         }
@@ -4160,9 +4154,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             string panelId = pnlModalEspecialidades.ClientID;
 
-            ScriptManager.RegisterStartupScript(
-                this,
-                this.GetType(),
+            ScriptManager.RegisterStartupScript(this,this.GetType(),
                 "closeModalEsp",
                 $"hideModal('{panelId}');",
                 true
@@ -4222,15 +4214,76 @@ namespace Pry_PrestasaludWAP.CitaMedica
         private XFont CrearFuenteAjustada(XGraphics gfx,string texto,double anchoMaximo,double tamanoInicial,double tamanoMinimo,XFontStyle estilo)
         {
             double tamano = tamanoInicial;
-            XFont fuente = new XFont("Arial",tamano,estilo);
+            XFont fuente = new XFont("Times New Roman", tamano,estilo);
 
             while (tamano > tamanoMinimo && gfx.MeasureString(texto, fuente).Width > anchoMaximo)
             {
                 tamano -= 0.25;
-                fuente = new XFont("Arial",tamano,estilo);
+                fuente = new XFont("Times New Roman", tamano,estilo);
             }
 
             return fuente;
+        }
+
+        private string ObtenerNombreUsuarioAgenda()
+        {
+            try
+            {
+                if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString().Trim() == "")
+                {
+                    return "AREA DE AGENDAMIENTO";
+                }
+
+                int codigoUsuario = Convert.ToInt32(Session["usuCodigo"]);
+
+                object[] parametros = new object[3];
+                parametros[0] = codigoUsuario;
+                parametros[1] = "";
+                parametros[2] = 37;
+
+                DataSet dsUsuario = new Conexion(2,"").funConsultarSqls("sp_ConsultaDatos",parametros);
+
+                if (dsUsuario != null && dsUsuario.Tables.Count > 0 && dsUsuario.Tables[0].Rows.Count > 0)
+                {
+                    string nombre = dsUsuario.Tables[0].Rows[0]["Nombre"].ToString().Trim();
+                    string apellidos = dsUsuario.Tables[0].Rows[0]["Apellidos"].ToString().Trim();
+                    string primerNombre = "";
+                    if (nombre != "")
+                    {
+                        string[] partesNombre = nombre.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+
+                        if (partesNombre.Length > 0)
+                        {
+                            primerNombre = partesNombre[0];
+                        }
+                    }
+                    string primerApellido = "";
+
+                    if (apellidos != "")
+                    {
+                        string[] partesApellido =apellidos.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+
+                        if (partesApellido.Length > 0)
+                        {
+                            primerApellido = partesApellido[0];
+                        }
+                    }
+
+                    string nombreCompleto =(primerNombre + " " + primerApellido).Trim();
+
+                    if (nombreCompleto != "")
+                    {
+                        return nombreCompleto;
+                    }
+
+                }
+            }
+            catch
+            {
+
+            }
+
+            return "AREA DE AGENDAMIENTO";
         }
 
         private byte[] GenerarCartaAutorizacionPdf(int codigoEXSO,string fechaCita,string horaCita,string prestador)
@@ -4240,67 +4293,37 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 throw new Exception("Código de solicitud inválido.");
             }
 
+            DataSet dsCarta = ObtenerDatosCartaAutorizacion(codigoEXSO);
 
-            DataSet dsCarta =
-                ObtenerDatosCartaAutorizacion(
-                    codigoEXSO
-                );
-
-            if (dsCarta == null ||
-                dsCarta.Tables.Count == 0 ||
-                dsCarta.Tables[0].Rows.Count == 0)
+            if (dsCarta == null || dsCarta.Tables.Count == 0 || dsCarta.Tables[0].Rows.Count == 0)
             {
-                throw new Exception(
-                    "No existen datos para generar la carta."
-                );
+                throw new Exception("No existen datos para generar la carta.");
             }
 
-            DataRow solicitud =
-                dsCarta.Tables[0].Rows[0];
-
-            string titular =
-                solicitud["TITULAR"]
-                .ToString()
-                .Trim();
-
-            List<string> listaExamenes =
-                new List<string>();
+            DataRow solicitud = dsCarta.Tables[0].Rows[0];
+            string titular = solicitud["TITULAR"].ToString().Trim();
+            List<string> listaExamenes = new List<string>();
 
             if (dsCarta.Tables.Count > 1)
             {
-                foreach (
-                    DataRow fila
-                    in dsCarta.Tables[1].Rows)
+                foreach (DataRow fila in dsCarta.Tables[1].Rows)
                 {
-                    string requisito =
-                        fila["REQUISITO"]
-                        .ToString()
-                        .Trim();
+                    string requisito = fila["REQUISITO"].ToString().Trim();
 
                     if (requisito != "")
                     {
-                        listaExamenes.Add(
-                            requisito
-                        );
+                        listaExamenes.Add(requisito);
                     }
                 }
             }
 
-            if (
-                solicitud.Table.Columns.Contains(
-                    "EXAMEN_ADICIONAL"
-                ))
+            if (solicitud.Table.Columns.Contains("EXAMEN_ADICIONAL"))
             {
-                string adicional =
-                    solicitud["EXAMEN_ADICIONAL"]
-                    .ToString()
-                    .Trim();
+                string adicional = solicitud["EXAMEN_ADICIONAL"].ToString().Trim();
 
                 if (adicional != "")
                 {
-                    listaExamenes.Add(
-                        adicional
-                    );
+                    listaExamenes.Add(adicional);
                 }
             }
 
@@ -4327,14 +4350,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
             PdfPage pagina = documento.Pages[0];
-
             XGraphics gfx = XGraphics.FromPdfPage(pagina,XGraphicsPdfPageOptions.Append);
 
             //fuente
-            XFont fuenteTitular = new XFont("Arial",11,XFontStyle.Bold);
+            XFont fuenteTitular = new XFont("Times New Roman", 10,XFontStyle.Bold);
             string textoFecha = FormatearFechaCarta(fechaCita);
             string textoHora = FormatearHoraCarta(horaCita);
-
             string texto1 = "de ";
             string texto2 = "Seguros Unidos S.A.";
             string texto3 = ", el día ";
@@ -4342,41 +4363,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
             string texto5 = " y hora de la cita médica ";
             string texto6 = textoHora;
 
-            gfx.DrawRectangle(
-                XBrushes.White,
+            gfx.DrawRectangle(XBrushes.White,
                 65,     // X
                 61,     // Y
                 475,    // ancho
                 18      // alto
             );
 
-            double tamanoLinea = 7.5;
+            double tamanoLinea = 8.5;
             XFont fuenteLineaNormal = null;
             XFont fuenteLineaBold = null;
             double anchoDisponible = 470;
 
-            while (tamanoLinea >= 5.5)
+            while (tamanoLinea >= 7.0)
             {
-                fuenteLineaNormal =
-                    new XFont(
-                        "Arial",
-                        tamanoLinea,
-                        XFontStyle.Regular
-                    );
+                fuenteLineaNormal = new XFont("Times New Roman", tamanoLinea,XFontStyle.Regular);
+                fuenteLineaBold = new XFont("Times New Roman", tamanoLinea,XFontStyle.Bold);
 
-                fuenteLineaBold =
-                    new XFont(
-                        "Arial",
-                        tamanoLinea,
-                        XFontStyle.Bold
-                    );
-
-                double anchoTotal =
-                    gfx.MeasureString(
-                        texto1,
-                        fuenteLineaNormal
-                    ).Width
-                    +
+                double anchoTotal = gfx.MeasureString(texto1,fuenteLineaNormal).Width +
                     gfx.MeasureString(
                         texto2,
                         fuenteLineaBold
@@ -4414,208 +4418,338 @@ namespace Pry_PrestasaludWAP.CitaMedica
             double yLinea = 63;
 
             // "de "
-            gfx.DrawString(
-                texto1,
-                fuenteLineaNormal,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto1,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
                 ),
                 XStringFormats.TopLeft
             );
 
-            xLinea +=
-                gfx.MeasureString(
-                    texto1,
-                    fuenteLineaNormal
-                ).Width;
-
+            xLinea += gfx.MeasureString(texto1,fuenteLineaNormal).Width;
 
             // "Seguros Unidos S.A."
-            gfx.DrawString(
-                texto2,
-                fuenteLineaBold,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto2,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
-                ),
-                XStringFormats.TopLeft
-            );
+                ),XStringFormats.TopLeft);
 
-            xLinea +=
-                gfx.MeasureString(
-                    texto2,
-                    fuenteLineaBold
-                ).Width;
+            xLinea += gfx.MeasureString(texto2,fuenteLineaBold).Width;
 
             // ", el día "
-            gfx.DrawString(
-                texto3,
-                fuenteLineaNormal,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto3,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
-                ),
-                XStringFormats.TopLeft
-            );
+                ),XStringFormats.TopLeft);
 
-            xLinea +=
-                gfx.MeasureString(
-                    texto3,
-                    fuenteLineaNormal
-                ).Width;
-
+            xLinea += gfx.MeasureString(texto3,fuenteLineaNormal).Width;
 
             // FECHA
-            gfx.DrawString(
-                texto4,
-                fuenteLineaBold,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto4,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
-                ),
-                XStringFormats.TopLeft
-            );
+                ),XStringFormats.TopLeft);
 
-            xLinea +=
-                gfx.MeasureString(
-                    texto4,
-                    fuenteLineaBold
-                ).Width;
+            xLinea += gfx.MeasureString(texto4,fuenteLineaBold).Width;
 
-            gfx.DrawString(
-                texto5,
-                fuenteLineaNormal,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto5,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
-                ),
-                XStringFormats.TopLeft
-            );
+                ),XStringFormats.TopLeft);
 
-            xLinea +=
-                gfx.MeasureString(
-                    texto5,
-                    fuenteLineaNormal
-                ).Width;
+            xLinea += gfx.MeasureString(texto5,fuenteLineaNormal).Width;
 
             // HORA
-            gfx.DrawString(
-                texto6,
-                fuenteLineaBold,
-                XBrushes.Black,
-                new XRect(
-                    xLinea,
-                    yLinea,
+            gfx.DrawString(texto6,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
                     470,
                     15
-                ),
-                XStringFormats.TopLeft
-            );
+                ),XStringFormats.TopLeft);
 
-            gfx.DrawString(
-                titular,
-                fuenteTitular,
-                XBrushes.Black,
-                new XRect(
+            gfx.DrawString(titular,fuenteTitular,XBrushes.Black,new XRect(
                     177,
                     89,
                     350,
                     20
+                ),XStringFormats.TopLeft);
+
+            gfx.DrawRectangle(XBrushes.White,
+                65,
+                108,
+                475,
+                88
+            );
+
+            // --------------------------------------
+            // TITULO EXAMENES
+            // --------------------------------------
+
+            XFont fuenteTituloExamen = new XFont("Times New Roman",9,XFontStyle.Bold);
+            gfx.DrawString("Exámenes:",fuenteTituloExamen,XBrushes.Black,new XRect(
+                    68,
+                    112,
+                    55,
+                    15
                 ),
                 XStringFormats.TopLeft
             );
 
-            double tamanoExamen = 7.0;
+            // --------------------------------------
+            // LISTADO DE EXAMENES
+            // --------------------------------------
 
-            if (examenes.Length > 250)
+            double tamanoExamen = 7.8;
+
+            // Solo reducir un poco para listas muy largas.
+            // Nunca bajar a 5 o 6.
+            if (examenes.Length > 380)
             {
-                tamanoExamen =
-                    5.5;
+                tamanoExamen = 7.0;
             }
-            else if (examenes.Length > 180)
+            else if (examenes.Length > 320)
             {
-                tamanoExamen =
-                    6.0;
+                tamanoExamen = 7.2;
             }
-            else if (examenes.Length > 120)
+            else if (examenes.Length > 260)
             {
-                tamanoExamen =
-                    6.5;
+                tamanoExamen = 7.5;
             }
 
-            XFont fuenteExamen =
-                new XFont(
-                    "Arial",
-                    tamanoExamen,
-                    XFontStyle.Regular
-                );
-
-            XTextFormatter formatter =
-                new XTextFormatter(
-                    gfx
-                );
-
-            formatter.DrawString(
-                examenes,
-                fuenteExamen,
-                XBrushes.Black,
-                new XRect(
-                    120,
-                    115,
-                    410,
-                    42
+            XFont fuenteExamen = new XFont("Times New Roman",tamanoExamen,XFontStyle.Regular);
+            XTextFormatter formatterExamen = new XTextFormatter(gfx);
+            formatterExamen.DrawString(examenes,fuenteExamen,XBrushes.Black,new XRect(
+                    120,    // después de "Exámenes:"
+                    110,
+                    415,
+                    45      // espacio para aproximadamente 4 líneas
                 ),
                 XStringFormats.TopLeft
             );
 
-            double tamanoPrestador = 7.5;
+            // ======================================
+            // PARRAFO RESULTADOS
+            // ======================================
 
-            XFont fuentePrestador =
-                new XFont(
-                    "Arial",
-                    tamanoPrestador,
-                    XFontStyle.Regular
-                );
+            gfx.DrawRectangle(XBrushes.White,
+                65,     // X
+                153,    // Y
+                475,    // ancho
+                148     // alto
+            );
 
-            while (
-                tamanoPrestador > 5.5 &&
-                gfx.MeasureString(
-                    prestador,
-                    fuentePrestador
-                ).Width > 155)
-            {
-                tamanoPrestador -=
-                    0.25;
+            // ======================================
+            // FUENTES
+            // ======================================
 
-                fuentePrestador =
-                    new XFont(
-                        "Arial",
-                        tamanoPrestador,
-                        XFontStyle.Regular
-                    );
-            }
+            XFont fuenteParrafo = new XFont("Times New Roman",8.5,XFontStyle.Regular);
+            XFont fuenteParrafoBold = new XFont("Times New Roman",8.5,XFontStyle.Bold);
+            double xParrafo = 68;
+            double yParrafo = 158;
 
-            gfx.DrawString(
-                prestador,
-                fuentePrestador,
+            // ======================================
+            // LINEA 1 - RESULTADOS
+            // ======================================
+
+            string textoResultado1 = "Los resultados originales de los exámenes tienen que ser enviados: ";
+            string textoPrestasalud = "PRESTASALUD (QUITO)";
+            string textoResultadoContinua = " con número de R.U.C.";
+
+            // Parte normal
+            gfx.DrawString(textoResultado1,fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double anchoResultado1 = gfx.MeasureString(textoResultado1,fuenteParrafo).Width;
+
+            // PRESTASALUD en negrita
+            double xPrestasalud = xParrafo + anchoResultado1;
+
+            gfx.DrawString(textoPrestasalud,fuenteParrafoBold,XBrushes.Black,new XRect(xPrestasalud,yParrafo,
+                    150,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double anchoPrestasalud = gfx.MeasureString(textoPrestasalud,fuenteParrafoBold).Width;
+
+            // Continuación en LA MISMA LINEA
+            gfx.DrawString(textoResultadoContinua,fuenteParrafo,XBrushes.Black,new XRect(xPrestasalud + anchoPrestasalud,yParrafo,
+                    130,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            // ======================================
+            // LINEA 2
+            // Camilo Egas, Torres Feds. MISMA LINEA
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("1792169143001, a la dirección: Av. Leonardo Tejada y Camilo Egas, Torres Feds.",fuenteParrafo,XBrushes.Black,new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+
+            // ======================================
+            // LINEA 3
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("TELF: 02 3822663. Atención a Ana Lucia Pérez.",fuenteParrafo,XBrushes.Black,new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            // ======================================
+            // FACTURA
+            // ======================================
+
+            // Dejamos un pequeño espacio antes del siguiente párrafo
+            yParrafo += 19;
+
+            gfx.DrawString("La factura correspondiente debe ser enviada a:",fuenteParrafo,XBrushes.Black,
+                new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            // ======================================
+            // Dejamos espacio después de:
+            // "debe ser enviada a:"
+            // ======================================
+
+            yParrafo += 17;
+
+            // ======================================
+            // PRESTASALUD + DIRECCION
+            // ======================================
+
+            string textoFacturaBold = "PRESTASALUD (QUITO): ";
+
+            gfx.DrawString(textoFacturaBold,fuenteParrafoBold,XBrushes.Black,new XRect(
+                    xParrafo,
+                    yParrafo,
+                    160,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double anchoFacturaBold = gfx.MeasureString(textoFacturaBold,fuenteParrafoBold).Width;
+            gfx.DrawString("Av. Av. Leonardo Tejada y Camilo Egas, Torres Feds. Atención a",fuenteParrafo,XBrushes.Black,
+                new XRect(
+                    xParrafo + anchoFacturaBold,
+                    yParrafo,
+                    470 - anchoFacturaBold,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            // ======================================
+            // ANA LUCIA
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("Ana Lucía Pérez, con los siguientes datos:",fuenteParrafo,XBrushes.Black,new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+
+            // ======================================
+            // NOMBRE
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("Nombre: PRESTASALUD",fuenteParrafo,XBrushes.Black,new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+
+            // ======================================
+            // RUC
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("Ruc: 1792169143001",fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+
+            // ======================================
+            // DIRECCION
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("Dirección: Av. Leonardo Tejada y Camilo Egas, Torres Feds..",fuenteParrafo,
                 XBrushes.Black,
                 new XRect(
+                    xParrafo,
+                    yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            // ======================================
+            // TELEFONO
+            // ======================================
+
+            yParrafo += 13;
+
+            gfx.DrawString("Teléfono: 382-2663",fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
+                    470,
+                    13
+                ),
+                XStringFormats.TopLeft
+            );
+
+            double tamanoPrestador = 9.0;
+            XFont fuentePrestador = new XFont("Times New Roman",tamanoPrestador,XFontStyle.Regular);
+
+            while (tamanoPrestador > 7.5 && gfx.MeasureString(prestador,fuentePrestador).Width > 155)
+            {
+                tamanoPrestador -= 0.25;
+                fuentePrestador = new XFont("Times New Roman", tamanoPrestador,XFontStyle.Regular);
+            }
+
+            gfx.DrawString(prestador,fuentePrestador,XBrushes.Black,new XRect(
                     135,
                     417,
                     155,
@@ -4624,18 +4758,35 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 XStringFormats.TopLeft
             );
 
+            string usuarioAgenda = ObtenerNombreUsuarioAgenda();
+            gfx.DrawRectangle(XBrushes.White,
+                68,       // X
+                579,      // Y
+                190,      // ancho
+                15.5      // alto
+            );
+
+            XFont fuenteUsuarioAgenda = CrearFuenteAjustada(gfx,usuarioAgenda,
+                    185,
+                    12,
+                    9,
+                    XFontStyle.Bold
+                );
+
+            // Escribir el nombre exactamente
+            // donde estaba "Sandra Ayala"
+            gfx.DrawString(usuarioAgenda,fuenteUsuarioAgenda,XBrushes.Black,new XRect(
+                    71,       // X
+                    581,      // Y
+                    185,      // ancho
+                    15        // alto
+                ),XStringFormats.TopLeft);
 
             gfx.Dispose();
 
-            using (
-                MemoryStream memoria =
-                    new MemoryStream())
+            using (MemoryStream memoria = new MemoryStream())
             {
-                documento.Save(
-                    memoria,
-                    false
-                );
-
+                documento.Save(memoria,false);
                 documento.Close();
                 return memoria.ToArray();
             }
