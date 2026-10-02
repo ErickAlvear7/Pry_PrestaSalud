@@ -60,8 +60,8 @@ namespace Pry_PrestasaludWAP.Examenes
             DataRow cabecera = ds.Tables[0].Rows[0];
 
             LblSolicitud.Text = cabecera["EXSO_CODIGO"].ToString();
-            LblProducto.Text = cabecera["PROD_CODIGO"].ToString();
-            LblEstado.Text = cabecera["ESTADO_SOLICITUD"].ToString();
+            LblProducto.Text = cabecera["PRODUCTO"].ToString();
+            LblEstado.Text = cabecera["ESTADO_NOMBRE"].ToString();
 
             DateTime fechaSolicitud;
 
