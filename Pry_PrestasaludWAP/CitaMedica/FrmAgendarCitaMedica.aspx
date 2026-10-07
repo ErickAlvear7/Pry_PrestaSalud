@@ -100,7 +100,12 @@
 
             total = Math.round(total * 100) / 100;
 
-            document.getElementById('lblTotalEsp').innerText = total.toFixed(2);
+            //document.getElementById('lblTotalEsp').innerText = total.toFixed(2);
+            var lblTotal = document.getElementById('lblTotalEsp');
+
+            if (lblTotal) {
+                lblTotal.innerText = total.toFixed(2);
+            }
 
             var hf = document.getElementById('<%= hfTotalEsp.ClientID %>');
             if (hf) hf.value = total.toFixed(2);
@@ -108,22 +113,20 @@
 
         var urlCartaAutorizacion = null;
 
-        function mostrarCartaAutorizacion(base64Pdf,nombreArchivo) {
+        function mostrarCartaAutorizacion(base64Pdf, nombreArchivo) {
 
             try {
 
                 var contenido = atob(base64Pdf);
                 var bytes = new Uint8Array(contenido.length);
 
-                for (var i = 0; i < contenido.length; i++)
-                {
+                for (var i = 0; i < contenido.length; i++) {
                     bytes[i] = contenido.charCodeAt(i);
                 }
 
-                var blob = new Blob([bytes],{type:"application/pdf"});
+                var blob = new Blob([bytes], { type: "application/pdf" });
 
-                if (urlCartaAutorizacion != null)
-                {
+                if (urlCartaAutorizacion != null) {
 
                     URL.revokeObjectURL(urlCartaAutorizacion);
                 }
@@ -294,9 +297,9 @@
                 text-align: center;
             }
 
-            #modalCartaAutorizacion .modal-footer .btn {
-                margin: 3px;
-            }
+                #modalCartaAutorizacion .modal-footer .btn {
+                    margin: 3px;
+                }
         }
 
         @media (min-width: 1200px) {
@@ -309,6 +312,7 @@
                 height: calc(100vh - 220px);
             }
         }
+
         #acordionParametro > h3.ui-accordion-header {
             background: #337ab7 !important;
             background-image: none !important;
@@ -318,15 +322,14 @@
             font-weight: bold !important;
         }
 
-        #acordionParametro > h3.ui-accordion-header:hover,
-        #acordionParametro > h3.ui-accordion-header.ui-state-hover,
-        #acordionParametro > h3.ui-accordion-header.ui-state-active {
-            background: #337ab7 !important;
-            background-image: none !important;
-            color: #ffffff !important;
-            border-color: #337ab7 !important;
-        }
-
+            #acordionParametro > h3.ui-accordion-header:hover,
+            #acordionParametro > h3.ui-accordion-header.ui-state-hover,
+            #acordionParametro > h3.ui-accordion-header.ui-state-active {
+                background: #337ab7 !important;
+                background-image: none !important;
+                color: #ffffff !important;
+                border-color: #337ab7 !important;
+            }
     </style>
     <script type="text/javascript">
 
@@ -1217,31 +1220,50 @@
                         Seleccione Especialidades
                     </div>
                     <div class="modalBody">
-                        <div style="margin-bottom: 10px; font-weight: bold;">
-                            Total seleccionado: <span id="lblTotalEsp">0.00</span>
-                        </div>
+                        <%-- <div style="margin-bottom: 10px; font-weight: bold;">
+                            Total valor Red: <span id="lblTotalEsp">0.00</span>
+                        </div>--%>
                         <asp:HiddenField ID="hfTotalEsp" runat="server" Value="0.00" />
                         <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
                         <asp:GridView ID="gvEspecialidades" runat="server"
                             AutoGenerateColumns="false"
-                            DataKeyNames="PVP,Red"
+                            DataKeyNames="EXAM_CODIGO,EXDE_CODIGO,Red,Grupo,Descripcion"
                             GridLines="None"
-                            Width="100%">
+                            Width="100%"
+                            CssClass="table table-bordered table-hover">
                             <Columns>
-                                <asp:TemplateField>
+                                <asp:TemplateField HeaderText="Examen">
                                     <ItemTemplate>
-                                        <asp:CheckBox ID="chkSeleccionar" runat="server" onclick="calcTotalEsp();" />
+                                        <asp:Panel ID="pnlGrupoExamen" runat="server"
+                                            Visible='<%# Eval("GrupoMostrar").ToString().Trim() != "" %>'
+                                            Style="font-weight: bold; margin-bottom: 6px;">
+                                            <asp:Label ID="lblGrupoExamen" runat="server" Text='<%# Eval("GrupoMostrar") %>'></asp:Label>
+                                        </asp:Panel>
+                                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                            <asp:CheckBox ID="chkSeleccionar" runat="server" Style="margin-top: 2px;" />
+                                            <div style="flex: 1;">
+                                                <asp:Label ID="lblDescripcionExamen" runat="server"
+                                                    Text='<%# Eval("Descripcion") %>'
+                                                    Font-Bold='<%# Eval("Grupo").ToString().Trim() == "" %>'>
+                                                 </asp:Label>
+                                                <asp:Panel ID="pnlDetalleInformativo" runat="server"
+                                                    Visible='<%# Eval("DetalleInformativo").ToString().Trim() != "" %>'
+                                                    Style="margin-top: 5px; padding-left: 15px; color: #444;">
+                                                    <asp:Label ID="lblDetalleInformativo" runat="server"
+                                                        Text='<%# Eval("DetalleInformativo") %>'
+                                                        Font-Italic="true">
+                                                    </asp:Label>
+                                                </asp:Panel>
+                                            </div>
+                                        </div>
                                     </ItemTemplate>
+                                    <ItemStyle VerticalAlign="Top"/>
                                 </asp:TemplateField>
-                                <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
-                                <asp:BoundField DataField="PVP" HeaderText="PVP" />
-                                <asp:BoundField DataField="Red" HeaderText="Red" Visible="false" />
                             </Columns>
                         </asp:GridView>
                     </div>
                     <div class="modalFooter">
-                        <asp:Button ID="btnAgregarEspecialidades"
-                            runat="server"
+                        <asp:Button ID="btnAgregarEspecialidades" runat="server"
                             Text="Agregar Seleccionadas"
                             CssClass="btnModal btnPrimary"
                             OnClick="btnAgregarEspecialidades_Click" />

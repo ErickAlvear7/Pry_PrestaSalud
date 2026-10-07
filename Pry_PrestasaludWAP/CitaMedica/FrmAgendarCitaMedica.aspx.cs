@@ -173,7 +173,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     dtbHorarios.Columns.Add("hour");
                     ViewState["HorariosMedico"] = dtbHorarios;
 
-
                     lbltitulo.Text = "Agendar Cita";
                     //Session["CodigoTitular"] = Request["CodigoTitular"];
                     //Session["CodigoProducto"] = Request["CodigoProducto"];
@@ -181,6 +180,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     Session["CodigoProducto"] = Request["CodigoProducto"];
                     Session["Regresar"] = Request["Regresar"];
                     ViewState["CodigoEXSO"] = Request["CodigoEXSO"];//cambio aki
+                    int codigoEXSO = 0;
+                    if (Request["CodigoEXSO"] != null && int.TryParse(Request["CodigoEXSO"].ToString(),out codigoEXSO) && codigoEXSO > 0
+)
+                    {
+                        ViewState["EsFlujoExamen"] = "1";
+                    }
+                    else
+                    {
+                        ViewState["EsFlujoExamen"] = "0";
+                    }
+                    ViewState["CitaAdicional"] = Request["CitaAdicional"] != null && Request["CitaAdicional"].ToString() == "1" ? "1" : "0"; //cambio para nueva cita de examens
                     Session["TipoCita"] = "CitaMedica";
                     ViewState["Intervalo"] = 0;
 
@@ -1109,7 +1119,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlCiudad.DataTextField = "Descripcion";
                         ddlCiudad.DataValueField = "Codigo";
                         ddlCiudad.DataBind();
-
                         break;
                     case 1:
                         ddlPrestadora.Items.Clear();
@@ -1126,11 +1135,35 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
-                        Array.Resize(ref objparam, 3);
-                        objparam[0] = ddlCiudad.SelectedValue;
-                        objparam[1] = "";
-                        objparam[2] = 5;
-                        ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        //Array.Resize(ref objparam, 3);
+                        //objparam[0] = ddlCiudad.SelectedValue;
+                        //objparam[1] = "";
+                        //objparam[2] = 5;
+                        //ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        //ddlPrestadora.DataTextField = "Descripcion";
+                        //ddlPrestadora.DataValueField = "Codigo";
+                        //ddlPrestadora.DataBind();
+                        bool esFlujoExamen = ViewState["EsFlujoExamen"] != null && ViewState["EsFlujoExamen"].ToString() == "1";
+
+
+                        if (esFlujoExamen)
+                        {
+                           
+                            Array.Resize(ref objparam, 1);
+                            objparam[0] = int.Parse(ddlCiudad.SelectedValue);
+                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestadoresCiudad_Listar",objparam);
+                        }
+                        else
+                        {
+                           
+                            Array.Resize(ref objparam, 3);
+                            objparam[0] = ddlCiudad.SelectedValue;
+                            objparam[1] = "";
+                            objparam[2] = 5;
+
+                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                        }
+
                         ddlPrestadora.DataTextField = "Descripcion";
                         ddlPrestadora.DataValueField = "Codigo";
                         ddlPrestadora.DataBind();
@@ -1147,122 +1180,228 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlProvincia.DataValueField = "Codigo";
                         ddlProvincia.DataBind();
                         break;
+                    //case 3:
+                    //ddlMedico.Items.Clear();
+                    //medi.Text = "--Seleccione Médico--";
+                    //medi.Value = "0";
+                    //ddlMedico.Items.Add(medi);
+                    //Array.Resize(ref objparam, 3);
+                    //objparam[0] = ddlPrestadora.SelectedValue;
+                    //objparam[1] = "";
+                    //objparam[2] = 8;
+                    ////cambio
+                    //if (ddlPrestadora.SelectedValue == "466" || ddlPrestadora.SelectedValue == "368"
+                    //    || ddlPrestadora.SelectedValue == "444" || ddlPrestadora.SelectedValue == "581"
+                    //    || ddlPrestadora.SelectedValue == "56" || ddlPrestadora.SelectedValue == "404"
+                    //    || ddlPrestadora.SelectedValue == "336" || ddlPrestadora.SelectedValue == "356"
+                    //    || ddlPrestadora.SelectedValue == "533" || ddlPrestadora.SelectedValue == "461"
+                    //    || ddlPrestadora.SelectedValue == "357" || ddlPrestadora.SelectedValue == "467"
+                    //    || ddlPrestadora.SelectedValue == "375" || ddlPrestadora.SelectedValue == "550"
+                    //    || ddlPrestadora.SelectedValue == "342" || ddlPrestadora.SelectedValue == "425"
+                    //    || ddlPrestadora.SelectedValue == "529" || ddlPrestadora.SelectedValue == "414"
+                    //    || ddlPrestadora.SelectedValue == "239" || ddlPrestadora.SelectedValue == "540"
+                    //    || ddlPrestadora.SelectedValue == "535" || ddlPrestadora.SelectedValue == "523"
+                    //    || ddlPrestadora.SelectedValue == "514" || ddlPrestadora.SelectedValue == "79"
+                    //    || ddlPrestadora.SelectedValue == "551" || ddlPrestadora.SelectedValue == "12"
+                    //    || ddlPrestadora.SelectedValue == "547" || ddlPrestadora.SelectedValue == "600")
+                    //{
+                    //    ddlMedico.Items.Clear();
+                    //    medi.Text = "--Seleccione Médico--";
+                    //    medi.Value = "0";
+                    //    ddlMedico.Items.Add(medi);
+                    //    Array.Resize(ref objparam, 3);
+                    //    objparam[0] = ddlPrestadora.SelectedValue;
+                    //    objparam[1] = "";
+                    //    objparam[2] = 214;
+                    //    ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //    ddlEspecialidad.DataTextField = "Descripcion";
+                    //    ddlEspecialidad.DataValueField = "Codigo";
+                    //    ddlEspecialidad.DataBind();
+                    //    ddlTipoPago.SelectedIndex = 1;
+                    //}
+
+                    //ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //ddlEspecialidad.DataTextField = "Descripcion";
+                    //ddlEspecialidad.DataValueField = "Codigo";
+                    //ddlEspecialidad.DataBind();
+
+                    //if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+                    //{
+                    //    Array.Resize(ref objparam, 3);
+                    //    objparam[0] = 0;
+                    //    objparam[1] = "";
+                    //    objparam[2] = 190;
+                    //    ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //    ddlEspecialidad.DataTextField = "Descripcion";
+                    //    ddlEspecialidad.DataValueField = "Codigo";
+                    //    ddlEspecialidad.DataBind();
+
+                    //    FunCascadaCombos(4);
+                    //}
+
+                    //break;
                     case 3:
+
                         ddlMedico.Items.Clear();
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
+
+                        esFlujoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+
                         Array.Resize(ref objparam, 3);
                         objparam[0] = ddlPrestadora.SelectedValue;
                         objparam[1] = "";
-                        objparam[2] = 8;
-                        //cambio
-                        if (ddlPrestadora.SelectedValue == "466" || ddlPrestadora.SelectedValue == "368"
-                            || ddlPrestadora.SelectedValue == "444" || ddlPrestadora.SelectedValue == "581"
-                            || ddlPrestadora.SelectedValue == "56" || ddlPrestadora.SelectedValue == "404"
-                            || ddlPrestadora.SelectedValue == "336" || ddlPrestadora.SelectedValue == "356"
-                            || ddlPrestadora.SelectedValue == "533" || ddlPrestadora.SelectedValue == "461"
-                            || ddlPrestadora.SelectedValue == "357" || ddlPrestadora.SelectedValue == "467"
-                            || ddlPrestadora.SelectedValue == "375" || ddlPrestadora.SelectedValue == "550"
-                            || ddlPrestadora.SelectedValue == "342" || ddlPrestadora.SelectedValue == "425"
-                            || ddlPrestadora.SelectedValue == "529" || ddlPrestadora.SelectedValue == "414"
-                            || ddlPrestadora.SelectedValue == "239" || ddlPrestadora.SelectedValue == "540"
-                            || ddlPrestadora.SelectedValue == "535" || ddlPrestadora.SelectedValue == "523"
-                            || ddlPrestadora.SelectedValue == "514" || ddlPrestadora.SelectedValue == "79"
-                            || ddlPrestadora.SelectedValue == "551" || ddlPrestadora.SelectedValue == "12"
-                            || ddlPrestadora.SelectedValue == "547" || ddlPrestadora.SelectedValue == "600")
+
+                        if (esFlujoExamen)
                         {
-                            ddlMedico.Items.Clear();
-                            medi.Text = "--Seleccione Médico--";
-                            medi.Value = "0";
-                            ddlMedico.Items.Add(medi);
-                            Array.Resize(ref objparam, 3);
-                            objparam[0] = ddlPrestadora.SelectedValue;
-                            objparam[1] = "";
                             objparam[2] = 214;
-                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                            ddlEspecialidad.DataTextField = "Descripcion";
-                            ddlEspecialidad.DataValueField = "Codigo";
-                            ddlEspecialidad.DataBind();
-                            ddlTipoPago.SelectedIndex = 1;
+                        }
+                        else
+                        {
+                            objparam[2] = 8;
                         }
 
-                        ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
 
-                        if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+                        if (esFlujoExamen)
+                        {
+                            if (ddlTipoPago.Items.Count > 1)
+                            {
+                                ddlTipoPago.SelectedIndex = 1;
+                            }
+                        }
+
+                        if (!esFlujoExamen && ddlPrestadora.SelectedItem != null && ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
                             objparam[1] = "";
                             objparam[2] = 190;
-                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
                             ddlEspecialidad.DataTextField = "Descripcion";
                             ddlEspecialidad.DataValueField = "Codigo";
                             ddlEspecialidad.DataBind();
-
                             FunCascadaCombos(4);
                         }
 
                         break;
+                    //case 4:
+                    //    Array.Resize(ref objparam, 3);
+                    //    objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
+                    //    objparam[1] = "";
+                    //    objparam[2] = 31;
+                    //    //cambio
+                    //    if (ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3253"
+                    //        || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261"
+                    //        || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3327"
+                    //        || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3365"
+                    //        || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
+                    //        || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
+                    //        || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
+                    //        || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
+                    //        || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
+                    //        || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
+                    //        || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
+                    //        || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
+                    //        || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
+                    //        || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
+                    //    {
+                    //        Array.Resize(ref objparam, 3);
+                    //        objparam[0] = ddlPrestadora.SelectedValue;
+                    //        objparam[1] = "";
+                    //        objparam[2] = 213;
+
+                    //        var dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                    //        gvEspecialidades.DataSource = dt;
+                    //        gvEspecialidades.DataBind();
+
+                    //        updModalEsp.Update();
+                    //        AbrirModalEspecialidades();
+
+                    //        Array.Resize(ref objparam, 3);
+                    //        objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
+                    //        objparam[1] = "";
+                    //        objparam[2] = 31;
+                    //        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //        ddlMedico.DataTextField = "Descripcion";
+                    //        ddlMedico.DataValueField = "Codigo";
+                    //        ddlMedico.DataBind();
+                    //    }
+
+                    //    ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //    ddlMedico.DataTextField = "Descripcion";
+                    //    ddlMedico.DataValueField = "Codigo";
+                    //    ddlMedico.DataBind();
+
+                    //    if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
+                    //    {
+                    //        Array.Resize(ref objparam, 3);
+                    //        objparam[0] = 0;
+                    //        objparam[1] = "";
+                    //        objparam[2] = 191;
+                    //        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                    //        ddlMedico.DataTextField = "Descripcion";
+                    //        ddlMedico.DataValueField = "Codigo";
+                    //        ddlMedico.DataBind();
+                    //    }
+
+                    //    break;
                     case 4:
+
                         Array.Resize(ref objparam, 3);
                         objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
                         objparam[1] = "";
                         objparam[2] = 31;
-                        //cambio
-                        if (ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3253"
-                            || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261"
-                            || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3327"
-                            || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3365"
-                            || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
-                            || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
-                            || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
-                            || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
-                            || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
-                            || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
-                            || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
-                            || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                            || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
-                            || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
-                        {
-                            Array.Resize(ref objparam, 3);
-                            objparam[0] = ddlPrestadora.SelectedValue;
-                            objparam[1] = "";
-                            objparam[2] = 213;
 
-                            var dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-                            gvEspecialidades.DataSource = dt;
-                            gvEspecialidades.DataBind();
-
-                            updModalEsp.Update();
-                            AbrirModalEspecialidades();
-
-                            Array.Resize(ref objparam, 3);
-                            objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
-                            objparam[1] = "";
-                            objparam[2] = 31;
-                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                            ddlMedico.DataTextField = "Descripcion";
-                            ddlMedico.DataValueField = "Codigo";
-                            ddlMedico.DataBind();
-                        }
-
-                        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+                        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
 
-                        if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
+                        bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                        bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
+
+                        if (vieneDeExamen && esLaboratorio && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
+                        {
+
+                            object[] parametrosExamenes = new object[2];
+
+                            parametrosExamenes[0] = int.Parse(ddlCiudad.SelectedValue);
+                            parametrosExamenes[1] = int.Parse(ddlPrestadora.SelectedValue);
+
+                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar",parametrosExamenes);
+
+                            gvEspecialidades.DataSource = null;
+
+                            if (dsExamenes != null && dsExamenes.Tables.Count > 0 && dsExamenes.Tables[0].Rows.Count > 0)
+                            {
+                                ultimoGrupoExamen = "";
+                                gvEspecialidades.DataSource = dsExamenes.Tables[0];
+                                gvEspecialidades.DataBind();
+                                updModalEsp.Update();
+                                AbrirModalEspecialidades();
+                            }
+                            else
+                            {
+                                gvEspecialidades.DataBind();
+                                new Funciones().funShowJSMessage("El prestador seleccionado no tiene exámenes configurados.",this);
+                            }
+                        }
+
+                        if (!vieneDeExamen && ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
                             objparam[1] = "";
                             objparam[2] = 191;
-                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
                             ddlMedico.DataTextField = "Descripcion";
                             ddlMedico.DataValueField = "Codigo";
                             ddlMedico.DataBind();
@@ -1497,6 +1636,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             try
             {
+
+                bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
+
+                // Solo la primera cita del proceso de exámenes
+                // debe utilizar la carta de autorización.
+                bool esAgendamientoExamen = vieneDeExamen && !esCitaAdicional;
+
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[1] = "";
@@ -1534,7 +1681,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
                 //adjunto
-                bool esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                /*esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";*/ //cambio
                 byte[] cartaPdf = null;
                 string nombreCartaPdf = "";
 
@@ -1673,7 +1820,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
-                esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                //esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1"; cambio aki
 
                 if (mensaje == "")
                 {
@@ -1710,7 +1857,22 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         );
                     }
 
-                    if (esAgendamientoExamen)
+                    //if (esAgendamientoExamen)
+                    //{
+                    //    Response.Redirect(
+                    //        "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'",
+                    //        true
+                    //    );
+                    //}
+                    //else
+                    //{
+                    //    // CITA NORMAL
+                    //    Response.Redirect(
+                    //        "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito",
+                    //        true
+                    //    );
+                    //}
+                    if (vieneDeExamen)
                     {
                         Response.Redirect(
                             "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'",
@@ -1719,7 +1881,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else
                     {
-                        // CITA NORMAL
                         Response.Redirect(
                             "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito",
                             true
@@ -2971,6 +3132,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 bool lexiste = false;
                 lblerror.Text = "";
 
+                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
+                bool esFlujoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+
                 if (ddlOpcion.SelectedValue == "0")
                 {
                     new Funciones().funShowJSMessage("Seleccione Tipo de Registro..!", this);
@@ -2982,7 +3146,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     return;
                 }
 
-              
                 //Consulta si la hora execede el tiempo determinado en el intervalo(SOLO FECHA ACTUAL)
                 fechaActual = DateTime.Now.ToString("MM/dd/yyyy");
                 Calendario = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
@@ -3031,43 +3194,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
 
-                //----BLOQUEAR PRESTADOR POR FECHA DE ATENCION ----
-
-                //Array.Resize(ref objparam, 3);
-                //objparam[0] = ddlPrestadora.SelectedValue;
-                //objparam[1] = "";
-                //objparam[2] = 181;
-                //DataSet data = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-                //if (data.Tables[0].Rows.Count > 0 && data != null)
-                //{
-
-                //    string fechaInicio = data.Tables[0].Rows[0][0].ToString();
-                //    string fechaFin = data.Tables[0].Rows[0][1].ToString();
-
-                //    DateTime FechaIni = DateTime.ParseExact(fechaInicio, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                //    DateTime FechaFi = DateTime.ParseExact(fechaFin, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                //    DateTime FechaCita = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                //    string newFechaCita = FechaCita.ToString("dd/MM/yyyy");
-
-
-                //    if (FechaCita >= FechaIni && FechaCita <= FechaFi)
-                //    {
-                //        new Funciones().funShowJSMessage("Prestador no atendera el " + newFechaCita, this);
-                //        return;
-                //    }
-
-                //}
-
-                //DateTime fechaIni = Convert.ToDateTime(dt.Tables[0].Rows[0][0].ToString()).Date;
-                //DateTime fechaFi = Convert.ToDateTime(dt.Tables[0].Rows[0][1].ToString()).Date;
-
-                //TimeSpan difFechas = fechaFi - fechaIni;
-
-                // int dias = (int)difFechas.TotalDays;
-                // string days = Convert.ToString(dias);
-
-                //Buscar si ya existe alguna reserva realizada
+                
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 2;
                 objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
@@ -3109,63 +3236,149 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     new Funciones().funShowJSMessage("Seleccione Titular o Beneficiario para Agendar Cita..!", this);
                     return;
                 }
-                if (ViewState["tbCitaMedica"] != null)
+                //if (ViewState["tbCitaMedica"] != null)
+                //{
+                //    DataTable tblbuscar = (DataTable)ViewState["tbCitaMedica"];
+                //    if (tblbuscar.Rows.Count > 0)
+                //    {
+                //        DataRow result = tblbuscar.Select("Cliente='" + ViewState["Cliente"].ToString() + "' and Especialidad='" + ddlEspecialidad.SelectedItem.ToString() + "'").FirstOrDefault();
+                //        if (result != null) lexiste = true;
+                //    }
+                //}
+
+                //if (lexiste)
+                //{
+                //    new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!", this);
+                //    return;
+                //}
+                if (!esFlujoExamen)
                 {
-                    DataTable tblbuscar = (DataTable)ViewState["tbCitaMedica"];
-                    if (tblbuscar.Rows.Count > 0)
+                    if (ViewState["tbCitaMedica"] != null)
                     {
-                        DataRow result = tblbuscar.Select("Cliente='" + ViewState["Cliente"].ToString() + "' and Especialidad='" + ddlEspecialidad.SelectedItem.ToString() + "'").FirstOrDefault();
-                        if (result != null) lexiste = true;
+                        DataTable tblbuscar = (DataTable)ViewState["tbCitaMedica"];
+
+                        if (tblbuscar.Rows.Count > 0)
+                        {
+                            DataRow result =
+                                tblbuscar.Select(
+                                    "Cliente='" +
+                                    ViewState["Cliente"].ToString() +
+                                    "' and Especialidad='" +
+                                    ddlEspecialidad.SelectedItem.ToString() +
+                                    "'"
+                                ).FirstOrDefault();
+
+                            if (result != null)
+                            {
+                                lexiste = true;
+                            }
+                        }
                     }
-                }
 
-                if (lexiste)
-                {
-                    new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!", this);
-                    return;
-                }
-
-                Array.Resize(ref objparam, 18);
-                objparam[0] = 18;
-                objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
-                objparam[2] = int.Parse(ddlMedico.SelectedValue);
-                objparam[3] = 0;
-                objparam[4] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
-                objparam[5] = CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper();
-                objparam[6] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
-                objparam[7] = "";
-                objparam[8] = int.Parse(grdvDatosCitas.DataKeys[intIndex].Values["HodeCodigo"].ToString());
-                objparam[9] = "";
-                objparam[10] = int.Parse(ViewState["TituCodigo"].ToString());
-                objparam[11] = int.Parse(ViewState["BeneCodigo"].ToString());
-                objparam[12] = "";
-                objparam[13] = "";
-                objparam[14] = "";
-                objparam[15] = int.Parse(Session["usuCodigo"].ToString());
-                objparam[16] = Session["MachineName"].ToString();
-                objparam[17] = "";
-                //PREGUNTAR SI EL CLIENTE YA TIENE AGENDADA UNA CITA EN ESTADO ACTIVO
-                dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
-                if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" || Session["CodigoProducto"].ToString() == "227")
-                {
-                    if (dt.Tables[0].Rows.Count > 0)
+                    if (lexiste)
                     {
 
-                        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
-                        new Funciones().funShowJSMessage(alerta, this);
+                        new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!",this);
                         return;
                     }
                 }
-                else
+
+                //Array.Resize(ref objparam, 18);
+                //objparam[0] = 18;
+                //objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
+                //objparam[2] = int.Parse(ddlMedico.SelectedValue);
+                //objparam[3] = 0;
+                //objparam[4] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
+                //objparam[5] = CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper();
+                //objparam[6] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
+                //objparam[7] = "";
+                //objparam[8] = int.Parse(grdvDatosCitas.DataKeys[intIndex].Values["HodeCodigo"].ToString());
+                //objparam[9] = "";
+                //objparam[10] = int.Parse(ViewState["TituCodigo"].ToString());
+                //objparam[11] = int.Parse(ViewState["BeneCodigo"].ToString());
+                //objparam[12] = "";
+                //objparam[13] = "";
+                //objparam[14] = "";
+                //objparam[15] = int.Parse(Session["usuCodigo"].ToString());
+                //objparam[16] = Session["MachineName"].ToString();
+                //objparam[17] = "";
+
+
+
+                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
+
+
+                //if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" || Session["CodigoProducto"].ToString() == "227")
+                //{
+                //    if (dt.Tables[0].Rows.Count > 0)
+                //    {
+
+                //        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
+                //        new Funciones().funShowJSMessage(alerta, this);
+                //        return;
+                //    }
+                //}
+                //else
+                //{
+                //    if (dt.Tables[0].Rows.Count > 0)
+                //    {
+
+                //        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
+                //        new Funciones().funShowJSMessage(alerta, this);
+                //        return;
+                //    }
+
+                //}
+                if (!esCitaAdicional)
                 {
-                    if (dt.Tables[0].Rows.Count > 0)
+
+                    Array.Resize(ref objparam, 18);
+                    objparam[0] = 18;
+                    objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
+                    objparam[2] = int.Parse(ddlMedico.SelectedValue);
+                    objparam[3] = 0;
+                    objparam[4] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
+                    objparam[5] = CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper();
+                    objparam[6] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
+                    objparam[7] = "";
+                    objparam[8] = int.Parse(grdvDatosCitas.DataKeys[intIndex].Values["HodeCodigo"].ToString());
+                    objparam[9] = "";
+                    objparam[10] = int.Parse(ViewState["TituCodigo"].ToString());
+                    objparam[11] = int.Parse(ViewState["BeneCodigo"].ToString());
+                    objparam[12] = "";
+                    objparam[13] = "";
+                    objparam[14] = "";
+                    objparam[15] = int.Parse(Session["usuCodigo"].ToString());
+                    objparam[16] = Session["MachineName"].ToString();
+                    objparam[17] = "";
+
+                    // PREGUNTAR SI EL CLIENTE YA TIENE
+                    // AGENDADA UNA CITA EN ESTADO ACTIVO
+
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras",objparam);
+
+
+                    if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" ||
+                        Session["CodigoProducto"].ToString() == "227")
                     {
+                        if (dt.Tables[0].Rows.Count > 0)
+                        {
+                            alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
 
-                        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
-                        new Funciones().funShowJSMessage(alerta, this);
-                        return;
+                            new Funciones().funShowJSMessage(alerta,this);
+                            return;
+                        }
                     }
+                    else
+                    {
+                        if (dt.Tables[0].Rows.Count > 0)
+                        {
+                            alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
 
+                            new Funciones().funShowJSMessage(alerta,this);
+                            return;
+                        }
+                    }
                 }
 
                 //REALIZAR EL CONTEO DE LAS CITAS SEGUN LA PROGRAMACION DE SU PRODUCTO
@@ -3285,29 +3498,54 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["CodigoPrestadora"] = ddlPrestadora.SelectedValue;
-                    if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" 
-                        || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261" 
-                        || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3365" 
-                        || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3327"
-                        || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
-                        || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
-                        || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
-                        || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
-                        || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
-                        || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
-                        || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
-                        || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                        || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
-                        || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
+                    //if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" 
+                    //    || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261" 
+                    //    || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3365" 
+                    //    || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3327"
+                    //    || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
+                    //    || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
+                    //    || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
+                    //    || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
+                    //    || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
+                    //    || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
+                    //    || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
+                    //    || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
+                    //    || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
+                    //    || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
+                    //{
+                    //    filagre["Observacion"] = ViewState["descripcion"].ToString();
+                    //    filagre["Latitud"] = ViewState["sumaLab"].ToString();
+                    //    filagre["Longitud"] = ViewState["sumaRed"].ToString();
+                    //}
+                    //else
+                    //{
+                    //    filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
+
+                    //}
+                    bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                    bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
+
+                    if (vieneDeExamen && esLaboratorio)
                     {
+                        if (ViewState["descripcion"] == null || ViewState["descripcion"].ToString().Trim() == "")
+                        {
+                            new Funciones().funShowJSMessage("Debe seleccionar al menos un examen.",this);
+                            return;
+                        }
+
+                        // Exámenes seleccionados
                         filagre["Observacion"] = ViewState["descripcion"].ToString();
-                        filagre["Latitud"] = ViewState["sumaLab"].ToString();
-                        filagre["Longitud"] = ViewState["sumaRed"].ToString();
+
+                        // Ya no usamos PVP.
+                        // Se deja 0 para mantener la estructura existente.
+                        filagre["Latitud"] = "0.00";
+
+                        // Valor RED total
+                        filagre["Longitud"] = ViewState["sumaRed"] != null ? Convert.ToDecimal(ViewState["sumaRed"]).ToString("0.00",CultureInfo.InvariantCulture): "0.00";
                     }
                     else
                     {
                         filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-                        
                     }
 
                     tblagre.Rows.Add(filagre);
@@ -3523,8 +3761,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 tbCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                 if (tbCitaMedica.Rows.Count > 0)
                 {
+                    bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
                     //ACTUALIZAR EN EL CASO DE SER AGENDAMIENTO POR EXAMENES
-                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
+                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1" && !esCitaAdicional)
                     {
 
                         if (ViewState["CodigoEXSO"] == null || ViewState["CodigoEXSO"].ToString().Trim() == "")
@@ -3896,16 +4135,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 // Solo es examen cuando Regresar = 1.
                 // Si viene null, se considera cita normal.
-                bool esAgendamientoExamen =
-                    Session["Regresar"] != null &&
-                    Session["Regresar"].ToString() == "1";
+                //bool esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
+
+
+                // Solo la PRIMERA cita de examen
+                // lleva carta de autorización.
+                bool esAgendamientoExamen = vieneDeExamen && !esCitaAdicional;
 
                 if (esAgendamientoExamen)
                 {
-                    Response.Redirect(
-                        "~/Examenes/FrmSolicitudOperadorAdmin.aspx",
-                        true
-                    );
+                    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx",true);
                 }
                 else
                 {
@@ -4068,86 +4309,135 @@ namespace Pry_PrestasaludWAP.CitaMedica
              );
         }
 
+
         protected void btnAgregarEspecialidades_Click(object sender, EventArgs e)
         {
-
-            decimal sumaCodigos = 0m;
-            decimal sumaRed = 0m;
-
-            List<string> descripciones = new List<string>();
-            bool check = false;
-
-            for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
+            try
             {
-                GridViewRow row = gvEspecialidades.Rows[i];
-                CheckBox chk = row.FindControl("chkSeleccionar") as CheckBox;
 
-                if (chk != null && chk.Checked)
+                decimal sumaRed = 0m;
+
+                List<string> descripciones = new List<string>();
+                List<string> codigosSeleccionados = new List<string>();
+                List<int> examenesRedSumados = new List<int>();
+
+                bool check = false;
+
+                for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
                 {
-                    check = true;
 
-                    string descripcion = Server.HtmlDecode(row.Cells[1].Text).Trim();
-                    descripciones.Add(descripcion);
+                    GridViewRow row = gvEspecialidades.Rows[i];
+                    CheckBox chk = row.FindControl("chkSeleccionar") as CheckBox;
 
-                    // PVP desde DataKeys
-                    decimal pvpVal = 0m;
-                    if (gvEspecialidades.DataKeys[i].Values["PVP"] != null)
+                    if (chk != null && chk.Checked)
                     {
-                        string pvpTxt = gvEspecialidades.DataKeys[i].Values["PVP"].ToString();
+                        check = true;
 
-                        if (!decimal.TryParse(pvpTxt, NumberStyles.Any, CultureInfo.InvariantCulture, out pvpVal))
+                        int examenCodigo = 0;
+
+                        if (gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"] != null)
                         {
-                            decimal.TryParse(pvpTxt, NumberStyles.Any, new CultureInfo("es-EC"), out pvpVal);
+                            int.TryParse(gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"].ToString(),out examenCodigo);
+                        }
+
+
+                        int detalleCodigo = 0;
+
+                        if (gvEspecialidades.DataKeys[i].Values["EXDE_CODIGO"] != null)
+                        {
+                            int.TryParse(gvEspecialidades.DataKeys[i].Values["EXDE_CODIGO"].ToString(),out detalleCodigo);
+                        }
+
+                        string grupo = "";
+
+                        if (gvEspecialidades.DataKeys[i].Values["Grupo"] != null)
+                        {
+                            grupo =gvEspecialidades.DataKeys[i].Values["Grupo"].ToString().Trim();
+                        }
+
+                        string descripcion = "";
+
+                        if (gvEspecialidades.DataKeys[i].Values["Descripcion"] != null)
+                        {
+                            descripcion = gvEspecialidades.DataKeys[i].Values["Descripcion"].ToString().Trim();
+                        }
+
+                        string textoSeleccionado = "";
+
+                        if (grupo != "")
+                        {
+                            textoSeleccionado = grupo + " - " + descripcion;
+                        }
+                        else
+                        {
+                            textoSeleccionado = descripcion;
+                        }
+
+                        if (textoSeleccionado != "")
+                        {
+                            descripciones.Add(textoSeleccionado);
+                        }
+
+
+                        codigosSeleccionados.Add(
+                            examenCodigo.ToString() +
+                            ":" +
+                            detalleCodigo.ToString()
+                        );
+
+                        decimal redVal = 0m;
+
+                        object valorRed = gvEspecialidades.DataKeys[i].Values["Red"];
+
+                        if (valorRed != null &&valorRed != DBNull.Value)
+                        {
+                            redVal = Convert.ToDecimal(valorRed);
+                        }
+
+                        if (!examenesRedSumados.Contains(examenCodigo))
+                        {
+                            sumaRed += redVal;
+                            examenesRedSumados.Add(examenCodigo);
                         }
                     }
-
-                    sumaCodigos += pvpVal;
-
-                    // Red desde DataKeys
-                    decimal redVal = 0m;
-                    if (gvEspecialidades.DataKeys[i].Values["Red"] != null)
-                    {
-                        string redTxt = gvEspecialidades.DataKeys[i].Values["Red"].ToString();
-
-                        if (!decimal.TryParse(redTxt, NumberStyles.Any, CultureInfo.InvariantCulture, out redVal))
-                        {
-                            decimal.TryParse(redTxt, NumberStyles.Any, new CultureInfo("es-EC"), out redVal);
-                        }
-                    }
-
-                    sumaRed += redVal;
                 }
+
+                if (!check)
+                {
+                    new Funciones().funShowJSMessage("Debe seleccionar al menos un examen.",this);
+                    AbrirModalEspecialidades();
+                    return;
+                }
+
+                ViewState["descripcion"] = string.Join(", ",descripciones.ToArray());
+                ViewState["codigosExamenes"] = string.Join(",",codigosSeleccionados.ToArray());
+                ViewState["sumaLab"] = 0m;
+                ViewState["sumaRed"] = Math.Round(sumaRed,2);
+                hfTotalEsp.Value = "0.00";
+                hfTotalRed.Value = sumaRed.ToString("0.00",CultureInfo.InvariantCulture);
+
+                string mensaje = "Exámenes seleccionados:\\n\\n" +
+                    string.Join(
+                        "\\n",
+                        descripciones.ToArray()
+                    );
+
+                ScriptManager.RegisterStartupScript(
+                    this,
+                    this.GetType(),
+                    "msgExamenes",
+                    "alert('" +
+                    HttpUtility.JavaScriptStringEncode(
+                        mensaje
+                    ) +
+                    "');",
+                    true
+                );
             }
-
-            hfTotalEsp.Value = sumaCodigos.ToString("0.00", CultureInfo.InvariantCulture);
-
-            if (!check)
+            catch (Exception ex)
             {
-                ScriptManager.RegisterStartupScript(this,this.GetType(),
-                      "msg",
-                      "alert('Debe seleccionar al menos un examen.');",
-                      true
-                  );
-
-                AbrirModalEspecialidades();
-                return;
-
+                lblerror.Text = ex.ToString();
             }
-
-            ViewState["descripcion"] = string.Join(", ", descripciones.Distinct());
-            ViewState["sumaLab"] = Math.Round(sumaCodigos, 2);
-            ViewState["sumaRed"] = Math.Round(sumaRed, 2);
-
-            string seleccionados = ViewState["descripcion"].ToString();
-            string seleccionadosJs = HttpUtility.JavaScriptStringEncode(seleccionados);
-
-            ScriptManager.RegisterStartupScript(this,this.GetType(),
-                "mostrarSeleccionados",
-                "alert('Seleccionados:\\n\\n" + seleccionadosJs + "');",
-                true
-            );
-
-            CerrarModalEspecialidades();
         }
 
         private void CerrarModalEspecialidades()
@@ -4858,6 +5148,80 @@ namespace Pry_PrestasaludWAP.CitaMedica
             Session.Remove("CartaAutorizacionPendiente");
 
             ViewState["ContinuarCarta"] = "NO";
+        }
+
+        private string ultimoGrupoExamen = "";
+        protected void gvEspecialidades_RowDataBound(object sender,GridViewRowEventArgs e)
+        {
+           
+            if (e.Row.RowType != DataControlRowType.DataRow)
+            {
+                return;
+            }
+
+            Label lblGrupo = e.Row.FindControl("lblGrupoExamen") as Label;
+            Label lblDescripcion = e.Row.FindControl("lblDescripcionExamen") as Label;
+            Label lblDetalle = e.Row.FindControl("lblDetalleInformativo") as Label;
+            string grupo = DataBinder.Eval(e.Row.DataItem,"Grupo").ToString().Trim();
+            string descripcion = DataBinder.Eval(e.Row.DataItem,"Descripcion").ToString().Trim();
+            string detalleInformativo = DataBinder.Eval(e.Row.DataItem,"DetalleInformativo").ToString().Trim();
+
+
+            if (grupo != "")
+            {
+                if (lblGrupo != null)
+                {
+                    if (grupo == ultimoGrupoExamen)
+                    {
+                        lblGrupo.Visible = false;
+                    }
+                    else
+                    {
+                        lblGrupo.Visible = true;
+                        lblGrupo.Text = grupo + "<br />";
+                        ultimoGrupoExamen = grupo;
+                    }
+                }
+
+                if (lblDescripcion != null)
+                {
+                    lblDescripcion.Text = "&nbsp;&nbsp;&nbsp;&nbsp;" + descripcion + "<br />";
+                }
+
+                if (lblDetalle != null)
+                {
+                    lblDetalle.Visible = false;
+                }
+            }
+
+            else
+            {
+                ultimoGrupoExamen = "";
+
+                if (lblGrupo != null)
+                {
+                    lblGrupo.Visible = false;
+                }
+
+                if (lblDescripcion != null)
+                {
+                    lblDescripcion.Font.Bold = true;
+                    lblDescripcion.Text = descripcion + "<br />";
+                }
+
+                if (lblDetalle != null)
+                {
+                    if (detalleInformativo != "")
+                    {
+                        lblDetalle.Visible = true;
+                        lblDetalle.Text = "&nbsp;&nbsp;&nbsp;&nbsp;" + detalleInformativo;
+                    }
+                    else
+                    {
+                        lblDetalle.Visible = false;
+                    }
+                }
+            }
         }
 
 

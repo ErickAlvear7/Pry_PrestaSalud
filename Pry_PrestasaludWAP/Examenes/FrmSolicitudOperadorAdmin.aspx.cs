@@ -232,6 +232,69 @@ namespace Pry_PrestasaludWAP.Examenes
                         }
                     }
 
+                    // ==========================================
+                    // BOTON AGENDAR PRINCIPAL
+                    // ==========================================
+
+                    //ImageButton btnAgendar =
+                    //    e.Row.FindControl("ImgAgendar")
+                    //    as ImageButton;
+
+                    if (btnAgendar != null)
+                    {
+                        // Primera cita:
+                        // SRR o SRV pueden continuar al agendamiento.
+                        if (
+                            estado == "SRR" ||
+                            estado == "SRV")
+                        {
+                            btnAgendar.Enabled = true;
+
+                            btnAgendar.ToolTip = "Agendar primera cita";
+
+                            btnAgendar.Style["opacity"] = "1";
+
+                            btnAgendar.Style["cursor"] = "pointer";
+                        }
+                        else
+                        {
+                            btnAgendar.Enabled = false;
+
+                            btnAgendar.ToolTip = "La solicitud ya fue agendada";
+
+                            btnAgendar.Style["opacity"] ="0.35";
+
+                            btnAgendar.Style["cursor"] = "not-allowed";
+                        }
+                    }
+
+
+                    // ==========================================
+                    // BOTON CITA ADICIONAL
+                    // ==========================================
+
+                    ImageButton btnCitaAdicional = e.Row.FindControl("ImgCitaAdicional") as ImageButton;
+
+                    if (btnCitaAdicional != null)
+                    {
+                        // Solo se permite cuando ya existe
+                        // una primera cita: estado SGA.
+                        if (estado == "SGA")
+                        {
+                            btnCitaAdicional.Enabled = true;
+                            btnCitaAdicional.ToolTip = "Registrar cita adicional";
+                            btnCitaAdicional.Style["opacity"] = "1";
+                            btnCitaAdicional.Style["cursor"] = "pointer";
+                        }
+                        else
+                        {
+                            btnCitaAdicional.Enabled = false;
+                            btnCitaAdicional.ToolTip = "Disponible después del primer agendamiento";
+                            btnCitaAdicional.Style["opacity"] = "0.35";
+                            btnCitaAdicional.Style["cursor"] = "not-allowed";
+                        }
+                    }
+
                     ImageButton btnDaquilema = e.Row.FindControl("ImgDescargarDaquilema") as ImageButton;
                     string producto = "";
 
@@ -337,6 +400,58 @@ namespace Pry_PrestasaludWAP.Examenes
                 codigotitu = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
 
                 Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx" + "?CodigoTitular=" + codigotitu + "&CodigoProducto=" + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1", true);
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = ex.ToString();
+            }
+        }
+        protected void ImgCitaAdicional_Click(object sender,ImageClickEventArgs e)
+        {
+            try
+            {
+                ImageButton boton = sender as ImageButton;
+
+                if (boton == null)
+                {
+                    return;
+                }
+
+                GridViewRow gvRow = boton.NamingContainer as GridViewRow;
+
+                if (gvRow == null)
+                {
+                    return;
+                }
+
+                string estadoSolicitud = GrdvDatos.DataKeys[gvRow.RowIndex].Values["EstadoCodigo"].ToString().Trim();
+
+                // Seguridad adicional
+                if (estadoSolicitud != "SGA")
+                {
+                    new Funciones().funShowJSMessage("La cita adicional solamente está disponible para solicitudes ya agendadas.",this);
+                    return;
+                }
+
+                string codigoEXSO = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
+                string codigoPROD = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPROD"].ToString();
+                string codigoTITU = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
+
+
+                // IMPORTANTE:
+                // NO llamar FunActualizarEstado()
+                // NO exigir nueva descarga
+                // NO generar nueva carta aquí.
+
+                Response.Redirect(
+                    "~/CitaMedica/FrmAgendarCitaMedica.aspx" +
+                    "?CodigoTitular=" + codigoTITU +
+                    "&CodigoProducto=" + codigoPROD +
+                    "&CodigoEXSO=" + codigoEXSO +
+                    "&Regresar=1" +
+                    "&CitaAdicional=1",
+                    true
+                );
             }
             catch (Exception ex)
             {

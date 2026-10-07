@@ -79,6 +79,15 @@
                                         </ItemTemplate>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Cita Adicional">
+                                        <ItemTemplate>
+                                        <asp:ImageButton ID="ImgCitaAdicional" runat="server" Height="20px"
+                                            ImageUrl="~/Botones/citamedica.png"
+                                            ToolTip="Registrar cita adicional"
+                                            OnClick="ImgCitaAdicional_Click" />
+                                        </ItemTemplate>
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Resultados">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="BtnResultados" runat="server"

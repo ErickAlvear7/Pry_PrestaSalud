@@ -422,7 +422,7 @@
                                     <asp:TextBox ID="TxtMonto" runat="server" CssClass="form-control alinearDerecha" MaxLength="6" TabIndex="2" Width="100%">0.00</asp:TextBox>
                                 </td>--%>
                                 <td>
-                                    <h5>Campaing:</h5>
+                                    <h5>Campaña:</h5>
                                 </td>
                                 <td>
                                     <asp:DropDownList ID="DdlCampaign" runat="server" AutoPostBack="True" CssClass="form-control" TabIndex="1" Width="100%" OnSelectedIndexChanged="DdlCampaign_SelectedIndexChanged">
@@ -695,7 +695,7 @@
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>--%>
-                <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left; margin-top: 10px;">CODEPENDIENTE</h3>
+                <h3 class="label label-primary" style="font-size: 14px; display: block; text-align: left; margin-top: 10px;">CODEUDOR</h3>
                 <asp:UpdatePanel ID="UpdCodependiente" runat="server">
                     <ContentTemplate>
                         <div class="panel panel-default" style="margin-top: 10px;">
