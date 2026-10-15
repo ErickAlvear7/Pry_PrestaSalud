@@ -153,6 +153,7 @@
                                 </asp:DropDownList>
                             </div>
                             <asp:Button ID="BtnConsultar" runat="server" Text="Consultar" CssClass="btn btn-primary" OnClick="BtnConsultar_Click" />
+                            <asp:Button ID="BtnExportarExcel" runat="server" Text="Exportar a Excel" CssClass="btn btn-success" OnClick="BtnExportarExcel_Click" />
                             <asp:CheckBox ID="ChkEnLinea" runat="server" Text="Actualizar cada 15 segundos" Checked="true" AutoPostBack="true" OnCheckedChanged="ChkEnLinea_CheckedChanged" />
                         </div>
                         <asp:Label ID="LblError" runat="server" ForeColor="Red" EnableViewState="false" />
@@ -186,19 +187,13 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="4. Cliente">
                                         <ItemTemplate>
-                                            <div class="etapa">
-                                                <h4>Cliente</h4>
-                                                <div class="intervalo">Gestión posterior a auditoría</div>
-                                                <div class="duracion">—</div>
-                                                <div class="situacion">Por definir</div>
-                                                <div class="fechas">Falta definir las acciones de inicio y fin.</div>
-                                            </div>
+                                            <%# BloqueEtapa(Container.DataItem, "Cliente") %>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>
-                        <p class="nota">Tiempos en horas, minutos y segundos. Agendamiento cuenta las 24 horas de lunes a viernes. Resultados y auditoría incluyen fines de semana. «Sin registro» identifica una fecha que no fue registrada.</p>
+                        <p class="nota">Tiempos en horas, minutos y segundos. Agendamiento cuenta las 24 horas de lunes a viernes. Resultados, auditoría y cliente incluyen fines de semana. «Sin registro» identifica una fecha que no fue registrada.</p>
                         <asp:Timer ID="TimerTiempos" runat="server" Interval="15000" OnTick="TimerTiempos_Tick" />
                     </ContentTemplate>
                 </asp:UpdatePanel>

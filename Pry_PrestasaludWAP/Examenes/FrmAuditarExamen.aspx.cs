@@ -52,14 +52,14 @@ namespace Pry_PrestasaludWAP.Examenes
         #endregion
 
         #region Procedimientos y Funciones
-       
+
         private void FunCargaMantenimiento()
         {
             try
             {
                 int codigoEXSO = 0;
 
-                if (ViewState["CodigoEXSO"] == null || !int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO))
+                if (ViewState["CodigoEXSO"] == null || !int.TryParse(ViewState["CodigoEXSO"].ToString(), out codigoEXSO))
                 {
                     Lblerror.Text = "No se recibió el código de la solicitud.";
                     return;
@@ -71,7 +71,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
-                object[] parametros = CrearParametrosOperacionSolicitud(19,codigoEXSO);
+                object[] parametros = CrearParametrosOperacionSolicitud(19, codigoEXSO);
 
                 DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
 
@@ -185,7 +185,70 @@ namespace Pry_PrestasaludWAP.Examenes
         //    }
         //}
 
-        private object[] CrearParametrosOperacionSolicitud(int tipo,int codigoEXSO)
+
+        private DataSet OperacionNotificacion(int codigoEXSO, string accion, Guid token)
+        {
+            object[] parametros = new object[4];
+            parametros[0] = codigoEXSO;
+            parametros[1] = Convert.ToInt32(Session["usuCodigo"]);
+            parametros[2] = accion;
+            parametros[3] = token.ToString();
+            return new Conexion(2, "").funConsultarSqls("sp_Examen_Auditoria_Notificacion", parametros);
+        }
+        private bool NotificarAuditoriaCompleta(int codigoEXSO)
+        {
+            Guid token = Guid.NewGuid();
+            bool reservado = false;
+            bool smtpConfirmado = false;
+            try
+            {
+                DataSet aviso = OperacionNotificacion(codigoEXSO, "RESERVAR", token);
+                if (aviso == null || aviso.Tables.Count == 0 || aviso.Tables[0].Rows.Count == 0)
+                    throw new InvalidOperationException("No se confirmó la reserva del correo.");
+                string resultadoAviso = aviso.Tables[0].Rows[0]["Resultado"].ToString();
+                if (resultadoAviso == "PENDIENTE" || resultadoAviso == "YA_REGISTRADO") return true;
+                if (resultadoAviso != "RESERVADO") throw new InvalidOperationException("Respuesta de notificación no válida.");
+                reservado = true;
+                if (aviso.Tables.Count < 2 || aviso.Tables[1].Rows.Count == 0)
+                    throw new InvalidOperationException("No se obtuvieron los pacientes del correo.");
+                System.Text.StringBuilder cuerpo = new System.Text.StringBuilder();
+                cuerpo.Append("<h3>AUDITORÍA DE EXÁMENES FINALIZADA</h3>");
+                foreach (DataRow paciente in aviso.Tables[1].Rows)
+                {
+                    string rol = paciente["TipoPersona"].ToString() == "TITULAR" ? "Titular" : "Codeudor";
+                    cuerpo.Append("<p><strong>").Append(rol).Append(":</strong> ")
+                        .Append(HttpUtility.HtmlEncode(paciente["Paciente"].ToString()))
+                        .Append("<br /><strong>Resultado:</strong> ")
+                        .Append(HttpUtility.HtmlEncode(paciente["EstadoAuditoria"].ToString())).Append("</p>");
+                }
+                string body = cuerpo.ToString();
+                string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "EXAMEN AUDITADO", body, "mail.prestasalud.com", 587,
+                    true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
+                // Confirmar el contrato de SendHtmlEmailExamen: se presupone vacío al tener éxito.
+                if (!string.IsNullOrWhiteSpace(correo))
+                    throw new InvalidOperationException("El servicio de correo no confirmó el envío.");
+                smtpConfirmado = true;
+                DataSet confirmado = OperacionNotificacion(codigoEXSO, "ENVIADO", token);
+                if (confirmado == null || confirmado.Tables.Count == 0 || confirmado.Tables[0].Rows.Count == 0 ||
+                    confirmado.Tables[0].Rows[0]["Resultado"].ToString() != "OK")
+                    throw new InvalidOperationException("El correo se envió, pero no se confirmó su registro.");
+                return true;
+            }
+            catch (Exception)
+            {
+                if (reservado && !smtpConfirmado)
+                {
+                    // No reintentar automáticamente: SMTP puede haber aceptado el mensaje antes del error.
+                    try { OperacionNotificacion(codigoEXSO, "REVISAR", token); } catch { }
+                }
+                Lblerror.Text = smtpConfirmado
+                    ? "La auditoría se guardó y el correo se envió, pero falta confirmar el registro de notificación. Revise antes de reenviar."
+                    : "La auditoría se guardó. No se confirmó el correo; revise el registro de notificación antes de reenviar.";
+                return false;
+            }
+        }
+
+        private object[] CrearParametrosOperacionSolicitud(int tipo, int codigoEXSO)
         {
             object[] parametros = new object[43];
             parametros[0] = tipo;
@@ -243,7 +306,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             DateTime fecha;
 
-            if (DateTime.TryParse(valor.ToString(),out fecha))
+            if (DateTime.TryParse(valor.ToString(), out fecha))
             {
                 return fecha.ToString("dd/MM/yyyy");
             }
@@ -261,12 +324,12 @@ namespace Pry_PrestasaludWAP.Examenes
             string texto = valor.ToString().Trim();
             decimal monto = 0m;
 
-            if (!decimal.TryParse(texto,NumberStyles.Any,CultureInfo.InvariantCulture,out monto))
+            if (!decimal.TryParse(texto, NumberStyles.Any, CultureInfo.InvariantCulture, out monto))
             {
-                decimal.TryParse(texto,NumberStyles.Any,new CultureInfo("es-EC"),out monto);
+                decimal.TryParse(texto, NumberStyles.Any, new CultureInfo("es-EC"), out monto);
             }
 
-            return "$ " + monto.ToString("N2",new CultureInfo("es-EC"));
+            return "$ " + monto.ToString("N2", new CultureInfo("es-EC"));
         }
 
         protected bool EsPdf(object extension)
@@ -285,12 +348,12 @@ namespace Pry_PrestasaludWAP.Examenes
 
             string ext = extension.ToString().Trim().ToLower().Replace(".", "");
 
-            if (ext == "pdf")return "PDF";
-            if (ext == "xls" || ext == "xlsx")return "EXCEL";
+            if (ext == "pdf") return "PDF";
+            if (ext == "xls" || ext == "xlsx") return "EXCEL";
             return ext.ToUpper();
         }
 
-        protected void RptPacientes_ItemDataBound(object sender,RepeaterItemEventArgs e)
+        protected void RptPacientes_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             try
             {
@@ -309,7 +372,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 int codigoPERS = 0;
 
-                int.TryParse(fila["PERS_CODIGO"].ToString(),out codigoPERS);
+                int.TryParse(fila["PERS_CODIGO"].ToString(), out codigoPERS);
 
                 if (codigoPERS <= 0)
                 {
@@ -326,7 +389,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 Repeater rptResultados = e.Item.FindControl("RptResultados") as Repeater;
                 Label lblSinResultados = e.Item.FindControl("LblSinResultados") as Label;
 
-                object[] parametrosResultados = CrearParametrosOperacionSolicitud(20,codigoEXSO);
+                object[] parametrosResultados = CrearParametrosOperacionSolicitud(20, codigoEXSO);
 
                 // @in_auxi1 = PERS_CODIGO
                 parametrosResultados[36] = codigoPERS;
@@ -371,7 +434,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 // TIPO 22
                 // =====================================================
 
-                object[] parametrosAuditoria = CrearParametrosOperacionSolicitud(22,codigoEXSO);
+                object[] parametrosAuditoria = CrearParametrosOperacionSolicitud(22, codigoEXSO);
 
                 // @in_auxi1 = PERS_CODIGO
                 parametrosAuditoria[36] = codigoPERS;
@@ -485,7 +548,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         }
                         else
                         {
-                            lblEstado.ForeColor =System.Drawing.Color.Gray;
+                            lblEstado.ForeColor = System.Drawing.Color.Gray;
                         }
                     }
 
@@ -527,13 +590,13 @@ namespace Pry_PrestasaludWAP.Examenes
             return "panel-collapse collapse";
         }
 
-        protected void BtnGuardarAuditoria_Command(object sender,CommandEventArgs e)
+        protected void BtnGuardarAuditoria_Command(object sender, CommandEventArgs e)
         {
             try
             {
                 int codigoPERS = 0;
 
-                if (!int.TryParse(e.CommandArgument.ToString(),out codigoPERS) || codigoPERS <= 0)
+                if (!int.TryParse(e.CommandArgument.ToString(), out codigoPERS) || codigoPERS <= 0)
                 {
                     Lblerror.Text = "No se pudo identificar al paciente.";
                     return;
@@ -569,9 +632,9 @@ namespace Pry_PrestasaludWAP.Examenes
                     observacionHtml = ViewState[claveObservacion].ToString();
                 }
 
-                List<ImagenObservacionAuditoria>imagenesObservacion = ExtraerImagenesObservacion(ref observacionHtml);
+                List<ImagenObservacionAuditoria> imagenesObservacion = ExtraerImagenesObservacion(ref observacionHtml);
 
-                FileUpload fupAdjunto =item.FindControl("FupAdjuntoAuditor") as FileUpload;
+                FileUpload fupAdjunto = item.FindControl("FupAdjuntoAuditor") as FileUpload;
 
                 string estado = "";
 
@@ -587,7 +650,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (string.IsNullOrEmpty(estado))
                 {
-                    new Funciones().funShowJSMessage("Seleccione ACEPTADO o RECHAZADO.",this);
+                    new Funciones().funShowJSMessage("Seleccione ACEPTADO o RECHAZADO.", this);
                     return;
                 }
 
@@ -605,7 +668,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     if (nombreArchivo.Length > 150)
                     {
-                        new Funciones().funShowJSMessage("El nombre del archivo no puede superar 150 caracteres.",this);
+                        new Funciones().funShowJSMessage("El nombre del archivo no puede superar 150 caracteres.", this);
                         return;
                     }
 
@@ -630,7 +693,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                         default:
 
-                            new Funciones().funShowJSMessage("El archivo adjunto debe ser PDF, XLS o XLSX.",this);
+                            new Funciones().funShowJSMessage("El archivo adjunto debe ser PDF, XLS o XLSX.", this);
                             return;
                     }
 
@@ -640,7 +703,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     }
                 }
 
-                object[] parametros = CrearParametrosOperacionSolicitud(23,codigoEXSO);
+                object[] parametros = CrearParametrosOperacionSolicitud(23, codigoEXSO);
 
                 parametros[20] = observacion;
                 parametros[21] = archivo;
@@ -665,7 +728,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 foreach (ImagenObservacionAuditoria imagen in imagenesObservacion)
                 {
 
-                    object[] parametrosImagen = CrearParametrosOperacionSolicitud(24,codigoEXSO);
+                    object[] parametrosImagen = CrearParametrosOperacionSolicitud(24, codigoEXSO);
 
                     parametrosImagen[21] = imagen.Bytes;
                     parametrosImagen[22] = imagen.Nombre;
@@ -714,7 +777,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         );
                 }
 
-                object[] parametrosObservacion =CrearParametrosOperacionSolicitud(25,codigoEXSO);
+                object[] parametrosObservacion = CrearParametrosOperacionSolicitud(25, codigoEXSO);
 
                 parametrosObservacion[20] = observacionHtml;
                 parametrosObservacion[29] = codigoEXSO;
@@ -739,17 +802,11 @@ namespace Pry_PrestasaludWAP.Examenes
                 ViewState["PacienteAuditoriaAbrir"] = codigoPERS.ToString();
                 FunCargaMantenimiento();
 
-                new Funciones().funShowJSMessage("Auditoría guardada correctamente. Estado de la solicitud: " + estadoSolicitud,this);
+                new Funciones().funShowJSMessage("Auditoría guardada correctamente. Estado de la solicitud: " + estadoSolicitud, this);
 
-                string body = "EXAMEN AUDITADO" + "<br/> ";
-                body += "------------------------------------------------------------------" + "<br/>";
-                //body += "CEDULA:" + " " + TxtNumeroDocumento.Text.Trim() + "<br/>";
-                //body += "TITULAR:" + " " + TxtPrimerNombre.Text.Trim().ToUpper() + " " + TxtPrimerApellido.Text.Trim().ToUpper() + "<br/>";
+                if (!NotificarAuditoriaCompleta(codigoEXSO)) return;
 
-                string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN EDITADO", body, "mail.prestasalud.com", 587,
-                    true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
-
-                Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
+                Response.Redirect("FrmAuditarExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
                 return;
             }
             catch (Exception ex)
@@ -758,7 +815,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnEditarObservacion_Command(object sender,CommandEventArgs e)
+        protected void BtnEditarObservacion_Command(object sender, CommandEventArgs e)
         {
             try
             {
@@ -946,7 +1003,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnAceptarObservacion_Click(object sender,EventArgs e)
+        protected void BtnAceptarObservacion_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1009,7 +1066,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnInsertarImagenAuditor_Click(object sender,EventArgs e)
+        protected void BtnInsertarImagenAuditor_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1021,7 +1078,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (FupImagenInformeAuditor == null || !FupImagenInformeAuditor.HasFile)
                 {
-                    new Funciones().funShowJSMessage("Seleccione una imagen.",this);
+                    new Funciones().funShowJSMessage("Seleccione una imagen.", this);
                     PnlEditorAuditoria.Visible = true;
                     return;
                 }
@@ -1054,7 +1111,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     default:
 
-                        new Funciones().funShowJSMessage("La imagen debe ser PNG, JPG, JPEG o GIF.",this);
+                        new Funciones().funShowJSMessage("La imagen debe ser PNG, JPG, JPEG o GIF.", this);
                         PnlEditorAuditoria.Visible = true;
                         return;
                 }
@@ -1064,7 +1121,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (FupImagenInformeAuditor.PostedFile.ContentLength > maxImagenBytes)
                 {
-                    new Funciones().funShowJSMessage("La imagen no puede superar 5 MB.",this);
+                    new Funciones().funShowJSMessage("La imagen no puede superar 5 MB.", this);
                     PnlEditorAuditoria.Visible = true;
                     return;
                 }
@@ -1078,7 +1135,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (bytes == null || bytes.Length == 0)
                 {
-                    new Funciones().funShowJSMessage("La imagen seleccionada está vacía.",this);
+                    new Funciones().funShowJSMessage("La imagen seleccionada está vacía.", this);
                     PnlEditorAuditoria.Visible = true;
                     return;
                 }
@@ -1100,7 +1157,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 EditorObservacionAuditor.Content = contenidoActual + imagenHtml;
                 PnlEditorAuditoria.Visible = true;
 
-                new Funciones().funShowJSMessage("Imagen insertada en el informe.",this);
+                new Funciones().funShowJSMessage("Imagen insertada en el informe.", this);
             }
             catch (Exception ex)
             {
@@ -1109,7 +1166,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnCerrarEditor_Click(object sender,EventArgs e)
+        protected void BtnCerrarEditor_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1206,7 +1263,7 @@ namespace Pry_PrestasaludWAP.Examenes
             public byte[] Bytes { get; set; }
         }
 
-        private List<ImagenObservacionAuditoria>ExtraerImagenesObservacion(ref string html)
+        private List<ImagenObservacionAuditoria> ExtraerImagenesObservacion(ref string html)
         {
             List<ImagenObservacionAuditoria> imagenes = new List<ImagenObservacionAuditoria>();
 

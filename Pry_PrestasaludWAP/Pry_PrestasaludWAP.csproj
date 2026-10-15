@@ -240,6 +240,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ddl\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administrador\FrmAtencionAdminMed.aspx.cs">
