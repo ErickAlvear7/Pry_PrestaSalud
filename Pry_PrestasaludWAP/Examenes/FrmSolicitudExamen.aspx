@@ -634,7 +634,7 @@
                                     <h5>Monto Total:</h5>
                                 </td>
                                 <td>
-                                    <asp:TextBox ID="TxtMontoAc" runat="server" CssClass="form-control alinearDerecha" MaxLength="12" TabIndex="2" Width="100%" AutoPostBack="True" OnTextChanged="TxtMontoAc_TextChanged" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">0.00</asp:TextBox>
+                                    <asp:TextBox ID="TxtMontoAc" runat="server" CssClass="form-control alinearDerecha" MaxLength="12" TabIndex="2" Width="100%" AutoPostBack="False" OnTextChanged="TxtMontoAc_TextChanged" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">0.00</asp:TextBox>
                                 </td>
                                 <td></td>
                             </tr>
@@ -949,7 +949,22 @@
                                 </div>
                             </div>
                         </div>
-                    </ContentTemplate>
+                    
+                <asp:Panel ID="PnlRequisitosCodeudor" runat="server" Visible="false">
+                    <h4>REQUISITOS DEL CODEUDOR</h4>
+                    <asp:Label ID="LblEstadoRequisitosCodeudor" runat="server" Font-Bold="true" />
+                    <asp:Button ID="BtnConsultarCodeudor" runat="server" Text="Consultar requisitos del codeudor"
+                        CssClass="btn btn-primary" OnClick="BtnConsultarCodeudor_Click" />
+                    <asp:GridView ID="GrdvRequisitosCodeudor" runat="server" AutoGenerateColumns="false"
+                        CssClass="table table-condensed table-bordered table-hover"
+                        EmptyDataText="Sin requisitos de exámenes para el codeudor.">
+                        <Columns>
+                            <asp:BoundField DataField="GRUPO" HeaderText="Grupo" />
+                            <asp:BoundField DataField="REQUISITO" HeaderText="Requisito / Examen" />
+                        </Columns>
+                    </asp:GridView>
+                </asp:Panel>
+</ContentTemplate>
                 </asp:UpdatePanel>
                 <script src="../Scripts/jquery.min.js" type="text/javascript"></script>
                 <script src="../Scripts/chosen.jquery.js" type="text/javascript"></script>

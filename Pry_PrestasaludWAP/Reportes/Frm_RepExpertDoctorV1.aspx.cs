@@ -195,7 +195,7 @@ namespace Pry_PrestasaludWAP.Reportes
             //ESTE LLENA EL GRIDVIEW
             ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
 
-            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null )
+            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
             {
                 //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
                 grdvDatos.DataSource = ds.Tables[0];
@@ -203,40 +203,112 @@ namespace Pry_PrestasaludWAP.Reportes
                 grdvDatos.DataBind();
                 //ViewState["grdvDatos"] = ds.Tables[0];
 
-            }else
-            {
-                new Funciones().funShowJSMessage("No se encontraron datos..!", this);
-            }
-        }
-        protected void FunGenerarReporte()
-        {
-            //ESTE CONSULTA PARA ALMACENAR LOS DATOS PARA EXPORTAR
-            Array.Resize(ref objparam, 5);
-            if (ddlCliente.SelectedValue == "0") objparam[0] = 2;
-            if (ddlCliente.SelectedValue != "0") objparam[0] = 3;
-
-            objparam[1] = txtFechaIni.Text;
-            objparam[2] = txtFechaFin.Text;
-            objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
-            objparam[4] = "0";
-
-            ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
-            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
-            {
-                ViewState["ListoReporte"] = "SI";
-                ViewState["grdvDatos"] = ds.Tables[0];
-
             }
             else
             {
-                ViewState["ListoReporte"] = "NO";
-                imgExportar.Visible = false;
-                lblExportar.Visible = false;
+                new Funciones().funShowJSMessage("No se encontraron datos..!", this);
             }
+
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
+            //    grdvDatos.DataSource = ds.Tables[0];
+            //    //grdvDatos.DataSource = dtresul;
+            //    grdvDatos.DataBind();
+            //    //ViewState["grdvDatos"] = ds.Tables[0];
+
+            //}
+            //else
+            //{
+            //    new Funciones().funShowJSMessage("No se encontraron datos..!", this);
+            //}
+        }
+
+        protected void FunGenerarReporte()
+        {
+            try
+            {
+                //ESTE CONSULTA PARA ALMACENAR LOS DATOS PARA EXPORTAR
+                Array.Resize(ref objparam, 5);
+                if (ddlCliente.SelectedValue == "0") objparam[0] = 2;
+                if (ddlCliente.SelectedValue != "0") objparam[0] = 3;
+
+                objparam[1] = txtFechaIni.Text;
+                objparam[2] = txtFechaFin.Text;
+                objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
+                objparam[4] = "0";
+
+                ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
+
+                if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
+                {
+                    ViewState["ListoReporte"] = "SI";
+                    ViewState["grdvDatos"] = ds.Tables[0];
+                }
+                else
+                {
+                    ViewState["ListoReporte"] = "NO";
+                    imgExportar.Visible = false;
+                    lblExportar.Visible = false;
+                }
+
+                //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                //{
+                //    ViewState["ListoReporte"] = "SI";
+                //    ViewState["grdvDatos"] = ds.Tables[0];
+                //}
+                //else
+                //{
+                //    ViewState["ListoReporte"] = "NO";
+                //    imgExportar.Visible = false;
+                //    lblExportar.Visible = false;
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
+                throw;
+            }
+
 
         }
 
-        
+        //protected void FunGenerarReporte()
+        //{
+        //    ViewState["ListoReporte"] = "NO";
+        //    ViewState["grdvDatos"] = null;
+
+        //    object[] parametros = new object[]
+        //    {
+        //        ddlCliente.SelectedValue == "0" ? 2 : 3,
+        //        txtFechaIni.Text,
+        //        txtFechaFin.Text,
+        //        int.Parse(ddlCliente.SelectedValue),
+        //        "0"
+        //    };
+
+        //    DataSet resultado = new Conexion(2, "").FunReportesDoctorV1(parametros);
+
+        //    if (resultado == null)
+        //        throw new InvalidOperationException(
+        //            "FunReportesDoctorV1 devolvió un DataSet nulo.");
+
+        //    if (resultado.Tables.Count == 0)
+        //        throw new InvalidOperationException(
+        //            "La consulta no devolvió ninguna tabla.");
+
+        //    if (resultado.Tables[0].Rows.Count == 0)
+        //    {
+        //        new Funciones().funShowJSMessage(
+        //            "No se encontraron datos para exportar.", this);
+        //        return;
+        //    }
+
+        //    ViewState["grdvDatos"] = resultado.Tables[0];
+        //    ViewState["ListoReporte"] = "SI";
+        //}
+
+
         public override void VerifyRenderingInServerForm(Control control)
         {
             /* Verifies that the control is rendered */
@@ -244,42 +316,52 @@ namespace Pry_PrestasaludWAP.Reportes
 
         protected void imgExportar_Click(object sender, ImageClickEventArgs e)
         {
-            FunGenerarReporte();
-            if(ViewState["ListoReporte"].ToString() == "SI")
+
+            try
             {
-                Response.Clear();
-                Response.Buffer = true;
-                string FileName = "ReporteExpertDoctor_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-                Response.Charset = "";
-                Response.ContentType = "application/vnd.ms-excel";
-                using (StringWriter sw = new StringWriter())
+                FunGenerarReporte();
+                if (/*ViewState["ListoReporte"].ToString() == "SI"*/Convert.ToString(ViewState["ListoReporte"]) == "SI")
                 {
-                    HtmlTextWriter hw = new HtmlTextWriter(sw);
-                    grdvDatos.AllowPaging = false;
-                    grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
-                    grdvDatos.DataBind();
-                    //grdvDatos.HeaderRow.BackColor = Color.White;
-                    foreach (GridViewRow row in grdvDatos.Rows)
+                    Response.Clear();
+                    Response.Buffer = true;
+                    string FileName = "ReporteExpertDoctor_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
+                    Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.ms-excel";
+                    using (StringWriter sw = new StringWriter())
                     {
-                        //row.BackColor = Color.White;
-                        row.Cells[7].Style.Add("mso-number-format", "\\@");
-                        //row.Cells[2].Style.Add("mso-number-format", "\\@");
-                        //row.Cells[3].Style.Add("mso-number-format", "\\@");
-                        //row.Cells[15].Style.Add("mso-number-format", "\\@");
+                        HtmlTextWriter hw = new HtmlTextWriter(sw);
+                        grdvDatos.AllowPaging = false;
+                        grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
+                        grdvDatos.DataBind();
+                        //grdvDatos.HeaderRow.BackColor = Color.White;
+                        foreach (GridViewRow row in grdvDatos.Rows)
+                        {
+                            //row.BackColor = Color.White;
+                            row.Cells[7].Style.Add("mso-number-format", "\\@");
+                            //row.Cells[2].Style.Add("mso-number-format", "\\@");
+                            //row.Cells[3].Style.Add("mso-number-format", "\\@");
+                            //row.Cells[15].Style.Add("mso-number-format", "\\@");
+                        }
+                        grdvDatos.RenderControl(hw);
+                        string style = @"<style> .textmode { } </style>";
+                        Response.Write(style);
+                        Response.Output.Write(sw.ToString());
+                        Response.Flush();
+                        Response.End();
                     }
-                    grdvDatos.RenderControl(hw);
-                    string style = @"<style> .textmode { } </style>";
-                    Response.Write(style);
-                    Response.Output.Write(sw.ToString());
-                    Response.Flush();
-                    Response.End();
+                }
+                else
+                {
+                    new Funciones().funShowJSMessage("Espsere un momento porfavor, se esta generando el reporte..!", this);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                new Funciones().funShowJSMessage("Espsere un momento porfavor, se esta generando el reporte..!", this);
+                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
+                throw;
             }
+          
         }
 
         protected void grdvDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)

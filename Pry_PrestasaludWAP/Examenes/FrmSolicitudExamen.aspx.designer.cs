@@ -447,6 +447,42 @@ namespace Pry_PrestasaludWAP.Examenes
         protected global::System.Web.UI.WebControls.Label LblCantidadRequisitos;
 
         /// <summary>
+        /// Control PnlRequisitosCodeudor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel PnlRequisitosCodeudor;
+
+        /// <summary>
+        /// Control LblEstadoRequisitosCodeudor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblEstadoRequisitosCodeudor;
+
+        /// <summary>
+        /// Control BtnConsultarCodeudor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnConsultarCodeudor;
+
+        /// <summary>
+        /// Control GrdvRequisitosCodeudor.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GrdvRequisitosCodeudor;
+
+        /// <summary>
         /// Control UpdExamenes.
         /// </summary>
         /// <remarks>

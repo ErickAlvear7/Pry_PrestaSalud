@@ -21,8 +21,8 @@ namespace Pry_PrestasaludWAP.Examenes
         Object[] objparamp = new Object[1]; //cambio aki
         Byte[] bytes;
         string fechaactual = "", filePath = "", filename1 = "", ext = "", type = "";
-        int codigocamp = 0, codigoclus=0;
-       
+        int codigocamp = 0, codigoclus = 0;
+
         #endregion
 
         #region Load
@@ -33,6 +33,8 @@ namespace Pry_PrestasaludWAP.Examenes
             if (scriptManager != null)
             {
                 scriptManager.RegisterPostBackControl(BtnGrabar);
+                scriptManager.RegisterPostBackControl(BtnConsultarRequisitos);
+                scriptManager.RegisterPostBackControl(BtnConsultarCodeudor);
             }
 
             if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
@@ -119,6 +121,18 @@ namespace Pry_PrestasaludWAP.Examenes
                         BtnConsultarRequisitos.Enabled = false;
                         BtnGrabar.Enabled = true;
                         BtnGrabar.Text = "Actualizar";
+                        bool editable = PermiteEditarRequisitos();
+                        TxtMonto.Enabled = editable;
+                        TxtMontoAc.Enabled = editable;
+                        TxtFechaNacimiento.Enabled = editable;
+                        BtnConsultarRequisitos.Enabled = editable;
+                        BtnConsultarCodeudor.Enabled = editable;
+                        BtnAgregarCodependiente.Enabled = editable;
+                        BtnQuitarCodependiente.Enabled = editable;
+                        BtnGrabar.Visible = editable;
+                        BtnGrabar.Enabled = editable;
+                        FileUpload1.Visible = editable;
+                        LblArchivo.Visible = editable;
                         Lbltitulo.Text = "Solicitud Examen Realizada";
                     }
                     else
@@ -126,7 +140,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         BtnCancelarSolicitud.Visible = false;
                         Lbltitulo.Text = "Nueva Solicitud Examen";
                     }
-                       
+
                 }
                 catch (Exception ex)
                 {
@@ -162,14 +176,14 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-            
+
                 int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
                 Array.Resize(ref objparam, 3);
                 objparam[0] = codigoEXSO;
                 objparam[1] = "";
                 objparam[2] = 150;
 
-                dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                dtx = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
                 if (dtx == null || dtx.Tables.Count == 0 || dtx.Tables[0].Rows.Count == 0)
                 {
@@ -189,10 +203,11 @@ namespace Pry_PrestasaludWAP.Examenes
                     estadoSolicita = filaCabecera["EstadoSolicita"].ToString().Trim().ToUpper();
                 }
 
+                ViewState["EstadoEdicion"] = estadoSolicita;
                 bool solicitudYaAgendada = estadoSolicita == "SGA" || estadoSolicita == "EXR" || estadoSolicita == "AUA"
                                          || estadoSolicita == "AUR";
 
-              
+
                 if (solicitudYaAgendada)
                 {
                     BtnCancelarSolicitud.Visible = false;
@@ -214,7 +229,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 int campaniaId = 0;
 
-                if (int.TryParse(codigoCampaign,out campaniaId))
+                if (int.TryParse(codigoCampaign, out campaniaId))
                 {
                     FunCargarProductos(campaniaId);
                 }
@@ -228,7 +243,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 TxtFechaSolicitud.Text = filaCabecera["FechaSolicita"].ToString();
                 string estado = filaCabecera["Estado"].ToString().Trim();
 
-                ChkEstado.Checked = estado.Equals("Activo",StringComparison.OrdinalIgnoreCase);
+                ChkEstado.Checked = estado.Equals("Activo", StringComparison.OrdinalIgnoreCase);
                 ChkEstado.Text = estado;
                 TxtMonto.Text = filaCabecera["Monto"].ToString().Trim();
                 TxtMontoAc.Text = filaCabecera["Total"].ToString().Trim();
@@ -240,7 +255,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (dsSolicitud != null && dsSolicitud.Tables.Count > 0 && dsSolicitud.Tables[0].Rows.Count > 0)
                 {
-                    TxtExamenAdicional.Text = ObtenerValor(dsSolicitud.Tables[0].Rows[0],"EXAMEN_ADICIONAL");
+                    TxtExamenAdicional.Text = ObtenerValor(dsSolicitud.Tables[0].Rows[0], "EXAMEN_ADICIONAL");
                 }
 
                 CargarCodependienteEdicion(codigoEXSO);
@@ -403,7 +418,7 @@ namespace Pry_PrestasaludWAP.Examenes
                         objparam[1] = "";
                         objparam[2] = 137;
                         dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-     
+
                         break;
                     case 1:
                         DdlCiudad.Items.Clear();
@@ -457,7 +472,7 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         private void LimpiarFormularioNuevoCodependiente()
         {
-   
+
             TxtNumeroDocumentoCodep.Text = "";
             TxtPrimerNombreCodep.Text = "";
             TxtSegundoNombreCodep.Text = "";
@@ -915,6 +930,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     }
 
                     requisitosGuardar = dsRequisitos.Tables[1].Copy();
+                    if (TieneCodeudorSeleccionado()) ConsultarRequisitosCodeudor();
 
                     bool requiereArchivo = Convert.ToBoolean(dsRequisitos.Tables[0].Rows[0]["REQUIERE_ARCHIVO"]);
 
@@ -1012,11 +1028,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     int codper = Convert.ToInt32(dsSolicitud.Tables[0].Rows[0]["PERS_CODIGO"]);
 
-                    ActualizarTitularSolicitud(codigoEXSO);
-                    ProcesarCodependienteEdicion(codigoEXSO);
-                    ActualizarExamenAdicional(codigoEXSO);
-                    byte[] pdf = GenerarPdfSolicitud(codigoEXSO);
-                    GuardarPdfSolicitud(codigoEXSO,pdf);
+                    GuardarEdicionRecalculada(codigoEXSO);
 
                     string body = "SOLICITUD DE EXAMEN EDITADA" + "<br/> ";
                     body += "------------------------------------------------------------------" + "<br/>";
@@ -1026,9 +1038,9 @@ namespace Pry_PrestasaludWAP.Examenes
                     string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN EDITADA", body, "mail.prestasalud.com", 587,
                         true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
 
-                    Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'",true );
+                    Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
                     return;
-                   
+
                 }
                 Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Guardado con Éxito'", true);
                 Context.ApplicationInstance.CompleteRequest();
@@ -1347,8 +1359,10 @@ namespace Pry_PrestasaludWAP.Examenes
         //crear el PDF
         private byte[] GenerarPdfSolicitud(int codigoEXSO)
         {
-            DataSet ds = ObtenerDatosSolicitudPdf(codigoEXSO);
-
+            return GenerarPdfSolicitud(codigoEXSO, ObtenerDatosSolicitudPdf(codigoEXSO));
+        }
+        private byte[] GenerarPdfSolicitud(int codigoEXSO, DataSet ds)
+        {
             if (ds == null || ds.Tables.Count < 2)
             {
                 throw new Exception("No se encontraron los datos necesarios para generar el PDF.");
@@ -1381,11 +1395,11 @@ namespace Pry_PrestasaludWAP.Examenes
             double margen = 40;
             double y = 40;
 
-            gfx.DrawString("SOLICITUD DE EXÁMENES",fuenteTitulo,XBrushes.Black,new XRect(margen,y,pagina.Width - 80,30),XStringFormats.TopCenter);
+            gfx.DrawString("SOLICITUD DE EXÁMENES", fuenteTitulo, XBrushes.Black, new XRect(margen, y, pagina.Width - 80, 30), XStringFormats.TopCenter);
             y += 40;
 
-            gfx.DrawString("Nro. Solicitud:",fuenteNegrita,XBrushes.Black,margen,y);
-            gfx.DrawString(codigoEXSO.ToString(),fuenteNormal,XBrushes.Black,margen + 90,y);
+            gfx.DrawString("Nro. Solicitud:", fuenteNegrita, XBrushes.Black, margen, y);
+            gfx.DrawString(codigoEXSO.ToString(), fuenteNormal, XBrushes.Black, margen + 90, y);
 
             string fechaSolicitud = "";
 
@@ -1396,29 +1410,29 @@ namespace Pry_PrestasaludWAP.Examenes
                 fechaSolicitud = fecha.ToString("dd/MM/yyyy HH:mm");
             }
 
-            gfx.DrawString("Fecha:",fuenteNegrita,XBrushes.Black,350,y);
+            gfx.DrawString("Fecha:", fuenteNegrita, XBrushes.Black, 350, y);
 
-            gfx.DrawString(fechaSolicitud,fuenteNormal,XBrushes.Black,395,y);
+            gfx.DrawString(fechaSolicitud, fuenteNormal, XBrushes.Black, 395, y);
 
             y += 30;
 
-            gfx.DrawString("DATOS DEL TITULAR",fuenteSubtitulo,XBrushes.Black,margen,y);
+            gfx.DrawString("DATOS DEL TITULAR", fuenteSubtitulo, XBrushes.Black, margen, y);
             y += 8;
 
-            gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
+            gfx.DrawLine(XPens.Gray, margen, y, pagina.Width - margen, y);
             y += 20;
 
             string nombres = ObtenerValor(titular, "pers_primernombre") + " " + ObtenerValor(titular, "pers_segundonombre");
             string apellidos = ObtenerValor(titular, "pers_primerapellido") + " " + ObtenerValor(titular, "pers_segundoapellido");
 
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Documento:",ObtenerValor(titular,"pers_numerodocumento"));
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Género:",ObtenerValor(titular,"pers_genero"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Documento:", ObtenerValor(titular, "pers_numerodocumento"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Género:", ObtenerValor(titular, "pers_genero"));
 
             y += 24;
 
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Nombres:",nombres.Trim());
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Nombres:", nombres.Trim());
             y += 24;
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Apellidos:",apellidos.Trim());
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Apellidos:", apellidos.Trim());
             y += 24;
 
             string fechaNacimiento = "";
@@ -1428,17 +1442,17 @@ namespace Pry_PrestasaludWAP.Examenes
                 fechaNacimiento = Convert.ToDateTime(titular["pers_fechanacimiento"]).ToString("dd/MM/yyyy");
             }
 
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Fecha nacimiento:",fechaNacimiento);
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Estado civil:",ObtenerValor(titular,"pers_estadocivil"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Fecha nacimiento:", fechaNacimiento);
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Estado civil:", ObtenerValor(titular, "pers_estadocivil"));
             y += 24;
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Teléfono:",ObtenerValor(titular,"pers_telefonocasa"));
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Celular:",ObtenerValor(titular,"pers_celular"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Teléfono:", ObtenerValor(titular, "pers_telefonocasa"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Celular:", ObtenerValor(titular, "pers_celular"));
             y += 24;
-            DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Email:",ObtenerValor(titular,"pers_email"));
+            DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Email:", ObtenerValor(titular, "pers_email"));
             y += 30;
-            gfx.DrawString("Dirección:",fuenteNegrita,XBrushes.Black,margen,y);
+            gfx.DrawString("Dirección:", fuenteNegrita, XBrushes.Black, margen, y);
             XTextFormatter direccionFormatter = new XTextFormatter(gfx);
-            direccionFormatter.DrawString(ObtenerValor(titular,"pers_direccion"),fuenteNormal,XBrushes.Black,new XRect(margen + 70,y - 10,pagina.Width - margen - 110,35),XStringFormats.TopLeft);
+            direccionFormatter.DrawString(ObtenerValor(titular, "pers_direccion"), fuenteNormal, XBrushes.Black, new XRect(margen + 70, y - 10, pagina.Width - margen - 110, 35), XStringFormats.TopLeft);
             y += 50;
             if (codependiente != null)
             {
@@ -1450,27 +1464,27 @@ namespace Pry_PrestasaludWAP.Examenes
                     pagina.Size = PdfSharp.PageSize.A4;
                     gfx = XGraphics.FromPdfPage(pagina);
                     y = 40;
-                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(),fuenteSubtitulo,XBrushes.Black,margen,y);
+                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(), fuenteSubtitulo, XBrushes.Black, margen, y);
                     y += 30;
                 }
 
-                gfx.DrawString("DATOS DEL CODEPENDIENTE",fuenteSubtitulo,XBrushes.Black,margen,y);
+                gfx.DrawString("DATOS DEL CODEPENDIENTE", fuenteSubtitulo, XBrushes.Black, margen, y);
                 y += 8;
 
-                gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
+                gfx.DrawLine(XPens.Gray, margen, y, pagina.Width - margen, y);
                 y += 20;
 
-                string nombresCodependiente = ObtenerValor(codependiente,"pers_primernombre") + " " + ObtenerValor(codependiente,"pers_segundonombre");
-                string apellidosCodependiente = ObtenerValor(codependiente,"pers_primerapellido") + " " + ObtenerValor(codependiente,"pers_segundoapellido");
+                string nombresCodependiente = ObtenerValor(codependiente, "pers_primernombre") + " " + ObtenerValor(codependiente, "pers_segundonombre");
+                string apellidosCodependiente = ObtenerValor(codependiente, "pers_primerapellido") + " " + ObtenerValor(codependiente, "pers_segundoapellido");
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Documento:",ObtenerValor(codependiente,"pers_numerodocumento"));
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Género:",ObtenerValor(codependiente,"pers_genero"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Documento:", ObtenerValor(codependiente, "pers_numerodocumento"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Género:", ObtenerValor(codependiente, "pers_genero"));
                 y += 24;
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Nombres:",nombresCodependiente.Trim());
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Nombres:", nombresCodependiente.Trim());
                 y += 24;
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Apellidos:",apellidosCodependiente.Trim());
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Apellidos:", apellidosCodependiente.Trim());
                 y += 24;
 
                 string fechaNacimientoCodependiente = "";
@@ -1480,22 +1494,22 @@ namespace Pry_PrestasaludWAP.Examenes
                     fechaNacimientoCodependiente = Convert.ToDateTime(codependiente["pers_fechanacimiento"]).ToString("dd/MM/yyyy");
                 }
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Fecha nacimiento:",fechaNacimientoCodependiente);
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Estado civil:",ObtenerValor(codependiente,"pers_estadocivil"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Fecha nacimiento:", fechaNacimientoCodependiente);
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Estado civil:", ObtenerValor(codependiente, "pers_estadocivil"));
                 y += 24;
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Teléfono:",ObtenerValor(codependiente,"pers_telefonocasa"));
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,320,y,"Celular:",ObtenerValor(codependiente,"pers_celular"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Teléfono:", ObtenerValor(codependiente, "pers_telefonocasa"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, 320, y, "Celular:", ObtenerValor(codependiente, "pers_celular"));
                 y += 24;
 
-                DibujarCampoPdf(gfx,fuenteNegrita,fuenteNormal,margen,y,"Email:",ObtenerValor(codependiente,"pers_email"));
+                DibujarCampoPdf(gfx, fuenteNegrita, fuenteNormal, margen, y, "Email:", ObtenerValor(codependiente, "pers_email"));
                 y += 30;
 
-                gfx.DrawString("Dirección:",fuenteNegrita,XBrushes.Black,margen,y);
+                gfx.DrawString("Dirección:", fuenteNegrita, XBrushes.Black, margen, y);
 
                 XTextFormatter direccionCodepFormatter = new XTextFormatter(gfx);
-                direccionCodepFormatter.DrawString(ObtenerValor(codependiente,"pers_direccion"),fuenteNormal,
-                    XBrushes.Black,new XRect(margen + 70,y - 10,pagina.Width - margen - 110,35),XStringFormats.TopLeft);
+                direccionCodepFormatter.DrawString(ObtenerValor(codependiente, "pers_direccion"), fuenteNormal,
+                    XBrushes.Black, new XRect(margen + 70, y - 10, pagina.Width - margen - 110, 35), XStringFormats.TopLeft);
                 y += 50;
             }
 
@@ -1509,20 +1523,22 @@ namespace Pry_PrestasaludWAP.Examenes
                 gfx = XGraphics.FromPdfPage(pagina);
                 y = 40;
 
-                gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(),fuenteSubtitulo,XBrushes.Black,margen,y);
+                gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(), fuenteSubtitulo, XBrushes.Black, margen, y);
                 y += 30;
             }
 
-            gfx.DrawString("EXÁMENES SOLICITADOS",fuenteSubtitulo,XBrushes.Black,margen,y);
+            gfx.DrawString("EXÁMENES SOLICITADOS", fuenteSubtitulo, XBrushes.Black, margen, y);
             y += 8;
-            gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
+            gfx.DrawLine(XPens.Gray, margen, y, pagina.Width - margen, y);
             y += 22;
 
             int numero = 1;
 
             foreach (DataRow examen in examenes.Rows)
             {
-                string nombreExamen = ObtenerValor(examen,"EXAMEN");
+                string personaExamen = examenes.Columns.Contains("TIPO_PERSONA") &&
+                    ObtenerValor(examen, "TIPO_PERSONA") == "CODEPENDIENTE" ? "CODEUDOR" : "TITULAR";
+                string nombreExamen = personaExamen + ": " + ObtenerValor(examen, "EXAMEN");
                 double altoFila = 32;
 
                 if (nombreExamen.Length > 150)
@@ -1544,22 +1560,22 @@ namespace Pry_PrestasaludWAP.Examenes
                     gfx = XGraphics.FromPdfPage(pagina);
                     y = 40;
 
-                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(),fuenteSubtitulo,XBrushes.Black,margen,y);
+                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(), fuenteSubtitulo, XBrushes.Black, margen, y);
                     y += 25;
 
-                    gfx.DrawString("EXÁMENES SOLICITADOS - CONTINUACIÓN",fuenteSubtitulo,XBrushes.Black,margen,y);
+                    gfx.DrawString("EXÁMENES SOLICITADOS - CONTINUACIÓN", fuenteSubtitulo, XBrushes.Black, margen, y);
                     y += 8;
 
-                    gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
+                    gfx.DrawLine(XPens.Gray, margen, y, pagina.Width - margen, y);
                     y += 22;
                 }
 
-                gfx.DrawRectangle(XPens.LightGray,margen,y,pagina.Width - 80,altoFila);
-                gfx.DrawString(numero.ToString() + ".",fuenteNegrita,XBrushes.Black,margen + 8,y + 17);
+                gfx.DrawRectangle(XPens.LightGray, margen, y, pagina.Width - 80, altoFila);
+                gfx.DrawString(numero.ToString() + ".", fuenteNegrita, XBrushes.Black, margen + 8, y + 17);
 
                 XTextFormatter formatter = new XTextFormatter(gfx);
 
-                formatter.DrawString(nombreExamen,fuenteNormal,XBrushes.Black,new XRect(margen + 30,y + 5,pagina.Width - 125,altoFila - 8),XStringFormats.TopLeft);
+                formatter.DrawString(nombreExamen, fuenteNormal, XBrushes.Black, new XRect(margen + 30, y + 5, pagina.Width - 125, altoFila - 8), XStringFormats.TopLeft);
                 y += altoFila;
 
                 numero++;
@@ -1588,24 +1604,24 @@ namespace Pry_PrestasaludWAP.Examenes
                     gfx = XGraphics.FromPdfPage(pagina);
                     y = 40;
 
-                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(),fuenteSubtitulo,XBrushes.Black,margen,y);
+                    gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(), fuenteSubtitulo, XBrushes.Black, margen, y);
 
                     y += 25;
 
-                    gfx.DrawString("EXÁMENES SOLICITADOS - CONTINUACIÓN",fuenteSubtitulo,XBrushes.Black,margen,y);
+                    gfx.DrawString("EXÁMENES SOLICITADOS - CONTINUACIÓN", fuenteSubtitulo, XBrushes.Black, margen, y);
                     y += 8;
 
-                    gfx.DrawLine(XPens.Gray,margen,y,pagina.Width - margen,y);
+                    gfx.DrawLine(XPens.Gray, margen, y, pagina.Width - margen, y);
                     y += 22;
                 }
 
-                gfx.DrawRectangle(XPens.LightGray,margen,y,pagina.Width - 80,altoFilaAdicional);
-                gfx.DrawString(numero.ToString() + ".",fuenteNegrita,XBrushes.Black,margen + 8,y + 17);
+                gfx.DrawRectangle(XPens.LightGray, margen, y, pagina.Width - 80, altoFilaAdicional);
+                gfx.DrawString(numero.ToString() + ".", fuenteNegrita, XBrushes.Black, margen + 8, y + 17);
 
                 XTextFormatter formatterAdicional = new XTextFormatter(gfx);
 
-                formatterAdicional.DrawString(examenAdicional,fuenteNormal,XBrushes.Black,
-                    new XRect(margen + 30,y + 5,pagina.Width - 125,altoFilaAdicional - 8),XStringFormats.TopLeft);
+                formatterAdicional.DrawString(examenAdicional, fuenteNormal, XBrushes.Black,
+                    new XRect(margen + 30, y + 5, pagina.Width - 125, altoFilaAdicional - 8), XStringFormats.TopLeft);
 
                 y += altoFilaAdicional;
 
@@ -1629,13 +1645,13 @@ namespace Pry_PrestasaludWAP.Examenes
                 gfx = XGraphics.FromPdfPage(pagina);
                 y = 40;
 
-                gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(),fuenteSubtitulo,XBrushes.Black,margen,y);
+                gfx.DrawString("SOLICITUD DE EXÁMENES - " + codigoEXSO.ToString(), fuenteSubtitulo, XBrushes.Black, margen, y);
                 y += 30;
             }
 
             y += 20;
 
-            gfx.DrawString("Total de exámenes: " + totalExamenes.ToString(),fuenteNegrita,XBrushes.Black,margen,y);
+            gfx.DrawString("Total de exámenes: " + totalExamenes.ToString(), fuenteNegrita, XBrushes.Black, margen, y);
             gfx.Dispose();
 
             using (MemoryStream memoria = new MemoryStream())
@@ -1748,6 +1764,203 @@ namespace Pry_PrestasaludWAP.Examenes
         }
 
         //crear tabla
+
+        protected void BtnConsultarCodeudor_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Lblerror.Text = "";
+                if (Convert.ToInt32(ViewState["CodigoEXSO"] ?? 0) > 0 && !PermiteEditarRequisitos())
+                {
+                    LblEstadoRequisitosCodeudor.Text = "Se conservan los requisitos guardados del codeudor.";
+                    return;
+                }
+                ConsultarRequisitosCodeudor();
+            }
+            catch (Exception ex)
+            {
+                RequisitosCodeudor = CrearTablaRequisitos();
+                BindRequisitosCodeudor();
+                Lblerror.Text = ex.Message;
+            }
+        }
+        private DataTable RequisitosCodeudor
+        {
+            get { return ViewState["RequisitosCodeudor"] as DataTable ?? CrearTablaRequisitos(); }
+            set { ViewState["RequisitosCodeudor"] = value; }
+        }
+
+        private bool PermiteEditarRequisitos()
+        {
+            string estado = Convert.ToString(ViewState["EstadoEdicion"]);
+            return ChkEstado.Checked && (estado == "SRR" || estado == "SRV");
+        }
+        private void GuardarEdicionRecalculada(int codigoEXSO)
+        {
+            if (!PermiteEditarRequisitos()) throw new Exception("La solicitud no permite edición.");
+            DataSet reglas = ObtenerRequisitosAsegurabilidad();
+            if (!ProcesarRequisitos(reglas, true)) throw new Exception("El titular no cumple los requisitos para generar la solicitud.");
+            if (TieneCodeudorSeleccionado()) ConsultarRequisitosCodeudor();
+            else RequisitosCodeudor = CrearTablaRequisitos();
+            object[] consulta = CrearParametrosOperacionSolicitud(34, codigoEXSO);
+            consulta[36] = Convert.ToInt32(ViewState["CodigoTITUCodependiente"] ?? 0);
+            DataSet contexto = new Conexion(2, "").FunInsertSolictudExamen(consulta);
+            if (contexto == null || contexto.Tables.Count < 2 || contexto.Tables[1].Rows.Count == 0)
+                throw new Exception("No se pudo validar la edición actual.");
+            if (TieneCodeudorSeleccionado() && contexto.Tables[0].Rows.Count == 0)
+                throw new Exception("El codeudor no corresponde al canal de la solicitud.");
+            DataRow cab = contexto.Tables[1].Rows[0];
+            bool requiere = Convert.ToBoolean(reglas.Tables[0].Rows[0]["REQUIERE_ARCHIVO"]);
+            byte[] existente = cab["exso_docautorizacion"] as byte[];
+            if (requiere && !FileUpload1.HasFile && (existente == null || existente.Length == 0))
+            {
+                TrDocumentoAdjunto.Visible = true;
+                FileUpload1.Visible = true;
+                throw new Exception("Debe adjuntar la declaración de salud del titular.");
+            }
+            if (string.IsNullOrWhiteSpace(TxtPrimerNombre.Text) || string.IsNullOrWhiteSpace(TxtPrimerApellido.Text) ||
+                Convert.ToInt32(DdlCiudad.SelectedValue) <= 0)
+                throw new Exception("Complete nombre, apellido y ciudad del titular.");
+            decimal anterior = decimal.Parse(FormatearDecimal(TxtMonto.Text), CultureInfo.InvariantCulture);
+            if (anterior < 0) throw new Exception("El Monto Anterior no puede ser negativo.");
+            if (TxtExamenAdicional.Text.Trim().Length > 250) throw new Exception("El examen adicional admite hasta 250 caracteres.");
+            System.Xml.XmlDocument xml = new System.Xml.XmlDocument();
+            System.Xml.XmlElement raiz = xml.CreateElement("edicion"); xml.AppendChild(raiz);
+            System.Xml.XmlElement listado = xml.CreateElement("requisitos"); raiz.AppendChild(listado);
+            foreach (string rol in new string[] { "TITULAR", "CODEPENDIENTE" })
+            {
+                DataTable tabla = rol == "TITULAR" ? RequisitosActuales : RequisitosCodeudor;
+                foreach (DataRow fila in tabla.Rows)
+                {
+                    System.Xml.XmlElement r = xml.CreateElement("r");
+                    r.SetAttribute("rol", rol); r.SetAttribute("codigo", Convert.ToInt32(fila["ASRQ_CODIGO"]).ToString());
+                    listado.AppendChild(r);
+                }
+            }
+            System.Xml.XmlElement adicional = xml.CreateElement("adicional");
+            adicional.InnerText = TxtExamenAdicional.Text.Trim(); raiz.AppendChild(adicional);
+            if (FileUpload1.HasFile)
+            {
+                string nombre = Path.GetFileName(FileUpload1.FileName);
+                string extension = Path.GetExtension(nombre).ToLowerInvariant();
+                string mime;
+                switch (extension)
+                {
+                    case ".pdf": mime = "application/pdf"; break;
+                    case ".doc": mime = "application/msword"; break;
+                    case ".docx": mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; break;
+                    case ".png": mime = "image/png"; break;
+                    case ".jpg": case ".jpeg": mime = "image/jpeg"; break;
+                    default: throw new Exception("Formato de declaración no permitido.");
+                }
+                if (nombre.Length > 100 || FileUpload1.FileBytes.Length == 0) throw new Exception("Archivo de declaración no válido.");
+                System.Xml.XmlElement doc = xml.CreateElement("declaracion");
+                doc.SetAttribute("nombre", nombre); doc.SetAttribute("mime", mime); doc.SetAttribute("ext", extension);
+                doc.InnerText = Convert.ToBase64String(FileUpload1.FileBytes); raiz.AppendChild(doc);
+            }
+            // Construir PDF de los datos propuestos antes de modificar la base.
+            DataSet borrador = ObtenerDatosSolicitudPdf(codigoEXSO).Copy();
+            DataRow titular = borrador.Tables[0].Rows[0];
+            titular["pers_primernombre"] = TxtPrimerNombre.Text.Trim().ToUpper();
+            titular["pers_segundonombre"] = TxtSegundoNombre.Text.Trim().ToUpper();
+            titular["pers_primerapellido"] = TxtPrimerApellido.Text.Trim().ToUpper();
+            titular["pers_segundoapellido"] = TxtSegundoApellido.Text.Trim().ToUpper();
+            titular["pers_fechanacimiento"] = DateTime.ParseExact(TxtFechaNacimiento.Text.Trim(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            titular["pers_direccion"] = TxtDireccion.Text.Trim().ToUpper();
+            titular["pers_telefonocasa"] = TxtFonoCasa.Text.Trim(); titular["pers_telefonooficina"] = TxtFonoOficina.Text.Trim();
+            titular["pers_celular"] = TxtCelular.Text.Trim(); titular["pers_email"] = TxtEmail.Text.Trim().ToLower();
+            titular["EXAMEN_ADICIONAL"] = TxtExamenAdicional.Text.Trim();
+            DataTable examenes = borrador.Tables[1]; examenes.Rows.Clear();
+            foreach (string rol in new string[] { "TITULAR", "CODEPENDIENTE" })
+            {
+                DataTable tabla = rol == "TITULAR" ? RequisitosActuales : RequisitosCodeudor;
+                foreach (DataRow fila in tabla.Rows)
+                {
+                    DataRow r = examenes.NewRow(); r["EXPR_CODIGO"] = fila["ASRQ_CODIGO"];
+                    r["EXAMEN"] = fila["REQUISITO"]; r["GRUPO"] = fila["GRUPO"]; r["DETALLE"] = "";
+                    r["TIPO_PERSONA"] = rol; r["PERS_CODIGO"] = rol == "TITULAR" ? cab["exso_perscodigo"] : contexto.Tables[0].Rows[0]["PERS_CODIGO"];
+                    examenes.Rows.Add(r);
+                }
+            }
+            DataTable personaCodeudor = contexto.Tables[0].Copy();
+            borrador.Tables.RemoveAt(2); personaCodeudor.TableName = "CodeudorPropuesto"; borrador.Tables.Add(personaCodeudor);
+            byte[] pdf = GenerarPdfSolicitud(codigoEXSO, borrador);
+            object[] parametros = CrearParametrosOperacionSolicitud(33, codigoEXSO);
+            parametros[1] = Convert.ToInt32(DdlProducto.SelectedValue);
+            parametros[4] = TxtPrimerNombre.Text.Trim().ToUpper(); parametros[5] = TxtSegundoNombre.Text.Trim().ToUpper();
+            parametros[6] = TxtPrimerApellido.Text.Trim().ToUpper(); parametros[7] = TxtSegundoApellido.Text.Trim().ToUpper();
+            parametros[10] = TxtFechaNacimiento.Text.Trim(); parametros[11] = Convert.ToInt32(DdlCiudad.SelectedValue);
+            parametros[12] = TxtDireccion.Text.Trim().ToUpper(); parametros[13] = TxtFonoCasa.Text.Trim();
+            parametros[14] = TxtFonoOficina.Text.Trim(); parametros[15] = TxtCelular.Text.Trim(); parametros[16] = TxtEmail.Text.Trim().ToLower();
+            parametros[20] = xml.OuterXml; parametros[21] = pdf;
+            parametros[22] = "Solicitud_" + codigoEXSO.ToString() + ".pdf";
+            parametros[31] = FormatearDecimal(TxtMonto.Text); parametros[32] = FormatearDecimal(TxtMontoAc.Text);
+            parametros[36] = Convert.ToInt32(ViewState["CodigoTITUCodependiente"] ?? 0);
+            parametros[37] = Convert.ToInt32(cab["exso_perscodigo"]);
+            DataSet respuesta = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+            if (respuesta == null || respuesta.Tables.Count == 0 || respuesta.Tables[0].Rows.Count == 0 ||
+                respuesta.Tables[0].Rows[0]["Resultado"].ToString() != "OK-EDICION")
+                throw new Exception("No se confirmó el guardado de la edición.");
+            ViewState["EstadoEdicion"] = "SRR";
+        }
+
+        private bool TieneCodeudorSeleccionado()
+        {
+            int codigo;
+            return int.TryParse(Convert.ToString(ViewState["CodigoTITUCodependiente"]), out codigo)
+                && codigo > 0;
+        }
+        private void BindRequisitosCodeudor()
+        {
+            GrdvRequisitosCodeudor.DataSource = RequisitosCodeudor;
+            GrdvRequisitosCodeudor.DataBind();
+            PnlRequisitosCodeudor.Visible = TieneCodeudorSeleccionado();
+            UpdRequisitos.Update();
+        }
+        private bool CambioCodeudor()
+        {
+            return Convert.ToInt32(ViewState["CodigoEXSO"] ?? 0) == 0 ||
+                Convert.ToInt32(ViewState["CodigoTITUCodependiente"] ?? 0) !=
+                Convert.ToInt32(ViewState["CodeudorOriginal"] ?? 0);
+        }
+        private void ConsultarRequisitosCodeudor()
+        {
+            RequisitosCodeudor = CrearTablaRequisitos();
+            if (!TieneCodeudorSeleccionado())
+            {
+                LblEstadoRequisitosCodeudor.Text = "";
+                PnlRequisitosCodeudor.Visible = false;
+                return;
+            }
+            string fecha = Convert.ToString(ViewState["FechaNacimientoCodeudor"]);
+            DateTime nacimiento;
+            if (!DateTime.TryParseExact(fecha, "MM/dd/yyyy", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out nacimiento))
+                throw new Exception("No existe una fecha de nacimiento válida para el codeudor.");
+            object[] parametros = CrearParametrosOperacionSolicitud(6, 0);
+            parametros[1] = Convert.ToInt32(DdlProducto.SelectedValue);
+            parametros[10] = nacimiento.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+            parametros[32] = FormatearDecimal(TxtMontoAc.Text);
+            DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
+            if (ds == null || ds.Tables.Count < 2 || ds.Tables[0].Rows.Count == 0)
+                throw new Exception("No se obtuvo respuesta para los requisitos del codeudor.");
+            DataRow info = ds.Tables[0].Rows[0];
+            string resultado = info["RESULTADO"].ToString().Trim();
+            if (resultado == "REQUISITOS")
+            {
+                if (ds.Tables[1].Rows.Count == 0)
+                    throw new Exception("La regla del codeudor no contiene requisitos.");
+                RequisitosCodeudor = ds.Tables[1].Copy();
+                LblEstadoRequisitosCodeudor.Text = "Requisitos del codeudor encontrados correctamente.";
+            }
+            else if (resultado == "SIN_REQUISITOS" || resultado == "NO_REALIZA")
+                LblEstadoRequisitosCodeudor.Text = "El codeudor no requiere exámenes.";
+            else
+                throw new Exception("Codeudor: " + info["MENSAJE"].ToString());
+            // REQUIERE_ARCHIVO del codeudor no modifica el adjunto del titular.
+            BindRequisitosCodeudor();
+        }
+
         private DataTable CrearTablaRequisitos()
         {
             DataTable dt = new DataTable();
@@ -1881,11 +2094,11 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (ViewState["CodigoEXSO"] != null)
                 {
-                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(), out codigoEXSO);
                 }
-                if (codigoEXSO > 0)
+                if (codigoEXSO > 0 && !PermiteEditarRequisitos())
                 {
-                    Lblerror.Text = "Los requisitos de una solicitud existente no pueden recalcularse.";
+                    Lblerror.Text = "Solo puede recalcular solicitudes activas en SRR o SRV.";
 
                     BtnConsultarRequisitos.Enabled = false;
                     return;
@@ -1952,8 +2165,15 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
 
                 DataSet ds = ObtenerRequisitosAsegurabilidad();
-                ProcesarRequisitos(ds, true);
                 bool correcto = ProcesarRequisitos(ds, true);
+                if (correcto && TieneCodeudorSeleccionado())
+                    ConsultarRequisitosCodeudor();
+                else
+                {
+                    RequisitosCodeudor = CrearTablaRequisitos();
+                    LblEstadoRequisitosCodeudor.Text = "";
+                    PnlRequisitosCodeudor.Visible = false;
+                }
                 ViewState["RequisitosConsultados"] = correcto;
             }
             catch (Exception ex)
@@ -1979,6 +2199,9 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             if (!string.IsNullOrWhiteSpace(TxtNumeroDocumento.Text))
             {
+                LimpiarRequisitosAsegurabilidad();
+                RequisitosCodeudor = CrearTablaRequisitos();
+                BindRequisitosCodeudor();
                 LblEstadoRequisitos.Text = "Monto Total modificado. Consulte nuevamente los requisitos.";
             }
         }
@@ -2126,7 +2349,7 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-            
+
                 string fechaNacimiento = HdnFechaNacimientoCodep.Value;
                 CargarCiudadesCodependiente();
 
@@ -2263,9 +2486,9 @@ namespace Pry_PrestasaludWAP.Examenes
             return ds;
         }
 
-        private void MostrarCodependienteSeleccionado(int codigoPERS,int codigoTITU,string documento,string nombre)
+        private void MostrarCodependienteSeleccionado(int codigoPERS, int codigoTITU, string documento, string nombre)
         {
-            
+
             ViewState["CodigoPERSCodependiente"] = codigoPERS;
             ViewState["CodigoTITUCodependiente"] = codigoTITU;
             ViewState["DocumentoCodependiente"] = documento.Trim();
@@ -2278,7 +2501,10 @@ namespace Pry_PrestasaludWAP.Examenes
             LblSinCodependiente.Visible = false;
             BtnAgregarCodependiente.Text = "Cambiar Codependiente";
             BtnAgregarCodependiente.Enabled = true;
-            BtnQuitarCodependiente.Visible =true;
+            BtnQuitarCodependiente.Visible = true;
+            RequisitosCodeudor = CrearTablaRequisitos();
+            LblEstadoRequisitosCodeudor.Text = "Consulte los requisitos para el codeudor seleccionado.";
+            BindRequisitosCodeudor();
         }
 
         private void GuardarCodependienteSolicitud(int codigoEXSO)
@@ -2301,8 +2527,13 @@ namespace Pry_PrestasaludWAP.Examenes
                 return;
             }
 
-            object[] parametros = CrearParametrosOperacionSolicitud(9, codigoEXSO);
-            parametros[0] = 9;
+            if (!CambioCodeudor() && ViewState["CodeudorGuardado"] != null) return;
+            object[] parametros = CrearParametrosOperacionSolicitud(32, codigoEXSO);
+            System.Text.StringBuilder xml = new System.Text.StringBuilder("<requisitos>");
+            foreach (DataRow requisito in RequisitosCodeudor.Rows)
+                xml.Append("<r codigo=\"").Append(Convert.ToInt32(requisito["ASRQ_CODIGO"])).Append("\" />");
+            xml.Append("</requisitos>");
+            parametros[20] = xml.ToString();
             parametros[29] = codigoEXSO;
             parametros[36] = codigoTITUCodependiente;
             DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
@@ -2318,6 +2549,8 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 throw new Exception("No fue posible relacionar el codependiente con la solicitud. Respuesta: " + resultado);
             }
+            ViewState["CodeudorOriginal"] = codigoTITUCodependiente;
+            ViewState["CodeudorGuardado"] = true;
         }
         private string ObtenerFechaNacimientoCodependiente()
         {
@@ -2439,7 +2672,7 @@ namespace Pry_PrestasaludWAP.Examenes
         private void ActualizarExamenAdicional(int codigoEXSO)
         {
             string examenAdicional = TxtExamenAdicional.Text.Trim();
-            object[] parametros = CrearParametrosOperacionSolicitud(11,codigoEXSO);
+            object[] parametros = CrearParametrosOperacionSolicitud(11, codigoEXSO);
 
             parametros[0] = 11;
             parametros[20] = examenAdicional.ToUpper();
@@ -2461,7 +2694,7 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         private void ActualizarTitularSolicitud(int codigoEXSO)
         {
-     
+
             DataSet dsSolicitud = ObtenerDatosSolicitudPdf(codigoEXSO);
 
             if (dsSolicitud == null || dsSolicitud.Tables.Count == 0 || dsSolicitud.Tables[0].Rows.Count == 0)
@@ -2471,7 +2704,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             int codigoPERS = 0;
 
-            if (!int.TryParse(dsSolicitud.Tables[0].Rows[0]["PERS_CODIGO"].ToString(),out codigoPERS))
+            if (!int.TryParse(dsSolicitud.Tables[0].Rows[0]["PERS_CODIGO"].ToString(), out codigoPERS))
             {
                 codigoPERS = 0;
             }
@@ -2503,7 +2736,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             int codigoCiudad = 0;
 
-            if (!int.TryParse(DdlCiudad.SelectedValue,out codigoCiudad))
+            if (!int.TryParse(DdlCiudad.SelectedValue, out codigoCiudad))
             {
                 codigoCiudad = 0;
             }
@@ -2513,7 +2746,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 throw new Exception("Seleccione la ciudad.");
             }
 
-            object[] parametros = CrearParametrosOperacionSolicitud(13,codigoEXSO);
+            object[] parametros = CrearParametrosOperacionSolicitud(13, codigoEXSO);
             parametros[0] = 13;
             parametros[2] = DdlTipoDocumento.SelectedValue;
             parametros[3] = TxtNumeroDocumento.Text.Trim();
@@ -2554,7 +2787,7 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         private void QuitarCodependienteSolicitud(int codigoEXSO)
         {
-            object[] parametros = CrearParametrosOperacionSolicitud(12,codigoEXSO);
+            object[] parametros = CrearParametrosOperacionSolicitud(12, codigoEXSO);
 
             parametros[0] = 12;
             parametros[29] = codigoEXSO;
@@ -2578,12 +2811,12 @@ namespace Pry_PrestasaludWAP.Examenes
 
         private void ProcesarCodependienteEdicion(int codigoEXSO)
         {
-         
+
             bool quitarCodependiente = false;
 
             if (ViewState["QuitarCodependiente"] != null)
             {
-                bool.TryParse(ViewState["QuitarCodependiente"].ToString(),out quitarCodependiente);
+                bool.TryParse(ViewState["QuitarCodependiente"].ToString(), out quitarCodependiente);
             }
 
             if (quitarCodependiente)
@@ -2596,7 +2829,7 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 int codigoTITUCodependiente = 0;
 
-                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(),out codigoTITUCodependiente);
+                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(), out codigoTITUCodependiente);
 
                 if (codigoTITUCodependiente > 0)
                 {
@@ -2612,7 +2845,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
             if (ViewState["CodigoTITUCodependiente"] != null)
             {
-                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(),out codigoTITUCodependiente);
+                int.TryParse(ViewState["CodigoTITUCodependiente"].ToString(), out codigoTITUCodependiente);
             }
 
             tieneCodependiente = codigoTITUCodependiente > 0;
@@ -2639,7 +2872,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 if (ViewState["CodigoEXSO"] != null)
                 {
                     int codigoEXSO = 0;
-                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(), out codigoEXSO);
                     BtnAgregarCodependiente.Enabled = codigoEXSO > 0;
                 }
             }
@@ -2809,6 +3042,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 string nombreCompleto = (primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido).Trim();
 
+                ViewState["FechaNacimientoCodeudor"] = DateTime.ParseExact(fechaNacimiento, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
                 MostrarCodependienteSeleccionado(codigoPERS, codigoTITU, identificacion, nombreCompleto);
                 MpeCodependiente.Hide();
                 TxtNumeroDocumentoCodep.Text = "";
@@ -2933,6 +3167,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 int codigoTITU = Convert.ToInt32(fila["CodigoTITU"]);
 
                 string nombreCompleto = (primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido).Replace("  ", " ").Trim();
+                ViewState["FechaNacimientoCodeudor"] = fechaNacimiento;
                 MostrarCodependienteSeleccionado(codigoPERS, codigoTITU, documento, nombreCompleto);
 
                 TxtNumeroDocumentoCodep.Text = "";
@@ -2958,16 +3193,16 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void BtnQuitarCodependiente_Click(object sender,EventArgs e)
+        protected void BtnQuitarCodependiente_Click(object sender, EventArgs e)
         {
             try
             {
-               
+
                 int codigoEXSO = 0;
 
                 if (ViewState["CodigoEXSO"] != null)
                 {
-                    int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO);
+                    int.TryParse(ViewState["CodigoEXSO"].ToString(), out codigoEXSO);
                 }
 
                 if (codigoEXSO > 0)
@@ -2984,6 +3219,10 @@ namespace Pry_PrestasaludWAP.Examenes
                 ViewState["CodigoPERSCodependienteBusqueda"] = 0;
                 ViewState["DocumentoCodependiente"] = null;
                 ViewState["NombreCodependiente"] = null;
+                ViewState["FechaNacimientoCodeudor"] = null;
+                RequisitosCodeudor = CrearTablaRequisitos();
+                LblEstadoRequisitosCodeudor.Text = "";
+                BindRequisitosCodeudor();
                 LblNombreCodependiente.Text = "";
                 LblDocumentoCodependiente.Text = "";
                 PnlCodependienteSeleccionado.Visible = false;
@@ -3089,14 +3328,14 @@ namespace Pry_PrestasaludWAP.Examenes
 
             if (fila["TITU_CODIGO"] != DBNull.Value)
             {
-                int.TryParse(fila["TITU_CODIGO"].ToString(),out codigoTITU);
+                int.TryParse(fila["TITU_CODIGO"].ToString(), out codigoTITU);
             }
 
             int codigoPERS = 0;
 
             if (fila["PERS_CODIGO"] != DBNull.Value)
             {
-                int.TryParse(fila["PERS_CODIGO"].ToString(),out codigoPERS);
+                int.TryParse(fila["PERS_CODIGO"].ToString(), out codigoPERS);
             }
 
             if (codigoTITU > 0)
@@ -3109,9 +3348,14 @@ namespace Pry_PrestasaludWAP.Examenes
                 ViewState["CodigoPERSCodependiente"] = codigoPERS;
             }
 
-            ViewState["DocumentoCodependiente"] = ObtenerValor(fila,"pers_numerodocumento");
-            ViewState["NombreCodependiente"] = (ObtenerValor(fila,"pers_primernombre") + " " + ObtenerValor(fila,"pers_segundonombre") + " " +
-                    ObtenerValor(fila,"pers_primerapellido") + " " + ObtenerValor(fila,"pers_segundoapellido")).Trim();
+            ViewState["CodeudorOriginal"] = codigoTITU;
+            ViewState["CodeudorGuardado"] = true;
+            ViewState["FechaNacimientoCodeudor"] = fila["pers_fechanacimiento"] == DBNull.Value ? "" :
+                Convert.ToDateTime(fila["pers_fechanacimiento"]).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+            BindRequisitosCodeudor();
+            ViewState["DocumentoCodependiente"] = ObtenerValor(fila, "pers_numerodocumento");
+            ViewState["NombreCodependiente"] = (ObtenerValor(fila, "pers_primernombre") + " " + ObtenerValor(fila, "pers_segundonombre") + " " +
+                    ObtenerValor(fila, "pers_primerapellido") + " " + ObtenerValor(fila, "pers_segundoapellido")).Trim();
         }
         private void CargarRequisitosGuardadosEdicion(DataSet dsSolicitud)
         {
@@ -3121,13 +3365,14 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 RequisitosActuales = dt;
                 BindRequisitos();
-                LblEstadoRequisitos.Text ="No existen requisitos guardados.";
+                LblEstadoRequisitos.Text = "No existen requisitos guardados.";
                 return;
             }
 
             DataTable tablaGuardada = dsSolicitud.Tables[1];
             int orden = 1;
 
+            RequisitosCodeudor = CrearTablaRequisitos();
             foreach (DataRow fila in tablaGuardada.Rows)
             {
                 DataRow nueva = dt.NewRow();
@@ -3135,7 +3380,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (fila.Table.Columns.Contains("EXPR_CODIGO"))
                 {
-                    int.TryParse(fila["EXPR_CODIGO"].ToString(),out codigo);
+                    int.TryParse(fila["EXPR_CODIGO"].ToString(), out codigo);
                 }
 
                 nueva["ASRQ_CODIGO"] = codigo;
@@ -3143,7 +3388,9 @@ namespace Pry_PrestasaludWAP.Examenes
                 nueva["REQUISITO"] = fila.Table.Columns.Contains("EXAMEN") ? fila["EXAMEN"].ToString() : "";
                 nueva["TIPO"] = "";
                 nueva["ORDEN"] = orden;
-                dt.Rows.Add(nueva);
+                if (fila.Table.Columns.Contains("TIPO_PERSONA") && fila["TIPO_PERSONA"].ToString() == "CODEPENDIENTE")
+                    RequisitosCodeudor.Rows.Add(nueva.ItemArray);
+                else dt.Rows.Add(nueva);
                 orden++;
             }
 
@@ -3159,6 +3406,8 @@ namespace Pry_PrestasaludWAP.Examenes
                 LblEstadoRequisitos.Text = "La solicitud no tiene requisitos guardados.";
             }
 
+            LblEstadoRequisitosCodeudor.Text = "Requisitos guardados del codeudor.";
+            BindRequisitosCodeudor();
             BtnConsultarRequisitos.Enabled = false;
         }
         private string CancelarSolicitud(int codigoEXSO)
@@ -3195,9 +3444,9 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 int codigoEXSO = 0;
 
-                if (ViewState["CodigoEXSO"] == null || !int.TryParse(ViewState["CodigoEXSO"].ToString(),out codigoEXSO) || codigoEXSO <= 0)
+                if (ViewState["CodigoEXSO"] == null || !int.TryParse(ViewState["CodigoEXSO"].ToString(), out codigoEXSO) || codigoEXSO <= 0)
                 {
-                    new Funciones().funShowJSMessage("No fue posible obtener el código de la solicitud.",this);
+                    new Funciones().funShowJSMessage("No fue posible obtener el código de la solicitud.", this);
                     return;
                 }
 
@@ -3211,7 +3460,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (resultado == "YA-CANCELADA")
                 {
-                    new Funciones().funShowJSMessage("La solicitud ya se encuentra cancelada.",this);
+                    new Funciones().funShowJSMessage("La solicitud ya se encuentra cancelada.", this);
                     BtnCancelarSolicitud.Enabled = false;
                     BtnGrabar.Enabled = false;
                     return;
@@ -3219,7 +3468,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
             catch (Exception ex)
             {
-                new Funciones().funShowJSMessage("Error al cancelar la solicitud: " + ex.Message,this);
+                new Funciones().funShowJSMessage("Error al cancelar la solicitud: " + ex.Message, this);
             }
         }
 

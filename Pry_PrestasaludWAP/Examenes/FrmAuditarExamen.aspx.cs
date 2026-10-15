@@ -740,6 +740,17 @@ namespace Pry_PrestasaludWAP.Examenes
                 FunCargaMantenimiento();
 
                 new Funciones().funShowJSMessage("Auditoría guardada correctamente. Estado de la solicitud: " + estadoSolicitud,this);
+
+                string body = "EXAMEN AUDITADO" + "<br/> ";
+                body += "------------------------------------------------------------------" + "<br/>";
+                //body += "CEDULA:" + " " + TxtNumeroDocumento.Text.Trim() + "<br/>";
+                //body += "TITULAR:" + " " + TxtPrimerNombre.Text.Trim().ToUpper() + " " + TxtPrimerApellido.Text.Trim().ToUpper() + "<br/>";
+
+                string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN EDITADO", body, "mail.prestasalud.com", 587,
+                    true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
+
+                Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
+                return;
             }
             catch (Exception ex)
             {

@@ -243,6 +243,8 @@ namespace Pry_PrestasaludWAP.Examenes
                 CargarSolicitud(codigoEXSO);
 
                 new Funciones().funShowJSMessage("Resultados guardados correctamente.",this);
+
+                
             }
             catch (Exception ex)
             {
@@ -311,6 +313,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
 
             return codigoEXRE;
+
         }
 
         private void GuardarDocumentoResultado(int codigoEXSO,int codigoEXRE,int orden,FileUpload archivo)
@@ -597,6 +600,15 @@ namespace Pry_PrestasaludWAP.Examenes
                 CargarSolicitud(codigoEXSO);
 
                 new Funciones().funShowJSMessage("Resultados enviados correctamente.",this);
+
+                string bod = "CARGA DE RESULTADOS" + "<br/> ";
+                //body += "------------------------------------------------------------------" + "<br/>";
+                //body += "CEDULA:" + " " + TxtNumeroDocumento.Text.Trim() + "<br/>";
+                //body += "TITULAR:" + " " + TxtPrimerNombre.Text.Trim().ToUpper() + " " + TxtPrimerApellido.Text.Trim().ToUpper() + "<br/>";
+
+                string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "CARGA DE RESULTADOS ENVIADA", body, "mail.prestasalud.com", 587,
+                    true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
+
             }
             catch (Exception ex)
             {

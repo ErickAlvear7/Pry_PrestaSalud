@@ -692,6 +692,13 @@
     <Compile Include="Examenes\FrmSolicitudOperadorAdmin.aspx.designer.cs">
       <DependentUpon>FrmSolicitudOperadorAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmTiemposExamenes.aspx.cs">
+      <DependentUpon>FrmTiemposExamenes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmTiemposExamenes.aspx.designer.cs">
+      <DependentUpon>FrmTiemposExamenes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\VerImagenAuditoria.ashx.cs">
       <DependentUpon>VerImagenAuditoria.ashx</DependentUpon>
     </Compile>
@@ -1638,6 +1645,7 @@
     <Content Include="Examenes\FrmSolicitudExamen.aspx" />
     <Content Include="Examenes\FrmSolicitudExamenAdmin.aspx" />
     <Content Include="Examenes\FrmSolicitudOperadorAdmin.aspx" />
+    <Content Include="Examenes\FrmTiemposExamenes.aspx" />
     <Content Include="FrmPaginaEnConstruccion.aspx" />
     <Content Include="Frm_Login.aspx" />
     <Content Include="Global.asax" />

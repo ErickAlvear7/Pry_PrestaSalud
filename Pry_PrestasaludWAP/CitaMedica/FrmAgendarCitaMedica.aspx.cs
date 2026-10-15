@@ -4332,14 +4332,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (chk != null && chk.Checked)
                     {
                         check = true;
-
                         int examenCodigo = 0;
 
                         if (gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"] != null)
                         {
                             int.TryParse(gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"].ToString(),out examenCodigo);
                         }
-
 
                         int detalleCodigo = 0;
 
@@ -4377,7 +4375,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             descripciones.Add(textoSeleccionado);
                         }
-
 
                         codigosSeleccionados.Add(
                             examenCodigo.ToString() +
