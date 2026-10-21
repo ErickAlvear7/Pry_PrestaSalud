@@ -595,6 +595,13 @@
     <Compile Include="Examenes\FrmClienteExamenAdmin.aspx.designer.cs">
       <DependentUpon>FrmClienteExamenAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmComercialSegurosUnidos.aspx.cs">
+      <DependentUpon>FrmComercialSegurosUnidos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmComercialSegurosUnidos.aspx.designer.cs">
+      <DependentUpon>FrmComercialSegurosUnidos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\FrmCorregirExamen.aspx.cs">
       <DependentUpon>FrmCorregirExamen.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1632,6 +1639,7 @@
     <Content Include="Examenes\FrmAuditarExamen.aspx" />
     <Content Include="Examenes\FrmAuditarExamenAdmin.aspx" />
     <Content Include="Examenes\FrmClienteExamenAdmin.aspx" />
+    <Content Include="Examenes\FrmComercialSegurosUnidos.aspx" />
     <Content Include="Examenes\FrmCorregirExamen.aspx" />
     <Content Include="Examenes\FrmExamenNegadoAdmin.aspx" />
     <Content Include="Examenes\FrmExamenRealizadoAdmin.aspx" />

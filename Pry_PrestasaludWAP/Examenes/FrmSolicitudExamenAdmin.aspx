@@ -56,7 +56,7 @@
                                             <asp:BoundField DataField="FecSolicitud" HeaderText="Fecha_Solicitud" />
                                             <asp:BoundField DataField="NumDocumento" HeaderText="No.Documento" />
                                             <asp:BoundField DataField="Cliente" HeaderText="Paciente" />
-                                            <asp:BoundField DataField="Observacion" HeaderText="Fecha / Día / Hora" />
+                                            <asp:BoundField DataField="Observacion" HeaderText="Fecha Agendamiento" />
                                             <asp:BoundField DataField="Proceso" HeaderText="Proceso" />
                                             <asp:BoundField DataField="EstadoSolicitud" HeaderText="Estado" />
                                             <asp:TemplateField HeaderText="Detalle">

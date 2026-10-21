@@ -754,7 +754,9 @@ namespace Pry_PrestasaludWAP.Examenes
                             return;
                         }
 
-                        Response.Redirect("FrmSolicitudExamenAdmin.aspx" + "?MensajeRetornado='Titular creado correctamente'", true);
+                        //CAMBIO PERFIL COMERCIAL
+                        //Response.Redirect("FrmSolicitudExamenAdmin.aspx" + "?MensajeRetornado='Titular creado correctamente'", true);
+                        Response.Redirect(UrlListadoSolicitudes() + "?MensajeRetornado='Guardado con Éxito'", true);
                         return;
                     }
 
@@ -1038,11 +1040,14 @@ namespace Pry_PrestasaludWAP.Examenes
                     string correo = new Funciones().SendHtmlEmailExamen("vroldan@prestasalud.com", "SOLICITUD EXAMEN EDITADA", body, "mail.prestasalud.com", 587,
                         true, "info@prestasalud.com", "Info.Presta.2025$", "", "", "ealvear@prestasalud.com,vgavilanez@prestasalud.com");
 
-                    Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
+                    //cAMBIO PERFIL COMERCIAL
+                    //Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Actualizado con Éxito'", true);
+                    Response.Redirect(UrlListadoSolicitudes() + "?MensajeRetornado='Actualizado con Éxito'", true);
                     return;
 
                 }
-                Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Guardado con Éxito'", true);
+                //Response.Redirect("FrmSolicitudExamenAdmin.aspx?MensajeRetornado='Guardado con Éxito'", true);
+                Response.Redirect(UrlListadoSolicitudes() + "?MensajeRetornado='Guardado con Éxito'", true);
                 Context.ApplicationInstance.CompleteRequest();
             }
             catch (Exception ex)
@@ -1052,7 +1057,8 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         protected void BtnSalir_Click(object sender, EventArgs e)
         {
-            Response.Redirect("FrmSolicitudExamenAdmin.aspx");
+            //Response.Redirect("FrmSolicitudExamenAdmin.aspx");
+            Response.Redirect(UrlListadoSolicitudes());
         }
 
         //CODIGO NUEVO
@@ -3454,7 +3460,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (resultado == "OK-SOLICITUD-CANCELADA")
                 {
-                    Response.Redirect("FrmSolicitudExamenAdmin.aspx");
+                    //Response.Redirect("FrmSolicitudExamenAdmin.aspx");
+                    Response.Redirect(UrlListadoSolicitudes());
                     return;
                 }
 
@@ -3470,6 +3477,15 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 new Funciones().funShowJSMessage("Error al cancelar la solicitud: " + ex.Message, this);
             }
+        }
+
+        //CAMBIO PERFIL COMERCIAL
+        private string UrlListadoSolicitudes()
+        {
+            return string.Equals(Request.QueryString["OrigenComercial"], "SU",
+                                 StringComparison.OrdinalIgnoreCase)
+                ? "FrmComercialSegurosUnidos.aspx"
+                : "FrmSolicitudExamenAdmin.aspx";
         }
 
 
