@@ -399,7 +399,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 codigopers = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoPERS"].ToString();
                 codigotitu = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoTITU"].ToString();
 
-                Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx" + "?CodigoTitular=" + codigotitu + "&CodigoProducto=" + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1", true);
+                Response.Redirect("~/Examenes/FrmAgendarExamenes.aspx" + "?CodigoTitular=" + codigotitu + "&CodigoProducto=" + codigoprod + "&CodigoEXSO=" + codigoexso + "&Regresar=1", true);
             }
             catch (Exception ex)
             {
@@ -444,7 +444,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 // NO generar nueva carta aquí.
 
                 Response.Redirect(
-                    "~/CitaMedica/FrmAgendarCitaMedica.aspx" +
+                    "~/Examenes/FrmAgendarExamenes.aspx" +
                     "?CodigoTitular=" + codigoTITU +
                     "&CodigoProducto=" + codigoPROD +
                     "&CodigoEXSO=" + codigoEXSO +

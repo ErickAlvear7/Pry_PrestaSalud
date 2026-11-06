@@ -200,7 +200,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
                     objparam[2] = 0;
                     objparam[3] = int.Parse(Session["CodigoProducto"].ToString());
-                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularEdit", objparam);
+                    dt = new Conexion(2, "").funConsultarSqls("x", objparam);
 
                     bool tieneFechaActiva = false;
 
@@ -1135,33 +1135,26 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
-                        //Array.Resize(ref objparam, 3);
-                        //objparam[0] = ddlCiudad.SelectedValue;
-                        //objparam[1] = "";
-                        //objparam[2] = 5;
-                        //ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        //ddlPrestadora.DataTextField = "Descripcion";
-                        //ddlPrestadora.DataValueField = "Codigo";
-                        //ddlPrestadora.DataBind();
+
                         bool esFlujoExamen = ViewState["EsFlujoExamen"] != null && ViewState["EsFlujoExamen"].ToString() == "1";
 
 
                         if (esFlujoExamen)
                         {
-                           
+
                             Array.Resize(ref objparam, 1);
                             objparam[0] = int.Parse(ddlCiudad.SelectedValue);
-                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestadoresCiudad_Listar",objparam);
+                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestadoresCiudad_Listar", objparam);
                         }
                         else
                         {
-                           
+
                             Array.Resize(ref objparam, 3);
                             objparam[0] = ddlCiudad.SelectedValue;
                             objparam[1] = "";
                             objparam[2] = 5;
 
-                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         }
 
                         ddlPrestadora.DataTextField = "Descripcion";
@@ -1180,66 +1173,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlProvincia.DataValueField = "Codigo";
                         ddlProvincia.DataBind();
                         break;
-                    //case 3:
-                    //ddlMedico.Items.Clear();
-                    //medi.Text = "--Seleccione Médico--";
-                    //medi.Value = "0";
-                    //ddlMedico.Items.Add(medi);
-                    //Array.Resize(ref objparam, 3);
-                    //objparam[0] = ddlPrestadora.SelectedValue;
-                    //objparam[1] = "";
-                    //objparam[2] = 8;
-                    ////cambio
-                    //if (ddlPrestadora.SelectedValue == "466" || ddlPrestadora.SelectedValue == "368"
-                    //    || ddlPrestadora.SelectedValue == "444" || ddlPrestadora.SelectedValue == "581"
-                    //    || ddlPrestadora.SelectedValue == "56" || ddlPrestadora.SelectedValue == "404"
-                    //    || ddlPrestadora.SelectedValue == "336" || ddlPrestadora.SelectedValue == "356"
-                    //    || ddlPrestadora.SelectedValue == "533" || ddlPrestadora.SelectedValue == "461"
-                    //    || ddlPrestadora.SelectedValue == "357" || ddlPrestadora.SelectedValue == "467"
-                    //    || ddlPrestadora.SelectedValue == "375" || ddlPrestadora.SelectedValue == "550"
-                    //    || ddlPrestadora.SelectedValue == "342" || ddlPrestadora.SelectedValue == "425"
-                    //    || ddlPrestadora.SelectedValue == "529" || ddlPrestadora.SelectedValue == "414"
-                    //    || ddlPrestadora.SelectedValue == "239" || ddlPrestadora.SelectedValue == "540"
-                    //    || ddlPrestadora.SelectedValue == "535" || ddlPrestadora.SelectedValue == "523"
-                    //    || ddlPrestadora.SelectedValue == "514" || ddlPrestadora.SelectedValue == "79"
-                    //    || ddlPrestadora.SelectedValue == "551" || ddlPrestadora.SelectedValue == "12"
-                    //    || ddlPrestadora.SelectedValue == "547" || ddlPrestadora.SelectedValue == "600")
-                    //{
-                    //    ddlMedico.Items.Clear();
-                    //    medi.Text = "--Seleccione Médico--";
-                    //    medi.Value = "0";
-                    //    ddlMedico.Items.Add(medi);
-                    //    Array.Resize(ref objparam, 3);
-                    //    objparam[0] = ddlPrestadora.SelectedValue;
-                    //    objparam[1] = "";
-                    //    objparam[2] = 214;
-                    //    ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //    ddlEspecialidad.DataTextField = "Descripcion";
-                    //    ddlEspecialidad.DataValueField = "Codigo";
-                    //    ddlEspecialidad.DataBind();
-                    //    ddlTipoPago.SelectedIndex = 1;
-                    //}
-
-                    //ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //ddlEspecialidad.DataTextField = "Descripcion";
-                    //ddlEspecialidad.DataValueField = "Codigo";
-                    //ddlEspecialidad.DataBind();
-
-                    //if (ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
-                    //{
-                    //    Array.Resize(ref objparam, 3);
-                    //    objparam[0] = 0;
-                    //    objparam[1] = "";
-                    //    objparam[2] = 190;
-                    //    ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //    ddlEspecialidad.DataTextField = "Descripcion";
-                    //    ddlEspecialidad.DataValueField = "Codigo";
-                    //    ddlEspecialidad.DataBind();
-
-                    //    FunCascadaCombos(4);
-                    //}
-
-                    //break;
                     case 3:
 
                         ddlMedico.Items.Clear();
@@ -1247,42 +1180,34 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
 
-                        esFlujoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                        esFlujoExamen = false;
 
                         Array.Resize(ref objparam, 3);
                         objparam[0] = ddlPrestadora.SelectedValue;
                         objparam[1] = "";
+                        objparam[2] = 8;
 
-                        if (esFlujoExamen)
-                        {
-                            objparam[2] = 214;
-                        }
-                        else
-                        {
-                            objparam[2] = 8;
-                        }
-
-                        ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                        ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-
-                        if (esFlujoExamen)
+                        //cambio aki
+                        foreach (ListItem item in ddlEspecialidad.Items)
                         {
-                            if (ddlTipoPago.Items.Count > 1)
-                            {
-                                ddlTipoPago.SelectedIndex = 1;
-                            }
+                            item.Text = System.Text.RegularExpressions.Regex
+                                .Replace(item.Text, @"\s+", " ")
+                                .Trim();
                         }
 
-                        if (!esFlujoExamen && ddlPrestadora.SelectedItem != null && ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+
+                        if (ddlPrestadora.SelectedItem != null && ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
                             objparam[1] = "";
                             objparam[2] = 190;
 
-                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                            ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                             ddlEspecialidad.DataTextField = "Descripcion";
                             ddlEspecialidad.DataValueField = "Codigo";
                             ddlEspecialidad.DataBind();
@@ -1290,68 +1215,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         }
 
                         break;
-                    //case 4:
-                    //    Array.Resize(ref objparam, 3);
-                    //    objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
-                    //    objparam[1] = "";
-                    //    objparam[2] = 31;
-                    //    //cambio
-                    //    if (ddlEspecialidad.SelectedValue == "3254" || ddlEspecialidad.SelectedValue == "3253"
-                    //        || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261"
-                    //        || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3327"
-                    //        || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3365"
-                    //        || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
-                    //        || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
-                    //        || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
-                    //        || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
-                    //        || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
-                    //        || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
-                    //        || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
-                    //        || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                    //        || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
-                    //        || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
-                    //    {
-                    //        Array.Resize(ref objparam, 3);
-                    //        objparam[0] = ddlPrestadora.SelectedValue;
-                    //        objparam[1] = "";
-                    //        objparam[2] = 213;
-
-                    //        var dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-                    //        gvEspecialidades.DataSource = dt;
-                    //        gvEspecialidades.DataBind();
-
-                    //        updModalEsp.Update();
-                    //        AbrirModalEspecialidades();
-
-                    //        Array.Resize(ref objparam, 3);
-                    //        objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
-                    //        objparam[1] = "";
-                    //        objparam[2] = 31;
-                    //        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //        ddlMedico.DataTextField = "Descripcion";
-                    //        ddlMedico.DataValueField = "Codigo";
-                    //        ddlMedico.DataBind();
-                    //    }
-
-                    //    ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //    ddlMedico.DataTextField = "Descripcion";
-                    //    ddlMedico.DataValueField = "Codigo";
-                    //    ddlMedico.DataBind();
-
-                    //    if (ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
-                    //    {
-                    //        Array.Resize(ref objparam, 3);
-                    //        objparam[0] = 0;
-                    //        objparam[1] = "";
-                    //        objparam[2] = 191;
-                    //        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                    //        ddlMedico.DataTextField = "Descripcion";
-                    //        ddlMedico.DataValueField = "Codigo";
-                    //        ddlMedico.DataBind();
-                    //    }
-
-                    //    break;
                     case 4:
 
                         Array.Resize(ref objparam, 3);
@@ -1359,7 +1222,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         objparam[1] = "";
                         objparam[2] = 31;
 
-                        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                        ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
@@ -1367,15 +1230,17 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
                         bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
 
-                        if (vieneDeExamen && esLaboratorio && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
+                        //if (vieneDeExamen && esLaboratorio && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
+                        if (EsLaboratorioConModal() && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
                         {
 
+                            LimpiarSeleccionExamenModal();
                             object[] parametrosExamenes = new object[2];
 
                             parametrosExamenes[0] = int.Parse(ddlCiudad.SelectedValue);
                             parametrosExamenes[1] = int.Parse(ddlPrestadora.SelectedValue);
 
-                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar",parametrosExamenes);
+                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametrosExamenes);
 
                             gvEspecialidades.DataSource = null;
 
@@ -1385,12 +1250,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                                 gvEspecialidades.DataSource = dsExamenes.Tables[0];
                                 gvEspecialidades.DataBind();
                                 updModalEsp.Update();
+                                ViewState["ContextoCatalogoExamenModal"] = ContextoExamenModalActual();
                                 AbrirModalEspecialidades();
                             }
                             else
                             {
                                 gvEspecialidades.DataBind();
-                                new Funciones().funShowJSMessage("El prestador seleccionado no tiene exámenes configurados.",this);
+                                new Funciones().funShowJSMessage("El prestador seleccionado no tiene exámenes configurados.", this);
                             }
                         }
 
@@ -1401,7 +1267,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             objparam[1] = "";
                             objparam[2] = 191;
 
-                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos",objparam);
+                            ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                             ddlMedico.DataTextField = "Descripcion";
                             ddlMedico.DataValueField = "Codigo";
                             ddlMedico.DataBind();
@@ -1433,13 +1299,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMotivoCita.DataBind();
                         if (ddlEspecialidad.SelectedValue.ToString() == "2447")
                         {
-                            /*Array.Resize(ref objparam, 1);
-                            objparam[0] = 19;
-                            ddlMotivoCita.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                            ddlMotivoCita.DataTextField = "Descripcion";
-                            ddlMotivoCita.DataValueField = "Codigo";
-                            ddlMotivoCita.DataBind();
-                            ddlMotivoCita.SelectedIndex = 7;*/
+
                             ddlMotivoCita.SelectedValue = "C";
                         }
                         break;
@@ -3123,6 +2983,61 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
         }
+        // nuevo metod agregado
+        private DataRow ConsultarValoresAgendamientoNormal()
+        {
+            int especialidad, prestador;
+
+            if (!int.TryParse(ddlEspecialidad.SelectedValue, out especialidad) ||
+                especialidad <= 0 ||
+                !int.TryParse(ddlPrestadora.SelectedValue, out prestador) ||
+                prestador <= 0)
+            {
+                throw new InvalidOperationException(
+                    "Seleccione el prestador y la especialidad."
+                );
+            }
+
+            object[] parametros = { especialidad, prestador };
+
+            DataSet datos = new Conexion(2, "").funConsultarSqls(
+                "sp_AgendaNormal_ValoresEspecialidad",
+                parametros
+            );
+
+            if (datos == null ||
+                datos.Tables.Count == 0 ||
+                datos.Tables[0].Rows.Count != 1)
+            {
+                throw new InvalidOperationException(
+                    "No se pudieron obtener PVP y RED. Revise la especialidad, " +
+                    "el prestador y sus valores configurados."
+                );
+            }
+
+            DataRow fila = datos.Tables[0].Rows[0];
+
+            //if (fila["PVP"] == DBNull.Value ||
+            //    fila["RED"] == DBNull.Value ||
+            //    Convert.ToDecimal(fila["PVP"]) < 0m ||
+            //    Convert.ToDecimal(fila["RED"]) < 0m)
+            //{
+            //    throw new InvalidOperationException(
+            //        "PVP y RED deben tener valores no negativos."
+            //    );
+            //}
+            if ((fila["PVP"] != DBNull.Value &&
+             Convert.ToDecimal(fila["PVP"]) < 0m) ||
+            (fila["RED"] != DBNull.Value &&
+             Convert.ToDecimal(fila["RED"]) < 0m))
+            {
+                throw new InvalidOperationException(
+                    "PVP y RED no pueden ser negativos."
+                );
+            }
+
+            return fila;
+        }
         protected void imgSelecc_Click(object sender, ImageClickEventArgs e)
         {
             try
@@ -3131,6 +3046,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 int intIndex = gvRowK.RowIndex;
                 bool lexiste = false;
                 lblerror.Text = "";
+                DataRow valoresNormal = ConsultarValoresAgendamientoNormal();
 
                 bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
                 bool esFlujoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
@@ -3522,32 +3438,24 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //    filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
 
                     //}
-                    bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                    bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
+                    //bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
+                    //bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
 
-                    if (vieneDeExamen && esLaboratorio)
-                    {
-                        if (ViewState["descripcion"] == null || ViewState["descripcion"].ToString().Trim() == "")
-                        {
-                            new Funciones().funShowJSMessage("Debe seleccionar al menos un examen.",this);
-                            return;
-                        }
 
-                        // Exámenes seleccionados
-                        filagre["Observacion"] = ViewState["descripcion"].ToString();
+                    //filagre["Latitud"] = Convert.ToDecimal(valoresNormal["PVP"]).ToString("0.00", CultureInfo.InvariantCulture);
+                    //filagre["Longitud"] = Convert.ToDecimal(valoresNormal["RED"]).ToString("0.00", CultureInfo.InvariantCulture);
+                    filagre["Latitud"] = valoresNormal["PVP"] == DBNull.Value
+                    ? ""
+                    : Convert.ToDecimal(valoresNormal["PVP"])
+                        .ToString("0.00", CultureInfo.InvariantCulture);
 
-                        // Ya no usamos PVP.
-                        // Se deja 0 para mantener la estructura existente.
-                        filagre["Latitud"] = "0.00";
-
-                        // Valor RED total
-                        filagre["Longitud"] = ViewState["sumaRed"] != null ? Convert.ToDecimal(ViewState["sumaRed"]).ToString("0.00",CultureInfo.InvariantCulture): "0.00";
-                    }
-                    else
-                    {
-                        filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-                    }
-
+                    filagre["Longitud"] = valoresNormal["RED"] == DBNull.Value
+                        ? ""
+                        : Convert.ToDecimal(valoresNormal["RED"])
+                            .ToString("0.00", CultureInfo.InvariantCulture);
+                    string nombreEspecialidadNormal =ddlEspecialidad.SelectedItem.Text.Trim();
+                    string notaNormal = txtObservacion.Text.Trim();
+                    filagre["Observacion"] = nombreEspecialidadNormal + (notaNormal.Length == 0 ? "" : " | " + notaNormal);
                     tblagre.Rows.Add(filagre);
                     ViewState["tbCitaMedica"] = tblagre;
                     grdvResumenCita.DataSource = tblagre;
@@ -4289,6 +4197,90 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
+        //cambio
+        // Pegar DENTRO de la clase FrmAgendarCitaMedica, fuera de otros métodos.
+        private string ContextoExamenModalActual()
+        {
+            return ddlCiudad.SelectedValue + "|" + ddlPrestadora.SelectedValue + "|" +
+                ddlEspecialidad.SelectedValue + "|" + Convert.ToString(ViewState["TituCodigo"]) +
+                "|" + Convert.ToString(ViewState["BeneCodigo"]);
+        }
+
+        private void LimpiarSeleccionExamenModal()
+        {
+            ViewState.Remove("descripcion");
+            ViewState.Remove("codigosExamenes");
+            ViewState.Remove("sumaLab");
+            ViewState.Remove("sumaRed");
+            ViewState.Remove("ContextoSeleccionExamenModal");
+            ViewState.Remove("ContextoCatalogoExamenModal");
+            hfTotalEsp.Value = "0.00";
+            hfTotalRed.Value = "0.00";
+        }
+
+        private bool CargarConfiguracionExamenesDelPrestador()
+        {
+            LimpiarSeleccionExamenModal();
+            ViewState["PrestadorTieneCatalogoExamenes"] = false;
+            ViewState["ContextoPrestadorCatalogo"] = "";
+            int ciudad, prestador;
+            if (!int.TryParse(ddlCiudad.SelectedValue, out ciudad) || ciudad <= 0 ||
+                !int.TryParse(ddlPrestadora.SelectedValue, out prestador) || prestador <= 0)
+                return false;
+
+            object[] parametros = { ciudad, prestador };
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametros);
+            if (ds == null || ds.Tables.Count == 0)
+                throw new InvalidOperationException("No se pudo consultar el catálogo del prestador. Vuelva a seleccionarlo.");
+
+            bool tieneCatalogo = ds.Tables[0].Rows.Count > 0;
+            ViewState["PrestadorTieneCatalogoExamenes"] = tieneCatalogo;
+            ViewState["ContextoPrestadorCatalogo"] = ciudad.ToString() + "|" + prestador.ToString();
+            return tieneCatalogo;
+        }
+
+        private bool EsLaboratorioConModal()
+        {
+            //bool vieneDeExamen = Convert.ToString(Session["Regresar"]) == "1";
+            //bool configurado = Convert.ToString(ViewState["PrestadorTieneCatalogoExamenes"]) == "True" &&
+            //    Convert.ToString(ViewState["ContextoPrestadorCatalogo"]) ==
+            //    ddlCiudad.SelectedValue + "|" + ddlPrestadora.SelectedValue;
+            //return (vieneDeExamen || configurado) && ddlEspecialidad.SelectedItem != null &&
+            //    string.Equals(ddlEspecialidad.SelectedItem.Text.Trim(), "LABORATORIO", StringComparison.OrdinalIgnoreCase);
+            return false;
+        }
+
+        private void ValidarSeleccionExamenModal()
+        {
+            if (!EsLaboratorioConModal()) return;
+            if (Convert.ToString(ViewState["ContextoSeleccionExamenModal"]) != ContextoExamenModalActual() ||
+                string.IsNullOrWhiteSpace(Convert.ToString(ViewState["descripcion"])) ||
+                ViewState["sumaRed"] == null)
+                throw new InvalidOperationException("Seleccione los exámenes para este paciente y prestador antes de reservar la hora.");
+            if (Convert.ToDecimal(ViewState["sumaRed"]) < 0)
+                throw new InvalidOperationException("El total de los exámenes no puede ser negativo.");
+        }
+
+        private void AplicarDatosExamenAlResumen(DataRow fila)
+        {
+            if (EsLaboratorioConModal())
+            {
+                ValidarSeleccionExamenModal();
+                fila["Observacion"] = Convert.ToString(ViewState["descripcion"]);
+                // Convención provisional solicitada: total seleccionado en el primer importe.
+                // El segundo queda en cero hasta definir PVP/costo.
+                fila["Latitud"] = Convert.ToDecimal(ViewState["sumaRed"])
+                    .ToString("0.00", CultureInfo.InvariantCulture);
+                fila["Longitud"] = "0.00";
+            }
+            else
+            {
+                // Las demás citas conservan el comportamiento del CS recibido.
+                fila["Observacion"] = txtObservacion.Text.Trim().ToUpper();
+            }
+        }
+
+
         //CAMBIO
         //MODAL LABORATORIO
         private void AbrirModalEspecialidades()
@@ -4322,6 +4314,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 List<int> examenesRedSumados = new List<int>();
 
                 bool check = false;
+
+                if (!EsLaboratorioConModal() || Convert.ToString(ViewState["ContextoCatalogoExamenModal"]) != ContextoExamenModalActual())
+                {
+                    throw new InvalidOperationException(
+                        "Cambió el paciente o el prestador. Seleccione nuevamente " +
+                        "LABORATORIO para cargar sus exámenes."
+                    );
+                }
 
                 for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
                 {
@@ -4410,24 +4410,41 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["codigosExamenes"] = string.Join(",",codigosSeleccionados.ToArray());
                 ViewState["sumaLab"] = 0m;
                 ViewState["sumaRed"] = Math.Round(sumaRed,2);
+                ViewState["ContextoSeleccionExamenModal"] = ContextoExamenModalActual();
                 hfTotalEsp.Value = "0.00";
                 hfTotalRed.Value = sumaRed.ToString("0.00",CultureInfo.InvariantCulture);
 
-                string mensaje = "Exámenes seleccionados:\\n\\n" +
-                    string.Join(
-                        "\\n",
-                        descripciones.ToArray()
-                    );
+                //string mensaje = "Exámenes seleccionados:\\n\\n" +
+                //    string.Join(
+                //        "\\n",
+                //        descripciones.ToArray()
+                //    );
+
+                //ScriptManager.RegisterStartupScript(
+                //    this,
+                //    this.GetType(),
+                //    "msgExamenes",
+                //    "alert('" +
+                //    HttpUtility.JavaScriptStringEncode(
+                //        mensaje
+                //    ) +
+                //    "');",
+                //    true
+                //);
+                string mensaje = "Exámenes seleccionados:\n\n" +
+                string.Join("\n", descripciones.ToArray());
+
+                string script = "hideModal('" +
+                    HttpUtility.JavaScriptStringEncode(pnlModalEspecialidades.ClientID) +
+                    "');alert('" +
+                    HttpUtility.JavaScriptStringEncode(mensaje) +
+                    "');";
 
                 ScriptManager.RegisterStartupScript(
                     this,
                     this.GetType(),
-                    "msgExamenes",
-                    "alert('" +
-                    HttpUtility.JavaScriptStringEncode(
-                        mensaje
-                    ) +
-                    "');",
+                    "cerrarYConfirmarExamenes",
+                    script,
                     true
                 );
             }

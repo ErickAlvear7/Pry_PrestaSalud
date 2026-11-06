@@ -55,7 +55,8 @@
                 if (dt.Tables[0].Rows.Count == 0) ViewState["intentos"] = "3";
                 else
                 {
-                    ViewState["PolicasUsuario"] = dt.Tables[0].Rows[0][1].ToString();
+                    //ViewState["PolicasUsuario"] = dt.Tables[0].Rows[0][1].ToString();
+                    ViewState["PoliticasUsuario"] = dt.Tables[0].Rows[0][1].ToString();
                     ViewState["intentos"] = dt.Tables[0].Rows[1][1].ToString();
                 }
                 if (!new Funciones().IsNumber(ViewState["intentos"].ToString())) ViewState["intentos"] = "3";
@@ -132,6 +133,7 @@
                     Session["validar"] = contador;
                     if (ValidarUsuario(txtukyxz.Text, txtppkd.Text))
                     {
+
                         Array.Resize(ref objparam, 11);
                         objparam[0] = 4;
                         objparam[1] = "LOGOBV";

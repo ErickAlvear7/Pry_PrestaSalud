@@ -20,8 +20,6 @@ public partial class Mantenedor_FrmMenu : Page
 
         string detalleLogo;
 
-       
-
         if (!IsPostBack)
         {
             dts = new Conexion(2, "").SIWebseg(int.Parse(Session["usuCodigo"].ToString()));
@@ -31,23 +29,24 @@ public partial class Mantenedor_FrmMenu : Page
                 trvmenu.ExpandAll();
             }
 
-            switch (Convert.ToString(Session["usuCodigo"]))
-            {
-                case "5191":
-                    detalleLogo = "PRUEBA";
-                    break;
+            //switch (Convert.ToString(Session["usuCodigo"]))
+            //{
+            //    case "5191":
+            //        detalleLogo = "PRUEBA";
+            //        break;
+            //    case "2675":
+            //        detalleLogo = "DAQUILEMA";
+            //        break;
 
-                // Agrega aquí los demás códigos y sus logos.
-
-                default:
-                    detalleLogo = "LOGOSI";
-                    break;
-            }
+            //    default:
+            //        detalleLogo = "LOGOSI";
+            //        break;
+            //}
 
             Array.Resize(ref objparam, 11);
             objparam[0] = 4;
-            //objparam[1] = "LOGOSI";
-            objparam[1] = detalleLogo;
+            objparam[1] = "LOGOSI";
+            //objparam[1] = detalleLogo;
             objparam[2] = "PATH LOGOS";
             objparam[3] = "";
             objparam[4] = "";

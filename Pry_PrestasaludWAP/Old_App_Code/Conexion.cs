@@ -784,14 +784,61 @@ public class Conexion
         }
         return mensaje;
     }
+    //public DataSet FunCodigoCita(object[] objparam, DataTable dt)
+    //{
+    //    try
+    //    {
+    //        using (SqlCommand cmd = new SqlCommand("sp_AgendaMedica"))
+    //        {
+    //            cmd.CommandType = CommandType.StoredProcedure;
+    //            cmd.Connection = Sqlcn;
+    //            cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
+    //            cmd.Parameters.AddWithValue("@in_codigoproducto", int.Parse(objparam[1].ToString()));
+    //            cmd.Parameters.AddWithValue("@in_usucodigo", objparam[2]);
+    //            cmd.Parameters.AddWithValue("@in_terminal", objparam[3]);
+    //            cmd.Parameters.AddWithValue("@in_observacion", objparam[4]);
+    //            cmd.Parameters.AddWithValue("@in_fuente", objparam[5]);
+    //            cmd.Parameters.AddWithValue("@in_tipopago", objparam[6]);
+    //            cmd.Parameters.AddWithValue("@in_Copago", objparam[7]);
+    //            cmd.Parameters.AddWithValue("@EmptyCitaMedica", dt);
+    //            Sqlcn.Open();
+    //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+    //            da.Fill(ds);
+    //            mensaje = "";
+    //            //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+    //        }
+    //        return ds;
+    //    }
+
+    //    catch (Exception ex)
+    //    {
+    //        return ds = null;
+    //    }
+
+    //}
+
+    // Sustituir SOLO este método en la clase Conexion.
+    // Requiere los using de System.Data y System.Data.SqlClient ya utilizados por la clase.
     public DataSet FunCodigoCita(object[] objparam, DataTable dt)
     {
+        bool abrioConexion = false;
         try
         {
-            using (SqlCommand cmd = new SqlCommand("sp_AgendaMedica"))
+            if (dt == null || !dt.Columns.Contains("Observacion"))
+                throw new ArgumentException("No se recibió la tabla de citas con su observación.");
+
+            bool requiereTextoLargo = false;
+            foreach (DataRow fila in dt.Rows)
+            {
+                if (Convert.ToString(fila["Observacion"]).Length > 250)
+                { requiereTextoLargo = true; break; }
+            }
+
+            string procedimiento = requiereTextoLargo ? "dbo.sp_AgendaMedicaExamenes" : "dbo.sp_AgendaMedica";
+            string tipoTabla = requiereTextoLargo ? "dbo.EmptyCitaMedicaExamenType" : "dbo.EmptyCitaMedicaType";
+            using (SqlCommand cmd = new SqlCommand(procedimiento, Sqlcn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Connection = Sqlcn;
                 cmd.Parameters.AddWithValue("@in_tipo", int.Parse(objparam[0].ToString()));
                 cmd.Parameters.AddWithValue("@in_codigoproducto", int.Parse(objparam[1].ToString()));
                 cmd.Parameters.AddWithValue("@in_usucodigo", objparam[2]);
@@ -800,22 +847,29 @@ public class Conexion
                 cmd.Parameters.AddWithValue("@in_fuente", objparam[5]);
                 cmd.Parameters.AddWithValue("@in_tipopago", objparam[6]);
                 cmd.Parameters.AddWithValue("@in_Copago", objparam[7]);
-                cmd.Parameters.AddWithValue("@EmptyCitaMedica", dt);
-                Sqlcn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(ds);
+                SqlParameter tabla = cmd.Parameters.Add("@EmptyCitaMedica", SqlDbType.Structured);
+                tabla.TypeName = tipoTabla;
+                tabla.Value = dt;
+                if (Sqlcn.State == ConnectionState.Closed)
+                { Sqlcn.Open(); abrioConexion = true; }
+                DataSet resultado = new DataSet();
+                using (SqlDataAdapter adaptador = new SqlDataAdapter(cmd))
+                    adaptador.Fill(resultado);
                 mensaje = "";
-                //int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+                return resultado;
             }
-            return ds;
         }
-
         catch (Exception ex)
         {
-            return ds = null;
+            mensaje = ex.Message;
+            throw new InvalidOperationException("No se pudo guardar la cita. Revise el detalle del error antes de reintentar.", ex);
         }
-
+        finally
+        {
+            if (abrioConexion && Sqlcn.State != ConnectionState.Closed) Sqlcn.Close();
+        }
     }
+
     public DataSet FunCodigoCitalINK(object[] objparam)
     {
         try

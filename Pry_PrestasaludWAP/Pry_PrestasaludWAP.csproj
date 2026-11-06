@@ -560,6 +560,13 @@
     <Compile Include="Especialidad\FrmNuevaEspecialidad.aspx.designer.cs">
       <DependentUpon>FrmNuevaEspecialidad.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmAgendarExamenes.aspx.cs">
+      <DependentUpon>FrmAgendarExamenes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmAgendarExamenes.aspx.designer.cs">
+      <DependentUpon>FrmAgendarExamenes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\FrmAgregarExamenPrestadora.aspx.cs">
       <DependentUpon>FrmAgregarExamenPrestadora.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1634,6 +1641,7 @@
     <Content Include="ddl\System.Web.Optimization.dll" />
     <Content Include="ddl\System.Web.Providers.dll" />
     <Content Include="ddl\WebGrease.dll" />
+    <Content Include="Examenes\FrmAgendarExamenes.aspx" />
     <Content Include="Examenes\FrmAgregarExamenPrestadora.aspx" />
     <Content Include="Examenes\FrmAtencionExamen.aspx" />
     <Content Include="Examenes\FrmAuditarExamen.aspx" />

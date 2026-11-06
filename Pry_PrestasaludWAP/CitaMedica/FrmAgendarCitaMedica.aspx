@@ -715,7 +715,7 @@
                                             <td></td>
                                         </tr>
                                         <tr>
-                                            <%--  <td></td>
+                                        <%--    <td></td>
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>
@@ -750,17 +750,6 @@
                                             <td colspan="3">
                                                 <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-control" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged" TabIndex="11">
                                                 </asp:DropDownList>
-                                                <%--     <br />
-                                                    <asp:TextBox ID="txtEspecialidades"
-                                                    runat="server"
-                                                    CssClass="form-control"
-                                                    ReadOnly="true"
-                                                    placeholder="Especialidades seleccionadas">
-                                                </asp:TextBox>
-
-                                                <!-- NUEVO: Guarda los códigos seleccionados -->
-                                                <asp:HiddenField ID="hfEspecialidades"
-                                                    runat="server" />--%>
                                             </td>
                                             <td></td>
                                         </tr>
@@ -1277,5 +1266,6 @@
             </ContentTemplate>
         </asp:UpdatePanel>
     </form>
+
 </body>
 </html>

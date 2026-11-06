@@ -523,6 +523,45 @@ namespace Pry_PrestasaludWAP.CitaMedica
         //Obtener disponibilidad
          private void FunDisponibilidades(int codCiudad,int codEspeci,int codSucur, string fechaActual)
          {
+
+            //codigo aumentado para validar citas en Medicina General
+            if(codEspeci == 22)
+            {
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 1; //Medicina General 
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 174;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                int cmg = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                if (cmg == 4)
+                {
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
+
+                }
+            }
+
+            //codigo aumentado para validar citas en Especialidades
+
+            if (codEspeci == 16 || codEspeci== 23 || codEspeci== 11 || codEspeci== 42 || codEspeci== 44 ||
+                codEspeci == 28)
+            {
+                Array.Resize(ref objparam, 3);
+                objparam[0] = 2; //Especialidades
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
+                objparam[2] = 174;
+                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+
+                int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
+
+                if (cesp == 3)
+                {
+                    new Funciones().funShowJSMessage("Revise # Citas Agendadas en Especialidades!!..", this);
+                    return;
+                }
+            }
+
             respGetDispo = new MediLinkApi().GetDisponibilidad(_urlpro, Session["AccessToken"].ToString(), codCiudad, codEspeci, codSucur, fechaActual);
 
             if (!respGetDispo.IsEmpty()) lstBoxMedicos.Visible = true;

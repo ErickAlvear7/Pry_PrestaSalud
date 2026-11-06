@@ -8,7 +8,9 @@
     <link href="css/Logueo.css" rel="stylesheet" type="text/css" />
     <link href="css/Estilos.css" rel="stylesheet" type="text/css" />
     <link href="~/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="~/Bootstrap/js/bootstrap.min.js"></script>
+    <%--<script src="~/Bootstrap/js/bootstrap.min.js"></script>--%>
+    <script src="<%= ResolveUrl("~/Scripts/jquery-1.10.2.min.js") %>"></script>
+    <script src="<%= ResolveUrl("~/Bootstrap/js/bootstrap.min.js") %>"></script>
 </head>
 <body>
     <form id="form1" runat="server">
