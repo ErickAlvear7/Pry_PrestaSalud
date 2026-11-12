@@ -345,33 +345,124 @@ public class Conexion
     }
 
 
+    //public DataSet FunReportesDoctorV1(object[] objparam)
+    //{
+    //    try
+    //    {
+    //        using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctor"))
+    //        {
+    //            cmd.CommandType = CommandType.StoredProcedure;
+    //            cmd.Connection = Sqlcn;
+    //            cmd.CommandTimeout = 500; //este es el timeout
+    //            cmd.Parameters.AddWithValue("@in_tipo", objparam[0]);
+    //            cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
+    //            cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
+    //            cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3]);
+    //            cmd.Parameters.AddWithValue("@in_tipocliente", objparam[4].ToString());
+    //            Sqlcn.Open();
+    //            //cmd.ExecuteNonQuery();
+    //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+    //            da.Fill(ds);
+    //            return ds;
+    //        }
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return ds = null;
+    //    }
+    //}
+    // Reemplazar SOLO FunReportesDoctorV1 dentro de Conexion.
     public DataSet FunReportesDoctorV1(object[] objparam)
     {
+        bool abrioConexion = false;
         try
         {
-            using (SqlCommand cmd = new SqlCommand("sp_ReportesExpertDoctor"))
+            if (objparam == null || objparam.Length < 5)
+                throw new ArgumentException("Faltan parámetros para consultar el reporte.");
+
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_ReportesExpertDoctor", Sqlcn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Connection = Sqlcn;
-                cmd.CommandTimeout = 500; //este es el timeout
-                cmd.Parameters.AddWithValue("@in_tipo", objparam[0]);
-                cmd.Parameters.AddWithValue("@in_fechadesde", objparam[1].ToString());
-                cmd.Parameters.AddWithValue("@in_fechahasta", objparam[2].ToString());
-                cmd.Parameters.AddWithValue("@in_codigocamp", objparam[3]);
-                cmd.Parameters.AddWithValue("@in_tipocliente", objparam[4].ToString());
-                Sqlcn.Open();
-                //cmd.ExecuteNonQuery();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(ds);
-                return ds;
-            }
+                cmd.CommandTimeout = 500;
+                cmd.Parameters.Add("@in_tipo", SqlDbType.Int).Value = Convert.ToInt32(objparam[0]);
+                cmd.Parameters.Add("@in_fechadesde", SqlDbType.VarChar, 10).Value = Convert.ToString(objparam[1]);
+                cmd.Parameters.Add("@in_fechahasta", SqlDbType.VarChar, 10).Value = Convert.ToString(objparam[2]);
+                cmd.Parameters.Add("@in_codigocamp", SqlDbType.Int).Value = Convert.ToInt32(objparam[3]);
+                cmd.Parameters.Add("@in_tipocliente", SqlDbType.VarChar, 2).Value = Convert.ToString(objparam[4]);
 
+                if (Sqlcn.State == ConnectionState.Closed)
+                {
+                    Sqlcn.Open();
+                    abrioConexion = true;
+                }
+
+                DataSet resultado = new DataSet();
+                using (SqlDataAdapter adaptador = new SqlDataAdapter(cmd))
+                    adaptador.Fill(resultado);
+                return resultado;
+            }
         }
-        catch (Exception ex)
+        catch (SqlException ex)
         {
-            return ds = null;
+            System.Diagnostics.Trace.TraceError("FunReportesDoctorV1: {0}", ex.ToString());
+            throw new InvalidOperationException(
+                "Error SQL " + ex.Number + " al consultar el reporte: " + ex.Message, ex);
+        }
+        finally
+        {
+            if (abrioConexion && Sqlcn.State != ConnectionState.Closed)
+                Sqlcn.Close();
         }
     }
+
+    //nuevo metodo agregado para reporte odonto
+    // AÑADIR dentro de la clase Conexion. No reemplazar funConsultarSqls.
+    public DataSet FunReporteExpertOdonto(object[] parametros)
+    {
+        bool abrioConexion = false;
+        try
+        {
+            if (parametros == null || parametros.Length != 6)
+                throw new ArgumentException("El reporte odontológico requiere seis parámetros.");
+
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_ReportesExpertOdonto", Sqlcn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                // Conserva el timeout predeterminado de SqlDataAdapter/funConsultarSqls.
+                cmd.CommandTimeout = 500;
+                cmd.Parameters.Add("@in_tipo", SqlDbType.Int).Value = Convert.ToInt32(parametros[0]);
+                cmd.Parameters.Add("@in_codigocam", SqlDbType.Int).Value = Convert.ToInt32(parametros[1]);
+                cmd.Parameters.Add("@in_tipoagenda", SqlDbType.VarChar, 2).Value = Convert.ToString(parametros[2]);
+                cmd.Parameters.Add("@in_tipocliente", SqlDbType.VarChar, 2).Value = Convert.ToString(parametros[3]);
+                cmd.Parameters.Add("@in_fechadesde", SqlDbType.VarChar, 10).Value = Convert.ToString(parametros[4]);
+                cmd.Parameters.Add("@in_fechahasta", SqlDbType.VarChar, 10).Value = Convert.ToString(parametros[5]);
+
+                if (Sqlcn.State == ConnectionState.Closed)
+                {
+                    Sqlcn.Open();
+                    abrioConexion = true;
+                }
+                DataSet resultado = new DataSet();
+                using (SqlDataAdapter adaptador = new SqlDataAdapter(cmd))
+                    adaptador.Fill(resultado);
+                return resultado;
+            }
+        }
+        catch (SqlException ex)
+        {
+            System.Diagnostics.Trace.TraceError("sp_ReportesExpertOdonto: {0}", ex.ToString());
+            throw new InvalidOperationException(
+                "Error SQL " + ex.Number + " en el reporte odontológico: " + ex.Message, ex);
+        }
+        finally
+        {
+            if (abrioConexion && Sqlcn.State != ConnectionState.Closed)
+                Sqlcn.Close();
+        }
+    }
+
+
     public DataSet FunInsertarTurnos(object[] objparam, DataTable dt)
     {        
         try

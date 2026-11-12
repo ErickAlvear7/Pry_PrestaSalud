@@ -38,15 +38,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     return;
                 }
 
-                if(Session["codigocita"] != null) 
-                {
-                    if (int.Parse(Session["codigocita"].ToString()) > 0)
-                    {
-                        ScriptManager.RegisterStartupScript(this.updPrincipal, GetType(), "Resumen Cita", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmDatosCitaMedica.aspx?CodigoCita=" + Session["codigocita"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=870px, height=430px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
-                        Session["codigocita"] = 0;
-                    }
+                //if (Session["codigocita"] != null)
+                //{
+                //    if (int.Parse(Session["codigocita"].ToString()) > 0)
+                //    {
+                //        ScriptManager.RegisterStartupScript(this.updPrincipal, GetType(), "Resumen Cita", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmDatosCitaMedica.aspx?CodigoCita=" + Session["codigocita"].ToString() + "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=870px, height=430px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
+                //        Session["codigocita"] = 0;
+                //    }
 
-                }
+                //}
 
                 lbltitulo.Text = "Administración Titulares (Agendamiento Médico)";
                 if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());

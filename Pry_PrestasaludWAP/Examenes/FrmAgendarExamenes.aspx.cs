@@ -3206,55 +3206,9 @@ namespace Pry_PrestasaludWAP.Examenes
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["CodigoPrestadora"] = ddlPrestadora.SelectedValue;
-                    //if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" 
-                    //    || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261" 
-                    //    || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3365" 
-                    //    || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3327"
-                    //    || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
-                    //    || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
-                    //    || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
-                    //    || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
-                    //    || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
-                    //    || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
-                    //    || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
-                    //    || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                    //    || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
-                    //    || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
-                    //{
-                    //    filagre["Observacion"] = ViewState["descripcion"].ToString();
-                    //    filagre["Latitud"] = ViewState["sumaLab"].ToString();
-                    //    filagre["Longitud"] = ViewState["sumaRed"].ToString();
-                    //}
-                    //else
-                    //{
-                    //    filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-
-                    //}
+        
                     bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
                     bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
-
-                    //if (vieneDeExamen && esLaboratorio)
-                    //{
-                    //    if (ViewState["descripcion"] == null || ViewState["descripcion"].ToString().Trim() == "")
-                    //    {
-                    //        new Funciones().funShowJSMessage("Debe seleccionar al menos un examen.",this);
-                    //        return;
-                    //    }
-
-                    //    // Exámenes seleccionados
-                    //    filagre["Observacion"] = ViewState["descripcion"].ToString();
-
-                    //    // Ya no usamos PVP.
-                    //    // Se deja 0 para mantener la estructura existente.
-                    //    filagre["Latitud"] = "0.00";
-
-                    //    // Valor RED total
-                    //    filagre["Longitud"] = ViewState["sumaRed"] != null ? Convert.ToDecimal(ViewState["sumaRed"]).ToString("0.00",CultureInfo.InvariantCulture): "0.00";
-                    //}
-                    //else
-                    //{
-                    //    filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-                    //}
 
                     AplicarDatosExamenAlResumen(filagre);
                     tblagre.Rows.Add(filagre);
@@ -3271,13 +3225,42 @@ namespace Pry_PrestasaludWAP.Examenes
                 lblerror.Text = ex.ToString();
             }
         }
+        //protected void tmrdat_Tick(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        FunEliminarReservas();
+        //        if (int.Parse(ddlMedico.SelectedValue) > 0) FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblerror.Text = ex.ToString();
+        //    }
+        //}
         protected void tmrdat_Tick(object sender, EventArgs e)
         {
             try
             {
-                //Lamar al procedimiento para que elimine reservas
+                int usuario;
+                if (!int.TryParse(Convert.ToString(Session["usuCodigo"]), out usuario) || usuario <= 0)
+                {
+                    tmrdat.Enabled = false;
+                    return;
+                }
+
                 FunEliminarReservas();
-                if (int.Parse(ddlMedico.SelectedValue) > 0) FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
+
+                int medico, especialidad;
+
+                if (!int.TryParse(ddlMedico.SelectedValue, out medico) || medico <= 0 || !int.TryParse(ddlEspecialidad.SelectedValue, out especialidad) || especialidad <= 0)
+                {
+                    return;
+                }
+
+                if (CalendarioCita.SelectedDate == DateTime.MinValue)
+                    return;
+
+                FunAgendaHoras(0,especialidad,medico,CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"),CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
             }
             catch (Exception ex)
             {
@@ -3779,8 +3762,8 @@ namespace Pry_PrestasaludWAP.Examenes
                         }
                     }
                 }
-                if (mensaje == "") Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado='Cita(s) Cancelada(s) con Éxito'", true);
-                else Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado='Revise Mails, hubo errores en el envío..!'", true);
+                if (mensaje == "") Response.Redirect("FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Cancelada(s) con Éxito'", true);
+                else Response.Redirect("FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Revise Mails, hubo errores en el envío..!'", true);
             }
             catch (Exception ex)
             {
@@ -3931,7 +3914,7 @@ namespace Pry_PrestasaludWAP.Examenes
         }
         protected void lnkActualizar_Click(object sender, EventArgs e)
         {
-            ScriptManager.RegisterStartupScript(this.updDatosPersonales, GetType(), "Actualizar", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('FrmActualizarDatos.aspx?CodTitular=" +
+            ScriptManager.RegisterStartupScript(this.updDatosPersonales, GetType(), "Actualizar", "javascript: var posicion_x; var posicion_y; posicion_x=(screen.width/2)-(900/2); posicion_y=(screen.height/2)-(600/2); window.open('../CitaMedica/FrmActualizarDatos.aspx?CodTitular=" +
                 Session["CodigoTitular"].ToString() + "&CodProducto=" + Session["CodigoProducto"].ToString() + "&Regresar=" + Session["Regresar"].ToString() +
                 "',null,'left=' + posicion_x + ', top=' + posicion_y + ', width=1024px, height=600px, status=no,resizable= yes, scrollbars=yes, toolbar=no, location=no, menubar=no,titlebar=0');", true);
         }

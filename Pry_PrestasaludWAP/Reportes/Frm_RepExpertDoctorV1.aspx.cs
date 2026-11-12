@@ -1,4 +1,384 @@
-﻿using System;
+﻿//using System;
+//using System.Data;
+//using System.Globalization;
+//using System.IO;
+//using System.Linq;
+//using System.Threading;
+//using System.Web.UI;
+//using System.Web.UI.WebControls;
+
+//namespace Pry_PrestasaludWAP.Reportes
+//{
+//    public partial class Frm_RepExpertDoctorV1 : Page
+//    {
+//        #region Variables
+//        Object[] objparam = new Object[1];
+//        DataSet ds = new DataSet();
+//        string sentencia1 = "", sentencia2 = "", motivoAgenda = "";
+//        Thread thrEnviarSP;
+//        #endregion
+
+//        #region Load
+//        protected void Page_Load(object sender, EventArgs e)
+//        {
+//            if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
+//                Response.Redirect("~/Reload.html");
+//            ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
+//            scriptManager.RegisterPostBackControl(this.imgExportar);
+//            if (!IsPostBack)
+//            {
+//                if (Session["SalirAgenda"].ToString() == "NO")
+//                {
+//                    if (Session["TipoCita"].ToString() == "CitaMedica")
+//                        Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + Session["CodigoTitular"].ToString() + "&CodigoProducto=" + Session["CodigoProducto"].ToString(), true);
+
+//                    if (Session["TipoCita"].ToString() == "CitaOdontologica")
+//                        Response.Redirect("~/CitaOdontologica/FrmAgendarCitaOdonto.aspx?Tipo=" + "E" + "&CodigoTitular=" + Session["CodigoTitular"].ToString() + "&CodigoProducto=" + Session["CodigoProducto"].ToString(), true);
+//                    return;
+//                }
+//                txtFechaIni.Text = DateTime.Now.ToString("yyyy-MM-dd");
+//                txtFechaFin.Text = DateTime.Now.ToString("yyyy-MM-dd");
+//                lbltitulo.Text = "Reportes Expert Doctor <BASICO 1.0>";
+//                FunCascadaCombos(0);
+//                FunCascadaCombos(1);
+
+//            }
+//            else grdvDatos.DataSource = ViewState["grdvDatos"];
+//        }
+//        #endregion
+
+//        #region Procedimientos y Funciones
+//        private void FunCascadaCombos(int opcion)
+//        {
+//            switch (opcion)
+//            {
+//                case 0:
+//                    Array.Resize(ref objparam, 1);
+//                    objparam[0] = 38;
+//                    //ddlTipoAgenda.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+//                    //ddlTipoAgenda.DataTextField = "Descripcion";
+//                    //ddlTipoAgenda.DataValueField = "Codigo";
+//                    //ddlTipoAgenda.DataBind();
+//                    break;
+//                case 1:
+//                    Array.Resize(ref objparam, 1);
+//                    objparam[0] = 51;
+//                    ddlCliente.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+//                    ddlCliente.DataTextField = "Descripcion";
+//                    ddlCliente.DataValueField = "Codigo";
+//                    ddlCliente.DataBind();
+//                    break;
+//            }
+//        }
+//        #endregion
+
+//        #region Botones y Eventos
+//        protected void btnProcesar_Click(object sender, EventArgs e)
+//        {
+//            lblerror.Text = "";
+//            //if (ddlTipoAgenda.SelectedValue == "0")
+//            //{
+//            //    new Funciones().funShowJSMessage("Seleccione Tipo Agenda..!", this);
+//            //    return; 
+//            //}
+
+//            if (!new Funciones().IsDateNewx(txtFechaIni.Text))
+//            {
+//                new Funciones().funShowJSMessage("No es una fecha válida..!", this);
+//                return;
+//            }
+
+//            if (!new Funciones().IsDateNewx(txtFechaFin.Text))
+//            {
+//                new Funciones().funShowJSMessage("No es una fecha válida..!", this);
+//                return;
+//            }
+
+//            if (DateTime.ParseExact(txtFechaIni.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture))
+//            {
+//                new Funciones().funShowJSMessage("La Fecha de Inicio no puede ser mayor a la Fecha de Fin..!", this);
+//                return;
+//            }
+
+//            #region Programacion Orientada
+//            //if (rdbFechaRegistro.Checked) sentencia1 = "where convert(date,CI.cita_fechacreacion,101) between ";
+//            //if (rdbFechaCita.Checked) sentencia1 = "where convert(date,HI.hici_fechacita,101) between ";
+//            ////CONSULTAR TODOS
+//            //if (ddlTipoAgenda.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue == "0") 
+//            //    sentencia2 = "";
+
+//            ////CONSULTAR POR TIPO AGENDA
+//            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue == "0")
+//            //{
+//            //    if (ddlTipoAgenda.SelectedItem.ToString() != "")
+//            //        //sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "''";
+//            //        //sentencia2 = "and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "''";
+//            //        sentencia2 = "and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue + "''";
+//            //}
+
+//            ////CONSULTAR POR TIPO CLIENTE
+//            //if (ddlTipoAgenda.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue == "0")
+//            //    sentencia2 = "and CI.cita_tipocliente=''" + ddlTipoCliente.SelectedValue + "''";
+
+//            ////CONSULTAR TIPO AGENDA Y TIPO CLIENTE
+//            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue == "0")
+//            //    sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
+//            //        "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" + ddlTipoCliente.SelectedValue + "''";
+
+//            ////CONSULTAR TIPO AGENDA Y MOTIVO
+//            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue != "0")
+//            //{
+//            //    if (ddlTipoAgenda.SelectedValue == "C")
+//            //    {
+//            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
+//            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_motivo=" +
+//            //            ddlMotivoCita.SelectedValue;
+//            //    }
+//            //    else
+//            //    {
+//            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
+//            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_descripcioncita=''" +
+//            //            ddlMotivoCita.SelectedValue + "''";
+//            //    }
+//            //}
+
+//            ////CONSULTAR TIPO AGENDA - TIPO CLIENTE - MOTIVO
+//            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue != "0")
+//            //{
+//            //    if (ddlTipoAgenda.SelectedValue == "C")
+//            //    {
+//            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
+//            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" +
+//            //            ddlTipoCliente.SelectedValue + "'' and HI.hici_motivo=" + ddlMotivoCita.SelectedValue;
+//            //    }
+//            //    else
+//            //    {
+//            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
+//            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" +
+//            //            ddlTipoCliente.SelectedValue + "'' and HI.hici_descripcioncita=''" + ddlMotivoCita.SelectedValue + "''";
+//            //    }
+//            //}
+//            ////CONSULTAR POR TIPO DE CLIENTE
+//            //if (ddlCliente.SelectedValue != "0")
+//            //{
+//            //    sentencia2 = " and PR.CAMP_CODIGO=" + ddlCliente.SelectedValue;
+//            //}
+//            #endregion
+
+//            Array.Resize(ref objparam, 5);
+//            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
+//            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
+//            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 2;
+//            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 3;
+//            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 4;
+//            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 5;
+//            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
+//            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
+
+//            imgExportar.Visible = true;
+//            lblExportar.Visible = true;
+//            ViewState["ListoReporte"] = "NO";
+
+//            if (ddlCliente.SelectedValue == "0") objparam[0] = 0;
+//            if (ddlCliente.SelectedValue != "0")  objparam[0] = 1;
+
+//            //System.Threading.Thread.Sleep(500);            
+//            objparam[1] = txtFechaIni.Text;
+//            objparam[2] = txtFechaFin.Text;
+//            objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
+//            objparam[4] = "0";
+
+//            //thrEnviarSP = new Thread(new ThreadStart(FunGenerarReporte));
+//            //thrEnviarSP.Start();
+
+//            //APARENTEMENTE SE VAN AL MISMO SP CON LOS MISMOS PARAMETROS
+//            //ESTE LLENA EL GRIDVIEW
+//            ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
+
+//            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
+//            {
+//                //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
+//                grdvDatos.DataSource = ds.Tables[0];
+//                //grdvDatos.DataSource = dtresul;
+//                grdvDatos.DataBind();
+//                //ViewState["grdvDatos"] = ds.Tables[0];
+
+//            }
+//            else
+//            {
+//                new Funciones().funShowJSMessage("No se encontraron datos..!", this);
+//            }
+
+//            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+//            //{
+//            //    //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
+//            //    grdvDatos.DataSource = ds.Tables[0];
+//            //    //grdvDatos.DataSource = dtresul;
+//            //    grdvDatos.DataBind();
+//            //    //ViewState["grdvDatos"] = ds.Tables[0];
+
+//            //}
+//            //else
+//            //{
+//            //    new Funciones().funShowJSMessage("No se encontraron datos..!", this);
+//            //}
+//        }
+
+//        protected void FunGenerarReporte()
+//        {
+//            try
+//            {
+//                //ESTE CONSULTA PARA ALMACENAR LOS DATOS PARA EXPORTAR
+//                Array.Resize(ref objparam, 5);
+//                if (ddlCliente.SelectedValue == "0") objparam[0] = 2;
+//                if (ddlCliente.SelectedValue != "0") objparam[0] = 3;
+
+//                objparam[1] = txtFechaIni.Text;
+//                objparam[2] = txtFechaFin.Text;
+//                objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
+//                objparam[4] = "0";
+
+//                ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
+
+//                if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
+//                {
+//                    ViewState["ListoReporte"] = "SI";
+//                    ViewState["grdvDatos"] = ds.Tables[0];
+//                }
+//                else
+//                {
+//                    ViewState["ListoReporte"] = "NO";
+//                    imgExportar.Visible = false;
+//                    lblExportar.Visible = false;
+//                }
+
+//                //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+//                //{
+//                //    ViewState["ListoReporte"] = "SI";
+//                //    ViewState["grdvDatos"] = ds.Tables[0];
+//                //}
+//                //else
+//                //{
+//                //    ViewState["ListoReporte"] = "NO";
+//                //    imgExportar.Visible = false;
+//                //    lblExportar.Visible = false;
+//                //}
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
+//                throw;
+//            }
+
+
+//        }
+
+//        //protected void FunGenerarReporte()
+//        //{
+//        //    ViewState["ListoReporte"] = "NO";
+//        //    ViewState["grdvDatos"] = null;
+
+//        //    object[] parametros = new object[]
+//        //    {
+//        //        ddlCliente.SelectedValue == "0" ? 2 : 3,
+//        //        txtFechaIni.Text,
+//        //        txtFechaFin.Text,
+//        //        int.Parse(ddlCliente.SelectedValue),
+//        //        "0"
+//        //    };
+
+//        //    DataSet resultado = new Conexion(2, "").FunReportesDoctorV1(parametros);
+
+//        //    if (resultado == null)
+//        //        throw new InvalidOperationException(
+//        //            "FunReportesDoctorV1 devolvió un DataSet nulo.");
+
+//        //    if (resultado.Tables.Count == 0)
+//        //        throw new InvalidOperationException(
+//        //            "La consulta no devolvió ninguna tabla.");
+
+//        //    if (resultado.Tables[0].Rows.Count == 0)
+//        //    {
+//        //        new Funciones().funShowJSMessage(
+//        //            "No se encontraron datos para exportar.", this);
+//        //        return;
+//        //    }
+
+//        //    ViewState["grdvDatos"] = resultado.Tables[0];
+//        //    ViewState["ListoReporte"] = "SI";
+//        //}
+
+
+//        public override void VerifyRenderingInServerForm(Control control)
+//        {
+//            /* Verifies that the control is rendered */
+//        }
+
+//        protected void imgExportar_Click(object sender, ImageClickEventArgs e)
+//        {
+
+//            try
+//            {
+//                FunGenerarReporte();
+//                if (/*ViewState["ListoReporte"].ToString() == "SI"*/Convert.ToString(ViewState["ListoReporte"]) == "SI")
+//                {
+//                    Response.Clear();
+//                    Response.Buffer = true;
+//                    string FileName = "ReporteExpertDoctor_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xls";
+//                    Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+//                    Response.Charset = "";
+//                    Response.ContentType = "application/vnd.ms-excel";
+//                    using (StringWriter sw = new StringWriter())
+//                    {
+//                        HtmlTextWriter hw = new HtmlTextWriter(sw);
+//                        grdvDatos.AllowPaging = false;
+//                        grdvDatos.DataSource = (DataTable)ViewState["grdvDatos"];
+//                        grdvDatos.DataBind();
+//                        //grdvDatos.HeaderRow.BackColor = Color.White;
+//                        foreach (GridViewRow row in grdvDatos.Rows)
+//                        {
+//                            //row.BackColor = Color.White;
+//                            row.Cells[7].Style.Add("mso-number-format", "\\@");
+//                            //row.Cells[2].Style.Add("mso-number-format", "\\@");
+//                            //row.Cells[3].Style.Add("mso-number-format", "\\@");
+//                            //row.Cells[15].Style.Add("mso-number-format", "\\@");
+//                        }
+//                        grdvDatos.RenderControl(hw);
+//                        string style = @"<style> .textmode { } </style>";
+//                        Response.Write(style);
+//                        Response.Output.Write(sw.ToString());
+//                        Response.Flush();
+//                        Response.End();
+//                    }
+//                }
+//                else
+//                {
+//                    new Funciones().funShowJSMessage("Espsere un momento porfavor, se esta generando el reporte..!", this);
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
+//                throw;
+//            }
+
+//        }
+
+//        protected void grdvDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+//        {
+//            grdvDatos.PageIndex = e.NewPageIndex;
+//            grdvDatos.DataBind();
+//        }
+
+//        protected void btnSalir_Click(object sender, EventArgs e)
+//        {
+//            Response.Redirect("~/Mantenedor/FrmDetalle.aspx", true);
+//        }
+//        #endregion
+//    }
+//}
+
+using System;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -21,18 +401,30 @@ namespace Pry_PrestasaludWAP.Reportes
         #region Load
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
-                Response.Redirect("~/Reload.html");
+            if (string.IsNullOrWhiteSpace(Convert.ToString(Session["usuCodigo"])))
+            {
+                Response.Redirect("~/Reload.html", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
             ScriptManager scriptManager = ScriptManager.GetCurrent(this.Page);
+            if (scriptManager == null || imgExportar == null)
+            {
+                lblerror.Text = "La página publicada no tiene el ScriptManager o el control de exportación esperado. Verifique ASPX y DLL.";
+                return;
+            }
+
+            scriptManager.AsyncPostBackTimeout = 600;
             scriptManager.RegisterPostBackControl(this.imgExportar);
+
             if (!IsPostBack)
             {
-                if (Session["SalirAgenda"].ToString() == "NO")
+                if (Convert.ToString(Session["SalirAgenda"]) == "NO")
                 {
-                    if (Session["TipoCita"].ToString() == "CitaMedica")
+                    if (Convert.ToString(Session["TipoCita"]) == "CitaMedica")
                         Response.Redirect("~/CitaMedica/FrmAgendarCitaMedica.aspx?Tipo=" + "E" + "&CodigoTitular=" + Session["CodigoTitular"].ToString() + "&CodigoProducto=" + Session["CodigoProducto"].ToString(), true);
 
-                    if (Session["TipoCita"].ToString() == "CitaOdontologica")
+                    if (Convert.ToString(Session["TipoCita"]) == "CitaOdontologica")
                         Response.Redirect("~/CitaOdontologica/FrmAgendarCitaOdonto.aspx?Tipo=" + "E" + "&CodigoTitular=" + Session["CodigoTitular"].ToString() + "&CodigoProducto=" + Session["CodigoProducto"].ToString(), true);
                     return;
                 }
@@ -41,7 +433,7 @@ namespace Pry_PrestasaludWAP.Reportes
                 lbltitulo.Text = "Reportes Expert Doctor <BASICO 1.0>";
                 FunCascadaCombos(0);
                 FunCascadaCombos(1);
-                
+
             }
             else grdvDatos.DataSource = ViewState["grdvDatos"];
         }
@@ -76,238 +468,77 @@ namespace Pry_PrestasaludWAP.Reportes
         protected void btnProcesar_Click(object sender, EventArgs e)
         {
             lblerror.Text = "";
-            //if (ddlTipoAgenda.SelectedValue == "0")
-            //{
-            //    new Funciones().funShowJSMessage("Seleccione Tipo Agenda..!", this);
-            //    return; 
-            //}
-
-            if (!new Funciones().IsDateNewx(txtFechaIni.Text))
-            {
-                new Funciones().funShowJSMessage("No es una fecha válida..!", this);
-                return;
-            }
-
-            if (!new Funciones().IsDateNewx(txtFechaFin.Text))
-            {
-                new Funciones().funShowJSMessage("No es una fecha válida..!", this);
-                return;
-            }
-
-            if (DateTime.ParseExact(txtFechaIni.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture) > DateTime.ParseExact(txtFechaFin.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture))
-            {
-                new Funciones().funShowJSMessage("La Fecha de Inicio no puede ser mayor a la Fecha de Fin..!", this);
-                return;
-            }
-
-            #region Programacion Orientada
-            //if (rdbFechaRegistro.Checked) sentencia1 = "where convert(date,CI.cita_fechacreacion,101) between ";
-            //if (rdbFechaCita.Checked) sentencia1 = "where convert(date,HI.hici_fechacita,101) between ";
-            ////CONSULTAR TODOS
-            //if (ddlTipoAgenda.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue == "0") 
-            //    sentencia2 = "";
-
-            ////CONSULTAR POR TIPO AGENDA
-            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue == "0")
-            //{
-            //    if (ddlTipoAgenda.SelectedItem.ToString() != "")
-            //        //sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "''";
-            //        //sentencia2 = "and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "''";
-            //        sentencia2 = "and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue + "''";
-            //}
-
-            ////CONSULTAR POR TIPO CLIENTE
-            //if (ddlTipoAgenda.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue == "0")
-            //    sentencia2 = "and CI.cita_tipocliente=''" + ddlTipoCliente.SelectedValue + "''";
-
-            ////CONSULTAR TIPO AGENDA Y TIPO CLIENTE
-            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue == "0")
-            //    sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
-            //        "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" + ddlTipoCliente.SelectedValue + "''";
-
-            ////CONSULTAR TIPO AGENDA Y MOTIVO
-            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlMotivoCita.SelectedValue != "0")
-            //{
-            //    if (ddlTipoAgenda.SelectedValue == "C")
-            //    {
-            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
-            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_motivo=" +
-            //            ddlMotivoCita.SelectedValue;
-            //    }
-            //    else
-            //    {
-            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
-            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and HI.hici_descripcioncita=''" +
-            //            ddlMotivoCita.SelectedValue + "''";
-            //    }
-            //}
-
-            ////CONSULTAR TIPO AGENDA - TIPO CLIENTE - MOTIVO
-            //if (ddlTipoAgenda.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlMotivoCita.SelectedValue != "0")
-            //{
-            //    if (ddlTipoAgenda.SelectedValue == "C")
-            //    {
-            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
-            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" +
-            //            ddlTipoCliente.SelectedValue + "'' and HI.hici_motivo=" + ddlMotivoCita.SelectedValue;
-            //    }
-            //    else
-            //    {
-            //        sentencia2 = "and CI.cita_estatuscita=''" + ddlTipoAgenda.SelectedValue +
-            //            "'' and HI.hici_estadocita=''" + ddlTipoAgenda.SelectedValue + "'' and CI.cita_tipocliente=''" +
-            //            ddlTipoCliente.SelectedValue + "'' and HI.hici_descripcioncita=''" + ddlMotivoCita.SelectedValue + "''";
-            //    }
-            //}
-            ////CONSULTAR POR TIPO DE CLIENTE
-            //if (ddlCliente.SelectedValue != "0")
-            //{
-            //    sentencia2 = " and PR.CAMP_CODIGO=" + ddlCliente.SelectedValue;
-            //}
-            #endregion
-
-            Array.Resize(ref objparam, 5);
-            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 0;
-            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 1;
-            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 2;
-            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue == "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 3;
-            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 4;
-            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "A") objparam[0] = 5;
-            //if (ddlCliente.SelectedValue == "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 6;
-            //if (ddlCliente.SelectedValue != "0" && ddlTipoCliente.SelectedValue != "0" && ddlTipoAgenda.SelectedValue == "C") objparam[0] = 7;
-
-            imgExportar.Visible = true;
-            lblExportar.Visible = true;
             ViewState["ListoReporte"] = "NO";
-
-            if (ddlCliente.SelectedValue == "0") objparam[0] = 0;
-            if (ddlCliente.SelectedValue != "0")  objparam[0] = 1;
-
-            //System.Threading.Thread.Sleep(500);            
-            objparam[1] = txtFechaIni.Text;
-            objparam[2] = txtFechaFin.Text;
-            objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
-            objparam[4] = "0";
-
-            //thrEnviarSP = new Thread(new ThreadStart(FunGenerarReporte));
-            //thrEnviarSP.Start();
-
-            //APARENTEMENTE SE VAN AL MISMO SP CON LOS MISMOS PARAMETROS
-            //ESTE LLENA EL GRIDVIEW
-            ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
-
-            if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
+            ViewState["grdvDatos"] = null;
+            imgExportar.Visible = false;
+            lblExportar.Visible = false;
+            grdvDatos.DataSource = null;
+            grdvDatos.DataBind();
+            try
             {
-                //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
-                grdvDatos.DataSource = ds.Tables[0];
-                //grdvDatos.DataSource = dtresul;
+                DataTable tabla = ConsultarDatosReporteDoctor(false);
+                grdvDatos.PageIndex = 0;
+                ViewState["grdvDatos"] = tabla;
+                grdvDatos.DataSource = tabla;
                 grdvDatos.DataBind();
-                //ViewState["grdvDatos"] = ds.Tables[0];
-
+                imgExportar.Visible = tabla.Rows.Count > 0;
+                lblExportar.Visible = tabla.Rows.Count > 0;
+                if (tabla.Rows.Count == 0)
+                    lblerror.Text = "No se encontraron datos para los filtros seleccionados.";
             }
-            else
+            catch (Exception ex)
             {
-                new Funciones().funShowJSMessage("No se encontraron datos..!", this);
+                ViewState["grdvDatos"] = null;
+                grdvDatos.DataSource = null;
+                grdvDatos.DataBind();
+                lblerror.Text = System.Web.HttpUtility.HtmlEncode(ex.Message);
             }
-
-            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            //{
-            //    //DataTable dtresul = ds.Tables[0].AsEnumerable().Take(25).CopyToDataTable();
-            //    grdvDatos.DataSource = ds.Tables[0];
-            //    //grdvDatos.DataSource = dtresul;
-            //    grdvDatos.DataBind();
-            //    //ViewState["grdvDatos"] = ds.Tables[0];
-
-            //}
-            //else
-            //{
-            //    new Funciones().funShowJSMessage("No se encontraron datos..!", this);
-            //}
         }
 
         protected void FunGenerarReporte()
         {
-            try
+            ViewState["ListoReporte"] = "NO";
+            ViewState["grdvDatos"] = null;
+            DataTable tabla = ConsultarDatosReporteDoctor(true);
+            ViewState["grdvDatos"] = tabla;
+            ViewState["ListoReporte"] = tabla.Rows.Count > 0 ? "SI" : "NO";
+            if (tabla.Rows.Count == 0)
             {
-                //ESTE CONSULTA PARA ALMACENAR LOS DATOS PARA EXPORTAR
-                Array.Resize(ref objparam, 5);
-                if (ddlCliente.SelectedValue == "0") objparam[0] = 2;
-                if (ddlCliente.SelectedValue != "0") objparam[0] = 3;
-
-                objparam[1] = txtFechaIni.Text;
-                objparam[2] = txtFechaFin.Text;
-                objparam[3] = int.Parse(ddlCliente.SelectedValue.ToString());
-                objparam[4] = "0";
-
-                ds = new Conexion(2, "").FunReportesDoctorV1(objparam);
-
-                if (ds.Tables[0].Rows.Count > 0 || ds.Tables[0] != null)
-                {
-                    ViewState["ListoReporte"] = "SI";
-                    ViewState["grdvDatos"] = ds.Tables[0];
-                }
-                else
-                {
-                    ViewState["ListoReporte"] = "NO";
-                    imgExportar.Visible = false;
-                    lblExportar.Visible = false;
-                }
-
-                //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                //{
-                //    ViewState["ListoReporte"] = "SI";
-                //    ViewState["grdvDatos"] = ds.Tables[0];
-                //}
-                //else
-                //{
-                //    ViewState["ListoReporte"] = "NO";
-                //    imgExportar.Visible = false;
-                //    lblExportar.Visible = false;
-                //}
+                imgExportar.Visible = false;
+                lblExportar.Visible = false;
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
-                throw;
-            }
-
-
         }
 
-        //protected void FunGenerarReporte()
-        //{
-        //    ViewState["ListoReporte"] = "NO";
-        //    ViewState["grdvDatos"] = null;
+        private DataTable ConsultarDatosReporteDoctor(bool exportar)
+        {
+            int usuario;
+            if (!int.TryParse(Convert.ToString(Session["usuCodigo"]), out usuario) || usuario <= 0)
+                throw new InvalidOperationException("La sesión expiró. Ingrese nuevamente al sitio.");
 
-        //    object[] parametros = new object[]
-        //    {
-        //        ddlCliente.SelectedValue == "0" ? 2 : 3,
-        //        txtFechaIni.Text,
-        //        txtFechaFin.Text,
-        //        int.Parse(ddlCliente.SelectedValue),
-        //        "0"
-        //    };
+            DateTime desde, hasta;
+            if (!DateTime.TryParseExact(txtFechaIni.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out desde) ||
+                !DateTime.TryParseExact(txtFechaFin.Text, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out hasta))
+                throw new InvalidOperationException("Ingrese fechas válidas de inicio y fin.");
+            if (hasta < desde)
+                throw new InvalidOperationException("La fecha de inicio no puede ser mayor a la fecha de fin.");
 
-        //    DataSet resultado = new Conexion(2, "").FunReportesDoctorV1(parametros);
+            int campania;
+            if (!int.TryParse(ddlCliente.SelectedValue, out campania) || campania < 0)
+                throw new InvalidOperationException("Seleccione un cliente válido o la opción Todos.");
 
-        //    if (resultado == null)
-        //        throw new InvalidOperationException(
-        //            "FunReportesDoctorV1 devolvió un DataSet nulo.");
-
-        //    if (resultado.Tables.Count == 0)
-        //        throw new InvalidOperationException(
-        //            "La consulta no devolvió ninguna tabla.");
-
-        //    if (resultado.Tables[0].Rows.Count == 0)
-        //    {
-        //        new Funciones().funShowJSMessage(
-        //            "No se encontraron datos para exportar.", this);
-        //        return;
-        //    }
-
-        //    ViewState["grdvDatos"] = resultado.Tables[0];
-        //    ViewState["ListoReporte"] = "SI";
-        //}
-
+            object[] parametros = {
+                exportar ? (campania == 0 ? 2 : 3) : (campania == 0 ? 0 : 1),
+                desde.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                hasta.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                campania, "0"
+            };
+            DataSet resultado = new Conexion(2, "").FunReportesDoctorV1(parametros);
+            if (resultado == null || resultado.Tables.Count == 0)
+                throw new InvalidOperationException("El reporte no devolvió una tabla. Verifique la versión del SP y el método de conexión.");
+            return resultado.Tables[0];
+        }
 
         public override void VerifyRenderingInServerForm(Control control)
         {
@@ -356,12 +587,15 @@ namespace Pry_PrestasaludWAP.Reportes
                     new Funciones().funShowJSMessage("Espsere un momento porfavor, se esta generando el reporte..!", this);
                 }
             }
+            catch (ThreadAbortException)
+            {
+                // Response.End termina la descarga con esta excepción esperada de ASP.NET.
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("Error en sp_ReportesExpertDoctor: {0}", ex.ToString());
-                throw;
+                lblerror.Text = System.Web.HttpUtility.HtmlEncode(ex.Message);
             }
-          
+
         }
 
         protected void grdvDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)

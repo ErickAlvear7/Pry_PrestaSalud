@@ -20,10 +20,6 @@ using System.Web.UI.WebControls;
 using System.Web.WebPages;
 using static Pry_PrestasaludWAP.Modelo.MediLinkModel;
 using static Pry_PrestasaludWAP.Modelo.Models;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Drawing.Layout;
 
 
 namespace Pry_PrestasaludWAP.CitaMedica
@@ -48,7 +44,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         Object[] objsendmails = new Object[3];
         Object[] objsendsms = new Object[3];
         Object[] objconsulta = new Object[3];
-        Object[] objparamdirecpre = new Object[3]; 
+        Object[] objparamdirecpre = new Object[3];
         Object[] objparamgrupo = new Object[3];
         DataTable tbDatosCita = new DataTable();
         DataTable tbCitaMedica = new DataTable();
@@ -62,7 +58,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         ImageButton btnEstado = new ImageButton();
         CheckBox chkCancelar = new CheckBox();
         TimeSpan horaActual, horaAgenda, intervalo, intervaloHoras;
-        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "", dtFecha="", horaAc="",
+        string horaSistema = "", fechaActual = "", Calendario = "", returnFile = "", dtFecha = "", horaAc = "",
                 fileTemplate = "", subject = "", agenda = "", status = "", mensaje = "", fileLogo = "", mailsP = "",
                 mailsA = "", mailsD = "", sendmails = "", medicamentos = "", mailsU = "", codigo = "", descripcion = "",
                 textoSMS = "", trama = "", celular = "", usuarioSMS = "", passSMS = "", alerta = "", tipofecha = "", sql = "",
@@ -173,24 +169,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     dtbHorarios.Columns.Add("hour");
                     ViewState["HorariosMedico"] = dtbHorarios;
 
+
                     lbltitulo.Text = "Agendar Cita";
                     //Session["CodigoTitular"] = Request["CodigoTitular"];
                     //Session["CodigoProducto"] = Request["CodigoProducto"];
                     Session["CodigoTitular"] = Request["CodigoTitular"];
                     Session["CodigoProducto"] = Request["CodigoProducto"];
-                    Session["Regresar"] = Request["Regresar"];
-                    ViewState["CodigoEXSO"] = Request["CodigoEXSO"];//cambio aki
-                    int codigoEXSO = 0;
-                    if (Request["CodigoEXSO"] != null && int.TryParse(Request["CodigoEXSO"].ToString(),out codigoEXSO) && codigoEXSO > 0
-)
-                    {
-                        ViewState["EsFlujoExamen"] = "1";
-                    }
-                    else
-                    {
-                        ViewState["EsFlujoExamen"] = "0";
-                    }
-                    ViewState["CitaAdicional"] = Request["CitaAdicional"] != null && Request["CitaAdicional"].ToString() == "1" ? "1" : "0"; //cambio para nueva cita de examens
+                    Session["Regresar"] = "0"; // Esta página es únicamente de agendamiento normal.
                     Session["TipoCita"] = "CitaMedica";
                     ViewState["Intervalo"] = 0;
 
@@ -200,7 +185,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
                     objparam[2] = 0;
                     objparam[3] = int.Parse(Session["CodigoProducto"].ToString());
-                    dt = new Conexion(2, "").funConsultarSqls("x", objparam);
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarTitularEdit", objparam);
 
                     bool tieneFechaActiva = false;
 
@@ -269,13 +254,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         imgAgendar.Enabled = false;
                     }
 
-                    if (Session["Regresar"] != null)
-                    {
-                        if (Session["Regresar"].ToString() == "1")
-                        {
-                            TrFileUpload.Visible = false;
-                        }
-                    }
+                    if (TrFileUpload != null) TrFileUpload.Visible = false;
+                    if (updModalEsp != null) updModalEsp.Visible = false;
+                    if (pnlModalEspecialidades != null) pnlModalEspecialidades.Visible = false;
 
                     if (Request["MensajeRetornado"] != null) SIFunBasicas.Basicas.PresentarMensaje(Page, "::PRESTASALUD::", Request["MensajeRetornado"].ToString());
 
@@ -310,9 +291,9 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 lblerror.Text = ex.ToString();
             }
-        
+
         }
-    
+
         #endregion
 
         #region Funciones y Procedimientos
@@ -474,7 +455,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             {
                 Array.Resize(ref objparam, 3);
                 objparam[0] = 0;
-                objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); 
+                objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
                 objparam[2] = 173;
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
@@ -585,7 +566,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
 
-              
+
                 if (dt != null && dt.Tables.Count > 0 && dt.Tables[0].Rows.Count > 0)
                 {
                     var row = dt.Tables[0].Rows[0];
@@ -1119,6 +1100,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlCiudad.DataTextField = "Descripcion";
                         ddlCiudad.DataValueField = "Codigo";
                         ddlCiudad.DataBind();
+
                         break;
                     case 1:
                         ddlPrestadora.Items.Clear();
@@ -1135,28 +1117,11 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
-
-                        bool esFlujoExamen = ViewState["EsFlujoExamen"] != null && ViewState["EsFlujoExamen"].ToString() == "1";
-
-
-                        if (esFlujoExamen)
-                        {
-
-                            Array.Resize(ref objparam, 1);
-                            objparam[0] = int.Parse(ddlCiudad.SelectedValue);
-                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestadoresCiudad_Listar", objparam);
-                        }
-                        else
-                        {
-
-                            Array.Resize(ref objparam, 3);
-                            objparam[0] = ddlCiudad.SelectedValue;
-                            objparam[1] = "";
-                            objparam[2] = 5;
-
-                            ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                        }
-
+                        Array.Resize(ref objparam, 3);
+                        objparam[0] = ddlCiudad.SelectedValue;
+                        objparam[1] = "";
+                        objparam[2] = 5;
+                        ddlPrestadora.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlPrestadora.DataTextField = "Descripcion";
                         ddlPrestadora.DataValueField = "Codigo";
                         ddlPrestadora.DataBind();
@@ -1174,105 +1139,57 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlProvincia.DataBind();
                         break;
                     case 3:
-
                         ddlMedico.Items.Clear();
                         medi.Text = "--Seleccione Médico--";
                         medi.Value = "0";
                         ddlMedico.Items.Add(medi);
 
-                        esFlujoExamen = false;
-
                         Array.Resize(ref objparam, 3);
                         objparam[0] = ddlPrestadora.SelectedValue;
                         objparam[1] = "";
                         objparam[2] = 8;
-
                         ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlEspecialidad.DataTextField = "Descripcion";
                         ddlEspecialidad.DataValueField = "Codigo";
                         ddlEspecialidad.DataBind();
-                        //cambio aki
-                        foreach (ListItem item in ddlEspecialidad.Items)
-                        {
-                            item.Text = System.Text.RegularExpressions.Regex
-                                .Replace(item.Text, @"\s+", " ")
-                                .Trim();
-                        }
 
-
-                        if (ddlPrestadora.SelectedItem != null && ddlPrestadora.SelectedItem.ToString() == "PRESTADOR VIRTUAL")
+                        if (ddlPrestadora.SelectedItem != null &&
+                            ddlPrestadora.SelectedItem.Text.Trim() == "PRESTADOR VIRTUAL")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
                             objparam[1] = "";
                             objparam[2] = 190;
-
                             ddlEspecialidad.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                             ddlEspecialidad.DataTextField = "Descripcion";
                             ddlEspecialidad.DataValueField = "Codigo";
                             ddlEspecialidad.DataBind();
                             FunCascadaCombos(4);
                         }
-
                         break;
-                    case 4:
 
+                    case 4:
                         Array.Resize(ref objparam, 3);
                         objparam[0] = int.Parse(ddlEspecialidad.SelectedValue);
                         objparam[1] = "";
                         objparam[2] = 31;
-
                         ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                         ddlMedico.DataTextField = "Descripcion";
                         ddlMedico.DataValueField = "Codigo";
                         ddlMedico.DataBind();
 
-                        bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                        bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
-
-                        //if (vieneDeExamen && esLaboratorio && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
-                        if (EsLaboratorioConModal() && ddlCiudad.SelectedValue != "0" && ddlPrestadora.SelectedValue != "0")
-                        {
-
-                            LimpiarSeleccionExamenModal();
-                            object[] parametrosExamenes = new object[2];
-
-                            parametrosExamenes[0] = int.Parse(ddlCiudad.SelectedValue);
-                            parametrosExamenes[1] = int.Parse(ddlPrestadora.SelectedValue);
-
-                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametrosExamenes);
-
-                            gvEspecialidades.DataSource = null;
-
-                            if (dsExamenes != null && dsExamenes.Tables.Count > 0 && dsExamenes.Tables[0].Rows.Count > 0)
-                            {
-                                ultimoGrupoExamen = "";
-                                gvEspecialidades.DataSource = dsExamenes.Tables[0];
-                                gvEspecialidades.DataBind();
-                                updModalEsp.Update();
-                                ViewState["ContextoCatalogoExamenModal"] = ContextoExamenModalActual();
-                                AbrirModalEspecialidades();
-                            }
-                            else
-                            {
-                                gvEspecialidades.DataBind();
-                                new Funciones().funShowJSMessage("El prestador seleccionado no tiene exámenes configurados.", this);
-                            }
-                        }
-
-                        if (!vieneDeExamen && ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.ToString() == "TELEMEDICINA")
+                        if (ddlEspecialidad.SelectedItem != null &&
+                            ddlEspecialidad.SelectedItem.Text.Trim() == "TELEMEDICINA")
                         {
                             Array.Resize(ref objparam, 3);
                             objparam[0] = 0;
                             objparam[1] = "";
                             objparam[2] = 191;
-
                             ddlMedico.DataSource = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                             ddlMedico.DataTextField = "Descripcion";
                             ddlMedico.DataValueField = "Codigo";
                             ddlMedico.DataBind();
                         }
-
                         break;
                     case 5:
                         Array.Resize(ref objparam, 1);
@@ -1299,7 +1216,13 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMotivoCita.DataBind();
                         if (ddlEspecialidad.SelectedValue.ToString() == "2447")
                         {
-
+                            /*Array.Resize(ref objparam, 1);
+                            objparam[0] = 19;
+                            ddlMotivoCita.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
+                            ddlMotivoCita.DataTextField = "Descripcion";
+                            ddlMotivoCita.DataValueField = "Codigo";
+                            ddlMotivoCita.DataBind();
+                            ddlMotivoCita.SelectedIndex = 7;*/
                             ddlMotivoCita.SelectedValue = "C";
                         }
                         break;
@@ -1497,13 +1420,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             try
             {
 
-                bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
-
-                // Solo la primera cita del proceso de exámenes
-                // debe utilizar la carta de autorización.
-                bool esAgendamientoExamen = vieneDeExamen && !esCitaAdicional;
-
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["usuCodigo"].ToString());
                 objparam[1] = "";
@@ -1532,37 +1448,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 //filePath = Server.MapPath("~" + "\\CitasAgendadas\\");
                 fileTemplate = Server.MapPath("~/Template/HtmlTemplate.html"); //este es el template que usa
-                
+
                 //cambio laboratorio
 
                 int codproducto = int.Parse(Session["CodigoProducto"].ToString());
-  
+
                 fileLogo = @ViewState["Ruta"].ToString() + ViewState["Logo"].ToString();
                 subject = "Agendamiento - " + ViewState["Campaing"].ToString() + "-" + ViewState["Producto"].ToString();
                 subject = subject.Replace('\r', ' ').Replace('\n', ' ');
-                //adjunto
-                /*esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";*/ //cambio
-                byte[] cartaPdf = null;
-                string nombreCartaPdf = "";
-
-                if (esAgendamientoExamen)
-                {
-                    if (Session["CartaAutorizacionPdf"] == null || Session["CartaAutorizacionNombre"] == null)
-                    {
-                        lblerror.Text = "No se encontró la carta de autorización para adjuntar al correo.";
-                        return;
-                    }
-
-                    cartaPdf = Session["CartaAutorizacionPdf"] as byte[];
-                    nombreCartaPdf = Session["CartaAutorizacionNombre"].ToString();
-
-                    if (cartaPdf == null || cartaPdf.Length == 0)
-                    {
-                        lblerror.Text = "La carta de autorización se encuentra vacía.";
-                        return;
-                    }
-                }
-                Array.Resize(ref objparam, 18);
+                ; Array.Resize(ref objparam, 18);
                 objparam[0] = 8;
                 objparam[13] = "";
                 objparam[14] = "";
@@ -1630,7 +1524,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     ViewState["Paciente"] = objcitamedica[12].ToString();
                     objdatostitu[0] = dr[12].ToString() == "T" ? 2 : 3;
                     objdatostitu[1] = dr[13].ToString();
-                    objdatostitu[2] = dr[14].ToString();  
+                    objdatostitu[2] = dr[14].ToString();
                     objdatostitu[3] = 0;
                     dt = new Conexion(2, "").FunGetDatosTituBene(objdatostitu);
                     objcitamedica[13] = dt.Tables[0].Rows[0][0].ToString();
@@ -1664,13 +1558,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     }
                     else
                     {
-                        if (esAgendamientoExamen)
-                        {
-                            mensaje = new Funciones().funEnviarMailExamen(mailsP, subject, objcitamedica, fileTemplate, ViewState["Host"].ToString(),
-                            int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()), ViewState["Usuario"].ToString(), ViewState["Password"].ToString(), fileLogo,
-                            mailsA, mailsD, mailsU, newFecha, newFechaNaci, cartaPdf, nombreCartaPdf);
-                        }
-                        else
                         {
                             mensaje = new Funciones().funEnviarMail(mailsP, subject, objcitamedica, fileTemplate,
                             ViewState["Host"].ToString(), int.Parse(ViewState["Port"].ToString()), bool.Parse(ViewState["EnableSSl"].ToString()),
@@ -1680,25 +1567,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                 }
 
-                //esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1"; cambio aki
 
                 if (mensaje == "")
                 {
-                    //if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
-                    //{
-                    //    LimpiarCartaAutorizacionTemporal();
-                    //}
 
-                    //if (Session["Perfil"].ToString() == "NOVA")
-                    //{
-                    //    string usuario = Session["usuLogin"]?.ToString() ?? "Anonimo";
-                    //    logHelper.RegistrarAccion(usuario, "Citas", "FrmAgendarCitaMedica.aspx.cs/Enviando Mail cita", $"HoraCita: {ViewState["HoraCita"] + " " + "CodigoCita: " + ViewState["CodigoCita"] + " " + "Prestador:" + ViewState["Prestadora"] + " " + "Medico:" + ViewState["Medico"] + " " + "Especialidad:" + ViewState["Especialidad"] }");
-                    //}
-
-                    //    if (Session["Regresar"].ToString() == "0")
-                    //    Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
-                    //    else
-                    //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
                     if (Session["Perfil"] != null && Session["Perfil"].ToString() == "NOVA")
                     {
                         string usuario = Session["usuLogin"] != null
@@ -1716,30 +1588,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             " Especialidad:" + ViewState["Especialidad"]
                         );
                     }
-
-                    //if (esAgendamientoExamen)
-                    //{
-                    //    Response.Redirect(
-                    //        "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'",
-                    //        true
-                    //    );
-                    //}
-                    //else
-                    //{
-                    //    // CITA NORMAL
-                    //    Response.Redirect(
-                    //        "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito",
-                    //        true
-                    //    );
-                    //}
-                    if (vieneDeExamen)
-                    {
-                        Response.Redirect(
-                            "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'",
-                            true
-                        );
-                    }
-                    else
                     {
                         Response.Redirect(
                             "FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito",
@@ -1749,24 +1597,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 }
                 else
                 {
-                    //if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1")
-                    //{
-                    //    LimpiarCartaAutorizacionTemporal();
-                    //}
-
-
-                    //if (Session["Regresar"].ToString() == "0")
-                    //    Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
-                    //else
-                    //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
-                    if (esAgendamientoExamen)
-                    {
-                        Response.Redirect(
-                            "~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!",
-                            true
-                        );
-                    }
-                    else
                     {
                         // CITA NORMAL
                         Response.Redirect(
@@ -1775,8 +1605,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         );
                     }
                 }
-
-                
             }
             catch (Exception ex)
             {
@@ -1859,14 +1687,12 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //    if (Session["Regresar"].ToString() == "0")
                 //        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Cita(s) Agendada(s) con Éxito", true);
                 //    else
-                //        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado='Cita(s) Agendada(s) con Éxito'", true);
                 //}
                 //else
                 //{
                 //    if (Session["Regresar"].ToString() == "0")
                 //        Response.Redirect("FrmCitaMedicaAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
                 //    else
-                //        Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx?MensajeRetornado=Revise Mails, hubo errores en el envío..!", true);
                 //}
             }
             catch (Exception ex)
@@ -1878,41 +1704,56 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         private void FunEnviarSMS()
         {
-
-            DateTime fechaSMS = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            string newFechasMms = fechaSMS.ToString("dd/MM/yyyy");
-
             try
             {
+                DateTime fechaSMS = DateTime.ParseExact(ViewState["FechaCita"].ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                string newFechasMms = fechaSMS.ToString("dd/MM/yyyy");
 
-                _enviarsms += "{\"phoneNumber\":\"" + lblCelular.InnerText + "\",";
-                _enviarsms += "\"messageId\":" + 134056 + ",";
-                _enviarsms += "\"transactionId\":\"" + ViewState["CodigoCita"].ToString() + "\",";
-                _enviarsms += "\"dataVariable\":[\"" + ViewState["Paciente"].ToString() + "\",\"" + newFechasMms +
-                    "\"" + ",\"" + ViewState["HoraCita"].ToString() + "\"" + ",\"" + ViewState["Ciudad"].ToString() + "\"" + ",\"" +
-                    ViewState["Medico"].ToString() + "\"" + ",\"" + ViewState["Prestadora"].ToString() + "\"]}";
-
-                HttpClient _client = new HttpClient();
+                var datos = new
                 {
-                    //_client.BaseAddress = new Uri("http://186.3.87.6/sms/client/api.php/sendMessage");
-                    _client.BaseAddress = new Uri("http://186.3.87.7/sms/client/api.php/sendMessage");
-                    //_client.BaseAddress = new Uri("https://app.smsplus.net.ec/sms/client/api.php/sendMessage/");
+                    phoneNumber = lblCelular.InnerText.Trim(),
+                    messageId = 134056,
+                    transactionId = ViewState["CodigoCita"].ToString(),
+                    dataVariable = new string[]
+                    {
+                        Convert.ToString(ViewState["Paciente"]),
+                        newFechasMms,
+                        Convert.ToString(ViewState["HoraCita"]),
+                        Convert.ToString(ViewState["Ciudad"]),
+                        Convert.ToString(ViewState["Medico"]),
+                        Convert.ToString(ViewState["Prestadora"])
+                    }
+                };
 
-                    _client.DefaultRequestHeaders.Add("ContentType", "application/json");
+                string json = new JavaScriptSerializer().Serialize(datos);
 
-                    var byteArray = Encoding.ASCII.GetBytes("958933205:oMbEapP90l37mgjU");
-                    _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                using (HttpClient _client = new HttpClient())
+                {
+                    _client.Timeout = TimeSpan.FromSeconds(60);
+
+                    var byteArray = Encoding.ASCII.GetBytes("958933205:K9mjR7v@P2xXL8qZ");
+
+                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
+
+                    using (HttpContent _content = new StringContent(json, Encoding.UTF8, "application/json"))
+                    using (HttpResponseMessage _respuesta = _client.PostAsync("http://186.3.87.7/sms/client/api.php/sendMessage", _content).GetAwaiter().GetResult())
+                    {
+                        string respuestaJson = _respuesta.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        new Funciones().funCrearLogAuditoria(
+                        int.Parse(Session["usuCodigo"].ToString()),
+                        "FrmAgendarCitaMedica",
+                        "Respuesta API SMS. HTTP: " +
+                        (int)_respuesta.StatusCode +
+                        ". Cuerpo: " + respuestaJson,
+                        1);
+
+                        if (!_respuesta.IsSuccessStatusCode)
+                        {
+                            throw new InvalidOperationException("Error al consumir la API SMS. HTTP: " + (int)_respuesta.StatusCode + " " + _respuesta.ReasonPhrase + ". Respuesta: " + respuestaJson);
+                        }
+                    }
                 }
-
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                HttpContent _content = new StringContent(_enviarsms, Encoding.UTF8, "application/json");
-                var _response = _client.PostAsync("sendMessage", _content);
-                _response.Wait();
-                HttpResponseMessage _respuesta = _response.Result;
-                var _responseJason = _respuesta.Content.ReadAsStreamAsync();
-
             }
             catch (Exception ex)
             {
@@ -2416,7 +2257,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             FunCascadaCombos(3);
-            
+
         }
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
@@ -2539,7 +2380,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //}
 
             FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd"));
-          
+
         }
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -2596,7 +2437,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
         }
         protected void btnLink_Click(object sender, EventArgs e)
         {
-         
+
             DataSet api = new DataSet();
             DataSet link = new DataSet();
             string _idcont = "", _idserv = "", _idespe = "", _idpatient = "", dtApi = "", _datalink = "", nombre = "", apellido = "", genero = "",
@@ -2754,7 +2595,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     //CONSULTAR SI EL PACIENTE ESTA YA EN CONTRATO
                     _idpatient = new MethodApi().GetPatiens("https://api.eh.medicalcenter.io/", email, _token);
 
-                    if(!_idpatient.IsEmpty())
+                    if (!_idpatient.IsEmpty())
                     {
                         idfinal = _idpatient;
                     }
@@ -2983,61 +2824,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
         }
-        // nuevo metod agregado
-        private DataRow ConsultarValoresAgendamientoNormal()
-        {
-            int especialidad, prestador;
-
-            if (!int.TryParse(ddlEspecialidad.SelectedValue, out especialidad) ||
-                especialidad <= 0 ||
-                !int.TryParse(ddlPrestadora.SelectedValue, out prestador) ||
-                prestador <= 0)
-            {
-                throw new InvalidOperationException(
-                    "Seleccione el prestador y la especialidad."
-                );
-            }
-
-            object[] parametros = { especialidad, prestador };
-
-            DataSet datos = new Conexion(2, "").funConsultarSqls(
-                "sp_AgendaNormal_ValoresEspecialidad",
-                parametros
-            );
-
-            if (datos == null ||
-                datos.Tables.Count == 0 ||
-                datos.Tables[0].Rows.Count != 1)
-            {
-                throw new InvalidOperationException(
-                    "No se pudieron obtener PVP y RED. Revise la especialidad, " +
-                    "el prestador y sus valores configurados."
-                );
-            }
-
-            DataRow fila = datos.Tables[0].Rows[0];
-
-            //if (fila["PVP"] == DBNull.Value ||
-            //    fila["RED"] == DBNull.Value ||
-            //    Convert.ToDecimal(fila["PVP"]) < 0m ||
-            //    Convert.ToDecimal(fila["RED"]) < 0m)
-            //{
-            //    throw new InvalidOperationException(
-            //        "PVP y RED deben tener valores no negativos."
-            //    );
-            //}
-            if ((fila["PVP"] != DBNull.Value &&
-             Convert.ToDecimal(fila["PVP"]) < 0m) ||
-            (fila["RED"] != DBNull.Value &&
-             Convert.ToDecimal(fila["RED"]) < 0m))
-            {
-                throw new InvalidOperationException(
-                    "PVP y RED no pueden ser negativos."
-                );
-            }
-
-            return fila;
-        }
         protected void imgSelecc_Click(object sender, ImageClickEventArgs e)
         {
             try
@@ -3047,9 +2833,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 bool lexiste = false;
                 lblerror.Text = "";
                 DataRow valoresNormal = ConsultarValoresAgendamientoNormal();
-
-                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
-                bool esFlujoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
 
                 if (ddlOpcion.SelectedValue == "0")
                 {
@@ -3110,7 +2893,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ViewState["FechaCita"] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
                 ViewState["HoraCita"] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
 
-                
+
                 Array.Resize(ref objparam, 18);
                 objparam[0] = 2;
                 objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
@@ -3152,22 +2935,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     new Funciones().funShowJSMessage("Seleccione Titular o Beneficiario para Agendar Cita..!", this);
                     return;
                 }
-                //if (ViewState["tbCitaMedica"] != null)
-                //{
-                //    DataTable tblbuscar = (DataTable)ViewState["tbCitaMedica"];
-                //    if (tblbuscar.Rows.Count > 0)
-                //    {
-                //        DataRow result = tblbuscar.Select("Cliente='" + ViewState["Cliente"].ToString() + "' and Especialidad='" + ddlEspecialidad.SelectedItem.ToString() + "'").FirstOrDefault();
-                //        if (result != null) lexiste = true;
-                //    }
-                //}
-
-                //if (lexiste)
-                //{
-                //    new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!", this);
-                //    return;
-                //}
-                if (!esFlujoExamen)
                 {
                     if (ViewState["tbCitaMedica"] != null)
                     {
@@ -3194,58 +2961,10 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (lexiste)
                     {
 
-                        new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!",this);
+                        new Funciones().funShowJSMessage("Titular/Beneficiario ya existe registrado para la cita..!", this);
                         return;
                     }
                 }
-
-                //Array.Resize(ref objparam, 18);
-                //objparam[0] = 18;
-                //objparam[1] = int.Parse(ddlEspecialidad.SelectedValue);
-                //objparam[2] = int.Parse(ddlMedico.SelectedValue);
-                //objparam[3] = 0;
-                //objparam[4] = CalendarioCita.SelectedDate.ToString("MM/dd/yyyy");
-                //objparam[5] = CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper();
-                //objparam[6] = grdvDatosCitas.Rows[intIndex].Cells[1].Text;
-                //objparam[7] = "";
-                //objparam[8] = int.Parse(grdvDatosCitas.DataKeys[intIndex].Values["HodeCodigo"].ToString());
-                //objparam[9] = "";
-                //objparam[10] = int.Parse(ViewState["TituCodigo"].ToString());
-                //objparam[11] = int.Parse(ViewState["BeneCodigo"].ToString());
-                //objparam[12] = "";
-                //objparam[13] = "";
-                //objparam[14] = "";
-                //objparam[15] = int.Parse(Session["usuCodigo"].ToString());
-                //objparam[16] = Session["MachineName"].ToString();
-                //objparam[17] = "";
-
-
-
-                //dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
-
-
-                //if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" || Session["CodigoProducto"].ToString() == "227")
-                //{
-                //    if (dt.Tables[0].Rows.Count > 0)
-                //    {
-
-                //        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
-                //        new Funciones().funShowJSMessage(alerta, this);
-                //        return;
-                //    }
-                //}
-                //else
-                //{
-                //    if (dt.Tables[0].Rows.Count > 0)
-                //    {
-
-                //        alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
-                //        new Funciones().funShowJSMessage(alerta, this);
-                //        return;
-                //    }
-
-                //}
-                if (!esCitaAdicional)
                 {
 
                     Array.Resize(ref objparam, 18);
@@ -3271,7 +2990,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     // PREGUNTAR SI EL CLIENTE YA TIENE
                     // AGENDADA UNA CITA EN ESTADO ACTIVO
 
-                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras",objparam);
+                    dt = new Conexion(2, "").funConsultarSqls("sp_CargarAgendarHoras", objparam);
 
 
                     if (Session["CodigoProducto"].ToString() == "225" || Session["CodigoProducto"].ToString() == "226" ||
@@ -3281,7 +3000,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
 
-                            new Funciones().funShowJSMessage(alerta,this);
+                            new Funciones().funShowJSMessage(alerta, this);
                             return;
                         }
                     }
@@ -3291,7 +3010,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         {
                             alerta = "Cliente ya tiene registrada una cita Fecha: " + dt.Tables[0].Rows[0][1].ToString();
 
-                            new Funciones().funShowJSMessage(alerta,this);
+                            new Funciones().funShowJSMessage(alerta, this);
                             return;
                         }
                     }
@@ -3414,36 +3133,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["CodigoPrestadora"] = ddlPrestadora.SelectedValue;
-                    //if (ddlEspecialidad.SelectedValue == "3253" || ddlEspecialidad.SelectedValue == "3254" 
-                    //    || ddlEspecialidad.SelectedValue == "3255" || ddlEspecialidad.SelectedValue == "3261" 
-                    //    || ddlEspecialidad.SelectedValue == "3359" || ddlEspecialidad.SelectedValue == "3365" 
-                    //    || ddlEspecialidad.SelectedValue == "3366" || ddlEspecialidad.SelectedValue == "3327"
-                    //    || ddlEspecialidad.SelectedValue == "3379" || ddlEspecialidad.SelectedValue == "3378"
-                    //    || ddlEspecialidad.SelectedValue == "3377" || ddlEspecialidad.SelectedValue == "3372"
-                    //    || ddlEspecialidad.SelectedValue == "3371" || ddlEspecialidad.SelectedValue == "3370"
-                    //    || ddlEspecialidad.SelectedValue == "3369" || ddlEspecialidad.SelectedValue == "3368"
-                    //    || ddlEspecialidad.SelectedValue == "3367" || ddlEspecialidad.SelectedValue == "3330"
-                    //    || ddlEspecialidad.SelectedValue == "3337" || ddlEspecialidad.SelectedValue == "3341"
-                    //    || ddlEspecialidad.SelectedValue == "3333" || ddlEspecialidad.SelectedValue == "3332"
-                    //    || ddlEspecialidad.SelectedValue == "3336" || ddlEspecialidad.SelectedValue == "3335"
-                    //    || ddlEspecialidad.SelectedValue == "3388" || ddlEspecialidad.SelectedValue == "3331"
-                    //    || ddlEspecialidad.SelectedValue == "3381" || ddlEspecialidad.SelectedValue == "3491")
-                    //{
-                    //    filagre["Observacion"] = ViewState["descripcion"].ToString();
-                    //    filagre["Latitud"] = ViewState["sumaLab"].ToString();
-                    //    filagre["Longitud"] = ViewState["sumaRed"].ToString();
-                    //}
-                    //else
-                    //{
-                    //    filagre["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-
-                    //}
-                    //bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                    //bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
-
-
-                    //filagre["Latitud"] = Convert.ToDecimal(valoresNormal["PVP"]).ToString("0.00", CultureInfo.InvariantCulture);
-                    //filagre["Longitud"] = Convert.ToDecimal(valoresNormal["RED"]).ToString("0.00", CultureInfo.InvariantCulture);
                     filagre["Latitud"] = valoresNormal["PVP"] == DBNull.Value
                     ? ""
                     : Convert.ToDecimal(valoresNormal["PVP"])
@@ -3453,9 +3142,18 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ? ""
                         : Convert.ToDecimal(valoresNormal["RED"])
                             .ToString("0.00", CultureInfo.InvariantCulture);
-                    string nombreEspecialidadNormal =ddlEspecialidad.SelectedItem.Text.Trim();
+                    string nombreEspecialidadNormal = ddlEspecialidad.SelectedItem.Text.Trim();
                     string notaNormal = txtObservacion.Text.Trim();
-                    filagre["Observacion"] = nombreEspecialidadNormal + (notaNormal.Length == 0 ? "" : " | " + notaNormal);
+                    if(notaNormal != "")
+                    {
+                        filagre["Observacion"] = txtObservacion.Text.Trim();
+                    }
+                    else
+                    {
+                        filagre["Observacion"] = nombreEspecialidadNormal;
+                    }
+                    //filagre["Observacion"] = nombreEspecialidadNormal + (notaNormal.Length == 0 ? "" : " | " + notaNormal);
+                    //filagre["Observacion"] = txtObservacion.Text.Trim();
                     tblagre.Rows.Add(filagre);
                     ViewState["tbCitaMedica"] = tblagre;
                     grdvResumenCita.DataSource = tblagre;
@@ -3474,9 +3172,25 @@ namespace Pry_PrestasaludWAP.CitaMedica
         {
             try
             {
-                //Lamar al procedimiento para que elimine reservas
+                int usuario;
+                if (!int.TryParse(Convert.ToString(Session["usuCodigo"]), out usuario) || usuario <= 0)
+                {
+                    tmrdat.Enabled = false;
+                    return;
+                }
+
                 FunEliminarReservas();
-                if (int.Parse(ddlMedico.SelectedValue) > 0) FunAgendaHoras(0, int.Parse(ddlEspecialidad.SelectedValue), int.Parse(ddlMedico.SelectedValue), CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
+                int medico, especialidad;
+
+                if (!int.TryParse(ddlMedico.SelectedValue, out medico) || medico <= 0 || !int.TryParse(ddlEspecialidad.SelectedValue, out especialidad) || especialidad <= 0)
+                {
+                    return;
+                }
+
+                if (CalendarioCita.SelectedDate == DateTime.MinValue)
+                    return;
+
+                FunAgendaHoras(0, especialidad, medico, CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
             }
             catch (Exception ex)
             {
@@ -3669,100 +3383,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 tbCitaMedica = (DataTable)ViewState["tbCitaMedica"];
                 if (tbCitaMedica.Rows.Count > 0)
                 {
-                    bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
-                    //ACTUALIZAR EN EL CASO DE SER AGENDAMIENTO POR EXAMENES
-                    if (Session["Regresar"] != null && Session["Regresar"].ToString() == "1" && !esCitaAdicional)
-                    {
-
-                        if (ViewState["CodigoEXSO"] == null || ViewState["CodigoEXSO"].ToString().Trim() == "")
-                        {
-                            lblerror.Text = "No se recibió el código de la solicitud de exámenes.";
-                            imgAgendar.Enabled = false;
-                            return;
-                        }
-
-                        int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
-                        bool continuarCarta = ViewState["ContinuarCarta"] != null && ViewState["ContinuarCarta"].ToString() == "SI";
-
-                        if (!continuarCarta)
-                        {
-                            string fechaCita = ViewState["FechaCita"] != null ? ViewState["FechaCita"].ToString() : "";
-                            string horaCita = ViewState["HoraCita"] != null ? ViewState["HoraCita"].ToString() : "";
-                            string prestador = ddlPrestadora.SelectedItem != null ? ddlPrestadora.SelectedItem.Text.Trim() : "";
-
-                            bytes = GenerarCartaAutorizacionPdf(codigoEXSO, fechaCita, horaCita, prestador);
-                            DataSet dsCartaNombre = ObtenerDatosCartaAutorizacion(codigoEXSO);
-                            string nombreTitularCarta = dsCartaNombre.Tables[0].Rows[0]["TITULAR"].ToString().Trim();
-                            filename1 = "Carta_Autorizacion_" + codigoEXSO.ToString() + "_" + LimpiarNombreArchivo(nombreTitularCarta) + ".pdf";
-                            type1 = "application/pdf";
-                            ext1 = ".pdf";
-
-                            Session["CartaAutorizacionPdf"] = bytes;
-                            Session["CartaAutorizacionNombre"] = filename1;
-                            Session["CartaAutorizacionTipo"] = type1;
-                            Session["CartaAutorizacionExtension"] = ext1;
-                            Session["CartaAutorizacionEXSO"] = codigoEXSO;
-
-                            string base64Carta = Convert.ToBase64String(bytes);
-                            string nombreCartaJs = HttpUtility.JavaScriptStringEncode(filename1);
-                            string scriptCarta = "mostrarCartaAutorizacion('" + base64Carta + "','" + nombreCartaJs + "');";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "MostrarCartaAutorizacion", scriptCarta, true);
-
-                            return;
-                        }
-
-                        bytes = (byte[])Session["CartaAutorizacionPdf"];
-                        filename1 = Session["CartaAutorizacionNombre"].ToString();
-                        type1 = Session["CartaAutorizacionTipo"].ToString();
-                        ext1 = Session["CartaAutorizacionExtension"].ToString();
-
-                        Array.Resize(ref objparam, 43);
-                        objparam[0] = 3;
-                        objparam[1] = 0;
-                        objparam[2] = "";
-                        objparam[3] = "";
-                        objparam[4] = "";
-                        objparam[5] = "";
-                        objparam[6] = "";
-                        objparam[7] = "";
-                        objparam[8] = "";
-                        objparam[9] = "";
-                        objparam[10] = "";
-                        objparam[11] = 0;
-                        objparam[12] = "";
-                        objparam[13] = "";
-                        objparam[14] = "";
-                        objparam[15] = "";
-                        objparam[16] = "";
-                        objparam[17] = 0;
-                        objparam[18] = 0;
-                        objparam[19] = "";
-                        objparam[20] = txtObservacionG.Text.Trim().ToUpper(); 
-                        objparam[21] = bytes;
-                        objparam[22] = filename1;
-                        objparam[23] = type1;
-                        objparam[24] = ext1;
-                        objparam[25] = 0;
-                        objparam[26] = "0";
-                        objparam[27] = "0";
-                        objparam[28] = "";
-                        objparam[29] = codigoEXSO;
-                        objparam[30] = "";
-                        objparam[31] = "SGA";
-                        objparam[32] = ViewState["FechaCita"].ToString() + " " + ViewState["HoraCita"].ToString().Substring(0, 5);
-                        objparam[33] = "";
-                        objparam[34] = "";
-                        objparam[35] = "";
-                        objparam[36] = int.Parse(Session["CodigoTitular"].ToString());
-                        objparam[37] = int.Parse(ddlPrestadora.SelectedValue);
-                        objparam[38] = int.Parse(ddlEspecialidad.SelectedValue);
-                        objparam[39] = int.Parse(ddlMedico.SelectedValue);
-                        objparam[40] = 0;
-                        objparam[41] = int.Parse(Session["usuCodigo"].ToString());
-                        objparam[42] = Session["MachineName"].ToString();
-                        dtsexa = new Conexion(2, "").FunInsertSolictudExamen(objparam);
-                    }
-
+                    ;
                     string[] columnas = new[] { "PreeCodigo", "MediCodigo","CodigoPrestadora", "TipoCliente", "TituCodigo", "BeneCodigo", "CodParentesco",
                         "EstatusCita","FechaCita","DiaCita","Hora","HodeCodigo","Detalle","Longitud","Latitud","Observacion"};
                     tbNuevaCitaMedica = (DataTable)ViewState["tbCitaMedica"];
@@ -3777,14 +3398,14 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
                     {
 
-                       objparam[4] = txtPoliza.Text.Trim().ToUpper() + "-" + txtCertificado.Text.Trim().ToUpper() + "-" +
-                                   txtRamo.Text.Trim().ToUpper() + "-" + txtSucursal.Text.Trim().ToUpper();
+                        objparam[4] = txtPoliza.Text.Trim().ToUpper() + "-" + txtCertificado.Text.Trim().ToUpper() + "-" +
+                                    txtRamo.Text.Trim().ToUpper() + "-" + txtSucursal.Text.Trim().ToUpper();
                     }
                     else
                     {
-                       objparam[4] = txtObservacionG.Text.Trim().ToUpper();
+                        objparam[4] = txtObservacionG.Text.Trim().ToUpper();
                     }
-                    
+
                     objparam[5] = "";
                     objparam[6] = ddlTipoPago.SelectedValue;
                     objparam[7] = ddlTipoPago.SelectedItem.Text;
@@ -3794,11 +3415,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     if (codCita > 0)
                     {
                         //ViewState["ContinuarCarta"] = "NO";
-                        //Session.Remove("CartaAutorizacionPdf");
-                        //Session.Remove("CartaAutorizacionNombre");
-                        //Session.Remove("CartaAutorizacionTipo");
-                        //Session.Remove("CartaAutorizacionExtension");
-                        //Session.Remove("CartaAutorizacionEXSO");
                         Session["SalirAgenda"] = "SI";
                         Session["codigocita"] = codCita;
 
@@ -3847,6 +3463,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[1].BackColor = System.Drawing.Color.LightBlue;
                 }
 
+
             }
 
         }
@@ -3872,6 +3489,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                     e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
                 }
             }
+
         }
         protected void grdvHistorialCitas_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -4022,7 +3640,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
             //if (Session["Regresar"].ToString() == "0")
             //    Response.Redirect("FrmCitaMedicaAdmin.aspx", true);
             //else
-            //    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx", true);
             try
             {
                 // Validar si existe una reserva pendiente
@@ -4040,23 +3657,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
                     return;
                 }
-
-                // Solo es examen cuando Regresar = 1.
-                // Si viene null, se considera cita normal.
-                //bool esAgendamientoExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
-                bool esCitaAdicional = ViewState["CitaAdicional"] != null && ViewState["CitaAdicional"].ToString() == "1";
-
-
-                // Solo la PRIMERA cita de examen
-                // lleva carta de autorización.
-                bool esAgendamientoExamen = vieneDeExamen && !esCitaAdicional;
-
-                if (esAgendamientoExamen)
-                {
-                    Response.Redirect("~/Examenes/FrmSolicitudOperadorAdmin.aspx",true);
-                }
-                else
                 {
                     Response.Redirect(
                         "FrmCitaMedicaAdmin.aspx",
@@ -4197,1046 +3797,52 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
-        //cambio
-        // Pegar DENTRO de la clase FrmAgendarCitaMedica, fuera de otros métodos.
-        private string ContextoExamenModalActual()
-        {
-            return ddlCiudad.SelectedValue + "|" + ddlPrestadora.SelectedValue + "|" +
-                ddlEspecialidad.SelectedValue + "|" + Convert.ToString(ViewState["TituCodigo"]) +
-                "|" + Convert.ToString(ViewState["BeneCodigo"]);
-        }
-
-        private void LimpiarSeleccionExamenModal()
-        {
-            ViewState.Remove("descripcion");
-            ViewState.Remove("codigosExamenes");
-            ViewState.Remove("sumaLab");
-            ViewState.Remove("sumaRed");
-            ViewState.Remove("ContextoSeleccionExamenModal");
-            ViewState.Remove("ContextoCatalogoExamenModal");
-            hfTotalEsp.Value = "0.00";
-            hfTotalRed.Value = "0.00";
-        }
-
-        private bool CargarConfiguracionExamenesDelPrestador()
-        {
-            LimpiarSeleccionExamenModal();
-            ViewState["PrestadorTieneCatalogoExamenes"] = false;
-            ViewState["ContextoPrestadorCatalogo"] = "";
-            int ciudad, prestador;
-            if (!int.TryParse(ddlCiudad.SelectedValue, out ciudad) || ciudad <= 0 ||
-                !int.TryParse(ddlPrestadora.SelectedValue, out prestador) || prestador <= 0)
-                return false;
-
-            object[] parametros = { ciudad, prestador };
-            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametros);
-            if (ds == null || ds.Tables.Count == 0)
-                throw new InvalidOperationException("No se pudo consultar el catálogo del prestador. Vuelva a seleccionarlo.");
-
-            bool tieneCatalogo = ds.Tables[0].Rows.Count > 0;
-            ViewState["PrestadorTieneCatalogoExamenes"] = tieneCatalogo;
-            ViewState["ContextoPrestadorCatalogo"] = ciudad.ToString() + "|" + prestador.ToString();
-            return tieneCatalogo;
-        }
-
-        private bool EsLaboratorioConModal()
-        {
-            //bool vieneDeExamen = Convert.ToString(Session["Regresar"]) == "1";
-            //bool configurado = Convert.ToString(ViewState["PrestadorTieneCatalogoExamenes"]) == "True" &&
-            //    Convert.ToString(ViewState["ContextoPrestadorCatalogo"]) ==
-            //    ddlCiudad.SelectedValue + "|" + ddlPrestadora.SelectedValue;
-            //return (vieneDeExamen || configurado) && ddlEspecialidad.SelectedItem != null &&
-            //    string.Equals(ddlEspecialidad.SelectedItem.Text.Trim(), "LABORATORIO", StringComparison.OrdinalIgnoreCase);
-            return false;
-        }
-
-        private void ValidarSeleccionExamenModal()
-        {
-            if (!EsLaboratorioConModal()) return;
-            if (Convert.ToString(ViewState["ContextoSeleccionExamenModal"]) != ContextoExamenModalActual() ||
-                string.IsNullOrWhiteSpace(Convert.ToString(ViewState["descripcion"])) ||
-                ViewState["sumaRed"] == null)
-                throw new InvalidOperationException("Seleccione los exámenes para este paciente y prestador antes de reservar la hora.");
-            if (Convert.ToDecimal(ViewState["sumaRed"]) < 0)
-                throw new InvalidOperationException("El total de los exámenes no puede ser negativo.");
-        }
-
-        private void AplicarDatosExamenAlResumen(DataRow fila)
-        {
-            if (EsLaboratorioConModal())
-            {
-                ValidarSeleccionExamenModal();
-                fila["Observacion"] = Convert.ToString(ViewState["descripcion"]);
-                // Convención provisional solicitada: total seleccionado en el primer importe.
-                // El segundo queda en cero hasta definir PVP/costo.
-                fila["Latitud"] = Convert.ToDecimal(ViewState["sumaRed"])
-                    .ToString("0.00", CultureInfo.InvariantCulture);
-                fila["Longitud"] = "0.00";
-            }
-            else
-            {
-                // Las demás citas conservan el comportamiento del CS recibido.
-                fila["Observacion"] = txtObservacion.Text.Trim().ToUpper();
-            }
-        }
-
-
         //CAMBIO
         //MODAL LABORATORIO
-        private void AbrirModalEspecialidades()
+
+
+        private DataRow ConsultarValoresAgendamientoNormal()
         {
-            string panelId = pnlModalEspecialidades.ClientID;
+            int especialidad, prestador;
 
-            string script = $@"
-                showModal('{panelId}');
-                makeDraggable('{panelId}', 'modalHeaderEsp');
-            ";
+            if (!int.TryParse(ddlEspecialidad.SelectedValue, out especialidad) || especialidad <= 0 ||
+                !int.TryParse(ddlPrestadora.SelectedValue, out prestador) || prestador <= 0)
+            {
+                throw new InvalidOperationException("Seleccione el prestador y la especialidad.");
+            }
 
-            ScriptManager.RegisterStartupScript(
-                 updModalEsp,
-                 updModalEsp.GetType(),
-                 "openModalEsp",
-                 script,
-                 true
-             );
+            object[] parametros = { especialidad, prestador };
+
+            DataSet datos = new Conexion(2, "").funConsultarSqls("sp_AgendaNormal_ValoresEspecialidad", parametros);
+
+            if (datos == null || datos.Tables.Count == 0 || datos.Tables[0].Rows.Count != 1)
+            {
+                throw new InvalidOperationException("No se pudieron obtener PVP y RED. Revise la especialidad, " +
+                    "el prestador y sus valores configurados.");
+            }
+
+            DataRow fila = datos.Tables[0].Rows[0];
+
+            if ((fila["PVP"] != DBNull.Value && Convert.ToDecimal(fila["PVP"]) < 0m) || (fila["RED"] != DBNull.Value && Convert.ToDecimal(fila["RED"]) < 0m))
+            {
+                throw new InvalidOperationException("PVP y RED no pueden ser negativos.");
+            }
+
+            return fila;
         }
-
-
+        // Compatibilidad con el ASPX actual: no abren ni procesan el flujo de exámenes.
+        // Se pueden retirar junto con sus controles/eventos del ASPX cuando se limpie el marcado.
         protected void btnAgregarEspecialidades_Click(object sender, EventArgs e)
         {
-            try
-            {
-
-                decimal sumaRed = 0m;
-
-                List<string> descripciones = new List<string>();
-                List<string> codigosSeleccionados = new List<string>();
-                List<int> examenesRedSumados = new List<int>();
-
-                bool check = false;
-
-                if (!EsLaboratorioConModal() || Convert.ToString(ViewState["ContextoCatalogoExamenModal"]) != ContextoExamenModalActual())
-                {
-                    throw new InvalidOperationException(
-                        "Cambió el paciente o el prestador. Seleccione nuevamente " +
-                        "LABORATORIO para cargar sus exámenes."
-                    );
-                }
-
-                for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
-                {
-
-                    GridViewRow row = gvEspecialidades.Rows[i];
-                    CheckBox chk = row.FindControl("chkSeleccionar") as CheckBox;
-
-                    if (chk != null && chk.Checked)
-                    {
-                        check = true;
-                        int examenCodigo = 0;
-
-                        if (gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"] != null)
-                        {
-                            int.TryParse(gvEspecialidades.DataKeys[i].Values["EXAM_CODIGO"].ToString(),out examenCodigo);
-                        }
-
-                        int detalleCodigo = 0;
-
-                        if (gvEspecialidades.DataKeys[i].Values["EXDE_CODIGO"] != null)
-                        {
-                            int.TryParse(gvEspecialidades.DataKeys[i].Values["EXDE_CODIGO"].ToString(),out detalleCodigo);
-                        }
-
-                        string grupo = "";
-
-                        if (gvEspecialidades.DataKeys[i].Values["Grupo"] != null)
-                        {
-                            grupo =gvEspecialidades.DataKeys[i].Values["Grupo"].ToString().Trim();
-                        }
-
-                        string descripcion = "";
-
-                        if (gvEspecialidades.DataKeys[i].Values["Descripcion"] != null)
-                        {
-                            descripcion = gvEspecialidades.DataKeys[i].Values["Descripcion"].ToString().Trim();
-                        }
-
-                        string textoSeleccionado = "";
-
-                        if (grupo != "")
-                        {
-                            textoSeleccionado = grupo + " - " + descripcion;
-                        }
-                        else
-                        {
-                            textoSeleccionado = descripcion;
-                        }
-
-                        if (textoSeleccionado != "")
-                        {
-                            descripciones.Add(textoSeleccionado);
-                        }
-
-                        codigosSeleccionados.Add(
-                            examenCodigo.ToString() +
-                            ":" +
-                            detalleCodigo.ToString()
-                        );
-
-                        decimal redVal = 0m;
-
-                        object valorRed = gvEspecialidades.DataKeys[i].Values["Red"];
-
-                        if (valorRed != null &&valorRed != DBNull.Value)
-                        {
-                            redVal = Convert.ToDecimal(valorRed);
-                        }
-
-                        if (!examenesRedSumados.Contains(examenCodigo))
-                        {
-                            sumaRed += redVal;
-                            examenesRedSumados.Add(examenCodigo);
-                        }
-                    }
-                }
-
-                if (!check)
-                {
-                    new Funciones().funShowJSMessage("Debe seleccionar al menos un examen.",this);
-                    AbrirModalEspecialidades();
-                    return;
-                }
-
-                ViewState["descripcion"] = string.Join(", ",descripciones.ToArray());
-                ViewState["codigosExamenes"] = string.Join(",",codigosSeleccionados.ToArray());
-                ViewState["sumaLab"] = 0m;
-                ViewState["sumaRed"] = Math.Round(sumaRed,2);
-                ViewState["ContextoSeleccionExamenModal"] = ContextoExamenModalActual();
-                hfTotalEsp.Value = "0.00";
-                hfTotalRed.Value = sumaRed.ToString("0.00",CultureInfo.InvariantCulture);
-
-                //string mensaje = "Exámenes seleccionados:\\n\\n" +
-                //    string.Join(
-                //        "\\n",
-                //        descripciones.ToArray()
-                //    );
-
-                //ScriptManager.RegisterStartupScript(
-                //    this,
-                //    this.GetType(),
-                //    "msgExamenes",
-                //    "alert('" +
-                //    HttpUtility.JavaScriptStringEncode(
-                //        mensaje
-                //    ) +
-                //    "');",
-                //    true
-                //);
-                string mensaje = "Exámenes seleccionados:\n\n" +
-                string.Join("\n", descripciones.ToArray());
-
-                string script = "hideModal('" +
-                    HttpUtility.JavaScriptStringEncode(pnlModalEspecialidades.ClientID) +
-                    "');alert('" +
-                    HttpUtility.JavaScriptStringEncode(mensaje) +
-                    "');";
-
-                ScriptManager.RegisterStartupScript(
-                    this,
-                    this.GetType(),
-                    "cerrarYConfirmarExamenes",
-                    script,
-                    true
-                );
-            }
-            catch (Exception ex)
-            {
-                lblerror.Text = ex.ToString();
-            }
+            lblerror.Text = "Seleccione la especialidad en el combo del agendamiento normal.";
         }
 
-        private void CerrarModalEspecialidades()
-        {
-            string panelId = pnlModalEspecialidades.ClientID;
+        protected void BtnCancelarCarta_Click(object sender, EventArgs e) { }
+        protected void BtnContinuarCarta_Click(object sender, EventArgs e) { }
+        protected void gvEspecialidades_RowDataBound(object sender, GridViewRowEventArgs e) { }
 
-            ScriptManager.RegisterStartupScript(this,this.GetType(),
-                "closeModalEsp",
-                $"hideModal('{panelId}');",
-                true
-            );
-        }
 
-        private DataSet ObtenerDatosCartaAutorizacion(int codigoEXSO)
-        {
-            if (codigoEXSO <= 0)
-            {
-                throw new Exception("No se recibió un código de solicitud válido.");
-            }
 
-            object[] parametros = new object[3];
-
-            parametros[0] = codigoEXSO;
-            parametros[1] = "";
-            parametros[2] = 226;
-
-            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", parametros);
-
-            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
-            {
-                throw new Exception("No fue posible obtener los datos de la solicitud para generar la carta.");
-            }
-
-            return ds;
-        }
-        private string FormatearFechaCarta(string fecha)
-        {
-            DateTime fechaCita;
-
-            if (!DateTime.TryParse(fecha, new CultureInfo("es-EC"), DateTimeStyles.None, out fechaCita))
-            {
-                if (!DateTime.TryParse(fecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaCita))
-                {
-                    return fecha;
-                }
-            }
-
-            CultureInfo cultura = new CultureInfo("es-EC");
-            string mes = cultura.DateTimeFormat.GetMonthName(fechaCita.Month).ToUpper();
-            return fechaCita.Day + " de " + mes + " del " + fechaCita.Year;
-        }
-        private string FormatearHoraCarta(string hora)
-        {
-            DateTime horaCita;
-
-            if (DateTime.TryParse(hora, new CultureInfo("es-EC"), DateTimeStyles.None, out horaCita))
-            {
-                return horaCita.ToString("hh:mm tt", CultureInfo.InvariantCulture);
-            }
-
-            return hora;
-        }
-
-        private XFont CrearFuenteAjustada(XGraphics gfx,string texto,double anchoMaximo,double tamanoInicial,double tamanoMinimo,XFontStyle estilo)
-        {
-            double tamano = tamanoInicial;
-            XFont fuente = new XFont("Times New Roman", tamano,estilo);
-
-            while (tamano > tamanoMinimo && gfx.MeasureString(texto, fuente).Width > anchoMaximo)
-            {
-                tamano -= 0.25;
-                fuente = new XFont("Times New Roman", tamano,estilo);
-            }
-
-            return fuente;
-        }
-
-        private string ObtenerNombreUsuarioAgenda()
-        {
-            try
-            {
-                if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString().Trim() == "")
-                {
-                    return "AREA DE AGENDAMIENTO";
-                }
-
-                int codigoUsuario = Convert.ToInt32(Session["usuCodigo"]);
-
-                object[] parametros = new object[3];
-                parametros[0] = codigoUsuario;
-                parametros[1] = "";
-                parametros[2] = 37;
-
-                DataSet dsUsuario = new Conexion(2,"").funConsultarSqls("sp_ConsultaDatos",parametros);
-
-                if (dsUsuario != null && dsUsuario.Tables.Count > 0 && dsUsuario.Tables[0].Rows.Count > 0)
-                {
-                    string nombre = dsUsuario.Tables[0].Rows[0]["Nombre"].ToString().Trim();
-                    string apellidos = dsUsuario.Tables[0].Rows[0]["Apellidos"].ToString().Trim();
-                    string primerNombre = "";
-                    if (nombre != "")
-                    {
-                        string[] partesNombre = nombre.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
-
-                        if (partesNombre.Length > 0)
-                        {
-                            primerNombre = partesNombre[0];
-                        }
-                    }
-                    string primerApellido = "";
-
-                    if (apellidos != "")
-                    {
-                        string[] partesApellido =apellidos.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
-
-                        if (partesApellido.Length > 0)
-                        {
-                            primerApellido = partesApellido[0];
-                        }
-                    }
-
-                    string nombreCompleto =(primerNombre + " " + primerApellido).Trim();
-
-                    if (nombreCompleto != "")
-                    {
-                        return nombreCompleto;
-                    }
-
-                }
-            }
-            catch
-            {
-
-            }
-
-            return "AREA DE AGENDAMIENTO";
-        }
-
-        private byte[] GenerarCartaAutorizacionPdf(int codigoEXSO,string fechaCita,string horaCita,string prestador)
-        {
-            if (codigoEXSO <= 0)
-            {
-                throw new Exception("Código de solicitud inválido.");
-            }
-
-            DataSet dsCarta = ObtenerDatosCartaAutorizacion(codigoEXSO);
-
-            if (dsCarta == null || dsCarta.Tables.Count == 0 || dsCarta.Tables[0].Rows.Count == 0)
-            {
-                throw new Exception("No existen datos para generar la carta.");
-            }
-
-            DataRow solicitud = dsCarta.Tables[0].Rows[0];
-            string titular = solicitud["TITULAR"].ToString().Trim();
-            List<string> listaExamenes = new List<string>();
-
-            if (dsCarta.Tables.Count > 1)
-            {
-                foreach (DataRow fila in dsCarta.Tables[1].Rows)
-                {
-                    string requisito = fila["REQUISITO"].ToString().Trim();
-
-                    if (requisito != "")
-                    {
-                        listaExamenes.Add(requisito);
-                    }
-                }
-            }
-
-            if (solicitud.Table.Columns.Contains("EXAMEN_ADICIONAL"))
-            {
-                string adicional = solicitud["EXAMEN_ADICIONAL"].ToString().Trim();
-
-                if (adicional != "")
-                {
-                    listaExamenes.Add(adicional);
-                }
-            }
-
-            string examenes = string.Join(", ",listaExamenes.ToArray());
-
-            if (examenes == "")
-            {
-                examenes = "SIN EXÁMENES REGISTRADOS";
-            }
-
-            string rutaPlantilla = Server.MapPath("~/PlantillasDocumentos/CartaAutorizacionExamenes.pdf");
-
-            if (!File.Exists(rutaPlantilla))
-            {
-                throw new Exception("No se encontró la plantilla PDF: " + rutaPlantilla);
-            }
-
-            PdfDocument documento = PdfReader.Open(rutaPlantilla,PdfDocumentOpenMode.Modify);
-
-            if (documento.PageCount == 0)
-            {
-                documento.Close();
-                throw new Exception("La plantilla PDF no contiene páginas.");
-            }
-
-            PdfPage pagina = documento.Pages[0];
-            XGraphics gfx = XGraphics.FromPdfPage(pagina,XGraphicsPdfPageOptions.Append);
-
-            //fuente
-            XFont fuenteTitular = new XFont("Times New Roman", 10,XFontStyle.Bold);
-            string textoFecha = FormatearFechaCarta(fechaCita);
-            string textoHora = FormatearHoraCarta(horaCita);
-            string texto1 = "de ";
-            string texto2 = "Seguros Unidos S.A.";
-            string texto3 = ", el día ";
-            string texto4 = textoFecha;
-            string texto5 = " y hora de la cita médica ";
-            string texto6 = textoHora;
-
-            gfx.DrawRectangle(XBrushes.White,
-                65,     // X
-                61,     // Y
-                475,    // ancho
-                18      // alto
-            );
-
-            double tamanoLinea = 8.5;
-            XFont fuenteLineaNormal = null;
-            XFont fuenteLineaBold = null;
-            double anchoDisponible = 470;
-
-            while (tamanoLinea >= 7.0)
-            {
-                fuenteLineaNormal = new XFont("Times New Roman", tamanoLinea,XFontStyle.Regular);
-                fuenteLineaBold = new XFont("Times New Roman", tamanoLinea,XFontStyle.Bold);
-
-                double anchoTotal = gfx.MeasureString(texto1,fuenteLineaNormal).Width +
-                    gfx.MeasureString(
-                        texto2,
-                        fuenteLineaBold
-                    ).Width
-                    +
-                    gfx.MeasureString(
-                        texto3,
-                        fuenteLineaNormal
-                    ).Width
-                    +
-                    gfx.MeasureString(
-                        texto4,
-                        fuenteLineaBold
-                    ).Width
-                    +
-                    gfx.MeasureString(
-                        texto5,
-                        fuenteLineaNormal
-                    ).Width
-                    +
-                    gfx.MeasureString(
-                        texto6,
-                        fuenteLineaBold
-                    ).Width;
-
-                if (anchoTotal <= anchoDisponible)
-                {
-                    break;
-                }
-
-                tamanoLinea -= 0.25;
-            }
-
-            double xLinea = 68;
-            double yLinea = 63;
-
-            // "de "
-            gfx.DrawString(texto1,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),
-                XStringFormats.TopLeft
-            );
-
-            xLinea += gfx.MeasureString(texto1,fuenteLineaNormal).Width;
-
-            // "Seguros Unidos S.A."
-            gfx.DrawString(texto2,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),XStringFormats.TopLeft);
-
-            xLinea += gfx.MeasureString(texto2,fuenteLineaBold).Width;
-
-            // ", el día "
-            gfx.DrawString(texto3,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),XStringFormats.TopLeft);
-
-            xLinea += gfx.MeasureString(texto3,fuenteLineaNormal).Width;
-
-            // FECHA
-            gfx.DrawString(texto4,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),XStringFormats.TopLeft);
-
-            xLinea += gfx.MeasureString(texto4,fuenteLineaBold).Width;
-
-            gfx.DrawString(texto5,fuenteLineaNormal,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),XStringFormats.TopLeft);
-
-            xLinea += gfx.MeasureString(texto5,fuenteLineaNormal).Width;
-
-            // HORA
-            gfx.DrawString(texto6,fuenteLineaBold,XBrushes.Black,new XRect(xLinea,yLinea,
-                    470,
-                    15
-                ),XStringFormats.TopLeft);
-
-            gfx.DrawString(titular,fuenteTitular,XBrushes.Black,new XRect(
-                    177,
-                    89,
-                    350,
-                    20
-                ),XStringFormats.TopLeft);
-
-            gfx.DrawRectangle(XBrushes.White,
-                65,
-                108,
-                475,
-                88
-            );
-
-            // --------------------------------------
-            // TITULO EXAMENES
-            // --------------------------------------
-
-            XFont fuenteTituloExamen = new XFont("Times New Roman",9,XFontStyle.Bold);
-            gfx.DrawString("Exámenes:",fuenteTituloExamen,XBrushes.Black,new XRect(
-                    68,
-                    112,
-                    55,
-                    15
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // --------------------------------------
-            // LISTADO DE EXAMENES
-            // --------------------------------------
-
-            double tamanoExamen = 7.8;
-
-            // Solo reducir un poco para listas muy largas.
-            // Nunca bajar a 5 o 6.
-            if (examenes.Length > 380)
-            {
-                tamanoExamen = 7.0;
-            }
-            else if (examenes.Length > 320)
-            {
-                tamanoExamen = 7.2;
-            }
-            else if (examenes.Length > 260)
-            {
-                tamanoExamen = 7.5;
-            }
-
-            XFont fuenteExamen = new XFont("Times New Roman",tamanoExamen,XFontStyle.Regular);
-            XTextFormatter formatterExamen = new XTextFormatter(gfx);
-            formatterExamen.DrawString(examenes,fuenteExamen,XBrushes.Black,new XRect(
-                    120,    // después de "Exámenes:"
-                    110,
-                    415,
-                    45      // espacio para aproximadamente 4 líneas
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // PARRAFO RESULTADOS
-            // ======================================
-
-            gfx.DrawRectangle(XBrushes.White,
-                65,     // X
-                153,    // Y
-                475,    // ancho
-                148     // alto
-            );
-
-            // ======================================
-            // FUENTES
-            // ======================================
-
-            XFont fuenteParrafo = new XFont("Times New Roman",8.5,XFontStyle.Regular);
-            XFont fuenteParrafoBold = new XFont("Times New Roman",8.5,XFontStyle.Bold);
-            double xParrafo = 68;
-            double yParrafo = 158;
-
-            // ======================================
-            // LINEA 1 - RESULTADOS
-            // ======================================
-
-            string textoResultado1 = "Los resultados originales de los exámenes tienen que ser enviados: ";
-            string textoPrestasalud = "PRESTASALUD (QUITO)";
-            string textoResultadoContinua = " con número de R.U.C.";
-
-            // Parte normal
-            gfx.DrawString(textoResultado1,fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            double anchoResultado1 = gfx.MeasureString(textoResultado1,fuenteParrafo).Width;
-
-            // PRESTASALUD en negrita
-            double xPrestasalud = xParrafo + anchoResultado1;
-
-            gfx.DrawString(textoPrestasalud,fuenteParrafoBold,XBrushes.Black,new XRect(xPrestasalud,yParrafo,
-                    150,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            double anchoPrestasalud = gfx.MeasureString(textoPrestasalud,fuenteParrafoBold).Width;
-
-            // Continuación en LA MISMA LINEA
-            gfx.DrawString(textoResultadoContinua,fuenteParrafo,XBrushes.Black,new XRect(xPrestasalud + anchoPrestasalud,yParrafo,
-                    130,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // LINEA 2
-            // Camilo Egas, Torres Feds. MISMA LINEA
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("1792169143001, a la dirección: Av. Leonardo Tejada y Camilo Egas, Torres Feds.",fuenteParrafo,XBrushes.Black,new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-
-            // ======================================
-            // LINEA 3
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("TELF: 02 3822663. Atención a Ana Lucia Pérez.",fuenteParrafo,XBrushes.Black,new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // FACTURA
-            // ======================================
-
-            // Dejamos un pequeño espacio antes del siguiente párrafo
-            yParrafo += 19;
-
-            gfx.DrawString("La factura correspondiente debe ser enviada a:",fuenteParrafo,XBrushes.Black,
-                new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // Dejamos espacio después de:
-            // "debe ser enviada a:"
-            // ======================================
-
-            yParrafo += 17;
-
-            // ======================================
-            // PRESTASALUD + DIRECCION
-            // ======================================
-
-            string textoFacturaBold = "PRESTASALUD (QUITO): ";
-
-            gfx.DrawString(textoFacturaBold,fuenteParrafoBold,XBrushes.Black,new XRect(
-                    xParrafo,
-                    yParrafo,
-                    160,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            double anchoFacturaBold = gfx.MeasureString(textoFacturaBold,fuenteParrafoBold).Width;
-            gfx.DrawString("Av. Av. Leonardo Tejada y Camilo Egas, Torres Feds. Atención a",fuenteParrafo,XBrushes.Black,
-                new XRect(
-                    xParrafo + anchoFacturaBold,
-                    yParrafo,
-                    470 - anchoFacturaBold,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // ANA LUCIA
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("Ana Lucía Pérez, con los siguientes datos:",fuenteParrafo,XBrushes.Black,new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-
-            // ======================================
-            // NOMBRE
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("Nombre: PRESTASALUD",fuenteParrafo,XBrushes.Black,new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-
-            // ======================================
-            // RUC
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("Ruc: 1792169143001",fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-
-            // ======================================
-            // DIRECCION
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("Dirección: Av. Leonardo Tejada y Camilo Egas, Torres Feds..",fuenteParrafo,
-                XBrushes.Black,
-                new XRect(
-                    xParrafo,
-                    yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            // ======================================
-            // TELEFONO
-            // ======================================
-
-            yParrafo += 13;
-
-            gfx.DrawString("Teléfono: 382-2663",fuenteParrafo,XBrushes.Black,new XRect(xParrafo,yParrafo,
-                    470,
-                    13
-                ),
-                XStringFormats.TopLeft
-            );
-
-            double tamanoPrestador = 9.0;
-            XFont fuentePrestador = new XFont("Times New Roman",tamanoPrestador,XFontStyle.Regular);
-
-            while (tamanoPrestador > 7.5 && gfx.MeasureString(prestador,fuentePrestador).Width > 155)
-            {
-                tamanoPrestador -= 0.25;
-                fuentePrestador = new XFont("Times New Roman", tamanoPrestador,XFontStyle.Regular);
-            }
-
-            gfx.DrawString(prestador,fuentePrestador,XBrushes.Black,new XRect(
-                    135,
-                    417,
-                    155,
-                    18
-                ),
-                XStringFormats.TopLeft
-            );
-
-            string usuarioAgenda = ObtenerNombreUsuarioAgenda();
-            gfx.DrawRectangle(XBrushes.White,
-                68,       // X
-                579,      // Y
-                190,      // ancho
-                15.5      // alto
-            );
-
-            XFont fuenteUsuarioAgenda = CrearFuenteAjustada(gfx,usuarioAgenda,
-                    185,
-                    12,
-                    9,
-                    XFontStyle.Bold
-                );
-
-            // Escribir el nombre exactamente
-            // donde estaba "Sandra Ayala"
-            gfx.DrawString(usuarioAgenda,fuenteUsuarioAgenda,XBrushes.Black,new XRect(
-                    71,       // X
-                    581,      // Y
-                    185,      // ancho
-                    15        // alto
-                ),XStringFormats.TopLeft);
-
-            gfx.Dispose();
-
-            using (MemoryStream memoria = new MemoryStream())
-            {
-                documento.Save(memoria,false);
-                documento.Close();
-                return memoria.ToArray();
-            }
-        }
-
-        private string LimpiarNombreArchivo(string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto))
-            {
-                return "TITULAR";
-            }
-
-            string nombre = texto.Trim().ToUpper();
-
-            foreach (char caracter in Path.GetInvalidFileNameChars())
-            {
-                nombre = nombre.Replace(caracter.ToString(),"");
-            }
-
-            nombre = nombre.Replace(" ", "_");
-
-            return nombre;
-        }
-
-        protected void BtnCancelarCarta_Click(object sender,EventArgs e)
-        {
-            try
-            {
-                ViewState["ContinuarCarta"] = "NO";
-                Session.Remove("CartaAutorizacionPdf");
-                Session.Remove("CartaAutorizacionNombre");
-                Session.Remove("CartaAutorizacionTipo");
-                Session.Remove("CartaAutorizacionExtension");
-                Session.Remove("CartaAutorizacionEXSO");
-                Session.Remove("CartaAutorizacionPendiente");
-
-                ScriptManager.RegisterStartupScript(this,this.GetType(),"CerrarCartaAutorizacion","cerrarCartaAutorizacion();",true);
-            }
-            catch (Exception ex)
-            {
-                lblerror.Text = ex.ToString();
-            }
-        }
-        protected void BtnContinuarCarta_Click(object sender,EventArgs e)
-        {
-            try
-            {
-                if (Session["CartaAutorizacionPdf"] == null)
-                {
-                    new Funciones().funShowJSMessage("No existe una carta pendiente de confirmación.",this);
-                    return;
-                }
-
-                ViewState["ContinuarCarta"] = "SI";
-                imgAgendar_Click(imgAgendar,null);
-            }
-            catch (Exception ex)
-            {
-                lblerror.Text = ex.ToString();
-            }
-        }
-        private void LimpiarCartaAutorizacionTemporal()
-        {
-            Session.Remove("CartaAutorizacionPdf");
-            Session.Remove("CartaAutorizacionNombre");
-            Session.Remove("CartaAutorizacionTipo");
-            Session.Remove("CartaAutorizacionExtension");
-            Session.Remove("CartaAutorizacionEXSO");
-            Session.Remove("CartaAutorizacionPendiente");
-
-            ViewState["ContinuarCarta"] = "NO";
-        }
-
-        private string ultimoGrupoExamen = "";
-        protected void gvEspecialidades_RowDataBound(object sender,GridViewRowEventArgs e)
-        {
-           
-            if (e.Row.RowType != DataControlRowType.DataRow)
-            {
-                return;
-            }
-
-            Label lblGrupo = e.Row.FindControl("lblGrupoExamen") as Label;
-            Label lblDescripcion = e.Row.FindControl("lblDescripcionExamen") as Label;
-            Label lblDetalle = e.Row.FindControl("lblDetalleInformativo") as Label;
-            string grupo = DataBinder.Eval(e.Row.DataItem,"Grupo").ToString().Trim();
-            string descripcion = DataBinder.Eval(e.Row.DataItem,"Descripcion").ToString().Trim();
-            string detalleInformativo = DataBinder.Eval(e.Row.DataItem,"DetalleInformativo").ToString().Trim();
-
-
-            if (grupo != "")
-            {
-                if (lblGrupo != null)
-                {
-                    if (grupo == ultimoGrupoExamen)
-                    {
-                        lblGrupo.Visible = false;
-                    }
-                    else
-                    {
-                        lblGrupo.Visible = true;
-                        lblGrupo.Text = grupo + "<br />";
-                        ultimoGrupoExamen = grupo;
-                    }
-                }
-
-                if (lblDescripcion != null)
-                {
-                    lblDescripcion.Text = "&nbsp;&nbsp;&nbsp;&nbsp;" + descripcion + "<br />";
-                }
-
-                if (lblDetalle != null)
-                {
-                    lblDetalle.Visible = false;
-                }
-            }
-
-            else
-            {
-                ultimoGrupoExamen = "";
-
-                if (lblGrupo != null)
-                {
-                    lblGrupo.Visible = false;
-                }
-
-                if (lblDescripcion != null)
-                {
-                    lblDescripcion.Font.Bold = true;
-                    lblDescripcion.Text = descripcion + "<br />";
-                }
-
-                if (lblDetalle != null)
-                {
-                    if (detalleInformativo != "")
-                    {
-                        lblDetalle.Visible = true;
-                        lblDetalle.Text = "&nbsp;&nbsp;&nbsp;&nbsp;" + detalleInformativo;
-                    }
-                    else
-                    {
-                        lblDetalle.Visible = false;
-                    }
-                }
-            }
-        }
 
 
         #endregion
