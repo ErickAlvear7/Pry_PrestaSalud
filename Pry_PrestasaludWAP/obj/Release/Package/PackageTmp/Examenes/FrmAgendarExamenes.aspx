@@ -1216,7 +1216,7 @@
                         <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
                         <asp:GridView ID="gvEspecialidades" runat="server"
                             AutoGenerateColumns="false"
-                            DataKeyNames="EXAM_CODIGO,EXDE_CODIGO,Red,Grupo,Descripcion"
+                            DataKeyNames="EXAM_CODIGO,EXDE_CODIGO,Red,PVP,Grupo,Descripcion"
                             GridLines="None"
                             Width="100%"
                             CssClass="table table-bordered table-hover">
@@ -1234,7 +1234,7 @@
                                                 <asp:Label ID="lblDescripcionExamen" runat="server"
                                                     Text='<%# Eval("Descripcion") %>'
                                                     Font-Bold='<%# Eval("Grupo").ToString().Trim() == "" %>'>
-                                                 </asp:Label>
+                                                </asp:Label>
                                                 <asp:Panel ID="pnlDetalleInformativo" runat="server"
                                                     Visible='<%# Eval("DetalleInformativo").ToString().Trim() != "" %>'
                                                     Style="margin-top: 5px; padding-left: 15px; color: #444;">
@@ -1246,7 +1246,7 @@
                                             </div>
                                         </div>
                                     </ItemTemplate>
-                                    <ItemStyle VerticalAlign="Top"/>
+                                    <ItemStyle VerticalAlign="Top" />
                                 </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
@@ -1269,4 +1269,3 @@
 
 </body>
 </html>
-

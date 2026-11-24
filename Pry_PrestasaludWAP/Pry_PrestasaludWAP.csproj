@@ -651,6 +651,13 @@
     <Compile Include="Examenes\FrmGrupoExamenes.aspx.designer.cs">
       <DependentUpon>FrmGrupoExamenes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\FrmMantenimientoExamenes.aspx.cs">
+      <DependentUpon>FrmMantenimientoExamenes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Examenes\FrmMantenimientoExamenes.aspx.designer.cs">
+      <DependentUpon>FrmMantenimientoExamenes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\FrmNuevoExamenAdmin.aspx.cs">
       <DependentUpon>FrmNuevoExamenAdmin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -714,11 +721,18 @@
     <Compile Include="Examenes\FrmTiemposExamenes.aspx.designer.cs">
       <DependentUpon>FrmTiemposExamenes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Examenes\OrdenAdicionalPdf.cs" />
+    <Compile Include="Examenes\VerAdjuntoAuditorCliente.ashx.cs">
+      <DependentUpon>VerAdjuntoAuditorCliente.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Examenes\VerImagenAuditoria.ashx.cs">
       <DependentUpon>VerImagenAuditoria.ashx</DependentUpon>
     </Compile>
     <Compile Include="Examenes\VerImagenCliente.ashx.cs">
       <DependentUpon>VerImagenCliente.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Examenes\VerOrdenAdicionalPdf.ashx.cs">
+      <DependentUpon>VerOrdenAdicionalPdf.ashx</DependentUpon>
     </Compile>
     <Compile Include="Examenes\VerResultadoExamen.ashx.cs">
       <DependentUpon>VerResultadoExamen.ashx</DependentUpon>
@@ -1654,6 +1668,7 @@
     <Content Include="Examenes\FrmExamenSegurosAdmin.aspx" />
     <Content Include="Examenes\FrmGestionExamenCliente.aspx" />
     <Content Include="Examenes\FrmGrupoExamenes.aspx" />
+    <Content Include="Examenes\FrmMantenimientoExamenes.aspx" />
     <Content Include="Examenes\FrmNuevoExamenAdmin.aspx" />
     <Content Include="Examenes\FrmNuevoExamenCliente.aspx" />
     <Content Include="Examenes\FrmPrestadoraExamenAdmin.aspx" />
@@ -1753,6 +1768,8 @@
     <Content Include="Examenes\VerResultadoExamen.ashx" />
     <Content Include="Examenes\VerImagenAuditoria.ashx" />
     <Content Include="Examenes\VerImagenCliente.ashx" />
+    <Content Include="Examenes\VerAdjuntoAuditorCliente.ashx" />
+    <Content Include="Examenes\VerOrdenAdicionalPdf.ashx" />
     <None Include="Expert_WebDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>Expert_WebDataSet.Designer.cs</LastGenOutput>

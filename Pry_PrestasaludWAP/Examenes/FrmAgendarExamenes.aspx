@@ -451,6 +451,11 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:Panel ID="PnlContextoOrden" runat="server" Visible="false" CssClass="alert alert-info" Style="margin: 12px;">
+            <strong>
+                <asp:Label ID="LblContextoOrden" runat="server" /></strong>
+            <asp:Literal ID="LitExamenesOrden" runat="server" Visible="false" />
+        </asp:Panel>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <asp:Label ID="lbltitulo" runat="server"></asp:Label>
@@ -641,7 +646,7 @@
                                             <td></td>
                                             <td colspan="4">
 
-                                                <asp:GridView ID="grdvTitulares" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="TituCodigo,BeneCodigo,CodTipo,CodParentesco" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4">
+                                                <asp:GridView ID="grdvTitulares" runat="server" AutoGenerateColumns="False" CssClass="table table-condensed table-bordered table-hover table-responsive" DataKeyNames="TituCodigo,BeneCodigo,CodTipo,CodParentesco" ShowHeaderWhenEmpty="True" Width="100%" TabIndex="4" OnRowDataBound="grdvTitulares_OrdenRowDataBound">
                                                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                                     <Columns>
                                                         <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
@@ -1216,7 +1221,7 @@
                         <asp:HiddenField ID="hfTotalRed" runat="server" Value="0.00" />
                         <asp:GridView ID="gvEspecialidades" runat="server"
                             AutoGenerateColumns="false"
-                            DataKeyNames="EXAM_CODIGO,EXDE_CODIGO,Red,Grupo,Descripcion"
+                            DataKeyNames="EXAM_CODIGO,EXDE_CODIGO,Red,PVP,Grupo,Descripcion"
                             GridLines="None"
                             Width="100%"
                             CssClass="table table-bordered table-hover">
@@ -1234,7 +1239,7 @@
                                                 <asp:Label ID="lblDescripcionExamen" runat="server"
                                                     Text='<%# Eval("Descripcion") %>'
                                                     Font-Bold='<%# Eval("Grupo").ToString().Trim() == "" %>'>
-                                                 </asp:Label>
+                                                </asp:Label>
                                                 <asp:Panel ID="pnlDetalleInformativo" runat="server"
                                                     Visible='<%# Eval("DetalleInformativo").ToString().Trim() != "" %>'
                                                     Style="margin-top: 5px; padding-left: 15px; color: #444;">
@@ -1246,7 +1251,7 @@
                                             </div>
                                         </div>
                                     </ItemTemplate>
-                                    <ItemStyle VerticalAlign="Top"/>
+                                    <ItemStyle VerticalAlign="Top" />
                                 </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
@@ -1269,4 +1274,3 @@
 
 </body>
 </html>
-

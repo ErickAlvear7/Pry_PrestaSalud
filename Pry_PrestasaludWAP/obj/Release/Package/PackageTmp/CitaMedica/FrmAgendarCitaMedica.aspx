@@ -455,7 +455,7 @@
             <div class="panel-heading">
                 <asp:Label ID="lbltitulo" runat="server"></asp:Label>
             </div>
-            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" AsyncPostBackTimeout="150"></asp:ToolkitScriptManager>
             <asp:UpdatePanel ID="updError" runat="server">
                 <ContentTemplate>
                     <div style="background-color: beige; text-align: left; width: 100%; font-size: 25px">
@@ -715,7 +715,7 @@
                                             <td></td>
                                         </tr>
                                         <tr>
-                                      <%--      <td></td>
+                                    <%--        <td></td>
                                             <td>
                                                 <h5>Sector:</h5>
                                             </td>

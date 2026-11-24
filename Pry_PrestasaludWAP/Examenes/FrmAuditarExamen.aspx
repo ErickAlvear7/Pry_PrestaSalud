@@ -486,6 +486,11 @@
                                                             runat="server"
                                                             GroupName="EstadoAuditoria"
                                                             Text=" RECHAZADO" />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <asp:RadioButton ID="RdbRechazadoApelable"
+                                                            runat="server"
+                                                            GroupName="EstadoAuditoria"
+                                                            Text=" RECHAZADO APELABLE" />
                                                     </div>
                                                 </div>
                                                 <%--  <div class="row"

@@ -428,24 +428,66 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
         }
 
+        //private void FunHistorialCitas()
+        //{
+        //    try
+        //    {
+        //        Array.Resize(ref objparam, 3);
+        //        objparam[0] = int.Parse(Session["CodigoTitular"].ToString());
+        //        objparam[1] = "";
+        //        objparam[2] = 32;
+        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
+        //        if (dt != null && dt.Tables[0].Rows.Count > 0)
+        //        {
+        //            grdvHistorialCitas.DataSource = dt;
+        //            grdvHistorialCitas.DataBind();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblerror.Text = ex.ToString();
+        //    }
+        //}
         private void FunHistorialCitas()
         {
             try
             {
-                Array.Resize(ref objparam, 3);
-                objparam[0] = int.Parse(Session["CodigoTitular"].ToString());
-                objparam[1] = "";
-                objparam[2] = 32;
-                dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                if (dt != null && dt.Tables[0].Rows.Count > 0)
+                lblerror.Text = "";
+
+                int codigoTitular;
+                if (!int.TryParse(Convert.ToString(Session["CodigoTitular"]), out codigoTitular)
+                    || codigoTitular <= 0)
                 {
-                    grdvHistorialCitas.DataSource = dt;
-                    grdvHistorialCitas.DataBind();
+                    throw new InvalidOperationException(
+                        "No se pudo cargar el historial: no hay un titular válido en la sesión.");
                 }
+
+                // Parámetros locales: no reutilizar objparam de otras consultas de la pantalla.
+                object[] parametrosHistorial = { codigoTitular, "", 32 };
+                //System.Data.DataSet historial = new Conexion(2, "")
+                //    .funConsultarSqls("sp_ConsultaDatos", parametrosHistorial);
+                System.Data.DataSet historial = new Conexion(2, "")
+                .FunConsultarHistorialCitas(codigoTitular);
+
+                if (historial == null || historial.Tables.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "La consulta del historial no devolvió una tabla para el titular "
+                        + codigoTitular + ". Revise la operación 32 y el manejo de errores de funConsultarSqls.");
+                }
+
+                // Enlazar también cuando no hay filas, para no conservar citas del titular anterior.
+                grdvHistorialCitas.EmptyDataText = "No se encontraron citas para este titular.";
+                grdvHistorialCitas.DataSource = historial.Tables[0];
+                grdvHistorialCitas.DataBind();
             }
             catch (Exception ex)
             {
-                lblerror.Text = ex.ToString();
+                grdvHistorialCitas.DataSource = null;
+                grdvHistorialCitas.DataBind();
+                lblerror.Text = System.Web.HttpUtility.HtmlEncode(ex.Message);
+                // Si Conexion oculta el error SQL y devuelve null, el mensaje anterior
+                // permite identificar esa situación, pero no recuperar la excepción original.
             }
         }
 
@@ -503,52 +545,6 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
 
-        //private void FunContadorCitasAc()
-        //{
-        //    try
-        //    {
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = 0;
-        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
-        //        objparam[2] = 216;
-        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-        //        ViewState["Mgeneral"] = dt.Tables[0].Rows[0][1].ToString();
-        //        ViewState["Especialidad"] = dt.Tables[0].Rows[0][2].ToString();
-
-        //        if (dt != null && dt.Tables[0].Rows.Count > 0)
-        //        {
-        //            grdvContadorCitas.DataSource = dt;
-        //            grdvContadorCitas.DataBind();
-        //        }
-
-        //        //SUMA LABORATORIOS
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = 0;
-        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString());
-        //        objparam[2] = 217;
-        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-        //        labh3.Visible = false;
-
-        //        string total = dt.Tables[0].Rows[0][0].ToString();
-
-        //        if (total != "0")
-        //        {
-
-        //            labh3.Visible = true;
-        //            grdvSumaLaboratorio.DataSource = dt;
-        //            grdvSumaLaboratorio.DataBind();
-
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        lblerror.Text = ex.ToString();
-        //        new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunContadorCitas", ex.ToString(), 1);
-        //    }
-
-        //}
 
         private void FunContadorCitasAc()
         {
@@ -660,49 +656,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
 
         }
         //CAMBIO 1
-        //private void FunValidarEspeAc()
-        //{
-        //    try
-        //    {
-
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = 1; //Medicina General 
-        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
-        //        objparam[2] = 215;
-        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-        //        int cmg = int.Parse(dt.Tables[0].Rows[0][0].ToString());
-
-        //        if (cmg == 4)
-        //        {
-        //            new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-
-        //        }
-
-        //        ViewState["ContMG"] = cmg;
-
-        //        Array.Resize(ref objparam, 3);
-        //        objparam[0] = 2; //Especialidades
-        //        objparam[1] = int.Parse(Session["CodigoTitular"].ToString()); ;
-        //        objparam[2] = 215;
-        //        dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-
-        //        int cesp = int.Parse(dt.Tables[0].Rows[0][0].ToString());
-
-        //        if (cesp == 4)
-        //        {
-        //            new Funciones().funShowJSMessage("Revise # Citas Agendadas!!..", this);
-        //        }
-
-        //        ViewState["ContESP"] = cesp;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        lblerror.Text = ex.ToString();
-        //        new Funciones().funCrearLogAuditoria(1, "frmCitaMedica.cs/FunValidarEspe", ex.ToString(), 1);
-        //    }
-
-        //}
+       
         private void FunValidarEspeAc()
         {
             try
@@ -1013,7 +967,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 //        ddlTipoPago.DataTextField = "Descripcion";
                 //        ddlTipoPago.DataValueField = "Codigo";
                 //        ddlTipoPago.DataBind();
-                //        ddlTipoPago.SelectedIndex = 2;
+                //        ddlTipoPago.SelectedIndex = 1;
                 //        break;
                 //    case 9:
                 //        Array.Resize(ref objparam, 1);
@@ -1216,13 +1170,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                         ddlMotivoCita.DataBind();
                         if (ddlEspecialidad.SelectedValue.ToString() == "2447")
                         {
-                            /*Array.Resize(ref objparam, 1);
-                            objparam[0] = 19;
-                            ddlMotivoCita.DataSource = new Conexion(2, "").funConsultarSqls("sp_CargaCombos", objparam);
-                            ddlMotivoCita.DataTextField = "Descripcion";
-                            ddlMotivoCita.DataValueField = "Codigo";
-                            ddlMotivoCita.DataBind();
-                            ddlMotivoCita.SelectedIndex = 7;*/
+
                             ddlMotivoCita.SelectedValue = "C";
                         }
                         break;
@@ -1236,7 +1184,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             ddlTipoPago.DataTextField = "Descripcion";
                             ddlTipoPago.DataValueField = "Codigo";
                             ddlTipoPago.DataBind();
-                            ddlTipoPago.SelectedIndex = 2;
+                            ddlTipoPago.SelectedIndex = 1;
                         }
                         else
                         {
@@ -2159,7 +2107,7 @@ namespace Pry_PrestasaludWAP.CitaMedica
                 ddlTipoPago.DataTextField = "Descripcion";
                 ddlTipoPago.DataValueField = "Codigo";
                 ddlTipoPago.DataBind();
-                ddlTipoPago.SelectedIndex = 2;
+                ddlTipoPago.SelectedIndex = 1;
             }
             else
             {
@@ -3144,13 +3092,15 @@ namespace Pry_PrestasaludWAP.CitaMedica
                             .ToString("0.00", CultureInfo.InvariantCulture);
                     string nombreEspecialidadNormal = ddlEspecialidad.SelectedItem.Text.Trim();
                     string notaNormal = txtObservacion.Text.Trim();
-                    if(notaNormal != "")
+                    if(notaNormal == "")
                     {
                         filagre["Observacion"] = txtObservacion.Text.Trim();
+                       
                     }
                     else
                     {
                         filagre["Observacion"] = nombreEspecialidadNormal;
+
                     }
                     //filagre["Observacion"] = nombreEspecialidadNormal + (notaNormal.Length == 0 ? "" : " | " + notaNormal);
                     //filagre["Observacion"] = txtObservacion.Text.Trim();
@@ -3491,41 +3441,70 @@ namespace Pry_PrestasaludWAP.CitaMedica
             }
 
         }
-        protected void grdvHistorialCitas_RowDataBound(object sender, GridViewRowEventArgs e)
+        //protected void grdvHistorialCitas_RowDataBound(object sender, GridViewRowEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (e.Row.RowIndex >= 0)
+        //        {
+        //            btnEstado = (ImageButton)(e.Row.Cells[0].FindControl("imgEstado"));
+        //            chkCancelar = (CheckBox)(e.Row.Cells[6].FindControl("chkSelecc"));
+        //            status = grdvHistorialCitas.DataKeys[e.Row.RowIndex].Values["Estado"].ToString();
+        //            chkCancelar.Enabled = false;
+        //            switch (status)
+        //            {
+        //                case "A":
+        //                    btnEstado.ImageUrl = "~/Botones/mailagenda.png";
+        //                    btnEstado.Height = 20;
+        //                    chkCancelar.Enabled = true;
+        //                    break;
+        //                case "C":
+        //                    btnEstado.ImageUrl = "~/Botones/emailcancel.png";
+        //                    btnEstado.Height = 20;
+        //                    break;
+        //                case "T":
+        //                    btnEstado.ImageUrl = "~/Botones/medico.png";
+        //                    btnEstado.Height = 20;
+        //                    break;
+        //                case "S":
+        //                    btnEstado.ImageUrl = "~/Botones/ausente.png";
+        //                    btnEstado.Height = 20;
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblerror.Text = ex.ToString();
+        //    }
+        //}
+        protected void grdvHistorialCitas_RowDataBound(object sender,
+         System.Web.UI.WebControls.GridViewRowEventArgs e)
         {
-            try
+            if (e.Row.RowType != System.Web.UI.WebControls.DataControlRowType.DataRow)
+                return;
+
+            var imagenEstado = e.Row.FindControl("imgEstado")
+                as System.Web.UI.WebControls.ImageButton;
+            var cancelar = e.Row.FindControl("chkSelecc")
+                as System.Web.UI.WebControls.CheckBox;
+
+            if (imagenEstado == null || cancelar == null)
+                throw new InvalidOperationException(
+                    "El ASPX del historial debe contener imgEstado y chkSelecc en sus filas.");
+
+            string estadoCita = Convert.ToString(
+                System.Web.UI.DataBinder.Eval(e.Row.DataItem, "Estado")).Trim();
+
+            cancelar.Enabled = estadoCita == "A";
+            imagenEstado.Height = System.Web.UI.WebControls.Unit.Pixel(20);
+
+            switch (estadoCita)
             {
-                if (e.Row.RowIndex >= 0)
-                {
-                    btnEstado = (ImageButton)(e.Row.Cells[0].FindControl("imgEstado"));
-                    chkCancelar = (CheckBox)(e.Row.Cells[6].FindControl("chkSelecc"));
-                    status = grdvHistorialCitas.DataKeys[e.Row.RowIndex].Values["Estado"].ToString();
-                    chkCancelar.Enabled = false;
-                    switch (status)
-                    {
-                        case "A":
-                            btnEstado.ImageUrl = "~/Botones/mailagenda.png";
-                            btnEstado.Height = 20;
-                            chkCancelar.Enabled = true;
-                            break;
-                        case "C":
-                            btnEstado.ImageUrl = "~/Botones/emailcancel.png";
-                            btnEstado.Height = 20;
-                            break;
-                        case "T":
-                            btnEstado.ImageUrl = "~/Botones/medico.png";
-                            btnEstado.Height = 20;
-                            break;
-                        case "S":
-                            btnEstado.ImageUrl = "~/Botones/ausente.png";
-                            btnEstado.Height = 20;
-                            break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                lblerror.Text = ex.ToString();
+                case "A": imagenEstado.ImageUrl = "~/Botones/mailagenda.png"; break;
+                case "C": imagenEstado.ImageUrl = "~/Botones/emailcancel.png"; break;
+                case "T": imagenEstado.ImageUrl = "~/Botones/medico.png"; break;
+                case "S": imagenEstado.ImageUrl = "~/Botones/ausente.png"; break;
             }
         }
         protected void imgCancel_Click(object sender, ImageClickEventArgs e)

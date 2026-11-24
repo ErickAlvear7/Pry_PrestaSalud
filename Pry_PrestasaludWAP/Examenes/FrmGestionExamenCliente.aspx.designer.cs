@@ -19,5 +19,8 @@
         protected global::System.Web.UI.WebControls.Button BtnAceptarInformeCliente;
         protected global::System.Web.UI.WebControls.Button BtnCerrarEditorCliente;
         protected global::System.Web.UI.WebControls.Button BtnSalir;
+        protected global::System.Web.UI.WebControls.Panel PnlVisorInformeAuditor;
+        protected global::System.Web.UI.WebControls.Label LblTituloVisorAuditor;
+        protected global::System.Web.UI.WebControls.Literal LitVisorInformeAuditor;
     }
 }

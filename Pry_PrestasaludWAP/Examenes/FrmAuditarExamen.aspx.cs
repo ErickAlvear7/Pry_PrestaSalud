@@ -454,6 +454,8 @@ namespace Pry_PrestasaludWAP.Examenes
                     e.Item.FindControl(
                         "RdbRechazado"
                     ) as RadioButton;
+                RadioButton rdbRechazadoApelable =
+                    e.Item.FindControl("RdbRechazadoApelable") as RadioButton;
 
 
                 AjaxControlToolkit.HTMLEditor.Editor txtObservacion =
@@ -509,6 +511,10 @@ namespace Pry_PrestasaludWAP.Examenes
                     {
                         rdbRechazado.Checked = estadoAuditoria == "RECHAZADO";
                     }
+                    if (rdbRechazadoApelable != null)
+                    {
+                        rdbRechazadoApelable.Checked = estadoAuditoria == "RECHAZADO APELABLE";
+                    }
 
                     string informeHtml = auditoria["EXRA_OBSERVACION"] != DBNull.Value ? auditoria["EXRA_OBSERVACION"].ToString() : "";
                     Label lblInforme = e.Item.FindControl("LblResumenObservacion") as Label;
@@ -545,6 +551,10 @@ namespace Pry_PrestasaludWAP.Examenes
                         )
                         {
                             lblEstado.ForeColor = System.Drawing.Color.Red;
+                        }
+                        else if (estadoAuditoria == "RECHAZADO APELABLE")
+                        {
+                            lblEstado.ForeColor = System.Drawing.Color.DarkOrange;
                         }
                         else
                         {
@@ -622,6 +632,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 RadioButton rdbAceptado = item.FindControl("RdbAceptado") as RadioButton;
                 RadioButton rdbRechazado = item.FindControl("RdbRechazado") as RadioButton;
+                RadioButton rdbRechazadoApelable = item.FindControl("RdbRechazadoApelable") as RadioButton;
                 //TextBox txtObservacion = item.FindControl("TxtObservacionAuditor") as TextBox;
                 string claveObservacion = "ObservacionAuditoria_" + codigoPERS.ToString();
 
@@ -648,9 +659,14 @@ namespace Pry_PrestasaludWAP.Examenes
                     estado = "RECHAZADO";
                 }
 
+                if (rdbRechazadoApelable != null && rdbRechazadoApelable.Checked)
+                {
+                    estado = "RECHAZADO APELABLE";
+                }
+
                 if (string.IsNullOrEmpty(estado))
                 {
-                    new Funciones().funShowJSMessage("Seleccione ACEPTADO o RECHAZADO.", this);
+                    new Funciones().funShowJSMessage("Seleccione ACEPTADO, RECHAZADO o RECHAZADO APELABLE.", this);
                     return;
                 }
 

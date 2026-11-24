@@ -24,12 +24,11 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
-               
+
                 if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                     Response.Redirect("~/Reload.html");
                 if (!IsPostBack)
                 {
-                    ViewState["Conectar"] = ConfigurationManager.ConnectionStrings["ConnecSQL"].ConnectionString;
                     Session["Descargado"] = "NO";
                     Lbltitulo.Text = "Administrar Solicitud Exámenes";
                     FunCargaMantenimiento();
@@ -51,7 +50,25 @@ namespace Pry_PrestasaludWAP.Examenes
             objparam[1] = "";
             objparam[2] = 144;
             dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-            GrdvDatos.DataSource = dts;
+            if (dts == null || dts.Tables.Count == 0) throw new InvalidOperationException("No se obtuvo el listado inicial de solicitudes.");
+            DataTable datos = dts.Tables[0].Copy();
+            AgregarColumnasOrden(datos);
+            foreach (DataRow r in datos.Rows)
+            {
+                r["OrdenCodigo"] = 0; r["EsOrdenAdicional"] = false; r["CodigoPersonaOrden"] = 0;
+                r["EstadoOrden"] = ""; r["TipoOrden"] = "Inicial";
+                r["NombreTitular"] = r["Cliente"]; r["DocumentoTitular"] = r["NumDocumento"];
+            }
+            DataSet adicionales = new Conexion(2, "").FunOrdenAdicionalAgenda(Convert.ToInt32(Session["usuCodigo"]), "LISTAR");
+            if (adicionales == null || adicionales.Tables.Count == 0) throw new InvalidOperationException("No se obtuvo el listado de órdenes adicionales.");
+            foreach (DataRow origen in adicionales.Tables[0].Rows)
+            {
+                DataRow fila = datos.NewRow();
+                foreach (DataColumn columna in datos.Columns)
+                    if (adicionales.Tables[0].Columns.Contains(columna.ColumnName)) fila[columna.ColumnName] = origen[columna.ColumnName];
+                datos.Rows.Add(fila);
+            }
+            GrdvDatos.DataSource = datos;
             GrdvDatos.DataBind();
         }
 
@@ -149,6 +166,21 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
+                    if (OrdenDeFila(e.Row) > 0)
+                    {
+                        bool pendiente = Convert.ToString(GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoOrden"]) == "ENVIADA";
+                        e.Row.Cells[5].BackColor = pendiente ? System.Drawing.Color.LightGoldenrodYellow : System.Drawing.Color.LightGreen;
+                        e.Row.Cells[5].Font.Bold = true;
+                        e.Row.FindControl("ImgDescargar").Visible = false;
+                        e.Row.FindControl("ImgDescargarDaquilema").Visible = false;
+                        e.Row.FindControl("ImgCitaAdicional").Visible = false;
+                        e.Row.FindControl("BtnResultados").Visible = false;
+                        ImageButton agendar = e.Row.FindControl("ImgAgendar") as ImageButton;
+                        agendar.Enabled = pendiente;
+                        agendar.ToolTip = pendiente ? "Agendar esta orden adicional" : "Orden adicional ya agendada";
+                        if (!pendiente) agendar.Style["opacity"] = "0.35";
+                        return;
+                    }
                     estado = GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString();
                     ImageButton btnAgendar = e.Row.FindControl("ImgAgendar") as ImageButton;
 
@@ -262,7 +294,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                             btnAgendar.ToolTip = "La solicitud ya fue agendada";
 
-                            btnAgendar.Style["opacity"] ="0.35";
+                            btnAgendar.Style["opacity"] = "0.35";
 
                             btnAgendar.Style["cursor"] = "not-allowed";
                         }
@@ -328,6 +360,8 @@ namespace Pry_PrestasaludWAP.Examenes
                 ImageButton boton = (ImageButton)sender;
                 GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
 
+                int orden = OrdenDeFila(gvRow);
+                if (orden > 0) { Response.Redirect("~/Examenes/VerOrdenAdicionalPdf.ashx?ambito=agenda&orden=" + orden, true); return; }
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
                 FunDownloadDocument(int.Parse(codigoexso), 161);
             }
@@ -342,6 +376,8 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 ImageButton boton = (ImageButton)sender;
                 GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
+                int orden = OrdenDeFila(gvRow);
+                if (orden > 0) { Response.Redirect("~/Examenes/VerOrdenAdicionalPdf.ashx?ambito=agenda&orden=" + orden, true); return; }
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
 
                 FunDownloadDocument(int.Parse(codigoexso), 223);
@@ -358,6 +394,8 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 ImageButton boton = (ImageButton)sender;
                 GridViewRow gvRow = (GridViewRow)boton.NamingContainer;
+                int orden = OrdenDeFila(gvRow);
+                if (orden > 0) { Response.Redirect("~/Examenes/VerOrdenAdicionalPdf.ashx?ambito=agenda&orden=" + orden, true); return; }
                 codigoexso = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
 
                 FunDownloadDocument(int.Parse(codigoexso), 225);
@@ -368,13 +406,16 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void ImgAgendar_Click(object sender,ImageClickEventArgs e)
+        protected void ImgAgendar_Click(object sender, ImageClickEventArgs e)
         {
             try
             {
+                GridViewRow filaOrden = (GridViewRow)((Control)sender).NamingContainer;
+                int orden = OrdenDeFila(filaOrden);
+                if (orden > 0) { AbrirAgendaOrden(orden); return; }
                 if (Session["Descargado"] == null || Session["Descargado"].ToString() != "SI")
                 {
-                    new Funciones().funShowJSMessage("Descargue el Examen Solicitado!",this);
+                    new Funciones().funShowJSMessage("Descargue el Examen Solicitado!", this);
                     return;
                 }
 
@@ -387,7 +428,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (estadoActual != "SRR" && estadoActual != "SRV")
                 {
-                    new Funciones().funShowJSMessage("La solicitud ya se encuentra en una etapa posterior y no puede volver a agendarse.",this);
+                    new Funciones().funShowJSMessage("La solicitud ya se encuentra en una etapa posterior y no puede volver a agendarse.", this);
                     return;
                 }
 
@@ -406,7 +447,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 Lblerror.Text = ex.ToString();
             }
         }
-        protected void ImgCitaAdicional_Click(object sender,ImageClickEventArgs e)
+        protected void ImgCitaAdicional_Click(object sender, ImageClickEventArgs e)
         {
             try
             {
@@ -424,12 +465,13 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
+                if (OrdenDeFila(gvRow) > 0) throw new InvalidOperationException("Esta acción corresponde a la solicitud inicial. Use Agendar en la fila de la orden adicional.");
                 string estadoSolicitud = GrdvDatos.DataKeys[gvRow.RowIndex].Values["EstadoCodigo"].ToString().Trim();
 
                 // Seguridad adicional
                 if (estadoSolicitud != "SGA")
                 {
-                    new Funciones().funShowJSMessage("La cita adicional solamente está disponible para solicitudes ya agendadas.",this);
+                    new Funciones().funShowJSMessage("La cita adicional solamente está disponible para solicitudes ya agendadas.", this);
                     return;
                 }
 
@@ -477,6 +519,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     return;
                 }
 
+                if (OrdenDeFila(gvRow) > 0) throw new InvalidOperationException("Esta acción corresponde a la solicitud inicial. Use Agendar en la fila de la orden adicional.");
                 string codigoEXSO = GrdvDatos.DataKeys[gvRow.RowIndex].Values["CodigoEXSO"].ToString();
                 string estadoSolicitud = GrdvDatos.DataKeys[gvRow.RowIndex].Values["EstadoCodigo"].ToString().Trim();
 
@@ -494,5 +537,37 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
         #endregion
+        private static void AgregarColumnasOrden(DataTable t)
+        {
+            string[] nombres = { "OrdenCodigo", "EsOrdenAdicional", "CodigoPersonaOrden", "EstadoOrden", "NombreTitular", "DocumentoTitular", "TipoOrden" };
+            Type[] tipos = { typeof(int), typeof(bool), typeof(int), typeof(string), typeof(string), typeof(string), typeof(string) };
+            for (int i = 0; i < nombres.Length; i++) if (!t.Columns.Contains(nombres[i])) t.Columns.Add(nombres[i], tipos[i]);
+        }
+        private int OrdenDeFila(GridViewRow fila)
+        {
+            int orden; return int.TryParse(Convert.ToString(GrdvDatos.DataKeys[fila.RowIndex].Values["OrdenCodigo"]), out orden) ? orden : 0;
+        }
+        private void AbrirAgendaOrden(int orden)
+        {
+            //if (Session["OrdenAdicionalPdfDescargada_" + orden] == null)
+            //    throw new InvalidOperationException("Descargue primero el PDF de esta orden adicional desde la columna Examen.");
+            if (Session["OrdenAdicionalPdfDescargada_" + orden] == null)
+            {
+                Lblerror.Text = "";
+                new Funciones().funShowJSMessage(
+                    "Descargar primero archivo adjunto", this);
+                return;
+            }
+            DataSet ds = new Conexion(2, "").FunOrdenAdicionalAgenda(Convert.ToInt32(Session["usuCodigo"]), "DETALLE", orden);
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count != 1)
+                throw new InvalidOperationException("La orden adicional ya no está disponible.");
+            DataRow r = ds.Tables[0].Rows[0];
+            if (Convert.ToString(r["EstadoOrden"]) != "ENVIADA") throw new InvalidOperationException("Esta orden ya no está pendiente de agendar.");
+            if (r["CodigoTITU"] == DBNull.Value) throw new InvalidOperationException("No se pudo identificar al paciente de esta orden.");
+            Response.Redirect("~/Examenes/FrmAgendarExamenes.aspx?CodigoTitular=" + Convert.ToInt32(r["CodigoTITU"])
+                + "&CodigoProducto=" + Convert.ToInt32(r["CodigoPROD"]) + "&CodigoEXSO=" + Convert.ToInt32(r["CodigoEXSO"])
+                + "&Regresar=1&CitaAdicional=1&CodigoOrdenAdicional=" + orden, true);
+        }
+
     }
 }

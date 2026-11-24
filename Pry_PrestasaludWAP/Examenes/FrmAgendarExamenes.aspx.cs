@@ -96,6 +96,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 if (Session["usuCodigo"] == null || Session["usuCodigo"].ToString() == "")
                     Response.Redirect("~/Reload.html");
                 Page.Form.Attributes.Add("enctype", "multipart/form-data");
+                InicializarOrdenAdicional();
 
                 Session["CodigoProducto"] = Request["CodigoProducto"];
 
@@ -190,7 +191,8 @@ namespace Pry_PrestasaludWAP.Examenes
                     {
                         ViewState["EsFlujoExamen"] = "0";
                     }
-                    ViewState["CitaAdicional"] = Request["CitaAdicional"] != null && Request["CitaAdicional"].ToString() == "1" ? "1" : "0"; //cambio para nueva cita de examens
+                    ViewState["CitaAdicional"] = Request["CitaAdicional"] != null && Request["CitaAdicional"].ToString() == "1" ? "1" : "0";
+                    if (EsOrdenAdicional) ViewState["CitaAdicional"] = "1"; //cambio para nueva cita de examens
                     Session["TipoCita"] = "CitaMedica";
                     ViewState["Intervalo"] = 0;
 
@@ -406,7 +408,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 dt = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
                 grdvDatosAdicionales.DataSource = dt.Tables[0];
                 grdvDatosAdicionales.DataBind();
-    
+
                 //Cambio PRESTASALUD
                 if (ViewState["Campaing"].ToString() == "SEGUROS PICHINCHA")
                 {
@@ -595,7 +597,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
 
         }
-    
+
         private void FunValidarEspeAc()
         {
             try
@@ -1122,7 +1124,7 @@ namespace Pry_PrestasaludWAP.Examenes
                             parametrosExamenes[0] = int.Parse(ddlCiudad.SelectedValue);
                             parametrosExamenes[1] = int.Parse(ddlPrestadora.SelectedValue);
 
-                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametrosExamenes);
+                            DataSet dsExamenes = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_ListarConPrecios", parametrosExamenes);
 
                             gvEspecialidades.DataSource = null;
 
@@ -1572,7 +1574,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (mensaje == "")
                 {
-                    
+
                     if (Session["Perfil"] != null && Session["Perfil"].ToString() == "NOVA")
                     {
                         string usuario = Session["usuLogin"] != null
@@ -1605,7 +1607,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
                 else
                 {
-                    
+
                     if (esAgendamientoExamen)
                     {
                         Response.Redirect(
@@ -2108,6 +2110,13 @@ namespace Pry_PrestasaludWAP.Examenes
             CheckBox chkest = new CheckBox();
             GridViewRow gvRow = (GridViewRow)(sender as Control).Parent.Parent;
             int intIndex = gvRow.RowIndex;
+            if (EsOrdenAdicional)
+            {
+                int t = Convert.ToInt32(grdvTitulares.DataKeys[intIndex].Values["TituCodigo"]);
+                int b = Convert.ToInt32(grdvTitulares.DataKeys[intIndex].Values["BeneCodigo"]);
+                if (t != Convert.ToInt32(ViewState["TitularPacienteOrden"]) || b != 0)
+                { ((CheckBox)sender).Checked = false; lblerror.Text = "Seleccione al paciente de la orden adicional."; return; }
+            }
             foreach (GridViewRow row in grdvTitulares.Rows)
             {
                 (row.FindControl("chkSeleccionar") as CheckBox).Checked = false;
@@ -2493,6 +2502,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
             try
             {
+                if (EsOrdenAdicional) throw new InvalidOperationException("Esta orden debe agendarse desde el calendario local de citas.");
+
 
                 Array.Resize(ref objparam, 3);
                 objparam[0] = int.Parse(Session["CodigoProducto"].ToString());
@@ -2834,6 +2845,7 @@ namespace Pry_PrestasaludWAP.Examenes
         {
             try
             {
+                if (EsOrdenAdicional) { InicializarOrdenAdicional(); ValidarPacienteOrdenAdicional(); }
                 GridViewRow gvRowK = (GridViewRow)(sender as Control).Parent.Parent;
                 int intIndex = gvRowK.RowIndex;
                 bool lexiste = false;
@@ -3206,7 +3218,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     filagre["Longitud"] = "";
                     filagre["Latitud"] = "";
                     filagre["CodigoPrestadora"] = ddlPrestadora.SelectedValue;
-        
+
                     bool vieneDeExamen = Session["Regresar"] != null && Session["Regresar"].ToString() == "1";
                     bool esLaboratorio = ddlEspecialidad.SelectedItem != null && ddlEspecialidad.SelectedItem.Text.Trim().ToUpper() == "LABORATORIO";
 
@@ -3260,7 +3272,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 if (CalendarioCita.SelectedDate == DateTime.MinValue)
                     return;
 
-                FunAgendaHoras(0,especialidad,medico,CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"),CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
+                FunAgendaHoras(0, especialidad, medico, CalendarioCita.SelectedDate.ToString("MM/dd/yyyy"), CalendarioCita.SelectedDate.ToString("dddd").Trim().ToUpper());
             }
             catch (Exception ex)
             {
@@ -3440,6 +3452,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
             try
             {
+                if (EsOrdenAdicional) { InicializarOrdenAdicional(); ValidarPacienteOrdenAdicional(); }
+
                 if (ViewState["CampCodigo"] != null
                     && ViewState["CampCodigo"].ToString().Trim() == "1"
                     && txtPoliza.Text.ToString().Trim() == "" && txtCertificado.Text.ToString().Trim() == ""
@@ -3573,7 +3587,9 @@ namespace Pry_PrestasaludWAP.Examenes
                     objparam[6] = ddlTipoPago.SelectedValue;
                     objparam[7] = ddlTipoPago.SelectedItem.Text;
                     //objparam[7] = ddlTipoPago.SelectedIndex.ToString();
-                    DataSet ds = new Conexion(2, "").FunCodigoCita(objparam, tbNuevaCitaMedica);
+                    DataSet ds = EsOrdenAdicional
+                        ? new Conexion(2, "").FunAgendarOrdenAdicional(CodigoOrdenAdicional, (Guid)ViewState["TokenAgendaOrden"], objparam, tbNuevaCitaMedica)
+                        : new Conexion(2, "").FunCodigoCita(objparam, tbNuevaCitaMedica);
                     int codCita = int.Parse(ds.Tables[0].Rows[0][0].ToString());
                     if (codCita > 0)
                     {
@@ -3586,7 +3602,9 @@ namespace Pry_PrestasaludWAP.Examenes
                         Session["SalirAgenda"] = "SI";
                         Session["codigocita"] = codCita;
 
-                        FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString()); //AKI SE ENVIA EL EMAIL
+                        bool reintentoOrden = EsOrdenAdicional && ds.Tables[0].Columns.Contains("Reintento") && Convert.ToBoolean(ds.Tables[0].Rows[0]["Reintento"]);
+                        if (!reintentoOrden) FunEnviarMailCita(tbMailCitaMedica, ddlTipoPago.SelectedItem.ToString());
+                        else lblerror.Text = "La orden ya estaba agendada. No se registró otra cita.";
                     }
                 }
 
@@ -4010,7 +4028,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 return false;
 
             object[] parametros = { ciudad, prestador };
-            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_Listar", parametros);
+            DataSet ds = new Conexion(2, "").funConsultarSqls("sp_ExamenesPrestador_ListarConPrecios", parametros);
             if (ds == null || ds.Tables.Count == 0)
                 throw new InvalidOperationException("No se pudo consultar el catálogo del prestador. Vuelva a seleccionarlo.");
 
@@ -4035,9 +4053,9 @@ namespace Pry_PrestasaludWAP.Examenes
             if (!EsLaboratorioConModal()) return;
             if (Convert.ToString(ViewState["ContextoSeleccionExamenModal"]) != ContextoExamenModalActual() ||
                 string.IsNullOrWhiteSpace(Convert.ToString(ViewState["descripcion"])) ||
-                ViewState["sumaRed"] == null)
+                ViewState["sumaRed"] == null || ViewState["sumaLab"] == null)
                 throw new InvalidOperationException("Seleccione los exámenes para este paciente y prestador antes de reservar la hora.");
-            if (Convert.ToDecimal(ViewState["sumaRed"]) < 0)
+            if (Convert.ToDecimal(ViewState["sumaRed"]) < 0 || Convert.ToDecimal(ViewState["sumaLab"]) < 0)
                 throw new InvalidOperationException("El total de los exámenes no puede ser negativo.");
         }
 
@@ -4047,11 +4065,11 @@ namespace Pry_PrestasaludWAP.Examenes
             {
                 ValidarSeleccionExamenModal();
                 fila["Observacion"] = Convert.ToString(ViewState["descripcion"]);
-                // Convención provisional solicitada: total seleccionado en el primer importe.
-                // El segundo queda en cero hasta definir PVP/costo.
-                fila["Latitud"] = Convert.ToDecimal(ViewState["sumaRed"])
+                // Valores independientes del catálogo, sumados una vez por examen.
+                fila["Latitud"] = Convert.ToDecimal(ViewState["sumaLab"])
                     .ToString("0.00", CultureInfo.InvariantCulture);
-                fila["Longitud"] = "0.00";
+                fila["Longitud"] = Convert.ToDecimal(ViewState["sumaRed"])
+                    .ToString("0.00", CultureInfo.InvariantCulture);
             }
             else
             {
@@ -4088,6 +4106,7 @@ namespace Pry_PrestasaludWAP.Examenes
             {
 
                 decimal sumaRed = 0m;
+                decimal sumaPvp = 0m;
 
                 List<string> descripciones = new List<string>();
                 List<string> codigosSeleccionados = new List<string>();
@@ -4102,6 +4121,10 @@ namespace Pry_PrestasaludWAP.Examenes
                         "LABORATORIO para cargar sus exámenes."
                     );
                 }
+
+                ViewState.Remove("ContextoSeleccionExamenModal");
+                ViewState.Remove("sumaLab");
+                ViewState.Remove("sumaRed");
 
                 for (int i = 0; i < gvEspecialidades.Rows.Count; i++)
                 {
@@ -4162,17 +4185,24 @@ namespace Pry_PrestasaludWAP.Examenes
                             detalleCodigo.ToString()
                         );
 
-                        decimal redVal = 0m;
+                        if (examenCodigo <= 0)
+                            throw new InvalidOperationException("El examen seleccionado no tiene un código válido.");
 
+                        object valorPvp = gvEspecialidades.DataKeys[i].Values["PVP"];
                         object valorRed = gvEspecialidades.DataKeys[i].Values["Red"];
+                        if (valorPvp == null || valorPvp == DBNull.Value ||
+                            valorRed == null || valorRed == DBNull.Value)
+                            throw new InvalidOperationException(
+                                "Configure PVP y RED del examen seleccionado en el mantenimiento antes de agendar: " + textoSeleccionado);
 
-                        if (valorRed != null && valorRed != DBNull.Value)
-                        {
-                            redVal = Convert.ToDecimal(valorRed);
-                        }
+                        decimal pvpVal = Convert.ToDecimal(valorPvp);
+                        decimal redVal = Convert.ToDecimal(valorRed);
+                        if (pvpVal < 0 || redVal < 0)
+                            throw new InvalidOperationException("El examen seleccionado tiene un importe negativo.");
 
                         if (!examenesRedSumados.Contains(examenCodigo))
                         {
+                            sumaPvp += pvpVal;
                             sumaRed += redVal;
                             examenesRedSumados.Add(examenCodigo);
                         }
@@ -4188,10 +4218,10 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 ViewState["descripcion"] = string.Join(", ", descripciones.ToArray());
                 ViewState["codigosExamenes"] = string.Join(",", codigosSeleccionados.ToArray());
-                ViewState["sumaLab"] = 0m;
+                ViewState["sumaLab"] = Math.Round(sumaPvp, 2);
                 ViewState["sumaRed"] = Math.Round(sumaRed, 2);
                 ViewState["ContextoSeleccionExamenModal"] = ContextoExamenModalActual();
-                hfTotalEsp.Value = "0.00";
+                hfTotalEsp.Value = sumaPvp.ToString("0.00", CultureInfo.InvariantCulture);
                 hfTotalRed.Value = sumaRed.ToString("0.00", CultureInfo.InvariantCulture);
 
                 //string mensaje = "Exámenes seleccionados:\\n\\n" +
@@ -4230,7 +4260,8 @@ namespace Pry_PrestasaludWAP.Examenes
             }
             catch (Exception ex)
             {
-                lblerror.Text = ex.ToString();
+                lblerror.Text = HttpUtility.HtmlEncode(ex.Message);
+                AbrirModalEspecialidades();
             }
         }
 
@@ -5020,5 +5051,63 @@ namespace Pry_PrestasaludWAP.Examenes
 
 
         #endregion
+        private int CodigoOrdenAdicional
+        { get { return ViewState["CodigoOrdenAdicional"] == null ? 0 : Convert.ToInt32(ViewState["CodigoOrdenAdicional"]); } }
+        private bool EsOrdenAdicional { get { return CodigoOrdenAdicional > 0; } }
+        private DataRow ObtenerOrdenAdicionalAgenda(int orden)
+        {
+            DataSet ds = new Conexion(2, "").FunOrdenAdicionalAgenda(Convert.ToInt32(Session["usuCodigo"]), "DETALLE", orden);
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count != 1) throw new InvalidOperationException("La orden adicional no está disponible.");
+            return ds.Tables[0].Rows[0];
+        }
+        private void InicializarOrdenAdicional()
+        {
+            string valor = Request.QueryString["CodigoOrdenAdicional"];
+            if (string.IsNullOrEmpty(valor)) { if (EsOrdenAdicional) throw new InvalidOperationException("Falta la referencia de la orden adicional."); return; }
+            int orden;
+            if (!int.TryParse(valor, out orden) || orden <= 0) throw new InvalidOperationException("La orden adicional no es válida.");
+            if (IsPostBack && CodigoOrdenAdicional != orden) throw new InvalidOperationException("Cambió la orden adicional de la página. Vuelva al listado.");
+            DataRow r = ObtenerOrdenAdicionalAgenda(orden);
+            if (Convert.ToString(r["CodigoEXSO"]) != Request.QueryString["CodigoEXSO"]
+                || Convert.ToString(r["CodigoPROD"]) != Request.QueryString["CodigoProducto"]
+                || Convert.ToString(r["CodigoTITU"]) != Request.QueryString["CodigoTitular"])
+                throw new InvalidOperationException("Los datos de la orden no coinciden con el enlace de agendamiento.");
+            if (r["CodigoTITU"] == DBNull.Value) throw new InvalidOperationException("No se pudo identificar al paciente de la orden.");
+            if (Session["OrdenAdicionalPdfDescargada_" + orden] == null)
+                throw new InvalidOperationException("Abra el PDF de esta orden desde el listado antes de agendarla.");
+            ViewState["CodigoOrdenAdicional"] = orden;
+            ViewState["TitularPacienteOrden"] = Convert.ToInt32(r["CodigoTITU"]);
+            ViewState["PacienteOrdenAdicional"] = Convert.ToInt32(r["CodigoPersonaOrden"]);
+            if (!IsPostBack) ViewState["TokenAgendaOrden"] = Guid.NewGuid();
+            ViewState["CitaAdicional"] = "1";
+            Session["CodigoTitular"] = Convert.ToString(r["CodigoTITU"]);
+            Session["CodigoProducto"] = Convert.ToString(r["CodigoPROD"]);
+            Session["Regresar"] = "1";
+            PnlContextoOrden.Visible = true;
+            LblContextoOrden.Text = HttpUtility.HtmlEncode("Solicitud " + r["CodigoEXSO"] + " · Orden adicional " + orden
+                + " · Titular: " + r["NombreTitular"] + " · Paciente: " + r["Cliente"]);
+            LitExamenesOrden.Text = HttpUtility.HtmlEncode(Convert.ToString(r["ExamenesSolicitados"])).Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "<br />");
+        }
+        private void ValidarPacienteOrdenAdicional()
+        {
+            if (!EsOrdenAdicional) return;
+            int titular, beneficiario;
+            if (!int.TryParse(Convert.ToString(ViewState["TituCodigo"]), out titular)
+                || !int.TryParse(Convert.ToString(ViewState["BeneCodigo"]), out beneficiario)
+                || titular != Convert.ToInt32(ViewState["TitularPacienteOrden"]) || beneficiario != 0
+                || Convert.ToString(ViewState["TipoCliente"]) != "T")
+                throw new InvalidOperationException("Seleccione únicamente al paciente indicado en esta orden adicional.");
+        }
+        protected void grdvTitulares_OrdenRowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (!EsOrdenAdicional || e.Row.RowType != DataControlRowType.DataRow) return;
+            CheckBox c = e.Row.FindControl("chkSeleccionar") as CheckBox;
+            int titular, beneficiario;
+            bool valido = int.TryParse(Convert.ToString(DataBinder.Eval(e.Row.DataItem, "TituCodigo")), out titular)
+                && int.TryParse(Convert.ToString(DataBinder.Eval(e.Row.DataItem, "BeneCodigo")), out beneficiario)
+                && titular == Convert.ToInt32(ViewState["TitularPacienteOrden"]) && beneficiario == 0;
+            if (c != null) { c.Enabled = valido; if (!valido) c.ToolTip = "Esta persona no corresponde a la orden adicional."; }
+        }
+
     }
 }

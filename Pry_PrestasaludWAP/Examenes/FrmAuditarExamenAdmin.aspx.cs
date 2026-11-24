@@ -47,8 +47,8 @@ namespace Pry_PrestasaludWAP.Examenes
                 objparam[1] = "";
                 objparam[2] = 145;//cambio aki camp codigo 24
                 dts = new Conexion(2, "").funConsultarSqls("sp_ConsultaDatos", objparam);
-                if(dts.Tables[0].Rows.Count>0)
-                codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());
+                if (dts.Tables[0].Rows.Count > 0)
+                    codigocamp = int.Parse(dts.Tables[0].Rows[0]["CodigoCAMP"].ToString());
 
                 objparam[0] = codigocamp;
                 objparam[1] = "";
@@ -84,7 +84,7 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
 
-        protected void GrdvDatos_RowDataBound(object sender,GridViewRowEventArgs e)
+        protected void GrdvDatos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 if (GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"] != null)
                 {
-                    estado =GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
+                    estado = GrdvDatos.DataKeys[e.Row.RowIndex].Values["EstadoCodigo"].ToString().Trim().ToUpper();
                 }
 
                 // Columna Estado
@@ -130,8 +130,15 @@ namespace Pry_PrestasaludWAP.Examenes
                     // =====================================
                     case "AUR":
 
-                        celdaEstado.BackColor = System.Drawing.Color.LightCoral;
-                        celdaEstado.ForeColor = System.Drawing.Color.DarkRed;
+                        DataRowView filaEstado = e.Row.DataItem as DataRowView;
+                        bool tieneApelable = filaEstado != null
+                            && filaEstado.DataView.Table.Columns.Contains("TieneRechazoApelable")
+                            && filaEstado["TieneRechazoApelable"] != DBNull.Value
+                            && Convert.ToBoolean(filaEstado["TieneRechazoApelable"]);
+                        celdaEstado.BackColor = tieneApelable
+                            ? System.Drawing.Color.PeachPuff : System.Drawing.Color.LightCoral;
+                        celdaEstado.ForeColor = tieneApelable
+                            ? System.Drawing.Color.DarkOrange : System.Drawing.Color.DarkRed;
                         break;
                 }
 

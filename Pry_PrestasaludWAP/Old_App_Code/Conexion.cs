@@ -1674,5 +1674,281 @@ public class Conexion
             return ds = null;
         }
     }
+
+    // Añadir dentro de la clase Conexion. No sustituir los métodos existentes.
+    public DataSet FunMantenimientoExamenes(object[] datos)
+    {
+        bool abrio = false;
+        try
+        {
+            if (datos == null || datos.Length != 15)
+                throw new ArgumentException("Se requieren los 15 parámetros del mantenimiento.");
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_Examen_Mantenimiento", Sqlcn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                string[] nombres = {"@Accion","@Ciudad","@Prestador","@Examen","@Relacion","@Nombre","@Detalle",
+                "@PVP","@RED","@Activo","@Usuario","@Terminal","@Direccion","@Telefono","@Email"};
+                SqlDbType[] tipos = {SqlDbType.VarChar,SqlDbType.Int,SqlDbType.Int,SqlDbType.Int,SqlDbType.Int,
+                SqlDbType.VarChar,SqlDbType.VarChar,SqlDbType.Decimal,SqlDbType.Decimal,SqlDbType.Bit,
+                SqlDbType.Int,SqlDbType.VarChar,SqlDbType.VarChar,SqlDbType.VarChar,SqlDbType.VarChar};
+                int[] longitudes = { 25, 0, 0, 0, 0, 500, 1000, 0, 0, 0, 0, 50, 150, 10, 80 };
+                for (int i = 0; i < nombres.Length; i++)
+                {
+                    SqlParameter parametro = cmd.Parameters.Add(nombres[i], tipos[i]);
+                    if (longitudes[i] > 0) parametro.Size = longitudes[i];
+                    if (tipos[i] == SqlDbType.Decimal) { parametro.Precision = 18; parametro.Scale = 2; }
+                    parametro.Value = datos[i] ?? DBNull.Value;
+                }
+                if (Sqlcn.State == ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                DataSet resultado = new DataSet();
+                using (SqlDataAdapter adaptador = new SqlDataAdapter(cmd)) adaptador.Fill(resultado);
+                return resultado;
+            }
+        }
+        finally
+        {
+            if (abrio && Sqlcn.State != ConnectionState.Closed) Sqlcn.Close();
+        }
+    }
+ 
+    public DataSet FunMantenimientoSubexamenes(object[] datos)
+    {
+        bool abrio = false;
+        try
+        {
+            if (datos == null || datos.Length != 16)
+                throw new ArgumentException("Se requieren los 16 parámetros del mantenimiento.");
+            using (SqlCommand cmd = new SqlCommand("dbo.sp_Examen_Subcategorias", Sqlcn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                string[] nombres = {"@Accion","@Examen","@Subexamen","@Relacion","@Nombre","@Informacion","@Orden",
+                "@Seleccionable","@Activo","@PVP","@RED","@Usuario","@Terminal","@Ciudad","@Prestador","@Nota"};
+                SqlDbType[] tipos = {SqlDbType.VarChar,SqlDbType.Int,SqlDbType.Int,SqlDbType.Int,SqlDbType.VarChar,
+                SqlDbType.VarChar,SqlDbType.Int,SqlDbType.Bit,SqlDbType.Bit,SqlDbType.Decimal,SqlDbType.Decimal,
+                SqlDbType.Int,SqlDbType.VarChar,SqlDbType.Int,SqlDbType.Int,SqlDbType.VarChar};
+                int[] longitudes = { 25, 0, 0, 0, 300, 1000, 0, 0, 0, 0, 0, 0, 50, 0, 0, 250 };
+                for (int i = 0; i < nombres.Length; i++)
+                {
+                    SqlParameter parametro = cmd.Parameters.Add(nombres[i], tipos[i]);
+                    if (longitudes[i] > 0) parametro.Size = longitudes[i];
+                    if (tipos[i] == SqlDbType.Decimal) 
+                    {
+                        parametro.Precision = 18; parametro.Scale = 2; 
+                    }
+                    parametro.Value = datos[i] ?? DBNull.Value;
+                }
+                if (Sqlcn.State == ConnectionState.Closed) 
+                { 
+                    Sqlcn.Open(); abrio = true; 
+                }
+                DataSet resultado = new DataSet();
+                using (SqlDataAdapter adaptador = new SqlDataAdapter(cmd)) adaptador.Fill(resultado);
+                return resultado;
+            }
+        }
+        finally
+        {
+            if (abrio && Sqlcn.State != ConnectionState.Closed) Sqlcn.Close();
+        }
+    }
+    // Añadir dentro de la clase Conexion, junto a sus otros métodos.
+    // NO reemplazar funConsultarSqls: las otras pantallas lo conservan.
+    public DataSet FunConsultarHistorialCitas(int codigoTitular)
+    {
+        if (codigoTitular <= 0)
+            throw new System.ArgumentException("El código del titular no es válido.");
+
+        bool abrio = false;
+        try
+        {
+            // Misma llamada POSICIONAL que el método anterior: código, texto vacío, operación 32.
+            // Los nombres siguientes son parámetros del comando, no se asumen nombres del SP.
+            using (var comando = new System.Data.SqlClient.SqlCommand(
+                "EXEC dbo.sp_ConsultaDatos @pTitular, @pTexto, @pOperacion;", Sqlcn))
+            {
+                comando.CommandType = CommandType.Text;
+                comando.CommandTimeout = 120;
+                comando.Parameters.Add("@pTitular", System.Data.SqlDbType.Int).Value = codigoTitular;
+                comando.Parameters.Add("@pTexto", System.Data.SqlDbType.VarChar, 1).Value = "";
+                comando.Parameters.Add("@pOperacion", System.Data.SqlDbType.Int).Value = 32;
+
+                if (Sqlcn.State == System.Data.ConnectionState.Closed)
+                {
+                    Sqlcn.Open();
+                    abrio = true;
+                }
+
+                var resultado = new DataSet();
+                using (var adaptador = new SqlDataAdapter(comando))
+                    adaptador.Fill(resultado);
+
+                if (resultado.Tables.Count == 0)
+                    throw new System.InvalidOperationException(
+                        "La operación 32 no devolvió una tabla. Servidor: " + Sqlcn.DataSource
+                        + "; base: " + Sqlcn.Database + "; titular: " + codigoTitular + ".");
+
+                return resultado;
+            }
+        }
+        catch (SqlException ex)
+        {
+            throw new InvalidOperationException(
+                "Error SQL " + ex.Number + " al consultar el historial. Servidor: " + Sqlcn.DataSource
+                + "; base: " + Sqlcn.Database + "; titular: " + codigoTitular
+                + "; procedimiento: " + ex.Procedure + "; línea: " + ex.LineNumber
+                + ". " + ex.Message, ex);
+        }
+        finally
+        {
+            if (abrio && Sqlcn.State != ConnectionState.Closed)
+                Sqlcn.Close();
+        }
+    }
+    // Añadir dentro de la clase Conexion. Conservar todos los métodos actuales.
+    public System.Data.DataSet FunSeguimientoExamenesCliente(object[] datos)
+    {
+        if (datos == null || datos.Length != 8)
+            throw new System.ArgumentException("Se requieren los ocho parámetros del seguimiento de cliente.");
+        bool abrio = false;
+        try
+        {
+            using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_Examen_Cliente_Seguimiento", Sqlcn))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                string[] nombres = { "@Usuario", "@Desde", "@Hasta", "@Documento", "@Estado", "@Pagina", "@Tamano", "@Solicitud" };
+                System.Data.SqlDbType[] tipos = { System.Data.SqlDbType.Int, System.Data.SqlDbType.Date, System.Data.SqlDbType.Date,
+                System.Data.SqlDbType.VarChar, System.Data.SqlDbType.VarChar, System.Data.SqlDbType.Int,
+                System.Data.SqlDbType.Int, System.Data.SqlDbType.Int };
+                for (int i = 0; i < nombres.Length; i++)
+                {
+                    var parametro = cmd.Parameters.Add(nombres[i], tipos[i]);
+                    if (tipos[i] == System.Data.SqlDbType.VarChar) parametro.Size = 20;
+                    parametro.Value = datos[i] ?? System.DBNull.Value;
+                }
+                if (Sqlcn.State == System.Data.ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                var ds = new System.Data.DataSet();
+                using (var adaptador = new System.Data.SqlClient.SqlDataAdapter(cmd)) adaptador.Fill(ds);
+                return ds;
+            }
+        }
+        finally
+        {
+            if (abrio && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close();
+        }
+    }
+
+    // Agregar dentro de Conexion; conservar los métodos existentes.
+    public System.Data.DataSet FunInformeOrdenCliente(int usuario, int solicitud, int persona,
+        string accion, string texto = null, System.DateTime? versionAuditoria = null)
+    {
+        bool abrio = false;
+        try
+        {
+            using (var comando = new System.Data.SqlClient.SqlCommand("dbo.sp_Examen_Cliente_InformeOrden", Sqlcn))
+            {
+                comando.CommandType = System.Data.CommandType.StoredProcedure;
+                comando.Parameters.Add("@Usuario", System.Data.SqlDbType.Int).Value = usuario;
+                comando.Parameters.Add("@Solicitud", System.Data.SqlDbType.Int).Value = solicitud;
+                comando.Parameters.Add("@Persona", System.Data.SqlDbType.Int).Value = persona;
+                comando.Parameters.Add("@Accion", System.Data.SqlDbType.VarChar, 12).Value = accion;
+                comando.Parameters.Add("@Texto", System.Data.SqlDbType.NVarChar, -1).Value = (object)texto ?? System.DBNull.Value;
+                comando.Parameters.Add("@VersionAuditoria", System.Data.SqlDbType.DateTime).Value = versionAuditoria.HasValue
+                    ? (object)versionAuditoria.Value : System.DBNull.Value;
+                if (Sqlcn.State == System.Data.ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                var ds = new System.Data.DataSet();
+                using (var adaptador = new System.Data.SqlClient.SqlDataAdapter(comando)) adaptador.Fill(ds);
+                return ds;
+            }
+        }
+        finally { if (abrio && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close(); }
+    }
+    // AGREGAR DENTRO DE Conexion. Conservar FunCodigoCita y todos los métodos existentes.
+    public void ValidarPermisoAgendaOrden(int usuario)
+    {
+        System.Data.DataSet permisos;
+        bool estabaCerrada = Sqlcn.State == System.Data.ConnectionState.Closed;
+        try { permisos = SIWebseg(usuario); }
+        finally { if (estabaCerrada && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close(); }
+        if (permisos != null && permisos.Tables.Count > 0 && permisos.Tables[0].Columns.Contains("TAR_PROGRAMA"))
+        {
+            foreach (System.Data.DataRow fila in permisos.Tables[0].Rows)
+            {
+                string ruta = Convert.ToString(fila["TAR_PROGRAMA"]).Replace('\\', '/').Split('?', '#')[0].Trim().TrimEnd('/');
+                string pagina = ruta.Substring(ruta.LastIndexOf('/') + 1);
+                if (pagina.Equals("FrmSolicitudOperadorAdmin.aspx", StringComparison.OrdinalIgnoreCase)
+                    || pagina.Equals("FrmSolicitudOperadorAdmin", StringComparison.OrdinalIgnoreCase)) return;
+            }
+        }
+        throw new InvalidOperationException("El usuario no tiene permiso para administrar el agendamiento de exámenes.");
+    }
+    public System.Data.DataSet FunOrdenAdicionalCliente(int usuario, int orden, string accion,
+        byte[] pdf = null, string nombre = null, string textoConfirmado = null, DateTime? versionAuditoria = null)
+    {
+        bool abrio = false;
+        try
+        {
+            using (var c = new System.Data.SqlClient.SqlCommand("dbo.sp_Examen_OrdenAdicional_Cliente", Sqlcn))
+            {
+                c.CommandType = System.Data.CommandType.StoredProcedure;
+                c.Parameters.Add("@Usuario", System.Data.SqlDbType.Int).Value = usuario;
+                c.Parameters.Add("@Orden", System.Data.SqlDbType.Int).Value = orden;
+                c.Parameters.Add("@Accion", System.Data.SqlDbType.VarChar, 12).Value = accion;
+                c.Parameters.Add("@Pdf", System.Data.SqlDbType.VarBinary, -1).Value = (object)pdf ?? DBNull.Value;
+                c.Parameters.Add("@Nombre", System.Data.SqlDbType.VarChar, 200).Value = (object)nombre ?? DBNull.Value;
+                c.Parameters.Add("@TextoConfirmado", System.Data.SqlDbType.NVarChar, -1).Value = (object)textoConfirmado ?? DBNull.Value;
+                c.Parameters.Add("@VersionAuditoria", System.Data.SqlDbType.DateTime).Value = versionAuditoria.HasValue ? (object)versionAuditoria.Value : DBNull.Value;
+                if (Sqlcn.State == System.Data.ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                var ds = new System.Data.DataSet(); using (var a = new System.Data.SqlClient.SqlDataAdapter(c)) a.Fill(ds); return ds;
+            }
+        }
+        finally { if (abrio && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close(); }
+    }
+    public System.Data.DataSet FunOrdenAdicionalAgenda(int usuario, string accion, int orden = 0)
+    {
+        ValidarPermisoAgendaOrden(usuario);
+        bool abrio = false;
+        try
+        {
+            using (var c = new System.Data.SqlClient.SqlCommand("dbo.sp_Examen_OrdenAdicional_Agenda", Sqlcn))
+            {
+                c.CommandType = System.Data.CommandType.StoredProcedure;
+                c.Parameters.Add("@Usuario", System.Data.SqlDbType.Int).Value = usuario;
+                c.Parameters.Add("@Accion", System.Data.SqlDbType.VarChar, 12).Value = accion;
+                c.Parameters.Add("@Orden", System.Data.SqlDbType.Int).Value = orden;
+                if (Sqlcn.State == System.Data.ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                var ds = new System.Data.DataSet(); using (var a = new System.Data.SqlClient.SqlDataAdapter(c)) a.Fill(ds); return ds;
+            }
+        }
+        finally { if (abrio && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close(); }
+    }
+    public System.Data.DataSet FunAgendarOrdenAdicional(int orden, Guid token, object[] parametros, System.Data.DataTable citas)
+    {
+        int usuario = Convert.ToInt32(parametros[2]); ValidarPermisoAgendaOrden(usuario);
+        if (citas == null || citas.Rows.Count == 0) throw new ArgumentException("No se recibieron las citas de la orden.");
+        bool abrio = false;
+        try
+        {
+            using (var c = new System.Data.SqlClient.SqlCommand("dbo.sp_Examen_OrdenAdicional_Agendar", Sqlcn))
+            {
+                c.CommandType = System.Data.CommandType.StoredProcedure;
+                c.Parameters.Add("@Orden", System.Data.SqlDbType.Int).Value = orden;
+                c.Parameters.Add("@Token", System.Data.SqlDbType.UniqueIdentifier).Value = token;
+                c.Parameters.Add("@in_codigoproducto", System.Data.SqlDbType.Int).Value = Convert.ToInt32(parametros[1]);
+                c.Parameters.Add("@in_usucodigo", System.Data.SqlDbType.Int).Value = usuario;
+                c.Parameters.Add("@in_terminal", System.Data.SqlDbType.VarChar, 50).Value = parametros[3];
+                c.Parameters.Add("@in_observacion", System.Data.SqlDbType.VarChar, 250).Value = parametros[4];
+                c.Parameters.Add("@in_tipopago", System.Data.SqlDbType.VarChar, 50).Value = parametros[6];
+                c.Parameters.Add("@in_Copago", System.Data.SqlDbType.VarChar, 50).Value = parametros[7];
+                var tvp = c.Parameters.Add("@EmptyCitaMedica", System.Data.SqlDbType.Structured);
+                tvp.TypeName = "dbo.EmptyCitaMedicaExamenType"; tvp.Value = citas;
+                if (Sqlcn.State == System.Data.ConnectionState.Closed) { Sqlcn.Open(); abrio = true; }
+                var ds = new System.Data.DataSet(); using (var a = new System.Data.SqlClient.SqlDataAdapter(c)) a.Fill(ds); return ds;
+            }
+        }
+        finally { if (abrio && Sqlcn.State != System.Data.ConnectionState.Closed) Sqlcn.Close(); }
+    }
+
+
+
     #endregion
 }

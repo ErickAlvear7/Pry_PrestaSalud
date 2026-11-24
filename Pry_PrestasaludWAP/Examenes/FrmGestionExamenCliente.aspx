@@ -248,6 +248,53 @@
                 width: 80px;
                 height: 80px;
             }
+
+        .visor-informe-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            background: rgba(0,0,0,.55);
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .visor-informe-ventana {
+            width: 1000px;
+            max-width: 100%;
+            height: 85vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .visor-informe-cabecera {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .visor-informe-contenido {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .informe-lectura {
+            max-height: 120px;
+            overflow-y: auto;
+            overflow-wrap: anywhere;
+        }
+
+        .estado-apelable {
+            color: #9c5700;
+            font-weight: bold;
+        }
     </style>
 
 </head>
@@ -429,6 +476,10 @@
                                             <div class="col-sm-10">
                                                 <div class="informe-lectura">
                                                     <asp:Literal ID="LitInformeAuditor" runat="server"></asp:Literal>
+                                                    <div style="margin-top: 8px;">
+                                                        <asp:Button ID="BtnVerInformeAuditor" runat="server" Text="Ver informe completo" CssClass="btn btn-primary btn-xs"
+                                                            CausesValidation="false" Visible="false" CommandArgument='<%# Eval("PERS_CODIGO") %>' OnCommand="BtnVerInformeAuditor_Command" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -438,60 +489,79 @@
                                             </div>
                                             <div class="col-sm-10">
                                                 <asp:Label ID="LblAdjuntoAuditor" runat="server" ForeColor="Gray"></asp:Label>
+                                                <asp:HyperLink ID="LnkVerAdjuntoAuditor" runat="server" Visible="false" Target="_blank" Text="Ver PDF" CssClass="btn btn-default btn-xs" />
+                                                <asp:HyperLink ID="LnkDescargarAdjuntoAuditor" runat="server" Visible="false" Target="_blank" Text="Descargar archivo" CssClass="btn btn-default btn-xs" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default panel-cliente">
+                                <asp:Panel ID="PnlGestionClientePaciente" runat="server" Visible="false" CssClass="panel panel-default panel-cliente">
                                     <div class="panel-heading">
                                         <strong>GESTIÓN CLIENTE</strong>
                                         <asp:Label ID="LblEstadoCliente" runat="server" CssClass="pull-right" Text="PENDIENTE"></asp:Label>
                                     </div>
                                     <div class="panel-body">
-                                        <div class="row" style="margin-bottom: 12px;">
-                                            <div class="col-sm-2">
-                                                <strong>Decisión:</strong>
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <asp:RadioButton ID="RdbClienteAceptado" runat="server" GroupName="EstadoCliente" Text=" ACEPTADO" />
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <asp:Panel ID="PnlGestionNormal" runat="server" Visible="false">
+                                            <div class="row" style="margin-bottom: 12px;">
+                                                <div class="col-sm-2">
+                                                    <strong>Decisión:</strong>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <asp:RadioButton ID="RdbClienteAceptado" runat="server" GroupName="EstadoCliente" Text=" ACEPTADO" />
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
                                             <asp:RadioButton ID="RdbClienteRechazado" runat="server" GroupName="EstadoCliente" Text=" RECHAZADO" />
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom: 12px;">
-                                            <div class="col-sm-2">
-                                                <strong>Informe:</strong>
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <asp:HiddenField ID="HfInformeCliente" runat="server" />
-                                                <asp:Button ID="BtnEditarInformeCliente" runat="server" Text="Editar informe" CssClass="btn btn-primary btn-xs" CausesValidation="false"
-                                                    CommandArgument='<%#Eval("PERS_CODIGO")%>'
-                                                    OnCommand="BtnEditarInformeCliente_Command" />
-                                                &nbsp;
-                                            <asp:Label ID="LblResumenInformeCliente" runat="server" Text="Sin informe" ForeColor="Gray"></asp:Label>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom: 12px;">
-                                            <div class="col-sm-2">
-                                                <strong>Adjunto:</strong>
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <asp:FileUpload ID="FupAdjuntoCliente" runat="server" />
-                                                <div style="margin-top: 5px;">
-                                                    <asp:Label ID="LblAdjuntoCliente" runat="server" Text="Sin archivo adjunto." ForeColor="Gray"></asp:Label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12" style="text-align: right;">
-                                                <asp:Button ID="BtnGuardarCliente" runat="server" Text="Guardar Gestión" CssClass="btn btn-success btn-sm" CausesValidation="false"
-                                                    CommandArgument='<%#Eval("PERS_CODIGO")%>'
-                                                    OnCommand=" BtnGuardarCliente_Command" />
+                                            <div class="row" style="margin-bottom: 12px;">
+                                                <div class="col-sm-2">
+                                                    <strong>Informe:</strong>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <asp:HiddenField ID="HfInformeCliente" runat="server" />
+                                                    <asp:Button ID="BtnEditarInformeCliente" runat="server" Text="Editar informe" CssClass="btn btn-primary btn-xs" CausesValidation="false"
+                                                        CommandArgument='<%#Eval("PERS_CODIGO")%>'
+                                                        OnCommand="BtnEditarInformeCliente_Command" />
+                                                    &nbsp;
+                                            <asp:Label ID="LblResumenInformeCliente" runat="server" Text="Sin informe" ForeColor="Gray"></asp:Label>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="row" style="margin-bottom: 12px;">
+                                                <div class="col-sm-2">
+                                                    <strong>Adjunto:</strong>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <asp:FileUpload ID="FupAdjuntoCliente" runat="server" />
+                                                    <div style="margin-top: 5px;">
+                                                        <asp:Label ID="LblAdjuntoCliente" runat="server" Text="Sin archivo adjunto." ForeColor="Gray"></asp:Label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12" style="text-align: right;">
+                                                    <asp:Button ID="BtnGuardarCliente" runat="server" Text="Guardar Gestión" CssClass="btn btn-success btn-sm" CausesValidation="false"
+                                                        CommandArgument='<%#Eval("PERS_CODIGO")%>'
+                                                        OnCommand=" BtnGuardarCliente_Command" />
+                                                </div>
+                                            </div>
+
+                                        </asp:Panel>
+                                        <asp:Panel ID="PnlGestionApelable" runat="server" Visible="false">
+                                            <label>Exámenes adicionales solicitados</label>
+                                            <p class="text-muted">Escriba los exámenes requeridos para este paciente según el informe del auditor.</p>
+                                            <asp:TextBox ID="TxtExamenesAdicionales" runat="server" TextMode="MultiLine" Rows="6" MaxLength="12000"
+                                                CssClass="form-control" Style="resize: vertical; min-height: 140px; max-height: 320px;" placeholder="Escriba los exámenes solicitados, uno por línea si lo prefiere." />
+                                            <p style="margin-top: 8px;">
+                                                <asp:Label ID="LblBorradorAdicional" runat="server" ForeColor="Gray" /></p>
+                                            <asp:Button ID="BtnGuardarBorradorAdicional" runat="server" Text="Guardar borrador" CssClass="btn btn-primary btn-sm"
+                                                CausesValidation="false" CommandArgument='<%# Eval("PERS_CODIGO") %>' OnCommand="BtnGuardarBorradorAdicional_Command" />
+                                            <asp:HyperLink ID="LnkPdfOrdenAdicional" runat="server" Visible="false" Target="_blank" Text="Ver PDF del borrador guardado" CssClass="btn btn-default btn-sm" />
+                                            <asp:Button ID="BtnEnviarOrdenAdicional" runat="server" Text="Enviar a agendamiento" CssClass="btn btn-success btn-sm"
+                                                CausesValidation="false" CommandArgument='<%# Eval("PERS_CODIGO") %>' OnCommand="BtnEnviarOrdenAdicional_Command"
+                                                OnClientClick="return confirm('¿Enviar estos exámenes a agendamiento? Después del envío el texto quedará de solo lectura.');" />
+                                        </asp:Panel>
                                     </div>
-                                </div>
-                                <div class="panel panel-default panel-historial">
+                                </asp:Panel>
+                                <asp:Panel ID="PnlHistorialGestionNormal" runat="server" CssClass="panel panel-default panel-historial">
                                     <div class="panel-heading">
                                         <strong>HISTORIAL GESTIÓN CLIENTE</strong>
                                     </div>
@@ -510,7 +580,7 @@
                                             <RowStyle Font-Size="X-Small" />
                                         </asp:GridView>
                                     </div>
-                                </div>
+                                </asp:Panel>
                             </div>
                         </div>
                     </ItemTemplate>
@@ -657,27 +727,57 @@
         </div>
         <script type="text/javascript">
 
-        function cerrarResultadoCliente() {
+            function cerrarResultadoCliente() {
 
-                                 var visor = document.getElementById('visorResultadoCliente');
+                var visor = document.getElementById('visorResultadoCliente');
 
-                                 var modal = document.getElementById('modalResultadoPdf');
+                var modal = document.getElementById('modalResultadoPdf');
 
-                                 if (visor != null) {
-                                     visor.removeAttribute('src');
-                                 }
+                if (visor != null) {
+                    visor.removeAttribute('src');
+                }
 
-                                 if (modal != null) {
-                                     modal.style.display = 'none';
-                                 }
+                if (modal != null) {
+                    modal.style.display = 'none';
+                }
 
-                                 document.body.style.overflow = '';
+                document.body.style.overflow = '';
 
-                                 return false;
-                             }
+                return false;
+            }
 
         </script >
 
+
+        <asp:Panel ID="PnlVisorInformeAuditor" runat="server" Visible="false" CssClass="visor-informe-overlay" role="dialog" aria-modal="true" aria-label="Informe del auditor">
+            <div class="visor-informe-ventana">
+                <div class="visor-informe-cabecera">
+                    <strong><asp:Label ID="LblTituloVisorAuditor" runat="server" /></strong>
+                    <button type="button" class="btn btn-default btn-sm" onclick="cerrarInformeAuditorCliente();">Cerrar</button>
+                </div>
+                <div class="visor-informe-contenido"><asp:Literal ID="LitVisorInformeAuditor" runat="server" /></div>
+            </div>
+        </asp:Panel>
+        <script type="text/javascript">
+            var idVisorAuditorCliente = null, scrollAnteriorAuditorCliente = '';
+            function abrirInformeAuditorCliente(id) {
+                var modal = document.getElementById(id);
+                if (!modal) return;
+                idVisorAuditorCliente = id;
+                scrollAnteriorAuditorCliente = document.body.style.overflow;
+                modal.style.display = 'flex'; document.body.style.overflow = 'hidden';
+                var cerrar = modal.querySelector('button'); if (cerrar) cerrar.focus();
+            }
+            function cerrarInformeAuditorCliente() {
+                var modal = document.getElementById(idVisorAuditorCliente);
+                if (modal) modal.style.display = 'none';
+                document.body.style.overflow = scrollAnteriorAuditorCliente;
+                idVisorAuditorCliente = null;
+            }
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && idVisorAuditorCliente) cerrarInformeAuditorCliente();
+            });
+        </script>
     </form>
 
 </body>

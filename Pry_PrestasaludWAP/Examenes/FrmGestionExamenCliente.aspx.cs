@@ -24,6 +24,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 }
 
                 Page.Form.Attributes.Add("enctype", "multipart/form-data");
+                if (IsPostBack) ValidarAccesoCliente();
                 ScriptManager sm = ScriptManager.GetCurrent(Page);
 
                 if (sm != null)
@@ -51,6 +52,7 @@ namespace Pry_PrestasaludWAP.Examenes
                     LblCodigoSolicitud.Text = codigoEXSO.ToString();
                     Lbltitulo.Text = "Gestión Cliente - Exámenes";
 
+                    ValidarAccesoCliente();
                     CargarSolicitud();
                 }
             }
@@ -172,6 +174,7 @@ namespace Pry_PrestasaludWAP.Examenes
                 parametrosAuditoria[36] = codigoPERS;
                 DataSet dsAuditoria = new Conexion(2, "").FunInsertSolictudExamen(parametrosAuditoria);
 
+                ViewState["EsApelableCliente_" + codigoPERS] = false;
                 Label lblEstado = e.Item.FindControl("LblEstadoAuditoria") as Label;
                 Label lblEstadoDetalle = e.Item.FindControl("LblEstadoAuditoriaDetalle") as Label;
                 Literal litInforme = e.Item.FindControl("LitInformeAuditor") as Literal;
@@ -182,7 +185,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
                     DataRow auditoria = dsAuditoria.Tables[0].Rows[0];
                     string estado = auditoria["EXRA_ESTADO"].ToString().Trim().ToUpper();
-                    puedeGestionarRechazado = estado == "RECHAZADO";
+                    puedeGestionarRechazado = false; // La gestión anterior de rechazos queda deshabilitada.
+                    bool esApelable = estado == "RECHAZADO APELABLE";
                     string informe = auditoria["EXRA_OBSERVACION"] != DBNull.Value ? auditoria["EXRA_OBSERVACION"].ToString() : "";
                     string adjunto = auditoria["EXRA_NOMBRE_DOC"].ToString().Trim();
 
@@ -198,6 +202,10 @@ namespace Pry_PrestasaludWAP.Examenes
                             estado == "RECHAZADO")
                         {
                             lblEstado.CssClass = "pull-right estado-rechazado";
+                        }
+                        else if (estado == "RECHAZADO APELABLE")
+                        {
+                            lblEstado.CssClass = "pull-right estado-apelable";
                         }
                         else
                         {
@@ -217,23 +225,17 @@ namespace Pry_PrestasaludWAP.Examenes
                         {
                             lblEstadoDetalle.ForeColor = System.Drawing.Color.Red;
                         }
-                    }
-
-                    if (litInforme != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(informe))
+                        else if (estado == "RECHAZADO APELABLE")
                         {
-                            litInforme.Text = "<span style='color:gray;'>Sin informe registrado.</span>";
-                        }
-                        else
-                        {
-                            litInforme.Text = informe;
+                            lblEstadoDetalle.ForeColor = System.Drawing.Color.DarkOrange;
                         }
                     }
 
+                    PrepararInformeCompacto(e.Item, codigoPERS, informe, adjunto, Convert.ToString(auditoria["EXRA_EXTENSION"]));
+                    ViewState["EsApelableCliente_" + codigoPERS] = esApelable;
                     if (lblAdjunto != null)
                     {
-                        lblAdjunto.Text = string.IsNullOrEmpty(adjunto) ? "Sin archivo adjunto." : adjunto;
+                        lblAdjunto.Text = string.IsNullOrEmpty(adjunto) ? "Sin archivo adjunto." : HttpUtility.HtmlEncode(adjunto);
                     }
                 }
 
@@ -391,6 +393,18 @@ namespace Pry_PrestasaludWAP.Examenes
 
                 //    historial.DataBind();
                 //}
+                bool apelableActual = ViewState["EsApelableCliente_" + codigoPERS] != null
+                    && Convert.ToBoolean(ViewState["EsApelableCliente_" + codigoPERS]);
+                Panel gestionNormal = e.Item.FindControl("PnlGestionNormal") as Panel;
+                Panel gestionApelable = e.Item.FindControl("PnlGestionApelable") as Panel;
+                Panel historialNormal = e.Item.FindControl("PnlHistorialGestionNormal") as Panel;
+                Panel gestionPaciente = e.Item.FindControl("PnlGestionClientePaciente") as Panel;
+                if (gestionPaciente != null) gestionPaciente.Visible = apelableActual;
+                if (gestionNormal != null) gestionNormal.Visible = false;
+                if (gestionApelable != null) gestionApelable.Visible = apelableActual;
+                if (historialNormal != null) historialNormal.Visible = false;
+                if (apelableActual) CargarBorradorPaciente(e.Item, codigoPERS);
+
             }
             catch (Exception ex)
             {
@@ -405,167 +419,24 @@ namespace Pry_PrestasaludWAP.Examenes
 
         protected void BtnEditarInformeCliente_Command(object sender, CommandEventArgs e)
         {
-            try
-            {
-                int codigoPERS = 0;
+            PnlEditorCliente.Visible = false;
+            Lblerror.Text = "Esta gestión anterior ya no está disponible. Solo los rechazos apelables permiten solicitar exámenes adicionales.";
 
-                if (!int.TryParse(e.CommandArgument.ToString(), out codigoPERS) || codigoPERS <= 0)
-                {
-                    Lblerror.Text = "No se pudo identificar al paciente.";
-                    return;
-                }
-
-                ValidarRechazoAuditor(codigoPERS);
-                ViewState["PacienteEditorCliente"] = codigoPERS;
-
-                string clave = "InformeCliente_" + codigoPERS.ToString();
-
-                if (ViewState[clave] != null)
-                {
-                    EditorInformeCliente.Content = ViewState[clave].ToString();
-                }
-                else
-                {
-                    EditorInformeCliente.Content = "";
-                }
-
-                LblPacienteEditorCliente.Text = "Paciente código " + codigoPERS.ToString();
-                PnlEditorCliente.Visible = true;
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
         }
 
 
         protected void BtnAceptarInformeCliente_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (ViewState["PacienteEditorCliente"] == null)
-                {
-                    Lblerror.Text = "No se pudo identificar al paciente.";
-                    return;
-                }
+            PnlEditorCliente.Visible = false;
+            Lblerror.Text = "Esta gestión anterior ya no está disponible. Solo los rechazos apelables permiten solicitar exámenes adicionales.";
 
-                int codigoPERS = Convert.ToInt32(ViewState["PacienteEditorCliente"]);
-                string clave = "InformeCliente_" + codigoPERS.ToString();
-
-                ViewState[clave] = EditorInformeCliente.Content;
-                PnlEditorCliente.Visible = false;
-                // No reenlazar el Repeater: recargaba el informe y la decisión anteriores.
-                // El borrador se persiste con el botón Guardar de la gestión del paciente.
-                foreach (RepeaterItem pacienteItem in RptPacientes.Items)
-                {
-                    Button guardar = pacienteItem.FindControl("BtnGuardarCliente") as Button;
-                    if (guardar != null && guardar.CommandArgument == codigoPERS.ToString())
-                    {
-                        Label resumen = pacienteItem.FindControl("LblResumenInformeCliente") as Label;
-                        if (resumen != null)
-                        {
-                            resumen.Text = "Informe modificado. Pendiente de guardar gestión.";
-                            resumen.ForeColor = System.Drawing.Color.DarkOrange;
-                        }
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
         }
 
         protected void BtnInsertarImagenCliente_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (ViewState["PacienteEditorCliente"] == null)
-                {
-                    Lblerror.Text = "No se pudo identificar al paciente.";
-                    return;
-                }
+            PnlEditorCliente.Visible = false;
+            Lblerror.Text = "Esta gestión anterior ya no está disponible. Solo los rechazos apelables permiten solicitar exámenes adicionales.";
 
-                if (FupImagenInformeCliente == null || !FupImagenInformeCliente.HasFile)
-                {
-                    new Funciones().funShowJSMessage("Seleccione una imagen.", this);
-                    PnlEditorCliente.Visible = true;
-                    return;
-                }
-
-                string nombre = System.IO.Path.GetFileName(FupImagenInformeCliente.PostedFile.FileName);
-                string extension = System.IO.Path.GetExtension(nombre).ToLower();
-                string mime = "";
-
-                switch (extension)
-                {
-                    case ".png":
-
-                        mime = "image/png";
-                        break;
-
-
-                    case ".jpg":
-
-                    case ".jpeg":
-
-                        mime = "image/jpeg";
-                        break;
-
-
-                    case ".gif":
-
-                        mime = "image/gif";
-                        break;
-
-
-                    default:
-
-                        new Funciones().funShowJSMessage("La imagen debe ser PNG, JPG, JPEG o GIF.", this);
-                        PnlEditorCliente.Visible = true;
-                        return;
-                }
-
-                int maxImagenBytes = 4 * 1024 * 1024;
-
-                if (FupImagenInformeCliente.PostedFile.ContentLength > maxImagenBytes)
-                {
-                    new Funciones().funShowJSMessage("La imagen no puede superar 4 MB.", this);
-                    PnlEditorCliente.Visible = true;
-                    return;
-                }
-
-                byte[] bytes;
-
-                using (System.IO.BinaryReader br = new System.IO.BinaryReader(FupImagenInformeCliente.PostedFile.InputStream))
-                {
-                    bytes = br.ReadBytes(FupImagenInformeCliente.PostedFile.ContentLength);
-                }
-
-                string base64 = Convert.ToBase64String(bytes);
-                string imagenHtml =
-                    "<p style=\"text-align:center;\">" +
-                    "<img src=\"data:" +
-                    mime +
-                    ";base64," +
-                    base64 +
-                    "\" " +
-                    "style=\"max-width:600px;width:auto;height:auto;" +
-                    "display:block;margin:8px auto;\" />" +
-                    "</p>";
-
-                string contenidoActual = EditorInformeCliente.Content != null ? EditorInformeCliente.Content : "";
-                EditorInformeCliente.Content = contenidoActual + imagenHtml;
-                PnlEditorCliente.Visible = true;
-
-                new Funciones().funShowJSMessage("Imagen insertada en el informe.", this);
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-                PnlEditorCliente.Visible = true;
-            }
         }
 
 
@@ -581,206 +452,9 @@ namespace Pry_PrestasaludWAP.Examenes
 
         protected void BtnGuardarCliente_Command(object sender, CommandEventArgs e)
         {
-            try
-            {
-                int codigoPERS = 0;
+            PnlEditorCliente.Visible = false;
+            Lblerror.Text = "Esta gestión anterior ya no está disponible. Solo los rechazos apelables permiten solicitar exámenes adicionales.";
 
-                if (!int.TryParse(e.CommandArgument.ToString(), out codigoPERS) || codigoPERS <= 0)
-                {
-                    Lblerror.Text = "No se pudo identificar al paciente.";
-                    return;
-                }
-
-                int codigoEXSO = Convert.ToInt32(ViewState["CodigoEXSO"]);
-                ValidarRechazoAuditor(codigoPERS);
-
-                Button boton = sender as Button;
-
-                if (boton == null)
-                {
-                    return;
-                }
-
-                RepeaterItem item = boton.NamingContainer as RepeaterItem;
-
-                if (item == null)
-                {
-                    return;
-                }
-
-                RadioButton aceptado = item.FindControl("RdbClienteAceptado") as RadioButton;
-                RadioButton rechazado = item.FindControl("RdbClienteRechazado") as RadioButton;
-                FileUpload adjunto = item.FindControl("FupAdjuntoCliente") as FileUpload;
-
-                string estado = "";
-
-                if (aceptado != null && aceptado.Checked)
-                {
-                    estado = "ACEPTADO";
-                }
-
-                if (rechazado != null && rechazado.Checked)
-                {
-                    estado = "RECHAZADO";
-                }
-
-                if (string.IsNullOrEmpty(estado))
-                {
-                    new Funciones().funShowJSMessage("Seleccione ACEPTADO o RECHAZADO.", this);
-                    return;
-                }
-
-                string claveInforme = "InformeCliente_" + codigoPERS.ToString();
-                string informeHtml = "";
-
-                if (ViewState[claveInforme] != null)
-                {
-                    informeHtml = ViewState[claveInforme].ToString();
-                }
-
-                List<ImagenInformeCliente> imagenes = ExtraerImagenesCliente(ref informeHtml);
-
-                byte[] archivo = new byte[0];
-                string nombreArchivo = "";
-                string extension = "";
-                string tipoArchivo = "";
-
-                if (adjunto != null && adjunto.HasFile)
-                {
-                    nombreArchivo = System.IO.Path.GetFileName(adjunto.PostedFile.FileName);
-
-                    if (nombreArchivo.Length > 100)
-                    {
-                        new Funciones().funShowJSMessage("El nombre del archivo no puede superar 100 caracteres.", this);
-                        return;
-                    }
-
-                    extension = System.IO.Path.GetExtension(nombreArchivo).ToLower();
-
-                    switch (extension)
-                    {
-                        case ".pdf":
-
-                            tipoArchivo = "application/pdf";
-                            break;
-
-                        case ".xls":
-
-                            tipoArchivo = "application/vnd.ms-excel";
-                            break;
-
-                        case ".xlsx":
-
-                            tipoArchivo = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                            break;
-
-                        default:
-
-                            new Funciones().funShowJSMessage("El archivo adjunto debe ser PDF, XLS o XLSX.", this);
-                            return;
-                    }
-
-                    using (System.IO.BinaryReader br = new System.IO.BinaryReader(adjunto.PostedFile.InputStream))
-                    {
-                        archivo = br.ReadBytes(adjunto.PostedFile.ContentLength);
-                    }
-                }
-
-
-                // =====================================
-                // GUARDAR GESTIÓN
-                // TIPO 27
-                // =====================================
-
-                object[] parametros = CrearParametrosOperacionSolicitud(27, codigoEXSO);
-
-                parametros[20] = informeHtml;
-                parametros[21] = archivo;
-                parametros[22] = nombreArchivo;
-                parametros[23] = tipoArchivo;
-                parametros[24] = extension;
-                parametros[29] = codigoEXSO;
-                parametros[31] = estado;
-                parametros[36] = codigoPERS;
-
-                DataSet ds = new Conexion(2, "").FunInsertSolictudExamen(parametros);
-
-
-                if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
-                {
-                    throw new Exception("No fue posible guardar la gestión del cliente.");
-                }
-
-                string resultado = ds.Tables[0].Rows[0]["Resultado"].ToString().Trim();
-
-                if (resultado != "OK-CLIENTE")
-                {
-                    throw new Exception("No fue posible guardar la gestión. " + resultado);
-                }
-
-                int codigoEXRC = Convert.ToInt32(ds.Tables[0].Rows[0]["CodigoEXRC"]);
-
-
-                // =====================================
-                // GUARDAR IMÁGENES DEL INFORME
-                // TIPO 28
-                // =====================================
-
-                foreach (ImagenInformeCliente imagen in imagenes)
-                {
-                    object[] parametrosImagen = CrearParametrosOperacionSolicitud(28, codigoEXSO);
-
-                    parametrosImagen[21] = imagen.Bytes;
-                    parametrosImagen[22] = imagen.Nombre;
-                    parametrosImagen[23] = imagen.Mime;
-                    parametrosImagen[24] = imagen.Extension;
-                    parametrosImagen[29] = codigoEXSO;
-                    parametrosImagen[36] = codigoEXRC;
-                    parametrosImagen[37] = imagen.Orden;
-
-                    DataSet dsImagen = new Conexion(2, "").FunInsertSolictudExamen(parametrosImagen);
-
-                    if (dsImagen == null || dsImagen.Tables.Count == 0 || dsImagen.Tables[0].Rows.Count == 0)
-                    {
-                        throw new Exception("No fue posible guardar una imagen del informe.");
-                    }
-
-                    int codigoEXCI = Convert.ToInt32(dsImagen.Tables[0].Rows[0]["CodigoEXCI"]);
-
-                    string urlImagen = ResolveUrl("~/Examenes/VerImagenCliente.ashx" + "?exso=" + codigoEXSO.ToString() + "&id=" + codigoEXCI.ToString());
-
-                    informeHtml = informeHtml.Replace(imagen.Token, urlImagen);
-                }
-
-
-                // =====================================
-                // GUARDAR HTML FINAL
-                // TIPO 29
-                // =====================================
-
-                object[] parametrosInforme = CrearParametrosOperacionSolicitud(29, codigoEXSO);
-                parametrosInforme[20] = informeHtml;
-                parametrosInforme[29] = codigoEXSO;
-                parametrosInforme[36] = codigoEXRC;
-
-                DataSet dsInforme = new Conexion(2, "").FunInsertSolictudExamen(parametrosInforme);
-
-                if (dsInforme == null || dsInforme.Tables.Count == 0 || dsInforme.Tables[0].Rows.Count == 0 || dsInforme.Tables[0].Rows[0]["Resultado"].ToString().Trim() != "OK-INFORME-CLIENTE")
-                {
-                    throw new Exception("La gestión fue guardada, pero no fue posible finalizar el informe.");
-                }
-
-                ViewState[claveInforme] = informeHtml;
-                CargarSolicitud();
-
-                if (!NotificarGestionClienteCompleta(codigoEXSO)) return;
-
-                new Funciones().funShowJSMessage("Gestión del cliente guardada correctamente.", this);
-            }
-            catch (Exception ex)
-            {
-                Lblerror.Text = ex.ToString();
-            }
         }
 
         #endregion
@@ -790,12 +464,8 @@ namespace Pry_PrestasaludWAP.Examenes
 
         private void ValidarRechazoAuditor(int codigoPERS)
         {
-            object[] parametros = CrearParametrosOperacionSolicitud(22, Convert.ToInt32(ViewState["CodigoEXSO"]));
-            parametros[36] = codigoPERS;
-            DataSet auditoria = new Conexion(2, "").FunInsertSolictudExamen(parametros);
-            if (auditoria == null || auditoria.Tables.Count == 0 || auditoria.Tables[0].Rows.Count == 0 ||
-                auditoria.Tables[0].Rows[0]["EXRA_ESTADO"].ToString().Trim().ToUpperInvariant() != "RECHAZADO")
-                throw new InvalidOperationException("Solo puede registrar gestión para resultados rechazados por el auditor.");
+            throw new InvalidOperationException("La gestión anterior del cliente está deshabilitada.");
+
         }
 
         private DataSet OperacionNotificacionCliente(int codigoEXSO, string accion, Guid token)
@@ -1092,6 +762,159 @@ namespace Pry_PrestasaludWAP.Examenes
         }
 
         #endregion
+
+        private void ValidarAccesoCliente()
+        {
+            int usuario, solicitud;
+            if (!int.TryParse(Convert.ToString(Session["usuCodigo"]), out usuario) || usuario <= 0
+                || !int.TryParse(Convert.ToString(ViewState["CodigoEXSO"]), out solicitud) || solicitud <= 0)
+                throw new InvalidOperationException("La sesión o la solicitud no es válida.");
+            object[] argumentos = { usuario, null, null, "", "", 1, 1, solicitud };
+            DataSet ds = new Conexion(2, "").FunSeguimientoExamenesCliente(argumentos);
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count != 1
+                || !Convert.ToBoolean(ds.Tables[0].Rows[0]["PuedeGestionar"]))
+                throw new InvalidOperationException("La solicitud no está disponible en su campaña o falta completar la auditoría.");
+        }
+        private DataRow LeerInformeOrden(int persona, string accion = "LEER", string texto = null, DateTime? version = null)
+        {
+            DataSet ds = new Conexion(2, "").FunInformeOrdenCliente(
+                Convert.ToInt32(Session["usuCodigo"]), Convert.ToInt32(ViewState["CodigoEXSO"]), persona, accion, texto, version);
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count != 1)
+                throw new InvalidOperationException("No se pudo consultar el informe del auditor.");
+            return ds.Tables[0].Rows[0];
+        }
+        public string ResumenInformeAuditor(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html)) return "Sin informe registrado.";
+            string texto = Regex.Replace(html, @"<[^>]*>", " ");
+            texto = Regex.Replace(HttpUtility.HtmlDecode(texto), @"\s+", " ").Trim();
+            if (texto.Length == 0) return "Informe con contenido gráfico. Pulse Ver informe completo.";
+            return texto.Length > 180 ? texto.Substring(0, 180) + "…" : texto;
+        }
+        private void PrepararInformeCompacto(RepeaterItem item, int persona, string html, string adjunto, string extension)
+        {
+            Literal resumen = item.FindControl("LitInformeAuditor") as Literal;
+            if (resumen != null) resumen.Text = HttpUtility.HtmlEncode(ResumenInformeAuditor(html));
+            Button ver = item.FindControl("BtnVerInformeAuditor") as Button;
+            if (ver != null) ver.Visible = !string.IsNullOrWhiteSpace(html);
+            HyperLink verPdf = item.FindControl("LnkVerAdjuntoAuditor") as HyperLink;
+            HyperLink descargar = item.FindControl("LnkDescargarAdjuntoAuditor") as HyperLink;
+            string url = ResolveUrl("~/Examenes/VerAdjuntoAuditorCliente.ashx?exso="
+                + Convert.ToInt32(ViewState["CodigoEXSO"]) + "&pers=" + persona);
+            if (verPdf != null) { verPdf.Visible = !string.IsNullOrWhiteSpace(adjunto) && EsPdf(extension); verPdf.NavigateUrl = url; }
+            if (descargar != null) { descargar.Visible = !string.IsNullOrWhiteSpace(adjunto); descargar.NavigateUrl = url + "&descargar=1"; }
+        }
+        protected void BtnVerInformeAuditor_Command(object sender, CommandEventArgs e)
+        {
+            try
+            {
+                int persona;
+                if (!int.TryParse(Convert.ToString(e.CommandArgument), out persona) || persona <= 0)
+                    throw new InvalidOperationException("No se pudo identificar al paciente.");
+                ValidarAccesoCliente();
+                DataRow r = LeerInformeOrden(persona);
+                string html = Convert.ToString(r["EXRA_OBSERVACION"]);
+                if (string.IsNullOrWhiteSpace(html)) throw new InvalidOperationException("El auditor no registró un informe.");
+                string documento = "<!doctype html><html><head><meta charset='utf-8'><style>body{font:14px Arial,sans-serif;padding:16px;overflow-wrap:anywhere;}img{max-width:100%;height:auto;}table{max-width:100%;}</style></head><body>" + html + "</body></html>";
+                LitVisorInformeAuditor.Text = "<iframe title=\"Informe completo del auditor\" sandbox=\"allow-same-origin\" style=\"width:100%;height:100%;border:0;\" srcdoc=\""
+                    + HttpUtility.HtmlAttributeEncode(documento) + "\"></iframe>";
+                LblTituloVisorAuditor.Text = HttpUtility.HtmlEncode("Informe del auditor · " + Convert.ToString(r["Paciente"]));
+                PnlVisorInformeAuditor.Visible = true;
+                ScriptManager.RegisterStartupScript(this, GetType(), "VerInformeAuditorCliente",
+                    "abrirInformeAuditorCliente('" + HttpUtility.JavaScriptStringEncode(PnlVisorInformeAuditor.ClientID) + "');", true);
+            }
+            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+        }
+        private void CargarBorradorPaciente(RepeaterItem item, int persona, DataRow datos = null)
+        {
+            DataRow r = datos ?? LeerInformeOrden(persona);
+            ViewState["VersionAuditorCliente_" + persona] = Convert.ToDateTime(r["VersionAuditoria"]);
+            TextBox texto = item.FindControl("TxtExamenesAdicionales") as TextBox;
+            Label resumen = item.FindControl("LblBorradorAdicional") as Label;
+            Button guardar = item.FindControl("BtnGuardarBorradorAdicional") as Button;
+            string estado = Convert.ToString(r["EstadoOrden"]);
+            bool editable = Convert.ToString(r["EXRA_ESTADO"]) == "RECHAZADO APELABLE" && (estado == "" || estado == "BORRADOR");
+            if (texto != null) { texto.Text = Convert.ToString(r["ExamenesSolicitados"]); texto.Enabled = editable; }
+            if (guardar != null) guardar.Enabled = editable;
+            if (resumen != null)
+            {
+                if (Convert.ToInt32(r["OrdenCodigo"]) == 0) resumen.Text = "Sin borrador guardado.";
+                else if (estado == "BORRADOR")
+                {
+                    DateTime fecha = Convert.ToDateTime(r["FechaModificacion"] == DBNull.Value ? r["FechaCreacion"] : r["FechaModificacion"]);
+                    resumen.Text = "Borrador guardado el " + fecha.ToString("dd/MM/yyyy HH:mm") + ". Aún no se ha enviado.";
+                }
+                else resumen.Text = HttpUtility.HtmlEncode(estado == "ENVIADA" ? "Orden enviada a agendamiento." : "Estado de la orden: " + estado);
+            }
+            Button enviar = item.FindControl("BtnEnviarOrdenAdicional") as Button;
+            if (enviar != null) { enviar.Visible = editable; enviar.Enabled = editable; }
+            HyperLink pdf = item.FindControl("LnkPdfOrdenAdicional") as HyperLink;
+            if (pdf != null)
+            {
+                int orden = Convert.ToInt32(r["OrdenCodigo"]); pdf.Visible = orden > 0;
+                pdf.Text = estado == "BORRADOR" ? "Ver PDF del borrador guardado" : "Ver PDF de la orden enviada";
+                pdf.NavigateUrl = ResolveUrl("~/Examenes/VerOrdenAdicionalPdf.ashx?ambito=cliente&orden=" + orden);
+            }
+            Label cabecera = item.FindControl("LblEstadoCliente") as Label;
+            if (cabecera != null) { cabecera.Text = estado == "" ? "PENDIENTE" : HttpUtility.HtmlEncode(estado); cabecera.ForeColor = System.Drawing.Color.DarkOrange; }
+        }
+        protected void BtnGuardarBorradorAdicional_Command(object sender, CommandEventArgs e)
+        {
+            try
+            {
+                int persona;
+                Button boton = sender as Button;
+                RepeaterItem item = boton == null ? null : boton.NamingContainer as RepeaterItem;
+                if (item == null || !int.TryParse(Convert.ToString(e.CommandArgument), out persona) || persona <= 0)
+                    throw new InvalidOperationException("No se pudo identificar al paciente.");
+                ValidarAccesoCliente();
+                TextBox campo = item.FindControl("TxtExamenesAdicionales") as TextBox;
+                string texto = campo == null ? "" : campo.Text.Trim();
+                if (string.IsNullOrWhiteSpace(texto) || texto.Length > 12000)
+                    throw new InvalidOperationException("Ingrese los exámenes solicitados, hasta 12000 caracteres.");
+                object version = ViewState["VersionAuditorCliente_" + persona];
+                if (version == null) throw new InvalidOperationException("Recargue la página y revise el informe del auditor.");
+                DataRow r = LeerInformeOrden(persona, "BORRADOR", texto, Convert.ToDateTime(version));
+                CargarBorradorPaciente(item, persona, r);
+                Lblerror.Text = "Borrador guardado. Aún no se ha enviado a agendamiento.";
+            }
+            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+        }
+
+        protected void BtnEnviarOrdenAdicional_Command(object sender, CommandEventArgs e)
+        {
+            try
+            {
+                int persona; Button boton = sender as Button;
+                RepeaterItem item = boton == null ? null : boton.NamingContainer as RepeaterItem;
+                if (item == null || !int.TryParse(Convert.ToString(e.CommandArgument), out persona) || persona <= 0)
+                    throw new InvalidOperationException("No se pudo identificar al paciente.");
+                ValidarAccesoCliente();
+                DataRow actual = LeerInformeOrden(persona);
+                if (Convert.ToString(actual["EstadoOrden"]) == "ENVIADA" || Convert.ToString(actual["EstadoOrden"]) == "AGENDADA")
+                { CargarBorradorPaciente(item, persona, actual); Lblerror.Text = "La orden ya fue enviada a agendamiento."; return; }
+                TextBox campo = item.FindControl("TxtExamenesAdicionales") as TextBox;
+                string texto = campo == null ? "" : campo.Text.Trim();
+                if (string.IsNullOrWhiteSpace(texto) || texto.Length > 12000) throw new InvalidOperationException("Ingrese los exámenes solicitados, hasta 12000 caracteres.");
+                object version = ViewState["VersionAuditorCliente_" + persona];
+                if (version == null) throw new InvalidOperationException("Recargue la página y revise el informe del auditor.");
+                DataRow guardado = LeerInformeOrden(persona, "BORRADOR", texto, Convert.ToDateTime(version));
+                int orden = Convert.ToInt32(guardado["OrdenCodigo"]);
+                DataSet ds = new Conexion(2, "").FunOrdenAdicionalCliente(Convert.ToInt32(Session["usuCodigo"]), orden, "PREPARAR");
+                if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count != 1) throw new InvalidOperationException("No se pudo preparar la orden.");
+                DataRow datos = ds.Tables[0].Rows[0];
+                byte[] pdf = OrdenAdicionalPdf.Crear(datos);
+                string nombre = "Solicitud_" + ViewState["CodigoEXSO"] + "_OrdenAdicional_" + orden + ".pdf";
+                DataSet envio = new Conexion(2, "").FunOrdenAdicionalCliente(Convert.ToInt32(Session["usuCodigo"]), orden, "ENVIAR",
+                    pdf, nombre, Convert.ToString(datos["ExamenesSolicitados"]), Convert.ToDateTime(datos["VersionAuditoria"]));
+                if (envio == null || envio.Tables.Count == 0 || envio.Tables[0].Rows.Count != 1) throw new InvalidOperationException("No se pudo confirmar el envío de la orden.");
+                string resultado = Convert.ToString(envio.Tables[0].Rows[0]["Resultado"]);
+                if (resultado != "ENVIADA" && resultado != "YA_ENVIADA") throw new InvalidOperationException("No se confirmó el envío de la orden.");
+                CargarBorradorPaciente(item, persona);
+                Lblerror.Text = "Orden adicional enviada a agendamiento. Su PDF ya está disponible.";
+            }
+            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+        }
 
     }
 }
