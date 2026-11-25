@@ -9,7 +9,7 @@ namespace Pry_PrestasaludWAP.Examenes
 {
     public partial class FrmNuevoExamenCliente : Page
     {
-        private const int TamanoPagina = 10;
+        private const int TamanoPagina = 5;
         private int PaginaActual
         {
             get { return ViewState["PaginaCliente"] == null ? 1 : Convert.ToInt32(ViewState["PaginaCliente"]); }
@@ -106,16 +106,28 @@ namespace Pry_PrestasaludWAP.Examenes
             }
         }
         protected void BtnConsultar_Click(object sender, EventArgs e)
-        { if (GuardarFiltros()) { PaginaActual = 1; CargarSolicitudesCliente(); } }
+        {
+            if (GuardarFiltros())
+            {
+                PaginaActual = 1; CargarSolicitudesCliente();
+            }
+        }
         protected void BtnLimpiar_Click(object sender, EventArgs e)
         {
             TxtDesde.Text = ""; TxtHasta.Text = ""; TxtDocumento.Text = ""; DdlEstado.SelectedIndex = 0;
-            if (GuardarFiltros()) { PaginaActual = 1; CargarSolicitudesCliente(); }
+            if (GuardarFiltros())
+            {
+                PaginaActual = 1; CargarSolicitudesCliente();
+            }
         }
         protected void BtnAnterior_Click(object sender, EventArgs e)
-        { PaginaActual = Math.Max(1, PaginaActual - 1); CargarSolicitudesCliente(); }
+        {
+            PaginaActual = Math.Max(1, PaginaActual - 1); CargarSolicitudesCliente();
+        }
         protected void BtnSiguiente_Click(object sender, EventArgs e)
-        { PaginaActual = Math.Min(1000000, PaginaActual + 1); CargarSolicitudesCliente(); }
+        {
+            PaginaActual = Math.Min(1000000, PaginaActual + 1); CargarSolicitudesCliente();
+        }
         protected void GrdvGrupoExamen_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType != DataControlRowType.DataRow) return;

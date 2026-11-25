@@ -124,9 +124,7 @@
 </head>
 
 <body>
-
     <form id="form1" runat="server">
-
         <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
         <div class="panel panel-primary">
             <div class="panel-heading">

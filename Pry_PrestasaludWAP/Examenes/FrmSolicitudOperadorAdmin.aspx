@@ -77,6 +77,58 @@
                 #GrdvDatos th:nth-child(7), #GrdvDatos td:nth-child(7) {
                     width: 62px;
                 }
+
+            #GrdvDatos .paginacion-agenda > td {
+                padding: 10px;
+                background: #f5f5f5;
+            }
+
+            #GrdvDatos .paginacion-agenda table {
+                width: auto;
+                min-width: 0;
+                margin: 0;
+            }
+
+                #GrdvDatos .paginacion-agenda table td {
+                    width: auto !important;
+                    padding: 3px;
+                    white-space: nowrap;
+                }
+
+            #GrdvDatos .paginacion-agenda a, #GrdvDatos .paginacion-agenda span {
+                display: inline-block;
+                padding: 5px 10px;
+                border: 1px solid #ddd;
+                border-radius: 3px;
+            }
+
+            #GrdvDatos .paginacion-agenda span {
+                background: #337ab7;
+                color: white;
+            }
+
+        .filtros-agenda {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+
+            .filtros-agenda > div {
+                flex: 1 1 180px;
+                min-width: 150px;
+            }
+
+            .filtros-agenda label {
+                display: block;
+            }
+
+        .nota-filtros-agenda, .resumen-agenda {
+            font-size: 12px;
+            color: #627181;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -94,11 +146,43 @@
                 </ContentTemplate>
             </asp:UpdatePanel>
             <div class="panel-body">
+                <asp:Panel ID="PnlFiltrosAgenda" runat="server" DefaultButton="BtnConsultarAgenda">
+                    <div class="filtros-agenda">
+                        <div>
+                            <label>Solicitud desde</label><asp:TextBox ID="TxtDesdeAgenda" runat="server" TextMode="Date" CssClass="form-control" />
+                        </div>
+                        <div>
+                            <label>Solicitud hasta</label><asp:TextBox ID="TxtHastaAgenda" runat="server" TextMode="Date" CssClass="form-control" />
+                        </div>
+                        <div>
+                            <label>Cédula / documento</label><asp:TextBox ID="TxtDocumentoAgenda" runat="server" MaxLength="20" CssClass="form-control" placeholder="Buscar documento" />
+                        </div>
+                        <div>
+                            <label>Proceso</label><asp:DropDownList ID="DdlProcesoAgenda" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="BtnConsultarAgenda_Click" CausesValidation="false">
+                                <asp:ListItem Value="">Todos</asp:ListItem>
+                                <asp:ListItem Value="SRR">Solicitud realizada</asp:ListItem>
+                                <asp:ListItem Value="SRV">Solicitud revisada</asp:ListItem>
+                                <asp:ListItem Value="SGA">Solicitud agendada</asp:ListItem>
+                                <asp:ListItem Value="EXR">Exámenes realizados</asp:ListItem>
+                                <asp:ListItem Value="AUA">Auditado aceptado</asp:ListItem>
+                                <asp:ListItem Value="AUR">Auditado rechazado (todos)</asp:ListItem>
+                                <asp:ListItem Value="OAE">Orden adicional pendiente de agendar</asp:ListItem>
+                                <asp:ListItem Value="OAG">Orden adicional agendada</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <asp:Button ID="BtnConsultarAgenda" runat="server" Text="Consultar" CssClass="btn btn-primary" CausesValidation="false" UseSubmitBehavior="false" OnClick="BtnConsultarAgenda_Click" />
+                        <asp:Button ID="BtnLimpiarAgenda" runat="server" Text="Limpiar" CssClass="btn btn-default" CausesValidation="false" UseSubmitBehavior="false" OnClick="BtnLimpiarAgenda_Click" />
+                    </div>
+                </asp:Panel>
+                <p class="nota-filtros-agenda">Fechas de la solicitud inicial o del envío de la orden adicional. Seleccione las fechas y pulse Consultar.</p>
+                <div class="resumen-agenda">
+                    <asp:Label ID="LblResumenAgenda" runat="server" />
+                </div>
                 <div class="solicitudes-tabla">
                     <asp:GridView ID="GrdvDatos" runat="server" Width="100%"
                         AutoGenerateColumns="False" DataKeyNames="CodigoEXSO,CodigoPERS,EstadoCodigo,CodigoTITU,Ext,CodigoPROD,OrdenCodigo,EsOrdenAdicional,CodigoPersonaOrden,EstadoOrden"
                         CssClass="table table-condensed table-bordered table-hover"
-                        ShowHeaderWhenEmpty="True" EmptyDataText="No existen datos para mostrar" OnRowDataBound="GrdvDatos_RowDataBound">
+                        ShowHeaderWhenEmpty="True" EmptyDataText="No existen datos para mostrar" OnRowDataBound="GrdvDatos_RowDataBound" AllowPaging="true" PageSize="5" OnPageIndexChanging="GrdvDatos_PageIndexChanging">
                         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                         <Columns>
                             <asp:BoundField DataField="FecSolicitud" HeaderText="Fecha_Solicitud" />
@@ -108,7 +192,6 @@
                             <asp:BoundField DataField="Cliente" HeaderText="Titular" />
                             <asp:BoundField DataField="Proceso" HeaderText="Proceso" />
                             <asp:BoundField DataField="TipoOrden" HeaderText="Orden" />
-
                             <asp:TemplateField HeaderText="Adjunto">
                                 <ItemTemplate>
                                     <asp:ImageButton ID="ImgDescargar" runat="server" Height="20px" ImageUrl="~/Botones/downloadcolor.png" OnClick="ImgDescargar_Click" />
@@ -164,6 +247,8 @@
                                 <ItemStyle HorizontalAlign="Center" />
                             </asp:TemplateField>
                         </Columns>
+                        <PagerSettings Mode="NumericFirstLast" PageButtonCount="5" FirstPageText="« Primera" LastPageText="Última »" Position="Bottom" />
+                        <PagerStyle CssClass="paginacion-agenda" HorizontalAlign="Left" />
                         <RowStyle Font-Size="X-Small" />
                     </asp:GridView>
                     <script>

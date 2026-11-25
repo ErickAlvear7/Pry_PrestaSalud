@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -68,6 +69,18 @@ namespace Pry_PrestasaludWAP.Examenes
                     if (adicionales.Tables[0].Columns.Contains(columna.ColumnName)) fila[columna.ColumnName] = origen[columna.ColumnName];
                 datos.Rows.Add(fila);
             }
+            DateTime? desde = ViewState["AgendaFiltroDesde"] as DateTime?;
+            DateTime? hasta = ViewState["AgendaFiltroHasta"] as DateTime?;
+            string documento = Convert.ToString(ViewState["AgendaFiltroDocumento"]);
+            string proceso = Convert.ToString(ViewState["AgendaFiltroProceso"]);
+            datos = FiltrarSolicitudesAgenda(datos, desde, hasta, documento, proceso);
+            LblResumenAgenda.Text = HttpUtility.HtmlEncode(datos.Rows.Count + " registro(s) · Desde: "
+                + (desde.HasValue ? desde.Value.ToString("dd/MM/yyyy") : "Sin límite") + " · Hasta: "
+                + (hasta.HasValue ? hasta.Value.ToString("dd/MM/yyyy") : "Sin límite")
+                + " · Documento: " + (documento.Length == 0 ? "Todos" : documento)
+                + " · Proceso: " + (proceso.Length == 0 ? "Todos" : proceso));
+            int ultimaPagina = datos.Rows.Count == 0 ? 0 : (datos.Rows.Count - 1) / GrdvDatos.PageSize;
+            if (GrdvDatos.PageIndex > ultimaPagina) GrdvDatos.PageIndex = ultimaPagina;
             GrdvDatos.DataSource = datos;
             GrdvDatos.DataBind();
         }
@@ -567,6 +580,85 @@ namespace Pry_PrestasaludWAP.Examenes
             Response.Redirect("~/Examenes/FrmAgendarExamenes.aspx?CodigoTitular=" + Convert.ToInt32(r["CodigoTITU"])
                 + "&CodigoProducto=" + Convert.ToInt32(r["CodigoPROD"]) + "&CodigoEXSO=" + Convert.ToInt32(r["CodigoEXSO"])
                 + "&Regresar=1&CitaAdicional=1&CodigoOrdenAdicional=" + orden, true);
+        }
+
+        protected void GrdvDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            e.Cancel = true;
+            if (e.NewPageIndex < 0) return;
+            try
+            {
+                Lblerror.Text = "";
+                GrdvDatos.PageIndex = e.NewPageIndex;
+                FunCargaMantenimiento();
+            }
+            catch (Exception ex)
+            {
+                Lblerror.Text = HttpUtility.HtmlEncode(ex.Message);
+            }
+        }
+
+        protected void BtnConsultarAgenda_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DateTime desde, hasta;
+                DateTime? filtroDesde = null, filtroHasta = null;
+                if (!string.IsNullOrWhiteSpace(TxtDesdeAgenda.Text))
+                {
+                    if (!DateTime.TryParseExact(TxtDesdeAgenda.Text.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out desde))
+                        throw new InvalidOperationException("Seleccione una fecha Desde válida.");
+                    filtroDesde = desde;
+                }
+                if (!string.IsNullOrWhiteSpace(TxtHastaAgenda.Text))
+                {
+                    if (!DateTime.TryParseExact(TxtHastaAgenda.Text.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out hasta))
+                        throw new InvalidOperationException("Seleccione una fecha Hasta válida.");
+                    filtroHasta = hasta;
+                }
+                if (filtroDesde.HasValue && filtroHasta.HasValue && filtroDesde.Value > filtroHasta.Value)
+                    throw new InvalidOperationException("La fecha Desde no puede ser posterior a Hasta.");
+                ViewState["AgendaFiltroDesde"] = filtroDesde;
+                ViewState["AgendaFiltroHasta"] = filtroHasta;
+                ViewState["AgendaFiltroDocumento"] = TxtDocumentoAgenda.Text.Trim();
+                ViewState["AgendaFiltroProceso"] = DdlProcesoAgenda.SelectedValue;
+                GrdvDatos.PageIndex = 0;
+                Lblerror.Text = "";
+                FunCargaMantenimiento();
+            }
+            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+        }
+        protected void BtnLimpiarAgenda_Click(object sender, EventArgs e)
+        {
+            TxtDesdeAgenda.Text = ""; TxtHastaAgenda.Text = ""; TxtDocumentoAgenda.Text = "";
+            DdlProcesoAgenda.SelectedIndex = 0;
+            BtnConsultarAgenda_Click(sender, e);
+        }
+        internal static DataTable FiltrarSolicitudesAgenda(DataTable datos, DateTime? desde, DateTime? hasta, string documento, string proceso)
+        {
+            DataTable filtrados = datos.Clone();
+            foreach (DataRow fila in datos.Rows)
+            {
+                if (!string.IsNullOrEmpty(documento) && !string.Equals(Convert.ToString(fila["NumDocumento"]).Trim(), documento.Trim(), StringComparison.OrdinalIgnoreCase)) continue;
+                if (!string.IsNullOrEmpty(proceso) && !string.Equals(Convert.ToString(fila["EstadoCodigo"]).Trim(), proceso, StringComparison.OrdinalIgnoreCase)) continue;
+                if (desde.HasValue || hasta.HasValue)
+                {
+                    DateTime fecha;
+                    if (!LeerFechaSolicitudAgenda(fila["FecSolicitud"], out fecha))
+                        throw new InvalidOperationException("No se pudo interpretar la fecha de la solicitud " + fila["CodigoEXSO"] + ". Revise FecSolicitud.");
+                    if (desde.HasValue && fecha.Date < desde.Value.Date) continue;
+                    if (hasta.HasValue && fecha.Date > hasta.Value.Date) continue;
+                }
+                filtrados.ImportRow(fila);
+            }
+            return filtrados;
+        }
+        internal static bool LeerFechaSolicitudAgenda(object valor, out DateTime fecha)
+        {
+            if (valor is DateTime) { fecha = (DateTime)valor; return true; }
+            // Operación 144: MM/dd/yyyy con hora AM/PM. Orden adicional: yyyy-MM-dd HH:mm:ss.
+            // No usar la cultura del servidor para evitar intercambiar día y mes.
+            return DateTime.TryParse(Convert.ToString(valor).Trim(), CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AllowWhiteSpaces, out fecha);
         }
 
     }

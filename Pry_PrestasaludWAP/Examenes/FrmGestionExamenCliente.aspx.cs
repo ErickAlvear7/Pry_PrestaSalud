@@ -847,7 +847,10 @@ namespace Pry_PrestasaludWAP.Examenes
                 else resumen.Text = HttpUtility.HtmlEncode(estado == "ENVIADA" ? "Orden enviada a agendamiento." : "Estado de la orden: " + estado);
             }
             Button enviar = item.FindControl("BtnEnviarOrdenAdicional") as Button;
-            if (enviar != null) { enviar.Visible = editable; enviar.Enabled = editable; }
+            if (enviar != null) 
+            { 
+                enviar.Visible = editable; enviar.Enabled = editable; 
+            }
             HyperLink pdf = item.FindControl("LnkPdfOrdenAdicional") as HyperLink;
             if (pdf != null)
             {
@@ -856,7 +859,10 @@ namespace Pry_PrestasaludWAP.Examenes
                 pdf.NavigateUrl = ResolveUrl("~/Examenes/VerOrdenAdicionalPdf.ashx?ambito=cliente&orden=" + orden);
             }
             Label cabecera = item.FindControl("LblEstadoCliente") as Label;
-            if (cabecera != null) { cabecera.Text = estado == "" ? "PENDIENTE" : HttpUtility.HtmlEncode(estado); cabecera.ForeColor = System.Drawing.Color.DarkOrange; }
+            if (cabecera != null) 
+            { 
+                cabecera.Text = estado == "" ? "PENDIENTE" : HttpUtility.HtmlEncode(estado); cabecera.ForeColor = System.Drawing.Color.DarkOrange; 
+            }
         }
         protected void BtnGuardarBorradorAdicional_Command(object sender, CommandEventArgs e)
         {
@@ -878,7 +884,10 @@ namespace Pry_PrestasaludWAP.Examenes
                 CargarBorradorPaciente(item, persona, r);
                 Lblerror.Text = "Borrador guardado. Aún no se ha enviado a agendamiento.";
             }
-            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+            catch (Exception ex) 
+            { 
+                Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); 
+            }
         }
 
         protected void BtnEnviarOrdenAdicional_Command(object sender, CommandEventArgs e)
@@ -892,7 +901,9 @@ namespace Pry_PrestasaludWAP.Examenes
                 ValidarAccesoCliente();
                 DataRow actual = LeerInformeOrden(persona);
                 if (Convert.ToString(actual["EstadoOrden"]) == "ENVIADA" || Convert.ToString(actual["EstadoOrden"]) == "AGENDADA")
-                { CargarBorradorPaciente(item, persona, actual); Lblerror.Text = "La orden ya fue enviada a agendamiento."; return; }
+                { 
+                    CargarBorradorPaciente(item, persona, actual); Lblerror.Text = "La orden ya fue enviada a agendamiento."; return; 
+                }
                 TextBox campo = item.FindControl("TxtExamenesAdicionales") as TextBox;
                 string texto = campo == null ? "" : campo.Text.Trim();
                 if (string.IsNullOrWhiteSpace(texto) || texto.Length > 12000) throw new InvalidOperationException("Ingrese los exámenes solicitados, hasta 12000 caracteres.");
@@ -913,7 +924,10 @@ namespace Pry_PrestasaludWAP.Examenes
                 CargarBorradorPaciente(item, persona);
                 Lblerror.Text = "Orden adicional enviada a agendamiento. Su PDF ya está disponible.";
             }
-            catch (Exception ex) { Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); }
+            catch (Exception ex) 
+            { 
+                Lblerror.Text = HttpUtility.HtmlEncode(ex.Message); 
+            }
         }
 
     }
